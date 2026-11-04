@@ -302,7 +302,178 @@
             background: #181C2B;
             border-radius: 2px;
         }
+
+        /* =====================================================================
+           LIGHT MODE STYLES & TRANSITIONS
+           ===================================================================== */
+        html {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        html.light {
+            --bg-void: #F8FAFC;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --border-hairline: rgba(15, 23, 42, 0.10);
+            --border-hover: rgba(15, 23, 42, 0.22);
+            --crimson: #FF2E54;
+            --crimson-hover: #E01E44;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+        }
+
+        html.light body {
+            background-color: #F8FAFC !important;
+            color: #0F172A !important;
+        }
+
+        /* Light mode text contrast */
+        html.light .text-white {
+            color: #0F172A !important;
+        }
+        html.light .text-white\/80,
+        html.light .text-white\/70 {
+            color: #334155 !important;
+        }
+        html.light .text-white\/40,
+        html.light .text-white\/30 {
+            color: #94A3B8 !important;
+        }
+        html.light .text-slate-400,
+        html.light .text-slate-500,
+        html.light .text-slate-300 {
+            color: #64748B !important;
+        }
+
+        /* Retain white text on primary buttons */
+        html.light .btn-primary,
+        html.light .btn-primary * {
+            color: #FFFFFF !important;
+        }
+
+        /* Light mode panels */
+        html.light .solid-panel,
+        html.light .translucent-panel {
+            background: rgba(255, 255, 255, 0.84) !important;
+            border-color: rgba(15, 23, 42, 0.10) !important;
+            box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.08) !important;
+        }
+        html.light .solid-panel:hover,
+        html.light .translucent-panel:hover {
+            border-color: rgba(15, 23, 42, 0.22) !important;
+        }
+
+        /* Navbar in light mode */
+        html.light #navbar > div > div {
+            background: rgba(255, 255, 255, 0.88) !important;
+            border-color: rgba(15, 23, 42, 0.10) !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06) !important;
+        }
+        html.light #navbar nav a {
+            color: #334155 !important;
+        }
+        html.light #navbar nav a:hover {
+            color: #0F172A !important;
+        }
+        html.light #theme-toggle-btn {
+            background: rgba(15, 23, 42, 0.06) !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+            color: #0F172A !important;
+        }
+
+        /* Ticket stub cutouts in light mode */
+        html.light .ticket-stub::before,
+        html.light .ticket-stub::after {
+            background-color: #F8FAFC !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+        }
+
+        /* Light mode inputs */
+        html.light input[type="text"],
+        html.light input[type="tel"] {
+            background-color: rgba(241, 245, 249, 0.95) !important;
+            border-color: rgba(15, 23, 42, 0.15) !important;
+            color: #0F172A !important;
+        }
+        html.light input[type="text"]::placeholder,
+        html.light input[type="tel"]::placeholder {
+            color: #94A3B8 !important;
+        }
+
+        /* Canvas background in light mode */
+        html.light #stage-bg-container {
+            background-color: #F8FAFC !important;
+        }
+        html.light #stage-scrim-top {
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.55) 0%, rgba(248, 250, 252, 0.2) 50%, rgba(248, 250, 252, 0.85) 100%) !important;
+        }
+        html.light #stage-scrim-radial {
+            background: radial-gradient(circle at 50% 35%, transparent 20%, rgba(248, 250, 252, 0.4) 65%, rgba(248, 250, 252, 0.88) 100%) !important;
+        }
+
+        /* Calculator inner box in light mode */
+        html.light #calc-output-box {
+            background: rgba(241, 245, 249, 0.9) !important;
+            border-color: rgba(15, 23, 42, 0.10) !important;
+        }
+
+        /* Step cards and mobile rate sheet */
+        html.light .bg-\[\#080A10\]\/55,
+        html.light .bg-\[\#080A10\]\/60 {
+            background: rgba(255, 255, 255, 0.85) !important;
+            border-color: rgba(15, 23, 42, 0.10) !important;
+        }
+
+        /* Floating carousel navigation buttons in light mode */
+        html.light .thumpn-nav-btn {
+            background: #FFFFFF !important;
+            border-color: rgba(15, 23, 42, 0.12) !important;
+            color: #0F172A !important;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.10) !important;
+        }
+        html.light .thumpn-nav-btn:hover {
+            background: var(--crimson) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Edge masks in light mode */
+        html.light .thumpn-fade-left {
+            background: linear-gradient(to right, #F8FAFC 0%, transparent 100%) !important;
+        }
+        html.light .thumpn-fade-right {
+            background: linear-gradient(to left, #F8FAFC 0%, transparent 100%) !important;
+        }
+
+        /* Footer in light mode */
+        html.light footer {
+            background: rgba(248, 250, 252, 0.95) !important;
+            border-color: rgba(15, 23, 42, 0.08) !important;
+        }
+
+        /* Modal backdrop and controls in light mode */
+        html.light [id$="-modal"] {
+            background-color: rgba(15, 23, 42, 0.45) !important;
+        }
+        html.light [id$="-modal"] button.text-slate-400:hover {
+            color: #0F172A !important;
+        }
+        html.light #cookie-banner button:first-child:hover {
+            color: #0F172A !important;
+        }
     </style>
+    <script>
+        (function() {
+            try {
+                var saved = localStorage.getItem('tixora-theme');
+                if (saved === 'light') {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                }
+            } catch(e) {}
+        })();
+    </script>
 </head>
 
 <body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
@@ -312,8 +483,8 @@
         <canvas id="scroll-sequence-canvas" class="w-full h-full block will-change-transform opacity-85 transition-opacity duration-700" style="filter: saturate(1.15) brightness(1.02); image-rendering: auto;"></canvas>
         
         <!-- Cinematic Stage Light Scrim: Crisp Concert Beams with Natural Focus -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#050608]/30 via-transparent to-[#050608]/65"></div>
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 35%, transparent 25%, rgba(5, 6, 8, 0.20) 65%, rgba(5, 6, 8, 0.65) 100%);"></div>
+        <div id="stage-scrim-top" class="absolute inset-0 bg-gradient-to-b from-[#050608]/30 via-transparent to-[#050608]/65"></div>
+        <div id="stage-scrim-radial" class="absolute inset-0" style="background: radial-gradient(circle at 50% 35%, transparent 25%, rgba(5, 6, 8, 0.20) 65%, rgba(5, 6, 8, 0.65) 100%);"></div>
         
         <!-- Concert Red Ambient Atmosphere -->
         <div class="absolute top-12 left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-crimson/15 blur-[150px] rounded-full pointer-events-none"></div>
@@ -342,7 +513,14 @@
                     </nav>
 
                     <!-- Single Action Button -->
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2 sm:space-x-3">
+                        <!-- Theme Toggle Button -->
+                        <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" 
+                                class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.12] flex items-center justify-center text-white transition-all active:scale-95 shadow-sm">
+                            <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden text-amber-500"></i>
+                            <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 text-slate-200"></i>
+                        </button>
+
                         <button onclick="openModal('promoter-modal')" class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
                             Promoter Portal
                         </button>
@@ -909,7 +1087,7 @@
 
                         <!-- Right Calculation Output Card -->
                         <div class="lg:col-span-6">
-                            <div class="rounded-2xl p-7 bg-black/45 backdrop-blur-sm border border-white/[0.10] space-y-6 font-mono">
+                            <div id="calc-output-box" class="rounded-2xl p-7 bg-black/45 backdrop-blur-sm border border-white/[0.10] space-y-6 font-mono">
                                 <div>
                                     <span class="text-xs text-slate-400 block uppercase tracking-wider">Estimated Monthly Commission</span>
                                     <div class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-1" id="calc-monthly-rev">₹18,900</div>
@@ -1690,6 +1868,114 @@
             if (e.target.id === 'buy-modal') closeModal('buy-modal');
             if (e.target.id === 'link-modal') closeModal('link-modal');
         });
+
+        /* =====================================================================
+           THEME SWITCHER ENGINE (Dark / Light Mode with LocalStorage Sync)
+           ===================================================================== */
+        function getSavedTheme() {
+            try {
+                return localStorage.getItem('tixora-theme') || 'dark';
+            } catch(e) {
+                return 'dark';
+            }
+        }
+
+        function applyTheme(theme) {
+            const htmlEl = document.documentElement;
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+
+            if (theme === 'light') {
+                htmlEl.classList.remove('dark');
+                htmlEl.classList.add('light');
+                if (sunIcon) sunIcon.classList.remove('hidden');
+                if (moonIcon) moonIcon.classList.add('hidden');
+            } else {
+                htmlEl.classList.remove('light');
+                htmlEl.classList.add('dark');
+                if (sunIcon) sunIcon.classList.add('hidden');
+                if (moonIcon) moonIcon.classList.remove('hidden');
+            }
+            try {
+                localStorage.setItem('tixora-theme', theme);
+            } catch(e) {}
+        }
+
+        window.toggleTheme = function() {
+            const isLight = document.documentElement.classList.contains('light');
+            const nextTheme = isLight ? 'dark' : 'light';
+            applyTheme(nextTheme);
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+            if (typeof showToast === 'function') {
+                showToast(nextTheme === 'light' ? 'Light mode enabled' : 'Dark mode enabled');
+            }
+        };
+
+        /* =====================================================================
+           COOKIE CONSENT BANNER CONTROLLER
+           ===================================================================== */
+        function initCookieBanner() {
+            try {
+                const consent = localStorage.getItem('tixora-cookies');
+                const banner = document.getElementById('cookie-banner');
+                if (!consent && banner) {
+                    setTimeout(() => {
+                        banner.classList.remove('translate-y-36', 'opacity-0', 'pointer-events-none');
+                        banner.classList.add('translate-y-0', 'opacity-100');
+                    }, 1200);
+                }
+            } catch(e) {}
+        }
+
+        window.acceptCookies = function(type) {
+            try {
+                localStorage.setItem('tixora-cookies', type || 'accepted');
+            } catch(e) {}
+            const banner = document.getElementById('cookie-banner');
+            if (banner) {
+                banner.classList.remove('translate-y-0', 'opacity-100');
+                banner.classList.add('translate-y-36', 'opacity-0', 'pointer-events-none');
+            }
+            if (typeof showToast === 'function') {
+                showToast(type === 'essential' ? 'Essential cookies recorded.' : 'All cookies approved.');
+            }
+        };
+
+        // Initialize theme and cookies
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(getSavedTheme());
+            initCookieBanner();
+        });
+        applyTheme(getSavedTheme());
+        initCookieBanner();
     </script>
+
+    <!-- Cookies & Verification Consent Banner -->
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 transition-all duration-500 translate-y-36 opacity-0 pointer-events-none">
+        <div class="solid-panel rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3 border border-white/[0.12] bg-[#0D0F17]/90 backdrop-blur-xl">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-crimson/15 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-xs sm:text-sm font-bold text-white font-display">Cookie & Session Compliance</div>
+                    <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-sans">
+                        We use essential cookies to maintain promoter sessions, track pass referral links, and prevent scalping bots on official concert allocations.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center justify-end space-x-2 pt-1 font-mono text-xs">
+                <button onclick="acceptCookies('essential')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+                    Essential Only
+                </button>
+                <button onclick="acceptCookies('all')" class="btn-primary px-4 py-1.5 rounded-lg text-white font-bold font-sans">
+                    Accept All
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
