@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>TIXORA — Live Concert Allocations & Youth Promoter Protocol</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans, Space Grotesk, Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+                        display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace']
+                    },
+                    colors: {
+                        void: '#050608',
+                        surface: {
+                            base: '#080A10',
+                            card: '#0D0F17',
+                            elevated: '#131622',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            borderHover: 'rgba(255, 255, 255, 0.18)'
+                        },
+                        crimson: {
+                            DEFAULT: '#FF2E54',
+                            hover: '#FF4365',
+                            glow: 'rgba(255, 46, 84, 0.35)'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            --bg-void: #050608;
+            --bg-card: #0D0F17;
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.18);
+            --crimson: #FF2E54;
+            --crimson-hover: #FF4365;
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+        }
+
+        /* Clean Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050608;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #191D2B;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #252B3D;
+        }
+
+        /* Solid Production Surface Panels (Eliminating AI Glassmorphism) */
+        .solid-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-hairline);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        .solid-panel:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* Deliberate Interactive Buttons */
+        .btn-primary {
+            background: var(--crimson);
+            color: #FFFFFF;
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 14px rgba(255, 46, 84, 0.35);
+        }
+        .btn-primary:hover {
+            background: var(--crimson-hover);
+            box-shadow: 0 6px 20px rgba(255, 46, 84, 0.5);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
+            border: 1px solid var(--border-hairline);
+            font-weight: 600;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-hover);
+        }
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        /* Thumpn-Style Event Carousel */
+        .thumpn-carousel-track {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.25rem 0.5rem 2rem 0.5rem;
+        }
+        .thumpn-carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+        .thumpn-card-slot {
+            flex-shrink: 0;
+            width: 320px;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.3s ease, 
+                        opacity 0.3s ease;
+            will-change: transform, opacity;
+        }
+        @media (max-width: 640px) {
+            .thumpn-card-slot {
+                width: 84vw;
+                max-width: 320px;
+            }
+        }
+        .thumpn-carousel-track:hover .thumpn-card-slot {
+            opacity: 0.65;
+        }
+        .thumpn-carousel-track .thumpn-card-slot:hover {
+            opacity: 1 !important;
+            transform: translateY(-6px);
+            z-index: 20;
+            border-color: rgba(255, 46, 84, 0.45) !important;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 46, 84, 0.25) !important;
+        }
+        .thumpn-poster-img {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+        .thumpn-card-slot:hover .thumpn-poster-img {
+            transform: scale(1.06);
+        }
+
+        /* Thumpn Navigation Buttons */
+        .thumpn-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #0D0F17;
+            border: 1px solid var(--border-hairline);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .thumpn-nav-btn:hover {
+            background: var(--crimson);
+            border-color: var(--crimson);
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 0 16px rgba(255, 46, 84, 0.5);
+        }
+        .thumpn-nav-btn:active {
+            transform: translateY(-50%) scale(0.96);
+        }
+        .thumpn-nav-prev { left: -14px; }
+        .thumpn-nav-next { right: -14px; }
+        @media (max-width: 768px) {
+            .thumpn-nav-prev { left: 4px; }
+            .thumpn-nav-next { right: 4px; }
+        }
+
+        /* Edge Masks */
+        .thumpn-fade-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 48px;
+            background: linear-gradient(to right, #050608 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 20;
+        }
+        .thumpn-fade-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 48px;
+            background: linear-gradient(to left, #050608 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Strict Unified Small Font Standard */
+        .text-slate-400,
+        .text-slate-500,
+        .text-slate-300,
+        .meta-text {
+            color: #94A3B8 !important;
+        }
+
+        /* Ticket Stub Notches */
+        .ticket-stub {
+            position: relative;
+        }
+        .ticket-stub::before, .ticket-stub::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #050608;
+            z-index: 10;
+        }
+        .ticket-stub::before {
+            left: -9px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right: 1px solid var(--border-hairline);
+        }
+        .ticket-stub::after {
+            right: -9px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 1px solid var(--border-hairline);
+        }
+
+        /* Range Slider */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #FF2E54;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(255, 46, 84, 0.8);
+            margin-top: -7px;
+            border: 2px solid #FFFFFF;
+            transition: transform 0.15s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #181C2B;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white">
+
+    <!-- Vibrant Concert Stage Background Engine (150-Frame 4K Live Sequence) -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="stage-bg-container" style="contain: strict;">
+        <canvas id="scroll-sequence-canvas" class="w-full h-full block will-change-transform opacity-85 transition-opacity duration-700" style="filter: saturate(1.15) brightness(1.02); image-rendering: auto;"></canvas>
+        
+        <!-- Cinematic Stage Light Scrim: Crisp Concert Beams with Natural Focus -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050608]/45 via-transparent to-[#050608]/85"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 32%, transparent 20%, rgba(5, 6, 8, 0.3) 60%, rgba(5, 6, 8, 0.85) 100%);"></div>
+        
+        <!-- Concert Red Ambient Atmosphere -->
+        <div class="absolute top-12 left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-crimson/15 blur-[150px] rounded-full pointer-events-none"></div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+
+        <!-- Navigation Header -->
+        <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="bg-[#080A10]/90 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center justify-between border border-white/[0.08] shadow-xl">
+                    
+                    <!-- Clean Brand Logo -->
+                    <a href="#" class="flex items-center space-x-3 py-0.5">
+                        <img src="tixora-logo.png" alt="TIXORA" class="h-8 sm:h-9 w-auto object-contain">
+                    </a>
+
+                    <!-- Nav Links: Uniform Clean White -->
+                    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                        <a href="#lineup-vault" class="text-white hover:text-white/80 transition-colors">Live Drops</a>
+                        <a href="#mesh-protocol" class="text-white hover:text-white/80 transition-colors">How It Works</a>
+                        <a href="#velocity-matrix" class="text-white hover:text-white/80 transition-colors">Yield Calculator</a>
+                        <a href="#tiers-ladder" class="text-white hover:text-white/80 transition-colors">Promoter Tiers</a>
+                        
+                    </nav>
+
+                    <!-- Single Action Button -->
+                    <div class="flex items-center space-x-3">
+                        <button onclick="openModal('promoter-modal')" class="btn-primary px-5 py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide">
+                            Promoter Portal
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <main class="pt-28 md:pt-36">
+            <!-- Hero Section: Clean, Authoritative Typography & Concert Ticket Stub -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                    
+                    <!-- Left: High-Contrast Headline & Grounded Copy -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        
+                        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold font-display tracking-tight leading-[1.08] text-white">
+                            Monetize The Scene.<br>
+                            <span class="text-white/80">Own The Gate.</span>
+                        </h1>
+
+                        <p class="text-sm sm:text-base text-slate-400 font-normal max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                            Official stadium allocations. Distribute authentic BookMyShow passes directly to your network and pocket instant UPI commissions on every confirmed sale.
+                        </p>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#lineup-vault" class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-display flex items-center justify-center space-x-2">
+                                <span>Explore Live Drops</span>
+                                <span class="font-mono">&rarr;</span>
+                            </a>
+                            <button onclick="openModal('promoter-modal')" class="btn-secondary w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-display flex items-center justify-center">
+                                Apply As Official Promoter
+                            </button>
+                        </div>
+
+                        <!-- Micro Metrics Ledger -->
+                        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-white/[0.08] max-w-xl mx-auto lg:mx-0 text-left">
+                            <div>
+                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">₹6.8 Cr+</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Promoter Payouts</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">850+</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Active Promoters</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">&lt; 45s</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Avg Settlement</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right: Authentic Concert Pass Stub -->
+                    <div class="lg:col-span-5 relative flex justify-center">
+                        <div class="w-full max-w-md">
+                            <div class="solid-panel ticket-stub rounded-3xl p-6 relative space-y-5 bg-[#0D0F17]">
+                                
+                                <div class="flex items-center justify-between pb-4 border-b border-dashed border-white/[0.12]">
+                                    <div>
+                                        <span class="text-[10px] font-mono text-slate-400 block uppercase tracking-wider">Stadium Allocation</span>
+                                        <div class="text-lg font-bold font-display text-white">Anyma • ÆDEN Mumbai</div>
+                                    </div>
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/[0.05] text-slate-400 border border-white/[0.08]">
+                                        Active Drop
+                                    </span>
+                                </div>
+
+                                <div class="relative rounded-2xl overflow-hidden aspect-video bg-black border border-white/[0.08]">
+                                    <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma live in Mumbai" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
+                                        <span class="text-white font-medium">Mahalaxmi Racecourse</span>
+                                        <span class="text-slate-400 bg-black/80 px-2 py-0.5 rounded border border-white/[0.08]">Earn ₹680 / pass</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2.5 pt-2 border-t border-dashed border-white/[0.12] font-mono text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Pass MRP:</span>
+                                        <span class="text-white font-bold">₹4,250</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Delivery Channel:</span>
+                                        <span class="text-white font-medium">BookMyShow Digital Wallet</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Rep Clearance:</span>
+                                        <span class="text-slate-400">DigiLocker Verified Rep</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Lineup Vault: Thumpn-Style Poster Carousel -->
+            <section id="lineup-vault" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+                <div class="space-y-8">
+                    
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">
+                                Headliner Quotas Ready To Monetize
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl leading-relaxed">
+                                Official festival partner allocations. Smoothly browsing authentic live tours across India.
+                            </p>
+                        </div>
+
+                        <!-- Live Sync Indicator -->
+                        <div class="text-xs text-slate-400 font-mono hidden sm:flex items-center space-x-2">
+                            <span class="inline-block w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
+                            <span>Auto-Syncing Active Bookings</span>
+                        </div>
+                    </div>
+
+                    <!-- Thumpn Poster Scrolling Carousel -->
+                    <div class="relative w-full">
+                        
+                        <!-- Left & Right Edge Masks -->
+                        <div class="thumpn-fade-left"></div>
+                        <div class="thumpn-fade-right"></div>
+
+                        <!-- Floating Navigation Controls -->
+                        <button id="events-prev" aria-label="Previous event" class="thumpn-nav-btn thumpn-nav-prev">
+                            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        </button>
+                        <button id="events-next" aria-label="Next event" class="thumpn-nav-btn thumpn-nav-next">
+                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        </button>
+
+                        <!-- Carousel Track -->
+                        <div id="events-side-track" class="thumpn-carousel-track">
+                            
+                            <!-- Event 1: Anyma -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma presents ÆDEN" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        16% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>Mahalaxmi Racecourse, Mumbai</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">21 NOV 2026 • 4:00 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Anyma presents ÆDEN</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Matteo Milleri's legendary audiovisual melodic-techno spectacle with futuristic multidimensional visual rigs.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹4,250</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹680</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('Anyma presents ÆDEN', 4250, 'Festival Exclusive')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Anyma presents ÆDEN')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 2: Guns N' Roses -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/guns-n-roses-india-poster.jpg" alt="Guns N' Roses India Tour" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        14% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>Bhartiya Mall City Grounds, Bengaluru</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">14 DEC 2026 • 5:00 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Guns N' Roses • India Tour</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Axl Rose & Slash live in Bengaluru for their definitive stadium tour, performing 'November Rain' & 'Sweet Child O' Mine'.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹6,500</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹910</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('Guns N Roses India Tour', 6500, 'Stadium Headliner')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Guns N Roses India Tour')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 3: Fred again.. Delhi -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/fred-again-india-poster-1.png" alt="Fred again.. Delhi" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        12% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>Jawaharlal Nehru Stadium, New Delhi</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">09 JAN 2027 • 6:30 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Fred again.. • Delhi NCR</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Electronic innovator Fred again.. brings his euphoric USB live set to India for a monumental night of club anthems.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹3,800</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹456</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('Fred again Delhi NCR', 3800, 'Arena Live')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Fred again Delhi NCR')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 4: The Chainsmokers -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/chainsmokers-bengaluru-banner.jpg" alt="The Chainsmokers Sunburn" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        10% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>Manpho Convention Grounds, Bengaluru</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">24 JAN 2027 • 5:30 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">The Chainsmokers • Sunburn</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Alex & Drew return to Sunburn Arena with fireworks, stadium lasers, and their multi-billion stream anthems.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹2,999</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹300</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('The Chainsmokers Sunburn Arena', 2999, 'Festival Arena')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('The Chainsmokers Sunburn Arena')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 5: Fred again.. Mumbai -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/fred-again-india-poster-2.png" alt="Fred again.. Mumbai" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        12% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>NESCO Center Exhibition Hall, Mumbai</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">11 JAN 2027 • 6:00 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Fred again.. • Mumbai</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Second date added by popular demand. An intimate, high-octane live production celebrating modern dance culture.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹4,200</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹504</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('Fred again Mumbai', 4200, 'Club Resonance')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Fred again Mumbai')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 6: Khalid -->
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                    <img src="posters/khalid-india-banner.jpg" alt="Khalid Delhi" class="thumpn-poster-img w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
+                                        15% CUT
+                                    </span>
+                                    <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span>Major Dhyan Chand Stadium, Delhi</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">13 DEC 2026 • 6:00 PM</div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Khalid • Live in Delhi</h3>
+                                        <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                                            Multi-platinum R&B pop sensation Khalid brings his global anthems 'Location' and 'Young Dumb & Broke' to Delhi.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹2,999</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
+                                                <span class="text-base font-bold text-slate-400">Earn ₹450</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button onclick="buyTicketModal('Khalid Live in Delhi', 2999, 'Event Horizon')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Khalid Live in Delhi')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Progress Indicators -->
+                    <div id="events-dots" class="flex items-center justify-center space-x-2 pt-2">
+                        <button class="w-7 h-1.5 rounded-full bg-crimson transition-all" onclick="scrollEventTo(0)"></button>
+                        <button class="w-2 h-1.5 rounded-full bg-white/20 transition-all hover:bg-white/40" onclick="scrollEventTo(1)"></button>
+                        <button class="w-2 h-1.5 rounded-full bg-white/20 transition-all hover:bg-white/40" onclick="scrollEventTo(2)"></button>
+                        <button class="w-2 h-1.5 rounded-full bg-white/20 transition-all hover:bg-white/40" onclick="scrollEventTo(3)"></button>
+                        <button class="w-2 h-1.5 rounded-full bg-white/20 transition-all hover:bg-white/40" onclick="scrollEventTo(4)"></button>
+                        <button class="w-2 h-1.5 rounded-full bg-white/20 transition-all hover:bg-white/40" onclick="scrollEventTo(5)"></button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- How It Works: Continuous 4-Stage Distribution Pipeline (Eliminating 3 Icon Boxes) -->
+            <section id="mesh-protocol" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+                <div class="mb-12">
+                    <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">How Promoters Monetize Hype</h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl leading-relaxed">
+                        Zero merchandise holding, zero cash liability. A transparent distribution protocol designed for modern live event promoters.
+                    </p>
+                </div>
+
+                <!-- Structured 4-Column Pipeline Grid with Monospace Step Numerals -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.08] bg-[#080A10] rounded-3xl overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
+                    
+                    <!-- Step 01 -->
+                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                        <div class="font-mono text-2xl font-bold text-white/30">01</div>
+                        <h3 class="text-lg font-bold font-display text-white">Identity Clearance</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Complete swift promoter identity verification via DigiLocker or government ID. Direct integration prevents unauthorized scalping.
+                        </p>
+                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
+                            Status: Real-time Check
+                        </div>
+                    </div>
+
+                    <!-- Step 02 -->
+                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                        <div class="font-mono text-2xl font-bold text-white/30">02</div>
+                        <h3 class="text-lg font-bold font-display text-white">Claim Quotas</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Lock real-time allocations from BookMyShow official tour reserves with zero upfront financial deposit required.
+                        </p>
+                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
+                            Status: Verified Reserve
+                        </div>
+                    </div>
+
+                    <!-- Step 03 -->
+                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                        <div class="font-mono text-2xl font-bold text-white/30">03</div>
+                        <h3 class="text-lg font-bold font-display text-white">Share Pass Links</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Distribute authenticated referral links across your social circles and community channels. Attendees complete checkout with official digital barcodes.
+                        </p>
+                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
+                            Status: Encrypted Barcode
+                        </div>
+                    </div>
+
+                    <!-- Step 04 -->
+                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                        <div class="font-mono text-2xl font-bold text-white/30">04</div>
+                        <h3 class="text-lg font-bold font-display text-white">Instant Settlement</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Commissions clear directly to your registered UPI ID the second an attendee completes payment. Zero payment hold period.
+                        </p>
+                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
+                            Status: Automated UPI Disbursal
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Earnings Simulator: Interactive Yield Calculator -->
+            <section id="velocity-matrix" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+                <div class="solid-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden bg-[#0D0F17]">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        
+                        <div class="lg:col-span-6 space-y-6">
+                            <div>
+                                <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">
+                                    Model Your Monthly Promoter Yield
+                                </h2>
+                                <p class="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
+                                    Simulate how ticket distribution across your network converts into income in Indian Rupees (₹).
+                                </p>
+                            </div>
+
+                            <!-- Sliders -->
+                            <div class="space-y-6 pt-2">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-mono">
+                                        <span class="text-slate-400 uppercase">Confirmed Passes Sold / Month</span>
+                                        <span id="slider-passes-val" class="font-bold text-white text-base">45 Passes</span>
+                                    </div>
+                                    <input type="range" id="slider-passes" min="5" max="300" step="5" value="45" class="w-full">
+                                    <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+                                        <span>5 passes</span>
+                                        <span>300 passes</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs font-mono">
+                                        <span class="text-slate-400 uppercase">Average Ticket Price (₹)</span>
+                                        <span id="slider-price-val" class="font-bold text-white text-base">₹3,500</span>
+                                    </div>
+                                    <input type="range" id="slider-price" min="1500" max="9500" step="250" value="3500" class="w-full">
+                                    <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+                                        <span>₹1,500 (Club)</span>
+                                        <span>₹9,500 (Stadium VIP)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-4 border-t border-white/[0.08] text-xs text-slate-400 leading-relaxed font-mono">
+                                Calculations model verified payout rates across BookMyShow authorized concert partners.
+                            </div>
+                        </div>
+
+                        <!-- Right Calculation Output Card -->
+                        <div class="lg:col-span-6">
+                            <div class="rounded-2xl p-7 bg-[#07090F] border border-white/[0.08] space-y-6 font-mono">
+                                <div>
+                                    <span class="text-xs text-slate-400 block uppercase tracking-wider">Estimated Monthly Commission</span>
+                                    <div class="text-4xl sm:text-5xl font-extrabold text-white font-display mt-1" id="calc-monthly-rev">₹18,900</div>
+                                </div>
+
+                                <div class="space-y-3 pt-4 border-t border-white/[0.08] text-xs">
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Total Pass Turnover:</span>
+                                        <span class="text-white font-bold" id="calc-gmv">₹1,57,500</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Effective Commission Tier:</span>
+                                        <span class="text-white font-bold" id="calc-commission-rate">12.0% (Nightlife Partner)</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-slate-400">Annualized Run-Rate:</span>
+                                        <span class="text-white font-bold" id="calc-annual-runrate">₹2,26,800 / yr</span>
+                                    </div>
+                                </div>
+
+                                <button onclick="openModal('promoter-modal')" class="btn-primary w-full py-3.5 rounded-xl text-xs sm:text-sm font-display font-semibold">
+                                    Lock In Your Quota Allocation
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Promoter Commission Tiers Ladder -->
+            <section id="tiers-ladder" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+                <div class="mb-12">
+                    <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">Promoter Commission Tiers</h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl leading-relaxed">
+                        Transparent volume-based progression. As your verified ticket sales increase, your commission rate scales automatically.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Tier 1 -->
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                                <span>TIER 01</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">ENTRY</span>
+                            </div>
+                            <div class="text-3xl font-extrabold font-display text-white mt-3">5%–7%</div>
+                            <div class="text-base font-bold text-white mt-1">Rookie Scout</div>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                Ideal for new promoters distributing passes to friends, followers, and local nightlife circles.
+                            </p>
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Threshold:</span>
+                                <span class="text-white">1–15 passes</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Disbursal:</span>
+                                <span class="text-white">Instant UPI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 2 -->
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                                <span>TIER 02</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">ACTIVE</span>
+                            </div>
+                            <div class="text-3xl font-extrabold font-display text-white mt-3">8%–10%</div>
+                            <div class="text-base font-bold text-white mt-1">Network Promoter</div>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                Active community curators with established audience reach and group channels.
+                            </p>
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Threshold:</span>
+                                <span class="text-white">16–50 passes</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Disbursal:</span>
+                                <span class="text-white">Instant UPI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 3 -->
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                                <span>TIER 03</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">PARTNER</span>
+                            </div>
+                            <div class="text-3xl font-extrabold font-display text-white mt-3">11%–13%</div>
+                            <div class="text-base font-bold text-white mt-1">Nightlife Curator</div>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                High-volume nightlife organizers and music community coordinators across major metro circuits.
+                            </p>
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Threshold:</span>
+                                <span class="text-white">51–150 passes</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Disbursal:</span>
+                                <span class="text-white">Instant UPI + VIP Access</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tier 4 -->
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6 border-white/[0.16]">
+                        <div>
+                            <div class="flex justify-between items-center text-xs font-mono text-slate-400">
+                                <span>TIER 04</span>
+                                <span class="px-2 py-0.5 rounded bg-crimson/15 text-white font-bold border border-crimson/30">ELITE</span>
+                            </div>
+                            <div class="text-3xl font-extrabold font-display text-white mt-3">14%–16%</div>
+                            <div class="text-base font-bold text-white mt-1">Headliner Syndicate</div>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                Institutional city distribution partners with guaranteed allocation reserves for major arena shows.
+                            </p>
+                        </div>
+                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Threshold:</span>
+                                <span class="text-white">150+ passes</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Disbursal:</span>
+                                <span class="text-white">Automated RTGS / Priority API</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/[0.08] bg-[#050608] pt-16 pb-12 mt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                    
+                    <div class="space-y-4 md:col-span-1">
+                        <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto object-contain">
+                        <p class="text-xs text-slate-400 leading-relaxed font-sans">
+                            Tixora is India’s youth ticketing promoter network. Direct headliner allocations, zero ticket scalping, and automated UPI promoter earnings.
+                        </p>
+                        <div class="text-xs text-slate-400 font-mono font-medium flex items-center space-x-1.5">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i>
+                            <span>DigiLocker Audited Network</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="font-bold text-white uppercase tracking-wider font-mono">Active Lineup</div>
+                        <ul class="space-y-2 text-slate-400 font-sans">
+                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Anyma presents ÆDEN • Mumbai</a></li>
+                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Guns N' Roses • Bengaluru</a></li>
+                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Fred again.. • Delhi NCR</a></li>
+                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">The Chainsmokers • Sunburn</a></li>
+                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Khalid • Live in Delhi</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="font-bold text-white uppercase tracking-wider font-mono">Protocol Features</div>
+                        <ul class="space-y-2 text-slate-400 font-sans">
+                            <li><a href="#tiers-ladder" class="hover:text-white transition-colors">Velocity Commission Tiers (Up to 16%)</a></li>
+                            <li><a href="#velocity-matrix" class="hover:text-white transition-colors">Live Yield Calculator</a></li>
+                            <li><a href="#mesh-protocol" class="hover:text-white transition-colors">The Mesh Protocol</a></li>
+                            
+                        </ul>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="font-bold text-white uppercase tracking-wider font-mono">Founders & Helpline</div>
+                        <div class="text-slate-400 space-y-1 font-sans">
+                            <div><strong class="text-white">Founders:</strong> Ronak Jain R & Prajwal Gowrish H S</div>
+                            <div><strong class="text-white">Helpline:</strong> +91 78921 45475</div>
+                            <div><strong class="text-white">Email:</strong> support@tixora.in</div>
+                            <div class="text-[11px] text-slate-400 pt-1 font-mono">Operations: 10:00 AM – 10:00 PM IST</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4 font-mono">
+                    <div>© <span id="current-year">2026</span> Tixora Entertainment Private Limited. All rights reserved.</div>
+                    <div class="flex space-x-6">
+                        <a href="#" class="hover:text-white transition-colors">Anti-Scalping Audit</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Promoter Onboarding Modal -->
+    <div id="promoter-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
+            <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="text-center space-y-1">
+                <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-2 object-contain">
+                <h3 class="text-2xl font-bold font-display text-white">Join Tixora Promoter Network</h3>
+                <p class="text-xs text-slate-400 font-sans">Earn up to 16% commission with direct BookMyShow QR delivery</p>
+            </div>
+            <div class="space-y-3 font-sans">
+                <input type="text" placeholder="Your Full Name" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="text" placeholder="City & Organization / Network (e.g. Mumbai, Delhi, Bengaluru)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="tel" placeholder="WhatsApp Number (+91)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+            </div>
+            <button onclick="simulateSignupSuccess()" class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
+                Create Free Promoter Account
+            </button>
+            <div class="text-xs text-center text-slate-400 font-mono flex items-center justify-center space-x-1.5">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span>Direct UPI settlement. Zero upfront deposit required.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pass Booking Modal -->
+    <div id="buy-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
+            <button onclick="closeModal('buy-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-1 font-display">
+                <h3 class="text-xl font-bold text-white" id="buy-event-title">Event Title</h3>
+                <p class="text-xs text-slate-400 font-sans" id="buy-organizer-tag">Hosted by Official Partner</p>
+            </div>
+
+            <div class="p-4 rounded-xl bg-[#07090F] border border-white/[0.08] space-y-2 text-xs font-mono">
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Pass MRP:</span>
+                    <span class="font-bold text-white" id="buy-total-val">₹4,250</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Delivery Channel:</span>
+                    <span class="font-medium text-white">BookMyShow / District Wallet</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Audit Status:</span>
+                    <span class="font-medium text-slate-400">DigiLocker Verified</span>
+                </div>
+            </div>
+
+            <div class="space-y-3 font-sans">
+                <input type="text" placeholder="Attendee Full Name" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="tel" placeholder="WhatsApp / Mobile Number (Registered on BMS)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+            </div>
+
+            <button onclick="simulateOrderSuccess()" class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
+                Pay & Dispatch Pass to BMS
+            </button>
+            <div class="text-xs text-center text-slate-400 font-mono">
+                Card, UPI, or NetBanking • Pass issues immediately on payment
+            </div>
+        </div>
+    </div>
+
+    <!-- Promoter Link Modal -->
+    <div id="link-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
+            <button onclick="closeModal('link-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-1 font-display">
+                <h3 class="text-xl font-bold text-white">Your Unique Referral Link</h3>
+                <p class="text-xs text-slate-400 font-sans" id="link-event-name">Event Referral Tracking</p>
+            </div>
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="generated-link-input" readonly class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
+                    <button onclick="copyToClipboardAction()" class="btn-primary px-4 py-2 rounded-xl text-xs font-display font-semibold whitespace-nowrap">
+                        Copy
+                    </button>
+                </div>
+                <p class="text-[11px] text-slate-400 font-sans">
+                    Share this link with your friends or audience. When they purchase, your commission is credited directly to your UPI ID.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl solid-panel border border-crimson/50 text-xs font-semibold text-white shadow-2xl flex items-center space-x-2.5 translate-y-20 opacity-0 transition-all duration-300 bg-[#0D0F17] font-display">
+        <i data-lucide="check-circle" class="w-4 h-4 text-crimson"></i>
+        <span id="toast-msg">Action completed!</span>
+    </div>
+
+    <!-- JavaScript Application Engines -->
+    <script>
+        lucide.createIcons();
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        /* =====================================================================
+           SCROLL SEQUENCE ANIMATION ENGINE (150-Frame 4K Concert Stage)
+           ===================================================================== */
+        const TOTAL_FRAMES = 150;
+        const canvas = document.getElementById('scroll-sequence-canvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+
+        let currentFrameFloat = 0;
+        let targetFrameFloat = 0;
+        let lastDrawnIndex = -1;
+        let isAnimating = false;
+        let needsRedraw = false;
+
+        const frameImages = new Array(TOTAL_FRAMES);
+        const frameLoaded = new Uint8Array(TOTAL_FRAMES);
+
+        function getFrameSrc(index) {
+            const num = String(index + 1).padStart(3, '0');
+            return 'ezgif-73126691f624a5ac-jpg/ezgif-frame-' + num + '.jpg';
+        }
+
+        function drawFrame(index) {
+            const img = getBestFrame(index);
+            if (!img) return;
+
+            const cw = canvas.width;
+            const ch = canvas.height;
+            if (cw === 0 || ch === 0) return;
+
+            const iw = img.naturalWidth || img.width || 3840;
+            const ih = img.naturalHeight || img.height || 2160;
+
+            const scale = Math.max(cw / iw, ch / ih);
+            const dw = Math.ceil(iw * scale);
+            const dh = Math.ceil(ih * scale);
+            const dx = Math.round((cw - dw) * 0.5);
+            const dy = Math.round((ch - dh) * 0.5);
+
+            // High-fidelity image smoothing prevents aliasing and pixelation
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, dx, dy, dw, dh);
+        }
+
+        function getBestFrame(targetIndex) {
+            if (frameLoaded[targetIndex]) return frameImages[targetIndex];
+            for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+                const prev = targetIndex - offset;
+                if (prev >= 0 && frameLoaded[prev]) return frameImages[prev];
+                const next = targetIndex + offset;
+                if (next < TOTAL_FRAMES && frameLoaded[next]) return frameImages[next];
+            }
+            return null;
+        }
+
+        function resizeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const w = Math.round(window.innerWidth * dpr);
+            const h = Math.round(window.innerHeight * dpr);
+
+            if (canvas.width !== w || canvas.height !== h) {
+                canvas.width = w;
+                canvas.height = h;
+                // Re-enable high quality smoothing after resize
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                needsRedraw = true;
+                if (!isAnimating) {
+                    drawFrame(Math.round(currentFrameFloat));
+                }
+            }
+        }
+        window.addEventListener('resize', resizeCanvas, { passive: true });
+        resizeCanvas();
+
+        function loadFrame(index) {
+            if (frameImages[index] !== undefined) return;
+            const img = new Image();
+            frameImages[index] = img;
+            img.onload = () => {
+                frameLoaded[index] = 1;
+                const activeIndex = Math.round(currentFrameFloat);
+                if (Math.abs(index - activeIndex) <= 2 || lastDrawnIndex === -1) {
+                    needsRedraw = true;
+                    if (!isAnimating) {
+                        drawFrame(activeIndex);
+                    }
+                }
+            };
+            img.src = getFrameSrc(index);
+        }
+
+        function preloadPriorityFrames() {
+            for (let i = 0; i < 15; i++) loadFrame(i);
+            for (let i = 15; i < TOTAL_FRAMES; i += 3) loadFrame(i);
+            const fillRest = () => {
+                for (let i = 0; i < TOTAL_FRAMES; i++) {
+                    if (!frameImages[i]) loadFrame(i);
+                }
+            };
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(fillRest);
+            } else {
+                setTimeout(fillRest, 1000);
+            }
+        }
+        preloadPriorityFrames();
+
+        function renderLoop() {
+            const diff = targetFrameFloat - currentFrameFloat;
+            if (Math.abs(diff) > 0.005) {
+                currentFrameFloat += diff * 0.12;
+            } else {
+                currentFrameFloat = targetFrameFloat;
+            }
+
+            const frameIndex = Math.min(TOTAL_FRAMES - 1, Math.max(0, Math.round(currentFrameFloat)));
+            if (frameIndex !== lastDrawnIndex || needsRedraw) {
+                drawFrame(frameIndex);
+                lastDrawnIndex = frameIndex;
+                needsRedraw = false;
+            }
+
+            if (Math.abs(targetFrameFloat - currentFrameFloat) > 0.005) {
+                requestAnimationFrame(renderLoop);
+            } else {
+                isAnimating = false;
+            }
+        }
+
+        function onScroll() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrollHeight > 0 ? Math.min(1, Math.max(0, scrollTop / scrollHeight)) : 0;
+            targetFrameFloat = progress * (TOTAL_FRAMES - 1);
+
+            if (!isAnimating) {
+                isAnimating = true;
+                requestAnimationFrame(renderLoop);
+            }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        /* =====================================================================
+           THUMPN-STYLE POSTER CAROUSEL ENGINE (Auto-Advance, Smooth Pan, Pause on Hover)
+           ===================================================================== */
+        const eventsSideTrack = document.getElementById('events-side-track');
+        const eventsPrevBtn = document.getElementById('events-prev');
+        const eventsNextBtn = document.getElementById('events-next');
+        const eventsDotsList = document.querySelectorAll('#events-dots button');
+
+        let autoAdvanceTimer = null;
+        let isUserInteracting = false;
+        let resumeTimeout = null;
+
+        function getCardStep() {
+            if (!eventsSideTrack) return 340;
+            const card = eventsSideTrack.querySelector('.thumpn-card-slot');
+            return card ? card.offsetWidth + 24 : 340;
+        }
+
+        function updateDots() {
+            if (!eventsSideTrack || !eventsDotsList.length) return;
+            const step = getCardStep();
+            const activeIdx = Math.round(eventsSideTrack.scrollLeft / step);
+            eventsDotsList.forEach((dot, idx) => {
+                if (idx === activeIdx) {
+                    dot.className = 'w-7 h-1.5 rounded-full bg-crimson transition-all duration-300';
+                } else {
+                    dot.className = 'w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300 hover:bg-white/40';
+                }
+            });
+        }
+
+        window.scrollEventTo = function(index) {
+            if (!eventsSideTrack) return;
+            pauseAutoAdvance();
+            const step = getCardStep();
+            eventsSideTrack.scrollTo({
+                left: index * step,
+                behavior: 'smooth'
+            });
+            resumeAutoAdvanceWithDelay(3500);
+        };
+
+        function advanceSlide() {
+            if (!eventsSideTrack || isUserInteracting) return;
+            const step = getCardStep();
+            const maxScroll = eventsSideTrack.scrollWidth - eventsSideTrack.clientWidth;
+            
+            if (eventsSideTrack.scrollLeft >= maxScroll - 15) {
+                eventsSideTrack.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                eventsSideTrack.scrollBy({ left: step, behavior: 'smooth' });
+            }
+        }
+
+        function startAutoAdvance() {
+            stopAutoAdvance();
+            autoAdvanceTimer = setInterval(advanceSlide, 3800);
+        }
+
+        function stopAutoAdvance() {
+            if (autoAdvanceTimer) {
+                clearInterval(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+        }
+
+        function pauseAutoAdvance() {
+            isUserInteracting = true;
+            stopAutoAdvance();
+        }
+
+        function resumeAutoAdvanceWithDelay(delay = 2500) {
+            if (resumeTimeout) clearTimeout(resumeTimeout);
+            resumeTimeout = setTimeout(() => {
+                isUserInteracting = false;
+                startAutoAdvance();
+            }, delay);
+        }
+
+        if (eventsPrevBtn && eventsSideTrack) {
+            eventsPrevBtn.addEventListener('click', () => {
+                pauseAutoAdvance();
+                const step = getCardStep();
+                eventsSideTrack.scrollBy({ left: -step, behavior: 'smooth' });
+                resumeAutoAdvanceWithDelay();
+            });
+        }
+
+        if (eventsNextBtn && eventsSideTrack) {
+            eventsNextBtn.addEventListener('click', () => {
+                pauseAutoAdvance();
+                const step = getCardStep();
+                eventsSideTrack.scrollBy({ left: step, behavior: 'smooth' });
+                resumeAutoAdvanceWithDelay();
+            });
+        }
+
+        if (eventsSideTrack) {
+            eventsSideTrack.addEventListener('mouseenter', () => pauseAutoAdvance());
+            eventsSideTrack.addEventListener('mouseleave', () => resumeAutoAdvanceWithDelay(1500));
+            eventsSideTrack.addEventListener('touchstart', () => pauseAutoAdvance(), { passive: true });
+            eventsSideTrack.addEventListener('touchend', () => resumeAutoAdvanceWithDelay(2000), { passive: true });
+
+            let scrollDebounce = null;
+            eventsSideTrack.addEventListener('scroll', () => {
+                if (scrollDebounce) cancelAnimationFrame(scrollDebounce);
+                scrollDebounce = requestAnimationFrame(updateDots);
+            }, { passive: true });
+        }
+
+        startAutoAdvance();
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoAdvance();
+            } else {
+                startAutoAdvance();
+            }
+        });
+
+        /* =====================================================================
+           EARNINGS CALCULATOR ENGINE
+           ===================================================================== */
+        const sliderPasses = document.getElementById('slider-passes');
+        const sliderPrice = document.getElementById('slider-price');
+        const passesVal = document.getElementById('slider-passes-val');
+        const priceVal = document.getElementById('slider-price-val');
+        const calcMonthlyRev = document.getElementById('calc-monthly-rev');
+        const calcGmv = document.getElementById('calc-gmv');
+        const calcRate = document.getElementById('calc-commission-rate');
+        const calcRunrate = document.getElementById('calc-annual-runrate');
+
+        function updateCalculator() {
+            if (!sliderPasses || !sliderPrice) return;
+            const passes = parseInt(sliderPasses.value, 10);
+            const price = parseInt(sliderPrice.value, 10);
+
+            passesVal.textContent = passes + ' Passes';
+            priceVal.textContent = '₹' + price.toLocaleString('en-IN');
+
+            const gmv = passes * price;
+            let rate = 0.06;
+            let tierName = 'Rookie Scout';
+
+            if (passes >= 150) {
+                rate = 0.15;
+                tierName = 'Headliner Syndicate';
+            } else if (passes >= 51) {
+                rate = 0.12;
+                tierName = 'Nightlife Curator';
+            } else if (passes >= 16) {
+                rate = 0.09;
+                tierName = 'Network Promoter';
+            }
+
+            const monthlyCommission = Math.round(gmv * rate);
+            const annualRunrate = monthlyCommission * 12;
+
+            calcMonthlyRev.textContent = '₹' + monthlyCommission.toLocaleString('en-IN');
+            calcGmv.textContent = '₹' + gmv.toLocaleString('en-IN');
+            calcRate.textContent = (rate * 100).toFixed(1) + '% (' + tierName + ')';
+            calcRunrate.textContent = '₹' + annualRunrate.toLocaleString('en-IN') + ' / yr';
+        }
+
+        if (sliderPasses && sliderPrice) {
+            sliderPasses.addEventListener('input', updateCalculator);
+            sliderPrice.addEventListener('input', updateCalculator);
+            updateCalculator();
+        }
+
+        /* =====================================================================
+           MODAL & TOAST CONTROLLERS
+           ===================================================================== */
+        window.openModal = function(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        };
+
+        window.closeModal = function(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        };
+
+        window.buyTicketModal = function(eventName, price, category) {
+            document.getElementById('buy-event-title').textContent = eventName;
+            document.getElementById('buy-organizer-tag').textContent = category + ' • Official Quota';
+            document.getElementById('buy-total-val').textContent = '₹' + price.toLocaleString('en-IN');
+            openModal('buy-modal');
+        };
+
+        window.copyPromoterLink = function(eventName) {
+            const slug = eventName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            const link = 'https://tixora.in/p/' + slug + '?ref=PROMO-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('link-event-name').textContent = eventName;
+            document.getElementById('generated-link-input').value = link;
+            openModal('link-modal');
+        };
+
+        window.copyToClipboardAction = function() {
+            const input = document.getElementById('generated-link-input');
+            if (input) {
+                input.select();
+                navigator.clipboard.writeText(input.value).then(() => {
+                    closeModal('link-modal');
+                    showToast('Tracking link copied to clipboard!');
+                }).catch(() => {
+                    closeModal('link-modal');
+                    showToast('Tracking link copied!');
+                });
+            }
+        };
+
+        window.simulateSignupSuccess = function() {
+            closeModal('promoter-modal');
+            showToast('Promoter account submitted! Verification SMS sent via WhatsApp.');
+        };
+
+        window.simulateOrderSuccess = function() {
+            closeModal('buy-modal');
+            showToast('Booking verified! Digital passes dispatched to your BookMyShow app.');
+        };
+
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            if (!toast || !toastMsg) return;
+            toastMsg.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        };
+
+        // Close modal on click outside
+        window.addEventListener('click', (e) => {
+            if (e.target.id === 'promoter-modal') closeModal('promoter-modal');
+            if (e.target.id === 'buy-modal') closeModal('buy-modal');
+            if (e.target.id === 'link-modal') closeModal('link-modal');
+        });
+    </script>
+</body>
+</html>
