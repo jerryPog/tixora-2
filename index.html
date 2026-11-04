@@ -308,7 +308,7 @@
 <body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
 
     <!-- Vibrant Concert Stage Background Engine (150-Frame 4K Live Sequence) -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="stage-bg-container" style="contain: strict;">
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-cover bg-center" id="stage-bg-container" style="contain: strict; background-image: url('ezgif-73126691f624a5ac-jpg/ezgif-frame-001.jpg');">
         <canvas id="scroll-sequence-canvas" class="w-full h-full block will-change-transform opacity-85 transition-opacity duration-700" style="filter: saturate(1.15) brightness(1.02); image-rendering: auto;"></canvas>
         
         <!-- Cinematic Stage Light Scrim: Crisp Concert Beams with Natural Focus -->
@@ -1326,6 +1326,8 @@
             return null;
         }
 
+        const isMobileDevice = () => window.innerWidth <= 768;
+
         let lastInnerWidth = window.innerWidth;
         function resizeCanvas(force = false) {
             const currentWidth = window.innerWidth;
@@ -1345,9 +1347,10 @@
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
                 needsRedraw = true;
-                if (!isAnimating) {
-                    drawFrame(Math.round(currentFrameFloat));
-                }
+                
+                // On mobile, always render constant hero frame
+                const frameToDraw = isMobileDevice() ? 0 : Math.round(currentFrameFloat);
+                drawFrame(frameToDraw);
             }
         }
         window.addEventListener('resize', () => resizeCanvas(false), { passive: true });
@@ -1360,7 +1363,7 @@
             frameImages[index] = img;
             img.onload = () => {
                 frameLoaded[index] = 1;
-                const activeIndex = Math.round(currentFrameFloat);
+                const activeIndex = isMobileDevice() ? 0 : Math.round(currentFrameFloat);
                 if (Math.abs(index - activeIndex) <= 2 || lastDrawnIndex === -1) {
                     needsRedraw = true;
                     if (!isAnimating) {
@@ -1372,9 +1375,17 @@
         }
 
         function preloadPriorityFrames() {
+            // On mobile phone: only load the constant hero frame to save battery and network data
+            if (isMobileDevice()) {
+                loadFrame(0);
+                return;
+            }
+
+            // On desktop: load full sequence for interactive scroll animation
             for (let i = 0; i < 15; i++) loadFrame(i);
             for (let i = 15; i < TOTAL_FRAMES; i += 3) loadFrame(i);
             const fillRest = () => {
+                if (isMobileDevice()) return;
                 for (let i = 0; i < TOTAL_FRAMES; i++) {
                     if (!frameImages[i]) loadFrame(i);
                 }
@@ -1388,6 +1399,12 @@
         preloadPriorityFrames();
 
         function renderLoop() {
+            // On mobile, freeze animation loop completely for a constant background
+            if (isMobileDevice()) {
+                isAnimating = false;
+                return;
+            }
+
             const diff = targetFrameFloat - currentFrameFloat;
             if (Math.abs(diff) > 0.005) {
                 currentFrameFloat += diff * 0.12;
@@ -1410,6 +1427,9 @@
         }
 
         function onScroll() {
+            // On mobile phones: DO NOT animate background on scroll, keep it rock-solid constant
+            if (isMobileDevice()) return;
+
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
             const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
             const progress = scrollHeight > 0 ? Math.min(1, Math.max(0, scrollTop / scrollHeight)) : 0;
