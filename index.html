@@ -73,14 +73,28 @@
             background: #252B3D;
         }
 
-        /* Solid Production Surface Panels (Eliminating AI Glassmorphism) */
-        .solid-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-hairline);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6);
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        /* Hardware-Accelerated Translucent Panels (Visible Concert BG + 60fps Smoothness) */
+        :root {
+            --bg-void: #050608;
+            --bg-card: rgba(11, 14, 22, 0.60);
+            --border-hairline: rgba(255, 255, 255, 0.10);
+            --border-hover: rgba(255, 255, 255, 0.22);
+            --crimson: #FF2E54;
+            --crimson-hover: #FF4365;
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
         }
-        .solid-panel:hover {
+
+        .solid-panel, .translucent-panel {
+            background: var(--bg-card);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-hairline);
+            box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+            transform: translateZ(0); /* Force GPU compositing for smooth scroll */
+        }
+        .solid-panel:hover, .translucent-panel:hover {
             border-color: var(--border-hover);
         }
 
@@ -298,8 +312,8 @@
         <canvas id="scroll-sequence-canvas" class="w-full h-full block will-change-transform opacity-85 transition-opacity duration-700" style="filter: saturate(1.15) brightness(1.02); image-rendering: auto;"></canvas>
         
         <!-- Cinematic Stage Light Scrim: Crisp Concert Beams with Natural Focus -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#050608]/45 via-transparent to-[#050608]/85"></div>
-        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 32%, transparent 20%, rgba(5, 6, 8, 0.3) 60%, rgba(5, 6, 8, 0.85) 100%);"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#050608]/30 via-transparent to-[#050608]/65"></div>
+        <div class="absolute inset-0" style="background: radial-gradient(circle at 50% 35%, transparent 25%, rgba(5, 6, 8, 0.20) 65%, rgba(5, 6, 8, 0.65) 100%);"></div>
         
         <!-- Concert Red Ambient Atmosphere -->
         <div class="absolute top-12 left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-crimson/15 blur-[150px] rounded-full pointer-events-none"></div>
@@ -311,7 +325,7 @@
         <!-- Navigation Header -->
         <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
             <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4">
-                <div class="bg-[#080A10]/90 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between border border-white/[0.08] shadow-xl">
+                <div class="bg-[#080A10]/65 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between border border-white/[0.12] shadow-xl">
                     
                     <!-- Clean Brand Logo -->
                     <a href="#" class="flex items-center space-x-3 py-0.5">
@@ -388,7 +402,7 @@
                     <!-- Right: Authentic Concert Pass Stub -->
                     <div class="lg:col-span-5 relative flex justify-center">
                         <div class="w-full max-w-md">
-                            <div class="solid-panel ticket-stub rounded-3xl p-5 sm:p-6 relative space-y-4 sm:space-y-5 bg-[#0D0F17]">
+                            <div class="solid-panel ticket-stub rounded-3xl p-5 sm:p-6 relative space-y-4 sm:space-y-5 bg-[#0D0F17]/60 backdrop-blur-md">
                                 
                                 <div class="flex items-center justify-between pb-4 border-b border-dashed border-white/[0.12]">
                                     <div>
@@ -467,10 +481,10 @@
                         <div id="events-side-track" class="thumpn-carousel-track">
                             
                             <!-- Event 1: Anyma -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma presents ÆDEN" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         16% CUT
                                     </span>
@@ -511,10 +525,10 @@
                             </div>
 
                             <!-- Event 2: Guns N' Roses -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/guns-n-roses-india-poster.jpg" alt="Guns N' Roses India Tour" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         14% CUT
                                     </span>
@@ -555,10 +569,10 @@
                             </div>
 
                             <!-- Event 3: Fred again.. Delhi -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/fred-again-india-poster-1.png" alt="Fred again.. Delhi" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         12% CUT
                                     </span>
@@ -599,10 +613,10 @@
                             </div>
 
                             <!-- Event 4: The Chainsmokers -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/chainsmokers-bengaluru-banner.jpg" alt="The Chainsmokers Sunburn" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         10% CUT
                                     </span>
@@ -643,10 +657,10 @@
                             </div>
 
                             <!-- Event 5: Fred again.. Mumbai -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/fred-again-india-poster-2.png" alt="Fred again.. Mumbai" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         12% CUT
                                     </span>
@@ -687,10 +701,10 @@
                             </div>
 
                             <!-- Event 6: Khalid -->
-                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
+                            <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/khalid-india-banner.jpg" alt="Khalid Delhi" class="thumpn-poster-img w-full h-full object-cover">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                         15% CUT
                                     </span>
@@ -757,9 +771,9 @@
                 </div>
 
                 <!-- Desktop 4-Column Pipeline Grid -->
-                <div class="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.08] bg-[#080A10] rounded-3xl overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
+                <div class="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.10] bg-[#080A10]/55 backdrop-blur-md rounded-3xl overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
                     
-                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
                         <div class="font-mono text-2xl font-bold text-white/30">01</div>
                         <h3 class="text-lg font-bold font-display text-white">Identity Clearance</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
@@ -770,7 +784,7 @@
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
                         <div class="font-mono text-2xl font-bold text-white/30">02</div>
                         <h3 class="text-lg font-bold font-display text-white">Claim Quotas</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
@@ -781,7 +795,7 @@
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
                         <div class="font-mono text-2xl font-bold text-white/30">03</div>
                         <h3 class="text-lg font-bold font-display text-white">Share Pass Links</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
@@ -792,7 +806,7 @@
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-[#0D0F17] transition-colors">
+                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
                         <div class="font-mono text-2xl font-bold text-white/30">04</div>
                         <h3 class="text-lg font-bold font-display text-white">Instant Settlement</h3>
                         <p class="text-xs text-slate-400 leading-relaxed">
@@ -807,7 +821,7 @@
 
                 <!-- Mobile Streamlined 4-Step Pipeline: Ultra-Fast & Zero Text Clutter -->
                 <div class="sm:hidden grid grid-cols-2 gap-3">
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10] space-y-1.5">
+                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
                         <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                             <span class="font-bold text-white/40">01</span>
                             <span>VERIFY</span>
@@ -816,7 +830,7 @@
                         <div class="text-[11px] text-slate-400 font-mono">DigiLocker verified</div>
                     </div>
 
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10] space-y-1.5">
+                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
                         <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                             <span class="font-bold text-white/40">02</span>
                             <span>ALLOCATE</span>
@@ -825,7 +839,7 @@
                         <div class="text-[11px] text-slate-400 font-mono">Zero deposit needed</div>
                     </div>
 
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10] space-y-1.5">
+                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
                         <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                             <span class="font-bold text-white/40">03</span>
                             <span>SHARE</span>
@@ -834,7 +848,7 @@
                         <div class="text-[11px] text-slate-400 font-mono">Official BMS QR</div>
                     </div>
 
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10] space-y-1.5">
+                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
                         <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                             <span class="font-bold text-white/40">04</span>
                             <span>EARN</span>
@@ -848,7 +862,7 @@
 
             <!-- Earnings Simulator: Interactive Yield Calculator -->
             <section id="velocity-matrix" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-                <div class="solid-panel rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden bg-[#0D0F17]">
+                <div class="solid-panel rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                         
                         <div class="lg:col-span-6 space-y-6">
@@ -895,7 +909,7 @@
 
                         <!-- Right Calculation Output Card -->
                         <div class="lg:col-span-6">
-                            <div class="rounded-2xl p-7 bg-[#07090F] border border-white/[0.08] space-y-6 font-mono">
+                            <div class="rounded-2xl p-7 bg-black/45 backdrop-blur-sm border border-white/[0.10] space-y-6 font-mono">
                                 <div>
                                     <span class="text-xs text-slate-400 block uppercase tracking-wider">Estimated Monthly Commission</span>
                                     <div class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-1" id="calc-monthly-rev">₹18,900</div>
@@ -938,7 +952,7 @@
                 <!-- Desktop 4-Card Ladder -->
                 <div class="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6">
                     
-                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                                 <span>TIER 01</span>
@@ -962,7 +976,7 @@
                         </div>
                     </div>
 
-                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                                 <span>TIER 02</span>
@@ -986,7 +1000,7 @@
                         </div>
                     </div>
 
-                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                                 <span>TIER 03</span>
@@ -1010,7 +1024,7 @@
                         </div>
                     </div>
 
-                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6 border-white/[0.16]">
+                    <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6 border-white/[0.16]">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
                                 <span>TIER 04</span>
@@ -1037,7 +1051,7 @@
                 </div>
 
                 <!-- Mobile Industrial Rate Sheet: Clean, High-Contrast 4-Row Matrix (Zero Long Paragraphs) -->
-                <div class="sm:hidden solid-panel rounded-2xl bg-[#080A10] overflow-hidden divide-y divide-white/[0.08]">
+                <div class="sm:hidden solid-panel rounded-2xl bg-[#080A10]/60 backdrop-blur-md overflow-hidden divide-y divide-white/[0.10]">
                     
                     <div class="p-4 flex items-center justify-between">
                         <div>
@@ -1095,7 +1109,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="border-t border-white/[0.08] bg-[#050608] pt-10 sm:pt-16 pb-10 sm:pb-12 mt-12 sm:mt-20">
+        <footer class="border-t border-white/[0.08] bg-[#050608]/70 backdrop-blur-md pt-10 sm:pt-16 pb-10 sm:pb-12 mt-12 sm:mt-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 mb-8 sm:mb-12">
                     
@@ -1158,7 +1172,7 @@
 
     <!-- Promoter Onboarding Modal -->
     <div id="promoter-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="solid-panel rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 relative bg-[#0D0F17] max-h-[92vh] overflow-y-auto">
+        <div class="solid-panel rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 relative bg-[#0D0F17]/85 backdrop-blur-xl max-h-[92vh] overflow-y-auto">
             <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -1168,9 +1182,9 @@
                 <p class="text-xs text-slate-400 font-sans">Earn up to 16% commission with direct BookMyShow QR delivery</p>
             </div>
             <div class="space-y-3 font-sans">
-                <input type="text" placeholder="Your Full Name" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="text" placeholder="City & Organization / Network (e.g. Mumbai, Delhi, Bengaluru)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="tel" placeholder="WhatsApp Number (+91)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                <input type="text" placeholder="Your Full Name" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="text" placeholder="City & Organization / Network (e.g. Mumbai, Delhi, Bengaluru)" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="tel" placeholder="WhatsApp Number (+91)" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
             </div>
             <button onclick="simulateSignupSuccess()" class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
                 Create Free Promoter Account
@@ -1209,8 +1223,8 @@
             </div>
 
             <div class="space-y-3 font-sans">
-                <input type="text" placeholder="Attendee Full Name" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="tel" placeholder="WhatsApp / Mobile Number (Registered on BMS)" class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                <input type="text" placeholder="Attendee Full Name" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
+                <input type="tel" placeholder="WhatsApp / Mobile Number (Registered on BMS)" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
             </div>
 
             <button onclick="simulateOrderSuccess()" class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
@@ -1234,7 +1248,7 @@
             </div>
             <div class="space-y-2">
                 <div class="flex items-center space-x-2">
-                    <input type="text" id="generated-link-input" readonly class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
+                    <input type="text" id="generated-link-input" readonly class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
                     <button onclick="copyToClipboardAction()" class="btn-primary px-4 py-2 rounded-xl text-xs font-display font-semibold whitespace-nowrap">
                         Copy
                     </button>
