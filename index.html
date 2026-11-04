@@ -43,6 +43,321 @@
                 }
             }
         };
+
+        /* =====================================================================
+           TIXORA AI CONCIERGE CHAT ENGINE
+           ===================================================================== */
+        const TIXORA_KB = [
+            {
+                id: 'commissions',
+                title: 'Promoter Commission Structure',
+                keywords: ['commission', 'commissions', 'earn', 'earning', 'rate', 'rates', 'percentage', 'cut', 'yield', 'tier', 'tiers', 'scout', 'capo', 'syndicate', 'patron', 'how much can i make', 'money'],
+                answer: `Tixora promoters earn tiered performance commissions based on monthly passes cleared:
+<br><br>
+• <strong class="text-white">Tier 1 (Scout)</strong>: 1–25 passes → <strong class="text-crimson font-mono font-bold">8.0% commission</strong><br>
+• <strong class="text-white">Tier 2 (Capo)</strong>: 26–100 passes → <strong class="text-crimson font-mono font-bold">11.0% commission</strong> + priority guestlist<br>
+• <strong class="text-white">Tier 3 (Syndicate)</strong>: 101–300 passes → <strong class="text-crimson font-mono font-bold">13.5% commission</strong> + VIP artist lounge<br>
+• <strong class="text-white">Tier 4 (Patron)</strong>: 300+ passes → <strong class="text-crimson font-mono font-bold">16.0% commission</strong> + dedicated tour quota contract
+<br><br>
+Zero upfront deposit or security collateral required. All earnings are calculated automatically.`,
+                actions: [
+                    { label: 'Calculate Commission', action: "scrollToSection('velocity-matrix')" },
+                    { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
+                ]
+            },
+            {
+                id: 'payouts',
+                title: 'Instant UPI Settlement',
+                keywords: ['payout', 'payouts', 'upi', 'settle', 'settlement', 'withdraw', 'withdrawal', 'bank', 'transfer', 'neft', 'delay', 'how fast', 'get paid'],
+                answer: `Commissions are tracked cryptographically per barcode scan:
+<br><br>
+• <strong class="text-white">Under 60-Second UPI</strong>: Automated settlement triggers directly to your registered UPI ID (GPay, PhonePe, Paytm, or BHIM) within <strong class="text-white font-mono">&lt;60s</strong> of gate verification.<br>
+• <strong class="text-white">Zero Lock-in</strong>: No minimum balance threshold to withdraw.<br>
+• <strong class="text-white">Audit Trail</strong>: Real-time scan timestamp and UPI transaction reference delivered to your WhatsApp.`,
+                actions: [
+                    { label: 'Register UPI in Portal', action: "openModal('promoter-modal')" }
+                ]
+            },
+            {
+                id: 'legitimacy',
+                title: 'Official BookMyShow Allocations',
+                keywords: ['bookmyshow', 'district', 'official', 'legit', 'real', 'fake', 'scam', 'authentic', 'delivery', 'barcode', 'qr', 'receive', 'ticket delivery'],
+                answer: `Yes, 100% authentic allocations. Tixora is an authorized partner network integrated directly with primary ticketing engines like <strong class="text-white">BookMyShow</strong> and <strong class="text-white">District</strong>.
+<br><br>
+• Passes are delivered instantly to the attendee's WhatsApp number and synced into their BookMyShow app account.<br>
+• Dynamic time-based QR barcodes refresh automatically at the venue gate to prevent duplicate screenshots or counterfeit scalping.`,
+                actions: [
+                    { label: 'View Live Tour Passes', action: "scrollToSection('lineup-vault')" }
+                ]
+            },
+            {
+                id: 'events',
+                title: 'Currently Active Tour Allocations',
+                keywords: ['event', 'events', 'concert', 'concerts', 'tour', 'tours', 'lineup', 'karan aujla', 'sunburn', 'diljit', 'boiler room', 'ap dhillon', 'dgtl', 'shows', 'who is performing'],
+                answer: `Here are the official allocations currently active on Tixora:
+<br><br>
+• <strong class="text-white">Karan Aujla — It Was All A Dream Tour</strong> (Delhi NCR & Mumbai • from ₹3,499)<br>
+• <strong class="text-white">Sunburn Goa 2026</strong> (Vagator Goa • from ₹4,999)<br>
+• <strong class="text-white">Diljit Dosanjh — Dil-Luminati Tour</strong> (Bengaluru • from ₹4,299)<br>
+• <strong class="text-white">Boiler Room Delhi</strong> (Warehouse Edition • from ₹2,999)<br>
+• <strong class="text-white">AP Dhillon — Brownprint Tour</strong> (Chandigarh • from ₹3,199)<br>
+• <strong class="text-white">DGTL Mumbai</strong> (Nesco Grounds • from ₹3,800)`,
+                actions: [
+                    { label: 'Browse Tour Posters', action: "scrollToSection('lineup-vault')" }
+                ]
+            },
+            {
+                id: 'registration',
+                title: 'How to Onboard as a Promoter',
+                keywords: ['join', 'sign up', 'register', 'apply', 'start', 'onboard', 'become', 'promoter account', 'how to become', 'how to work', 'requirements'],
+                answer: `Getting authorized on Tixora takes under 2 minutes:
+<br><br>
+1. Tap <strong class="text-white">Promoter Portal</strong>.<br>
+2. Enter your Name, City/Organization, and WhatsApp number.<br>
+3. Receive your promoter verification token & dynamic referral pass link.<br>
+4. Share passes directly with your network to begin earning up to 16% on every pass sold.`,
+                actions: [
+                    { label: 'Join Promoter Network', action: "openModal('promoter-modal')" }
+                ]
+            },
+            {
+                id: 'antiscalping',
+                title: 'Mesh Protocol Anti-Scalping Shield',
+                keywords: ['scalper', 'scalping', 'bot', 'bots', 'black market', 'fraud', 'protection', 'safe', 'security', 'anti scalping'],
+                answer: `Tixora protects genuine fans and promoters against bulk scalpers:
+<br><br>
+• <strong class="text-white">Mobile Identity Lock</strong>: Every pass is bound to the attendee's verified mobile number.<br>
+• <strong class="text-white">Dynamic Barcodes</strong>: Time-rotating QR tokens prevent screenshot reselling.<br>
+• <strong class="text-white">Scraper Rate Limiting</strong>: Automated checkout bots are blocked at the protocol level.`,
+                actions: [
+                    { label: 'How Protocol Works', action: "scrollToSection('mesh-protocol')" }
+                ]
+            },
+            {
+                id: 'support',
+                title: 'Human Operations Desk',
+                keywords: ['support', 'help', 'human', 'contact', 'agent', 'phone', 'email', 'talk', 'whatsapp support', 'call'],
+                answer: `Need to speak with our live operations team?
+<br><br>
+• <strong class="text-white">WhatsApp Live Desk</strong>: +91 98200 TIXORA (Available 10 AM – 11 PM IST)<br>
+• <strong class="text-white">Email Desk</strong>: support@tixora.live<br>
+• Priority response guaranteed in under 15 minutes during tour drops.`,
+                actions: [
+                    { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
+                ]
+            }
+        ];
+
+        const CHAT_SUGGESTIONS = [
+            "How do I earn commission?",
+            "How fast are UPI payouts?",
+            "Are tickets BookMyShow official?",
+            "What tours are live right now?",
+            "How to sign up as a promoter?",
+            "How does anti-scalping work?"
+        ];
+
+        let chatMessagesHistory = [];
+        let isChatOpen = false;
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function toggleChatbot() {
+            const widget = document.getElementById('ai-chat-widget');
+            const launcher = document.getElementById('ai-chat-launcher');
+            if (!widget) return;
+
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                widget.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                widget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                const input = document.getElementById('chat-input');
+                if (input) setTimeout(() => input.focus(), 250);
+            } else {
+                widget.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                widget.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function resetChat() {
+            chatMessagesHistory = [];
+            renderInitialGreeting();
+        }
+
+        function renderSuggestions() {
+            const container = document.getElementById('chat-suggestions');
+            if (!container) return;
+            container.innerHTML = CHAT_SUGGESTIONS.map(s => 
+                `<button onclick="askQuestion('${s.replace(/'/g, "\\'")}')" class="whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 hover:text-white border border-white/[0.08] transition-colors flex-shrink-0">
+                    ${s}
+                </button>`
+            ).join('');
+        }
+
+        function renderInitialGreeting() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-6 h-6 rounded-lg bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-[#121622]/90 border border-white/[0.10] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
+                        <p>
+                            Hey! I'm <strong class="text-white">TIXORA AI</strong>. I can answer questions about promoter commission tiers, instant UPI payouts, official BookMyShow pass verification, and live concert allocations.
+                        </p>
+                        <p class="text-[11px] text-slate-400">
+                            Tap a suggestion below or type your question:
+                        </p>
+                    </div>
+                </div>
+            `;
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            renderSuggestions();
+        }
+
+        function appendUserMessage(text) {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            const msgHtml = `
+                <div class="flex items-start justify-end space-x-2">
+                    <div class="bg-crimson text-white rounded-2xl rounded-tr-none px-3.5 py-2 max-w-[85%] leading-relaxed shadow-md font-medium text-xs break-words">
+                        ${escapeHtml(text)}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHtml);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendBotResponse(item) {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+
+            let actionsHtml = '';
+            if (item.actions && item.actions.length > 0) {
+                actionsHtml = `
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        ${item.actions.map(act => 
+                            `<button onclick="${act.action}" class="px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-crimson hover:text-white border border-white/[0.12] text-slate-200 text-[10px] font-mono tracking-tight transition-all active:scale-95">
+                                ${act.label} →
+                            </button>`
+                        ).join('')}
+                    </div>
+                `;
+            }
+
+            const botHtml = `
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-6 h-6 rounded-lg bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-[#121622]/90 border border-white/[0.10] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
+                        ${item.title ? `<div class="font-bold text-white font-display text-[12px] pb-0.5 border-b border-white/[0.08]">${item.title}</div>` : ''}
+                        <div>${item.answer}</div>
+                        ${actionsHtml}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', botHtml);
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function escapeHtml(string) {
+            const div = document.createElement('div');
+            div.innerText = string;
+            return div.innerHTML;
+        }
+
+        function findBestAnswer(query) {
+            const clean = query.toLowerCase().trim();
+
+            // Check for simple greetings
+            if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|s|[!?.])/i.test(clean)) {
+                return {
+                    title: 'Welcome to Tixora AI',
+                    answer: `Hello! 👋 I'm your AI concierge for Tixora. What would you like to know about our promoter network, payouts, or concert allocations?`,
+                    actions: [
+                        { label: 'Commission Rates', action: "askQuestion('How do I earn commission?')" },
+                        { label: 'Live Tours', action: "askQuestion('What tours are live right now?')" }
+                    ]
+                };
+            }
+
+            // Keyword scoring algorithm
+            let bestMatch = null;
+            let highestScore = 0;
+
+            for (const item of TIXORA_KB) {
+                let score = 0;
+                for (const kw of item.keywords) {
+                    if (clean.includes(kw)) {
+                        score += kw.length; // weight longer specific keywords more
+                    }
+                }
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestMatch = item;
+                }
+            }
+
+            if (bestMatch && highestScore > 0) {
+                return bestMatch;
+            }
+
+            // Fallback response with helpful shortcuts
+            return {
+                title: 'Tixora Concierge Guidance',
+                answer: `I'm here to help with anything on the Tixora Protocol! Tixora is an authorized live concert promoter network with direct BookMyShow allocations and instant UPI payouts (up to 16% commission).
+<br><br>
+Could you clarify if you're asking about <strong class="text-white">promoter commission rates</strong>, <strong class="text-white">ticket delivery</strong>, or <strong class="text-white">active tour drops</strong>?`,
+                actions: [
+                    { label: 'Commission Rates', action: "askQuestion('How do I earn commission?')" },
+                    { label: 'UPI Payouts', action: "askQuestion('How fast are UPI payouts?')" },
+                    { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
+                ]
+            };
+        }
+
+        function handleChatSubmit(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById('chat-input');
+            if (!input) return;
+            const query = input.value.trim();
+            if (!query) return;
+
+            input.value = '';
+            askQuestion(query);
+        }
+
+        function askQuestion(query) {
+            if (!isChatOpen) toggleChatbot();
+
+            appendUserMessage(query);
+
+            const typing = document.getElementById('chat-typing');
+            if (typing) typing.classList.remove('hidden');
+
+            const container = document.getElementById('chat-messages');
+            if (container) container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                if (typing) typing.classList.add('hidden');
+                const answer = findBestAnswer(query);
+                appendBotResponse(answer);
+            }, 450);
+        }
+
+        function initChatbot() {
+            renderInitialGreeting();
+        }
+
     </script>
 
     <style>
@@ -303,177 +618,7 @@
             border-radius: 2px;
         }
 
-        /* =====================================================================
-           LIGHT MODE STYLES & TRANSITIONS
-           ===================================================================== */
-        html {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        html.light {
-            --bg-void: #F8FAFC;
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --border-hairline: rgba(15, 23, 42, 0.10);
-            --border-hover: rgba(15, 23, 42, 0.22);
-            --crimson: #FF2E54;
-            --crimson-hover: #E01E44;
-            --text-primary: #0F172A;
-            --text-secondary: #64748B;
-        }
-
-        html.light body {
-            background-color: #F8FAFC !important;
-            color: #0F172A !important;
-        }
-
-        /* Light mode text contrast */
-        html.light .text-white {
-            color: #0F172A !important;
-        }
-        html.light .text-white\/80,
-        html.light .text-white\/70 {
-            color: #334155 !important;
-        }
-        html.light .text-white\/40,
-        html.light .text-white\/30 {
-            color: #94A3B8 !important;
-        }
-        html.light .text-slate-400,
-        html.light .text-slate-500,
-        html.light .text-slate-300 {
-            color: #64748B !important;
-        }
-
-        /* Retain white text on primary buttons */
-        html.light .btn-primary,
-        html.light .btn-primary * {
-            color: #FFFFFF !important;
-        }
-
-        /* Light mode panels */
-        html.light .solid-panel,
-        html.light .translucent-panel {
-            background: rgba(255, 255, 255, 0.84) !important;
-            border-color: rgba(15, 23, 42, 0.10) !important;
-            box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.08) !important;
-        }
-        html.light .solid-panel:hover,
-        html.light .translucent-panel:hover {
-            border-color: rgba(15, 23, 42, 0.22) !important;
-        }
-
-        /* Navbar in light mode */
-        html.light #navbar > div > div {
-            background: rgba(255, 255, 255, 0.88) !important;
-            border-color: rgba(15, 23, 42, 0.10) !important;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06) !important;
-        }
-        html.light #navbar nav a {
-            color: #334155 !important;
-        }
-        html.light #navbar nav a:hover {
-            color: #0F172A !important;
-        }
-        html.light #theme-toggle-btn {
-            background: rgba(15, 23, 42, 0.06) !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-            color: #0F172A !important;
-        }
-
-        /* Ticket stub cutouts in light mode */
-        html.light .ticket-stub::before,
-        html.light .ticket-stub::after {
-            background-color: #F8FAFC !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-        }
-
-        /* Light mode inputs */
-        html.light input[type="text"],
-        html.light input[type="tel"] {
-            background-color: rgba(241, 245, 249, 0.95) !important;
-            border-color: rgba(15, 23, 42, 0.15) !important;
-            color: #0F172A !important;
-        }
-        html.light input[type="text"]::placeholder,
-        html.light input[type="tel"]::placeholder {
-            color: #94A3B8 !important;
-        }
-
-        /* Canvas background in light mode */
-        html.light #stage-bg-container {
-            background-color: #F8FAFC !important;
-        }
-        html.light #stage-scrim-top {
-            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.55) 0%, rgba(248, 250, 252, 0.2) 50%, rgba(248, 250, 252, 0.85) 100%) !important;
-        }
-        html.light #stage-scrim-radial {
-            background: radial-gradient(circle at 50% 35%, transparent 20%, rgba(248, 250, 252, 0.4) 65%, rgba(248, 250, 252, 0.88) 100%) !important;
-        }
-
-        /* Calculator inner box in light mode */
-        html.light #calc-output-box {
-            background: rgba(241, 245, 249, 0.9) !important;
-            border-color: rgba(15, 23, 42, 0.10) !important;
-        }
-
-        /* Step cards and mobile rate sheet */
-        html.light .bg-\[\#080A10\]\/55,
-        html.light .bg-\[\#080A10\]\/60 {
-            background: rgba(255, 255, 255, 0.85) !important;
-            border-color: rgba(15, 23, 42, 0.10) !important;
-        }
-
-        /* Floating carousel navigation buttons in light mode */
-        html.light .thumpn-nav-btn {
-            background: #FFFFFF !important;
-            border-color: rgba(15, 23, 42, 0.12) !important;
-            color: #0F172A !important;
-            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.10) !important;
-        }
-        html.light .thumpn-nav-btn:hover {
-            background: var(--crimson) !important;
-            color: #FFFFFF !important;
-        }
-
-        /* Edge masks in light mode */
-        html.light .thumpn-fade-left {
-            background: linear-gradient(to right, #F8FAFC 0%, transparent 100%) !important;
-        }
-        html.light .thumpn-fade-right {
-            background: linear-gradient(to left, #F8FAFC 0%, transparent 100%) !important;
-        }
-
-        /* Footer in light mode */
-        html.light footer {
-            background: rgba(248, 250, 252, 0.95) !important;
-            border-color: rgba(15, 23, 42, 0.08) !important;
-        }
-
-        /* Modal backdrop and controls in light mode */
-        html.light [id$="-modal"] {
-            background-color: rgba(15, 23, 42, 0.45) !important;
-        }
-        html.light [id$="-modal"] button.text-slate-400:hover {
-            color: #0F172A !important;
-        }
-        html.light #cookie-banner button:first-child:hover {
-            color: #0F172A !important;
-        }
     </style>
-    <script>
-        (function() {
-            try {
-                var saved = localStorage.getItem('tixora-theme');
-                if (saved === 'light') {
-                    document.documentElement.classList.add('light');
-                    document.documentElement.classList.remove('dark');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                }
-            } catch(e) {}
-        })();
-    </script>
 </head>
 
 <body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
@@ -512,15 +657,8 @@
                         
                     </nav>
 
-                    <!-- Single Action Button -->
-                    <div class="flex items-center space-x-2 sm:space-x-3">
-                        <!-- Theme Toggle Button -->
-                        <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" 
-                                class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/[0.08] hover:bg-white/[0.15] border border-white/[0.12] flex items-center justify-center text-white transition-all active:scale-95 shadow-sm">
-                            <i data-lucide="sun" id="theme-icon-sun" class="w-4 h-4 hidden text-amber-500"></i>
-                            <i data-lucide="moon" id="theme-icon-moon" class="w-4 h-4 text-slate-200"></i>
-                        </button>
-
+                    <!-- Action Button -->
+                    <div class="flex items-center space-x-3">
                         <button onclick="openModal('promoter-modal')" class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
                             Promoter Portal
                         </button>
@@ -1870,50 +2008,6 @@
         });
 
         /* =====================================================================
-           THEME SWITCHER ENGINE (Dark / Light Mode with LocalStorage Sync)
-           ===================================================================== */
-        function getSavedTheme() {
-            try {
-                return localStorage.getItem('tixora-theme') || 'dark';
-            } catch(e) {
-                return 'dark';
-            }
-        }
-
-        function applyTheme(theme) {
-            const htmlEl = document.documentElement;
-            const sunIcon = document.getElementById('theme-icon-sun');
-            const moonIcon = document.getElementById('theme-icon-moon');
-
-            if (theme === 'light') {
-                htmlEl.classList.remove('dark');
-                htmlEl.classList.add('light');
-                if (sunIcon) sunIcon.classList.remove('hidden');
-                if (moonIcon) moonIcon.classList.add('hidden');
-            } else {
-                htmlEl.classList.remove('light');
-                htmlEl.classList.add('dark');
-                if (sunIcon) sunIcon.classList.add('hidden');
-                if (moonIcon) moonIcon.classList.remove('hidden');
-            }
-            try {
-                localStorage.setItem('tixora-theme', theme);
-            } catch(e) {}
-        }
-
-        window.toggleTheme = function() {
-            const isLight = document.documentElement.classList.contains('light');
-            const nextTheme = isLight ? 'dark' : 'light';
-            applyTheme(nextTheme);
-            if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                lucide.createIcons();
-            }
-            if (typeof showToast === 'function') {
-                showToast(nextTheme === 'light' ? 'Light mode enabled' : 'Dark mode enabled');
-            }
-        };
-
-        /* =====================================================================
            COOKIE CONSENT BANNER CONTROLLER
            ===================================================================== */
         function initCookieBanner() {
@@ -1943,17 +2037,17 @@
             }
         };
 
-        // Initialize theme and cookies
+        // Initialize cookie banner & chat
         document.addEventListener('DOMContentLoaded', () => {
-            applyTheme(getSavedTheme());
             initCookieBanner();
+            initChatbot();
         });
-        applyTheme(getSavedTheme());
         initCookieBanner();
+        initChatbot();
     </script>
 
     <!-- Cookies & Verification Consent Banner -->
-    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 transition-all duration-500 translate-y-36 opacity-0 pointer-events-none">
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:left-6 sm:max-w-md z-50 transition-all duration-500 translate-y-36 opacity-0 pointer-events-none">
         <div class="solid-panel rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3 border border-white/[0.12] bg-[#0D0F17]/90 backdrop-blur-xl">
             <div class="flex items-start space-x-3">
                 <div class="w-8 h-8 rounded-lg bg-crimson/15 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -1975,6 +2069,99 @@
                 </button>
             </div>
         </div>
+    </div>
+
+
+    <!-- =====================================================================
+         TIXORA AI CONCIERGE CHATBOT WIDGET
+         ===================================================================== -->
+    <!-- Floating Launcher Trigger Button -->
+    <div id="ai-chat-launcher" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 transition-all duration-300">
+        <button onclick="toggleChatbot()" id="chat-toggle-btn" aria-label="Open TIXORA AI Concierge"
+                class="group relative flex items-center space-x-2.5 bg-[#0D0F17]/95 hover:bg-[#131622] text-white pl-3.5 pr-4 py-2.5 rounded-full border border-white/[0.16] hover:border-crimson/60 shadow-[0_10px_35px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200 hover:scale-[1.03] active:scale-95">
+            <!-- Pulsing Active Indicator -->
+            <div class="relative flex items-center justify-center">
+                <span class="absolute w-2.5 h-2.5 rounded-full bg-crimson animate-ping opacity-75"></span>
+                <span class="relative w-2 h-2 rounded-full bg-crimson"></span>
+            </div>
+            <!-- Bot Icon -->
+            <div class="w-6 h-6 rounded-lg bg-crimson/20 text-crimson flex items-center justify-center">
+                <i data-lucide="bot" class="w-4 h-4"></i>
+            </div>
+            <!-- Brand Badge -->
+            <div class="text-left hidden xs:block sm:block">
+                <div class="text-xs font-bold font-display tracking-tight flex items-center space-x-1.5">
+                    <span>TIXORA AI</span>
+                    <span class="text-[9px] font-mono text-crimson uppercase tracking-wider px-1.5 py-0.5 rounded bg-crimson/15 border border-crimson/30">CONCIERGE</span>
+                </div>
+            </div>
+        </button>
+    </div>
+
+    <!-- Chatbot Window Dialog -->
+    <div id="ai-chat-widget" class="fixed bottom-20 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[410px] h-[550px] max-h-[80vh] z-50 rounded-2xl bg-[#090C12]/95 border border-white/[0.14] shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 pointer-events-none origin-bottom-right">
+        
+        <!-- Chat Header -->
+        <div class="px-4 py-3.5 bg-[#0D1019]/90 border-b border-white/[0.10] flex items-center justify-between flex-shrink-0">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-crimson/15 border border-crimson/30 flex items-center justify-center text-crimson">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <div class="text-xs sm:text-sm font-bold font-display text-white flex items-center space-x-1.5">
+                        <span>TIXORA Concierge</span>
+                        <span class="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded">ONLINE</span>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400">Official Concert Network AI Assistant</div>
+                </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="flex items-center space-x-1 text-slate-400">
+                <button onclick="resetChat()" title="Reset conversation" class="p-1.5 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+                <button onclick="toggleChatbot()" title="Close chat" class="p-1.5 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Thread -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs font-sans scroll-smooth">
+            <!-- Messages rendered dynamically -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="chat-typing" class="px-4 py-1.5 hidden flex-shrink-0">
+            <div class="inline-flex items-center space-x-1.5 bg-white/[0.05] border border-white/[0.08] px-3 py-1.5 rounded-full text-[11px] text-slate-400 font-mono">
+                <span>Tixora AI is typing</span>
+                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce"></span>
+                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce [animation-delay:0.2s]"></span>
+                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce [animation-delay:0.4s]"></span>
+            </div>
+        </div>
+
+        <!-- Quick Question Suggestions -->
+        <div id="chat-suggestions" class="px-3 py-2 bg-[#0A0D15]/90 border-t border-white/[0.06] flex items-center space-x-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
+            <!-- Suggestions rendered dynamically -->
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="p-3 bg-[#0D1019] border-t border-white/[0.10] flex-shrink-0">
+            <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-center space-x-2">
+                <input type="text" id="chat-input" placeholder="Ask about commissions, passes, BookMyShow..." autocomplete="off"
+                       class="flex-1 bg-black/50 border border-white/[0.12] focus:border-crimson rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors font-sans">
+                <button type="submit" id="chat-send-btn" aria-label="Send message"
+                        class="btn-primary w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform">
+                    <i data-lucide="send" class="w-3.5 h-3.5 text-white"></i>
+                </button>
+            </form>
+            <div class="mt-1.5 text-[9px] text-center font-mono text-slate-500">
+                Official AI Assistant • Real-Time Protocol Knowledge
+            </div>
+        </div>
+
     </div>
 
 </body>
