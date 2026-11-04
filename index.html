@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth overflow-x-hidden w-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -143,29 +143,33 @@
         }
         @media (max-width: 640px) {
             .thumpn-card-slot {
-                width: 84vw;
-                max-width: 320px;
+                width: 82vw;
+                max-width: 300px;
+                scroll-snap-align: center;
             }
         }
-        .thumpn-carousel-track:hover .thumpn-card-slot {
-            opacity: 0.65;
-        }
-        .thumpn-carousel-track .thumpn-card-slot:hover {
-            opacity: 1 !important;
-            transform: translateY(-6px);
-            z-index: 20;
-            border-color: rgba(255, 46, 84, 0.45) !important;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 46, 84, 0.25) !important;
+        /* Hover spotlight on desktop only (avoid sticky hover on mobile touch) */
+        @media (hover: hover) {
+            .thumpn-carousel-track:hover .thumpn-card-slot {
+                opacity: 0.65;
+            }
+            .thumpn-carousel-track .thumpn-card-slot:hover {
+                opacity: 1 !important;
+                transform: translateY(-6px);
+                z-index: 20;
+                border-color: rgba(255, 46, 84, 0.45) !important;
+                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 46, 84, 0.25) !important;
+            }
+            .thumpn-card-slot:hover .thumpn-poster-img {
+                transform: scale(1.06);
+            }
         }
         .thumpn-poster-img {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
         }
-        .thumpn-card-slot:hover .thumpn-poster-img {
-            transform: scale(1.06);
-        }
 
-        /* Thumpn Navigation Buttons */
+        /* Thumpn Navigation Buttons (Visible on desktop; mobile uses fluid thumb-swipe) */
         .thumpn-nav-btn {
             position: absolute;
             top: 50%;
@@ -196,17 +200,18 @@
         .thumpn-nav-prev { left: -14px; }
         .thumpn-nav-next { right: -14px; }
         @media (max-width: 768px) {
-            .thumpn-nav-prev { left: 4px; }
-            .thumpn-nav-next { right: 4px; }
+            .thumpn-nav-btn {
+                display: none; /* Mobile users swipe naturally without buttons blocking card taps */
+            }
         }
 
-        /* Edge Masks */
+        /* Edge Masks (Subtle on mobile so it doesn't block touch zones) */
         .thumpn-fade-left {
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
-            width: 48px;
+            width: 16px;
             background: linear-gradient(to right, #050608 0%, transparent 100%);
             pointer-events: none;
             z-index: 20;
@@ -216,10 +221,14 @@
             right: 0;
             top: 0;
             bottom: 0;
-            width: 48px;
+            width: 16px;
             background: linear-gradient(to left, #050608 0%, transparent 100%);
             pointer-events: none;
             z-index: 20;
+        }
+        @media (min-width: 640px) {
+            .thumpn-fade-left { width: 48px; }
+            .thumpn-fade-right { width: 48px; }
         }
 
         /* Strict Unified Small Font Standard */
@@ -282,7 +291,7 @@
     </style>
 </head>
 
-<body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white">
+<body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
 
     <!-- Vibrant Concert Stage Background Engine (150-Frame 4K Live Sequence) -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="stage-bg-container" style="contain: strict;">
@@ -301,12 +310,12 @@
 
         <!-- Navigation Header -->
         <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <div class="bg-[#080A10]/90 backdrop-blur-md rounded-2xl px-6 py-3 flex items-center justify-between border border-white/[0.08] shadow-xl">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4">
+                <div class="bg-[#080A10]/90 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between border border-white/[0.08] shadow-xl">
                     
                     <!-- Clean Brand Logo -->
                     <a href="#" class="flex items-center space-x-3 py-0.5">
-                        <img src="tixora-logo.png" alt="TIXORA" class="h-8 sm:h-9 w-auto object-contain">
+                        <img src="tixora-logo.png" alt="TIXORA" class="h-7 sm:h-9 w-auto object-contain">
                     </a>
 
                     <!-- Nav Links: Uniform Clean White -->
@@ -320,7 +329,7 @@
 
                     <!-- Single Action Button -->
                     <div class="flex items-center space-x-3">
-                        <button onclick="openModal('promoter-modal')" class="btn-primary px-5 py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide">
+                        <button onclick="openModal('promoter-modal')" class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
                             Promoter Portal
                         </button>
                     </div>
@@ -329,7 +338,7 @@
             </div>
         </header>
 
-        <main class="pt-28 md:pt-36">
+        <main class="pt-20 sm:pt-28 md:pt-36">
             <!-- Hero Section: Clean, Authoritative Typography & Concert Ticket Stub -->
             <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -337,7 +346,7 @@
                     <!-- Left: High-Contrast Headline & Grounded Copy -->
                     <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
                         
-                        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold font-display tracking-tight leading-[1.08] text-white">
+                        <h1 class="text-3xl sm:text-5xl lg:text-7xl font-bold font-display tracking-tight leading-[1.1] text-white">
                             Monetize The Scene.<br>
                             <span class="text-white/80">Own The Gate.</span>
                         </h1>
@@ -358,17 +367,17 @@
                         </div>
 
                         <!-- Micro Metrics Ledger -->
-                        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-white/[0.08] max-w-xl mx-auto lg:mx-0 text-left">
+                        <div class="grid grid-cols-3 gap-2 sm:gap-6 pt-6 border-t border-white/[0.08] max-w-xl mx-auto lg:mx-0 text-left">
                             <div>
-                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">₹6.8 Cr+</div>
+                                <div class="text-lg sm:text-3xl font-bold font-display text-white">₹6.8 Cr+</div>
                                 <div class="text-xs text-slate-400 font-mono mt-0.5">Promoter Payouts</div>
                             </div>
                             <div>
-                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">850+</div>
+                                <div class="text-lg sm:text-3xl font-bold font-display text-white">850+</div>
                                 <div class="text-xs text-slate-400 font-mono mt-0.5">Active Promoters</div>
                             </div>
                             <div>
-                                <div class="text-2xl sm:text-3xl font-bold font-display text-white">&lt; 45s</div>
+                                <div class="text-lg sm:text-3xl font-bold font-display text-white">&lt; 45s</div>
                                 <div class="text-xs text-slate-400 font-mono mt-0.5">Avg Settlement</div>
                             </div>
                         </div>
@@ -378,7 +387,7 @@
                     <!-- Right: Authentic Concert Pass Stub -->
                     <div class="lg:col-span-5 relative flex justify-center">
                         <div class="w-full max-w-md">
-                            <div class="solid-panel ticket-stub rounded-3xl p-6 relative space-y-5 bg-[#0D0F17]">
+                            <div class="solid-panel ticket-stub rounded-3xl p-5 sm:p-6 relative space-y-4 sm:space-y-5 bg-[#0D0F17]">
                                 
                                 <div class="flex items-center justify-between pb-4 border-b border-dashed border-white/[0.12]">
                                     <div>
@@ -393,7 +402,7 @@
                                 <div class="relative rounded-2xl overflow-hidden aspect-video bg-black border border-white/[0.08]">
                                     <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma live in Mumbai" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                                    <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono">
+                                    <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] sm:text-xs font-mono">
                                         <span class="text-white font-medium">Mahalaxmi Racecourse</span>
                                         <span class="text-slate-400 bg-black/80 px-2 py-0.5 rounded border border-white/[0.08]">Earn ₹680 / pass</span>
                                     </div>
@@ -462,7 +471,7 @@
                             
                             <!-- Event 1: Anyma -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma presents ÆDEN" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -493,10 +502,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('Anyma presents ÆDEN', 4250, 'Festival Exclusive')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('Anyma presents ÆDEN', 4250, 'Festival Exclusive')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('Anyma presents ÆDEN')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('Anyma presents ÆDEN')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -506,7 +515,7 @@
 
                             <!-- Event 2: Guns N' Roses -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/guns-n-roses-india-poster.jpg" alt="Guns N' Roses India Tour" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -537,10 +546,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('Guns N Roses India Tour', 6500, 'Stadium Headliner')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('Guns N Roses India Tour', 6500, 'Stadium Headliner')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('Guns N Roses India Tour')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('Guns N Roses India Tour')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -550,7 +559,7 @@
 
                             <!-- Event 3: Fred again.. Delhi -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/fred-again-india-poster-1.png" alt="Fred again.. Delhi" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -581,10 +590,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('Fred again Delhi NCR', 3800, 'Arena Live')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('Fred again Delhi NCR', 3800, 'Arena Live')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('Fred again Delhi NCR')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('Fred again Delhi NCR')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -594,7 +603,7 @@
 
                             <!-- Event 4: The Chainsmokers -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/chainsmokers-bengaluru-banner.jpg" alt="The Chainsmokers Sunburn" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -625,10 +634,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('The Chainsmokers Sunburn Arena', 2999, 'Festival Arena')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('The Chainsmokers Sunburn Arena', 2999, 'Festival Arena')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('The Chainsmokers Sunburn Arena')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('The Chainsmokers Sunburn Arena')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -638,7 +647,7 @@
 
                             <!-- Event 5: Fred again.. Mumbai -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/fred-again-india-poster-2.png" alt="Fred again.. Mumbai" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -669,10 +678,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('Fred again Mumbai', 4200, 'Club Resonance')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('Fred again Mumbai', 4200, 'Club Resonance')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('Fred again Mumbai')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('Fred again Mumbai')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -682,7 +691,7 @@
 
                             <!-- Event 6: Khalid -->
                             <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17] flex flex-col justify-between group">
-                                <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <img src="posters/khalid-india-banner.jpg" alt="Khalid Delhi" class="thumpn-poster-img w-full h-full object-cover">
                                     <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17] via-transparent to-transparent"></div>
                                     <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
@@ -713,10 +722,10 @@
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button onclick="buyTicketModal('Khalid Live in Delhi', 2999, 'Event Horizon')" class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold">
+                                            <button onclick="buyTicketModal('Khalid Live in Delhi', 2999, 'Event Horizon')" class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
-                                            <button onclick="copyPromoterLink('Khalid Live in Delhi')" class="btn-secondary w-full py-2.5 rounded-xl text-xs font-display">
+                                            <button onclick="copyPromoterLink('Khalid Live in Delhi')" class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
                                         </div>
@@ -806,7 +815,7 @@
 
             <!-- Earnings Simulator: Interactive Yield Calculator -->
             <section id="velocity-matrix" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-                <div class="solid-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden bg-[#0D0F17]">
+                <div class="solid-panel rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden bg-[#0D0F17]">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                         
                         <div class="lg:col-span-6 space-y-6">
@@ -856,7 +865,7 @@
                             <div class="rounded-2xl p-7 bg-[#07090F] border border-white/[0.08] space-y-6 font-mono">
                                 <div>
                                     <span class="text-xs text-slate-400 block uppercase tracking-wider">Estimated Monthly Commission</span>
-                                    <div class="text-4xl sm:text-5xl font-extrabold text-white font-display mt-1" id="calc-monthly-rev">₹18,900</div>
+                                    <div class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-1" id="calc-monthly-rev">₹18,900</div>
                                 </div>
 
                                 <div class="space-y-3 pt-4 border-t border-white/[0.08] text-xs">
@@ -893,7 +902,7 @@
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     
                     <!-- Tier 1 -->
                     <div class="solid-panel rounded-3xl p-6 bg-[#0D0F17] flex flex-col justify-between space-y-6">
@@ -1066,7 +1075,7 @@
 
     <!-- Promoter Onboarding Modal -->
     <div id="promoter-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
+        <div class="solid-panel rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 relative bg-[#0D0F17] max-h-[92vh] overflow-y-auto">
             <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -1220,7 +1229,15 @@
             return null;
         }
 
-        function resizeCanvas() {
+        let lastInnerWidth = window.innerWidth;
+        function resizeCanvas(force = false) {
+            const currentWidth = window.innerWidth;
+            // On mobile, ignore small height changes caused by browser URL-bar collapsing while scrolling
+            if (!force && Math.abs(currentWidth - lastInnerWidth) < 10 && canvas.width > 0) {
+                return;
+            }
+            lastInnerWidth = currentWidth;
+
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             const w = Math.round(window.innerWidth * dpr);
             const h = Math.round(window.innerHeight * dpr);
@@ -1228,7 +1245,6 @@
             if (canvas.width !== w || canvas.height !== h) {
                 canvas.width = w;
                 canvas.height = h;
-                // Re-enable high quality smoothing after resize
                 ctx.imageSmoothingEnabled = true;
                 ctx.imageSmoothingQuality = 'high';
                 needsRedraw = true;
@@ -1237,8 +1253,9 @@
                 }
             }
         }
-        window.addEventListener('resize', resizeCanvas, { passive: true });
-        resizeCanvas();
+        window.addEventListener('resize', () => resizeCanvas(false), { passive: true });
+        window.addEventListener('orientationchange', () => setTimeout(() => resizeCanvas(true), 150), { passive: true });
+        resizeCanvas(true);
 
         function loadFrame(index) {
             if (frameImages[index] !== undefined) return;
