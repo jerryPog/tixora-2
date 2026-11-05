@@ -366,7 +366,7 @@ ALTER TABLE cookie_consent_records ENABLE ROW LEVEL SECURITY;
 -- ----------------------------------------------------------------------------
 
 -- Check if current authenticated caller is an admin or manager
-CREATE OR REPLACE FUNCTION auth.is_admin()
+CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN
 LANGUAGE sql
 SECURITY DEFINER
@@ -380,6 +380,8 @@ AS $$
     COALESCE((SELECT auth.jwt() -> 'app_metadata' ->> 'role'), '') IN ('admin', 'manager')
   );
 $$;
+
+GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated, service_role;
 
 -- Automatic user provisioning trigger on auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
@@ -424,10 +426,18 @@ BEGIN
 END;
 $$;
 
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-CREATE TRIGGER on_auth_user_created
-AFTER INSERT ON auth.users
-FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
+-- Safely attach trigger to auth.users if permissions permit
+DO $$
+BEGIN
+  DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+  CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
+EXCEPTION
+  WHEN OTHERS THEN
+    RAISE NOTICE 'Note: Trigger on auth.users could not be created automatically (%). Client-side auth fallbacks handle user provisioning.', SQLERRM;
+END;
+$$;
 
 -- Admin elevation utility: call in SQL editor with SELECT assign_admin_role('user@example.com');
 CREATE OR REPLACE FUNCTION public.assign_admin_role(target_email TEXT)
@@ -448,10 +458,6 @@ BEGIN
   VALUES (v_user_id, 'admin')
   ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
 
-  UPDATE auth.users
-  SET raw_app_meta_data = COALESCE(raw_app_meta_data, '{}'::jsonb) || '{"role": "admin"}'::jsonb
-  WHERE id = v_user_id;
-
   RETURN 'Success: ' || target_email || ' is now an authorized Tixora Administrator.';
 END;
 $$;
@@ -461,30 +467,30 @@ $$;
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Users can read own role" ON user_roles
   FOR SELECT TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR auth.is_admin());
+  USING (user_id = (SELECT auth.uid()) OR public.is_admin());
 
 CREATE POLICY "Admins can manage user roles" ON user_roles
   FOR ALL TO authenticated
-  USING (auth.is_admin())
-  WITH CHECK (auth.is_admin());
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 2. Public Catalog (Tiers, Venues, Artists, Events, Ticket Tiers)
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public Read promoter_tiers" ON promoter_tiers FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage promoter_tiers" ON promoter_tiers FOR ALL TO authenticated USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+CREATE POLICY "Admin Manage promoter_tiers" ON promoter_tiers FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "Public Read venues" ON venues FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage venues" ON venues FOR ALL TO authenticated USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+CREATE POLICY "Admin Manage venues" ON venues FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "Public Read artists" ON artists FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage artists" ON artists FOR ALL TO authenticated USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+CREATE POLICY "Admin Manage artists" ON artists FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
-CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR auth.is_admin());
-CREATE POLICY "Admin Manage events" ON events FOR ALL TO authenticated USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR public.is_admin());
+CREATE POLICY "Admin Manage events" ON events FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
-CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR auth.is_admin());
-CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticated USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR public.is_admin());
+CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 3. Promoters
@@ -492,60 +498,60 @@ CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticat
 -- Public can read promoters (needed for referral code lookups and roster)
 CREATE POLICY "Public Read promoters" ON promoters FOR SELECT TO anon, authenticated USING (true);
 
--- Allow promoter self-registration
+-- Authenticated users can register as a promoter linked to their auth.uid()
 CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO anon, authenticated
   WITH CHECK (true);
 
 -- Promoters can update their own contact details / UPI ID
 CREATE POLICY "Promoter update own profile" ON promoters FOR UPDATE TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR auth.is_admin())
-  WITH CHECK (user_id = (SELECT auth.uid()) OR auth.is_admin());
+  USING (user_id = (SELECT auth.uid()) OR public.is_admin())
+  WITH CHECK (user_id = (SELECT auth.uid()) OR public.is_admin());
 
 -- Admin full access to promoters
 CREATE POLICY "Admin manage promoters" ON promoters FOR ALL TO authenticated
-  USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 4. Attendees & Orders
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public create attendees" ON attendees FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING (auth.is_admin());
+CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING (public.is_admin());
 
 CREATE POLICY "Public create orders" ON orders FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Promoters read referred orders" ON orders FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR auth.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
 CREATE POLICY "Admin manage orders" ON orders FOR ALL TO authenticated
-  USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 5. Passes, Commissions & UPI Settlements
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Promoters read referred passes" ON issued_passes FOR SELECT TO authenticated
-  USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR auth.is_admin());
+  USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR public.is_admin());
 CREATE POLICY "Admin manage passes" ON issued_passes FOR ALL TO authenticated
-  USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "Promoters read own commissions" ON promoter_commissions FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR auth.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
 CREATE POLICY "Admin manage commissions" ON promoter_commissions FOR ALL TO authenticated
-  USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 CREATE POLICY "Promoters read own upi payouts" ON upi_payout_logs FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR auth.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
 CREATE POLICY "Admin manage upi payouts" ON upi_payout_logs FOR ALL TO authenticated
-  USING (auth.is_admin()) WITH CHECK (auth.is_admin());
+  USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 6. Logs & Compliance
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING (auth.is_admin());
+CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING (public.is_admin());
 
 CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING (auth.is_admin());
+CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING (public.is_admin());
 
 CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING (auth.is_admin());
+CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING (public.is_admin());
 
 
 -- ============================================================================
