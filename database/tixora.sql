@@ -122,6 +122,8 @@ CREATE TABLE events (
 CREATE INDEX idx_events_slug ON events(slug);
 CREATE INDEX idx_events_status ON events(status);
 CREATE INDEX idx_events_date ON events(event_date);
+CREATE INDEX idx_events_artist ON events(artist_id);
+CREATE INDEX idx_events_venue ON events(venue_id);
 
 -- 6. Ticket Tiers / Quotas
 CREATE TABLE ticket_tiers (
@@ -171,6 +173,9 @@ CREATE TABLE orders (
 CREATE INDEX idx_orders_num ON orders(order_number);
 CREATE INDEX idx_orders_promoter ON orders(promoter_id);
 CREATE INDEX idx_orders_status ON orders(payment_status);
+CREATE INDEX idx_orders_attendee ON orders(attendee_id);
+CREATE INDEX idx_orders_event ON orders(event_id);
+CREATE INDEX idx_orders_ticket_tier ON orders(ticket_tier_id);
 
 -- 9. Issued Passes (Dynamic QR Mesh Protocol)
 CREATE TABLE issued_passes (
@@ -185,6 +190,7 @@ CREATE TABLE issued_passes (
 );
 CREATE INDEX idx_passes_code ON issued_passes(pass_code);
 CREATE INDEX idx_passes_phone ON issued_passes(attendee_phone);
+CREATE INDEX idx_passes_order ON issued_passes(order_id);
 
 -- 10. Promoter Commissions (Ledger)
 CREATE TABLE promoter_commissions (
@@ -201,6 +207,7 @@ CREATE TABLE promoter_commissions (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_comm_promoter ON promoter_commissions(promoter_id);
+CREATE INDEX idx_comm_order ON promoter_commissions(order_id);
 
 -- 11. UPI Payout Logs (<60s Settlement SLA)
 CREATE TABLE upi_payout_logs (
@@ -216,6 +223,7 @@ CREATE TABLE upi_payout_logs (
 );
 CREATE INDEX idx_payouts_promoter ON upi_payout_logs(promoter_id);
 CREATE INDEX idx_payouts_rrn ON upi_payout_logs(bank_rrn);
+CREATE INDEX idx_payouts_commission ON upi_payout_logs(commission_id);
 
 -- 12. Gate Verification Logs (Turnstile Scans)
 CREATE TABLE gate_verification_logs (
@@ -287,24 +295,28 @@ ORDER BY upl.created_at DESC;
 
 -- Auto-upgrade promoter tier & increment totals when commission is logged
 CREATE OR REPLACE FUNCTION trg_fn_update_promoter_tier()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 DECLARE
     v_total_passes INT;
     v_new_tier INT;
 BEGIN
     SELECT COALESCE(SUM(pass_quantity), 0)
     INTO v_total_passes
-    FROM promoter_commissions
+    FROM public.promoter_commissions
     WHERE promoter_id = NEW.promoter_id;
 
     SELECT tier_id INTO v_new_tier
-    FROM promoter_tiers
+    FROM public.promoter_tiers
     WHERE v_total_passes >= min_passes
       AND (max_passes IS NULL OR v_total_passes <= max_passes)
     ORDER BY min_passes DESC
     LIMIT 1;
 
-    UPDATE promoters
+    UPDATE public.promoters
     SET total_passes_sold = v_total_passes,
         total_earnings = total_earnings + NEW.commission_amount,
         tier_id = COALESCE(v_new_tier, tier_id),
@@ -313,7 +325,7 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS trg_commission_after_insert ON promoter_commissions;
 CREATE TRIGGER trg_commission_after_insert
@@ -322,17 +334,21 @@ FOR EACH ROW EXECUTE FUNCTION trg_fn_update_promoter_tier();
 
 -- Decrement ticket quota on successful order
 CREATE OR REPLACE FUNCTION trg_fn_decrement_ticket_quota()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
     IF NEW.payment_status = 'successful' THEN
-        UPDATE ticket_tiers
+        UPDATE public.ticket_tiers
         SET available_quota = available_quota - NEW.quantity
         WHERE id = NEW.ticket_tier_id
           AND available_quota >= NEW.quantity;
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS trg_order_after_insert ON orders;
 CREATE TRIGGER trg_order_after_insert
@@ -467,30 +483,30 @@ $$;
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Users can read own role" ON user_roles
   FOR SELECT TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR public.is_admin());
+  USING (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()));
 
 CREATE POLICY "Admins can manage user roles" ON user_roles
   FOR ALL TO authenticated
-  USING (public.is_admin())
-  WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin()))
+  WITH CHECK ((SELECT public.is_admin()));
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 2. Public Catalog (Tiers, Venues, Artists, Events, Ticket Tiers)
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public Read promoter_tiers" ON promoter_tiers FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage promoter_tiers" ON promoter_tiers FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Admin Manage promoter_tiers" ON promoter_tiers FOR ALL TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 CREATE POLICY "Public Read venues" ON venues FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage venues" ON venues FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Admin Manage venues" ON venues FOR ALL TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 CREATE POLICY "Public Read artists" ON artists FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin Manage artists" ON artists FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Admin Manage artists" ON artists FOR ALL TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
-CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR public.is_admin());
-CREATE POLICY "Admin Manage events" ON events FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR (SELECT public.is_admin()));
+CREATE POLICY "Admin Manage events" ON events FOR ALL TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
-CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR public.is_admin());
-CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR (SELECT public.is_admin()));
+CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 3. Promoters
@@ -504,54 +520,54 @@ CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO anon, authenti
 
 -- Promoters can update their own contact details / UPI ID
 CREATE POLICY "Promoter update own profile" ON promoters FOR UPDATE TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR public.is_admin())
-  WITH CHECK (user_id = (SELECT auth.uid()) OR public.is_admin());
+  USING (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()))
+  WITH CHECK (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()));
 
 -- Admin full access to promoters
 CREATE POLICY "Admin manage promoters" ON promoters FOR ALL TO authenticated
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 4. Attendees & Orders
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public create attendees" ON attendees FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING (public.is_admin());
+CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 CREATE POLICY "Public create orders" ON orders FOR INSERT TO anon, authenticated WITH CHECK (true);
 CREATE POLICY "Promoters read referred orders" ON orders FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin manage orders" ON orders FOR ALL TO authenticated
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 5. Passes, Commissions & UPI Settlements
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Promoters read referred passes" ON issued_passes FOR SELECT TO authenticated
-  USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR public.is_admin());
+  USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin manage passes" ON issued_passes FOR ALL TO authenticated
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 CREATE POLICY "Promoters read own commissions" ON promoter_commissions FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin manage commissions" ON promoter_commissions FOR ALL TO authenticated
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 CREATE POLICY "Promoters read own upi payouts" ON upi_payout_logs FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR public.is_admin());
+  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin manage upi payouts" ON upi_payout_logs FOR ALL TO authenticated
-  USING (public.is_admin()) WITH CHECK (public.is_admin());
+  USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 
 -- ----------------------------------------------------------------------------
 -- POLICIES: 6. Logs & Compliance
 -- ----------------------------------------------------------------------------
 CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING (public.is_admin());
+CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING (public.is_admin());
+CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING (public.is_admin());
+CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 
 -- ============================================================================
