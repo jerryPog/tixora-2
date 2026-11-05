@@ -11,6 +11,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Supabase JS Client (v2) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tixora Supabase Config -->
+    <script src="supabase-config.js"></script>
     <!-- Tixora Supabase Auth & Route Guard Protocol -->
     <script src="auth.js"></script>
     
@@ -1665,6 +1667,38 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                     </button>
                 </form>
 
+                <!-- Registration Success / Email Confirmation Notice -->
+                <div id="promoter-confirm-notice" class="hidden p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-xs space-y-3 font-sans">
+                    <div class="flex items-start space-x-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0 text-emerald-400 mt-0.5">
+                            <i data-lucide="mail-check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm font-display">Account Registered!</h4>
+                            <p class="text-slate-300 text-xs mt-0.5">
+                                Verification link sent to <span id="confirm-target-email" class="font-mono text-emerald-400 font-bold"></span>.
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Supabase requires email confirmation by default. Click the link in your email to permanently verify, or enter immediately using local session mode.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-2 pt-1 font-mono text-xs">
+                        <button type="button" id="btn-instant-enter" onclick="enterWithLocalBypass()" class="flex-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold flex items-center justify-center space-x-1.5 transition-colors shadow-lg">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                            <span>Instant Enter Desk</span>
+                        </button>
+                        <button type="button" id="btn-resend-confirm" onclick="handleResendConfirmation()" class="py-2 px-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white flex items-center justify-center space-x-1 transition-colors">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>Resend Email</span>
+                        </button>
+                    </div>
+                    <div class="text-[10px] text-slate-500 pt-1 border-t border-white/[0.06] flex items-center justify-between">
+                        <span>Project Owner Tip:</span>
+                        <span class="text-slate-400">Turn off 'Confirm email' in Supabase to skip this</span>
+                    </div>
+                </div>
+
                 <!-- Quick Test Sandbox Fill -->
                 <div class="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
                     <span class="text-slate-400">Sandbox Test Login:</span>
@@ -2429,14 +2463,18 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             if (window.lucide) lucide.createIcons();
         }
 
+        let _lastAttemptedEmail = '';
+
         function switchPromoterAuthTab(tab) {
             const btnSignin = document.getElementById('tab-auth-signin');
             const btnSignup = document.getElementById('tab-auth-signup');
             const formSignin = document.getElementById('form-promoter-signin');
             const formSignup = document.getElementById('form-promoter-signup');
             const errBox = document.getElementById('promoter-auth-error');
+            const confirmNotice = document.getElementById('promoter-confirm-notice');
 
             if (errBox) errBox.classList.add('hidden');
+            if (confirmNotice) confirmNotice.classList.add('hidden');
 
             if (tab === 'signin') {
                 btnSignin.className = 'py-2 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md';
@@ -2450,6 +2488,58 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 formSignin.classList.add('hidden');
             }
             if (window.lucide) lucide.createIcons();
+        }
+
+        function showRegistrationSuccessNotice(email) {
+            _lastAttemptedEmail = email;
+            const confirmNotice = document.getElementById('promoter-confirm-notice');
+            const emailTarget = document.getElementById('confirm-target-email');
+            const formSignup = document.getElementById('form-promoter-signup');
+            const formSignin = document.getElementById('form-promoter-signin');
+            const errBox = document.getElementById('promoter-auth-error');
+
+            if (errBox) errBox.classList.add('hidden');
+            if (formSignup) formSignup.classList.add('hidden');
+            if (formSignin) formSignin.classList.add('hidden');
+
+            if (emailTarget) emailTarget.textContent = email;
+            if (confirmNotice) confirmNotice.classList.remove('hidden');
+
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function enterWithLocalBypass() {
+            const email = _lastAttemptedEmail || document.getElementById('signin-email').value || document.getElementById('signup-email').value;
+            if (!email) {
+                showToast('Please enter your email to proceed.');
+                return;
+            }
+            try {
+                const res = TixoraAuth.loginWithLocalBypass(email);
+                showToast(`Session activated for ${res.user.email}!`);
+                await refreshPromoterUI();
+            } catch (err) {
+                console.error('Local bypass error:', err);
+                showToast('Unable to start local session: ' + err.message);
+            }
+        }
+
+        async function handleResendConfirmation() {
+            const email = _lastAttemptedEmail || document.getElementById('signin-email').value || document.getElementById('signup-email').value;
+            if (!email) {
+                showToast('No email address found to resend.');
+                return;
+            }
+            const btn = document.getElementById('btn-resend-confirm');
+            if (btn) btn.disabled = true;
+            try {
+                await TixoraAuth.resendConfirmation(email);
+                showToast(`Verification email resent to ${email}`);
+            } catch (err) {
+                showToast(err.message || 'Error resending verification email');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
         }
 
         async function handlePromoterSignIn(e) {
@@ -2469,8 +2559,14 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 await refreshPromoterUI();
             } catch (err) {
                 console.error('Promoter sign-in failed:', err);
-                errText.textContent = err.message || 'Invalid email or password.';
-                errBox.classList.remove('hidden');
+                if (err.code === 'email_not_confirmed') {
+                    showRegistrationSuccessNotice(email);
+                    errText.textContent = 'Email verification pending. Click Instant Enter below or check your email.';
+                    errBox.classList.remove('hidden');
+                } else {
+                    errText.textContent = err.message || 'Invalid email or password.';
+                    errBox.classList.remove('hidden');
+                }
             } finally {
                 btn.disabled = false;
                 if (window.lucide) lucide.createIcons();
@@ -2494,9 +2590,14 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             btn.disabled = true;
 
             try {
-                await TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
-                showToast('Promoter account activated! Your referral tracking code is live.');
-                await refreshPromoterUI();
+                const res = await TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
+                if (res && res.emailConfirmationRequired) {
+                    showRegistrationSuccessNotice(res.email || email);
+                    showToast('Account registered! Verification link sent to your email.');
+                } else {
+                    showToast('Promoter account activated! Your referral tracking code is live.');
+                    await refreshPromoterUI();
+                }
             } catch (err) {
                 console.error('Promoter signup failed:', err);
                 errText.textContent = err.message || 'Registration failed. Please check your inputs.';

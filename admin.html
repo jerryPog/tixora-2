@@ -11,6 +11,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Supabase JS Client (v2) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tixora Supabase Config -->
+    <script src="supabase-config.js"></script>
     <!-- Tixora Supabase Auth & RBAC Route Guard Protocol -->
     <script src="auth.js"></script>
     
@@ -245,6 +247,11 @@
                 <div id="forbidden-user-email" class="text-white font-bold truncate">user@tixora.live</div>
                 <div class="text-slate-400 pt-1">Assigned Role:</div>
                 <div id="forbidden-user-role" class="text-amber-400 font-bold uppercase">promoter</div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-black/40 border border-white/[0.06] text-[11px] font-mono text-left text-slate-400 space-y-1">
+                <span>To grant Administrator access to this user in Supabase, run in the SQL editor:</span>
+                <code class="block text-emerald-400 font-bold mt-1 overflow-x-auto text-[10px]" id="forbidden-sql-cmd">SELECT assign_admin_role('your-email');</code>
             </div>
 
             <div class="space-y-2 pt-2">
@@ -844,8 +851,10 @@
 
                     const forEmail = document.getElementById('forbidden-user-email');
                     const forRole = document.getElementById('forbidden-user-role');
+                    const sqlCmd = document.getElementById('forbidden-sql-cmd');
                     if (forEmail) forEmail.textContent = user.email || 'Authenticated User';
                     if (forRole) forRole.textContent = role || 'promoter';
+                    if (sqlCmd && user.email) sqlCmd.textContent = `SELECT assign_admin_role('${user.email}');`;
                     lucide.createIcons();
                 },
                 onUnauthenticated: () => {
@@ -879,7 +888,11 @@
                 await evaluateAdminAccess();
             } catch (err) {
                 console.error('Sign-in failed:', err);
-                errText.textContent = err.message || 'Authentication failed. Check your email, password, and Supabase config.';
+                if (err.code === 'email_not_confirmed') {
+                    errText.innerHTML = `Email confirmation pending for <strong>${emailInput.value}</strong>.<br><span class="text-slate-300 text-[11px] mt-1 block">Check your email, or confirm immediately in Supabase SQL editor: <code class="text-amber-300">UPDATE auth.users SET email_confirmed_at = now() WHERE email = '${emailInput.value}';</code></span>`;
+                } else {
+                    errText.textContent = err.message || 'Authentication failed. Check your email, password, and Supabase config.';
+                }
                 errBox.classList.remove('hidden');
                 lucide.createIcons();
             } finally {

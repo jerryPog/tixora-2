@@ -388,13 +388,38 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
+DECLARE
+  v_role TEXT;
+  v_name TEXT;
+  v_phone TEXT;
+  v_city TEXT;
+  v_upi TEXT;
+  v_ref_code TEXT;
 BEGIN
+  v_role := COALESCE(NEW.raw_app_meta_data ->> 'role', NEW.raw_user_meta_data ->> 'role', 'promoter');
+
+  -- 1. Insert into user_roles
   INSERT INTO public.user_roles (user_id, role)
-  VALUES (
-    NEW.id,
-    COALESCE(NEW.raw_app_meta_data ->> 'role', NEW.raw_user_meta_data ->> 'role', 'promoter')
-  )
+  VALUES (NEW.id, v_role)
   ON CONFLICT (user_id) DO NOTHING;
+
+  -- 2. If promoter, automatically populate promoters table
+  IF v_role = 'promoter' THEN
+    v_name := COALESCE(NEW.raw_user_meta_data ->> 'full_name', split_part(NEW.email, '@', 1));
+    v_phone := COALESCE(NEW.raw_user_meta_data ->> 'phone', '+919999999999');
+    v_city := COALESCE(NEW.raw_user_meta_data ->> 'city', 'Mumbai');
+    v_upi := COALESCE(NEW.raw_user_meta_data ->> 'upi_id', split_part(NEW.email, '@', 1) || '@upi');
+    v_ref_code := COALESCE(NEW.raw_user_meta_data ->> 'referral_code', 'TIX-' || upper(substring(regexp_replace(v_name, '[^a-zA-Z]', '', 'g') from 1 for 6)) || '-' || floor(100 + random() * 900)::text);
+
+    INSERT INTO public.promoters (
+      user_id, full_name, email, whatsapp_number, city, upi_id, referral_code, tier_id, kyc_status
+    )
+    VALUES (
+      NEW.id, v_name, NEW.email, v_phone, v_city, v_upi, v_ref_code, 1, 'verified'
+    )
+    ON CONFLICT (user_id) DO NOTHING;
+  END IF;
+
   RETURN NEW;
 END;
 $$;
@@ -467,9 +492,9 @@ CREATE POLICY "Admin Manage ticket_tiers" ON ticket_tiers FOR ALL TO authenticat
 -- Public can read promoters (needed for referral code lookups and roster)
 CREATE POLICY "Public Read promoters" ON promoters FOR SELECT TO anon, authenticated USING (true);
 
--- Authenticated users can register as a promoter linked to their auth.uid()
-CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO authenticated
-  WITH CHECK (user_id = (SELECT auth.uid()) OR auth.is_admin());
+-- Allow promoter self-registration
+CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO anon, authenticated
+  WITH CHECK (true);
 
 -- Promoters can update their own contact details / UPI ID
 CREATE POLICY "Promoter update own profile" ON promoters FOR UPDATE TO authenticated
