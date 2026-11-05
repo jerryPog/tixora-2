@@ -145,6 +145,17 @@ Zero upfront deposit or security collateral required. All earnings are calculate
                 actions: [
                     { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
                 ]
+            },
+            {
+                id: 'founders',
+                title: 'Founders & Leadership',
+                keywords: ['founder', 'founders', 'who founded', 'owner', 'owners', 'who started', 'creator', 'creators', 'team', 'who made', 'kanishk', 'ronak', 'prajwal'],
+                answer: `Tixora was founded by <strong class="text-white">Ronak Jain R</strong>, <strong class="text-white">Kanishk Jhunjhunwala</strong>, and <strong class="text-white">Prajwal Gowrish H S</strong>.
+<br><br>
+The team engineered Tixora as an authorized concert partner network and anti-scalping distribution protocol connecting official music tours with verified promoter networks across India.`,
+                actions: [
+                    { label: 'View Founders & Helpline', action: "scrollToSection('founders-section')" }
+                ]
             }
         ];
 
@@ -1461,10 +1472,10 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                         </ul>
                     </div>
 
-                    <div class="space-y-3 text-xs">
+                    <div id="founders-section" class="space-y-3 text-xs">
                         <div class="font-bold text-white uppercase tracking-wider font-mono">Founders & Helpline</div>
                         <div class="text-slate-400 space-y-1 font-sans">
-                            <div><strong class="text-white">Founders:</strong> Ronak Jain R & Prajwal Gowrish H S</div>
+                            <div><strong class="text-white">Founders:</strong> Ronak Jain R, Kanishk Jhunjhunwala & Prajwal Gowrish H S</div>
                             <div><strong class="text-white">Helpline:</strong> +91 78921 45475</div>
                             <div><strong class="text-white">Email:</strong> support@tixora.in</div>
                             <div class="text-[11px] text-slate-400 pt-1 font-mono">Operations: 10:00 AM – 10:00 PM IST</div>
