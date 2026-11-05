@@ -21,6 +21,7 @@ const MIME = {
 const server = http.createServer((req, res) => {
   let reqPath = decodeURI(req.url.split('?')[0]);
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
+  if (reqPath === '/admin' || reqPath === '/admin/') reqPath = '/admin.html';
   const filePath = path.join(__dirname, reqPath);
 
   fs.stat(filePath, (err, stats) => {
@@ -40,6 +41,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Tixora server is live at http://localhost:${PORT}/`);
+  console.log(`Tixora server is live at http://localhost:${PORT}/ (Admin portal: http://localhost:${PORT}/admin)`);
 });
-

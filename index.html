@@ -9,6 +9,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Supabase JS Client (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tixora Supabase Auth & Route Guard Protocol -->
+    <script src="auth.js"></script>
     
     <!-- Google Fonts: Plus Jakarta Sans, Space Grotesk, Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -669,7 +673,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                     </nav>
 
                     <!-- Action Button -->
-                    <div class="flex items-center space-x-3">
+                    <div id="nav-auth-container" class="flex items-center space-x-3">
                         <button onclick="openModal('promoter-modal')" class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
                             Promoter Portal
                         </button>
@@ -1487,6 +1491,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 <div class="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4 font-mono">
                     <div>© <span id="current-year">2026</span> Tixora Entertainment Private Limited. All rights reserved.</div>
                     <div class="flex space-x-6">
+                        <a href="/admin" class="hover:text-crimson transition-colors font-bold text-slate-300">Operations Desk (Admin)</a>
                         <a href="#" class="hover:text-white transition-colors">Anti-Scalping Audit</a>
                         <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                         <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
@@ -1497,28 +1502,182 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
     </div>
 
-    <!-- Promoter Onboarding Modal -->
+    <!-- Promoter Dual-Mode Portal Modal (Protected Auth & Command Center) -->
     <div id="promoter-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="solid-panel rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 sm:space-y-5 relative bg-[#0D0F17]/85 backdrop-blur-xl max-h-[92vh] overflow-y-auto">
-            <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+        <div class="solid-panel rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 relative bg-[#0D0F17]/95 border border-white/[0.12] backdrop-blur-xl max-h-[92vh] overflow-y-auto shadow-2xl">
+            <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="text-center space-y-1">
-                <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-2 object-contain">
-                <h3 class="text-2xl font-bold font-display text-white">Join Tixora Promoter Network</h3>
-                <p class="text-xs text-slate-400 font-sans">Earn up to 16% commission with direct BookMyShow QR delivery</p>
+
+            <!-- CONTAINER A: AUTHENTICATED PROMOTER LIVE DESK -->
+            <div id="promoter-desk-view" class="hidden space-y-4">
+                <div class="text-center space-y-1 relative">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Official Promoter Active</span>
+                    </div>
+                    <h3 class="text-2xl font-bold font-display text-white" id="desk-promoter-name">Welcome, Promoter</h3>
+                    <p class="text-xs text-slate-400 font-sans" id="desk-promoter-sub">Live allocation ledger & instant UPI settlement tracking</p>
+                </div>
+
+                <!-- Tier & Status Pill Banner -->
+                <div class="p-3.5 rounded-2xl bg-gradient-to-r from-crimson/20 via-orange-500/10 to-transparent border border-crimson/30 flex items-center justify-between">
+                    <div>
+                        <div class="text-[10px] font-mono uppercase text-slate-400">Current Velocity Tier</div>
+                        <div class="text-base font-bold font-display text-white" id="desk-tier-badge">Patron Tier (16.0% Cut)</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono uppercase text-slate-400">NPCI Settlement</div>
+                        <div class="text-xs font-mono font-bold text-emerald-400 flex items-center justify-end space-x-1">
+                            <i data-lucide="zap" class="w-3 h-3 text-emerald-400"></i>
+                            <span>&lt;60s Direct UPI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Your Unique Referral Link -->
+                <div class="space-y-1.5">
+                    <label class="block text-slate-400 font-mono text-[10px] uppercase">Your Official Shareable Pass Link</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="desk-referral-input" readonly value="https://tixora.live/?ref=TIX-PROMO" class="flex-1 bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-crimson">
+                        <button onclick="copyPromoterReferralLink()" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-display font-semibold whitespace-nowrap flex items-center space-x-1.5">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span id="copy-btn-text">Copy</span>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-500 font-sans">Passes purchased via this link automatically credit your commission ledger per gate scan.</p>
+                </div>
+
+                <!-- Live Performance Metrics -->
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-0.5">
+                        <div class="text-[10px] font-mono uppercase text-slate-400">Passes Cleared</div>
+                        <div class="text-xl font-bold font-mono text-white" id="desk-passes-cleared">0</div>
+                        <div class="text-[10px] text-slate-500">Live venue gate turnstiles</div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-0.5">
+                        <div class="text-[10px] font-mono uppercase text-slate-400">Lifetime Earnings</div>
+                        <div class="text-xl font-bold font-mono text-emerald-400" id="desk-lifetime-earnings">₹0.00</div>
+                        <div class="text-[10px] text-slate-500">Audited commission sum</div>
+                    </div>
+                    <div class="col-span-2 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs font-mono">
+                        <div>
+                            <span class="text-slate-400 block text-[10px] uppercase">Linked Settlement UPI</span>
+                            <span class="text-white font-semibold" id="desk-upi-id">user@upi</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Auto-Verified</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-2 pt-2">
+                    <a id="desk-whatsapp-btn" target="_blank" href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-display font-semibold flex items-center justify-center space-x-1.5 transition-colors">
+                        <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
+                        <span>Broadcast Pass Link to WhatsApp Network</span>
+                    </a>
+
+                    <a href="/admin" id="desk-admin-link" class="hidden w-full py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-crimson/40 text-crimson text-xs font-mono font-semibold flex items-center justify-center space-x-1.5 transition-colors">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-crimson"></i>
+                        <span>Open Admin Operations Desk →</span>
+                    </a>
+
+                    <button onclick="handlePromoterSignOut()" class="w-full py-2 rounded-xl text-xs font-mono text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors">
+                        Sign Out of Promoter Desk
+                    </button>
+                </div>
             </div>
-            <div class="space-y-3 font-sans">
-                <input type="text" placeholder="Your Full Name" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="text" placeholder="City & Organization / Network (e.g. Mumbai, Delhi, Bengaluru)" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="tel" placeholder="WhatsApp Number (+91)" class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
-            </div>
-            <button onclick="simulateSignupSuccess()" class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
-                Create Free Promoter Account
-            </button>
-            <div class="text-xs text-center text-slate-400 font-mono flex items-center justify-center space-x-1.5">
-                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-slate-400"></i>
-                <span>Direct UPI settlement. Zero upfront deposit required.</span>
+
+            <!-- CONTAINER B: PROMOTER AUTHENTICATION (SIGN IN / REGISTER) -->
+            <div id="promoter-auth-view" class="space-y-4">
+                <div class="text-center space-y-1">
+                    <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-1.5 object-contain">
+                    <h3 class="text-2xl font-bold font-display text-white">Promoter Network Access</h3>
+                    <p class="text-xs text-slate-400 font-sans">Authorized partner login & official youth promoter registration</p>
+                </div>
+
+                <!-- Auth Navigation Tabs -->
+                <div class="grid grid-cols-2 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs font-display">
+                    <button type="button" id="tab-auth-signin" onclick="switchPromoterAuthTab('signin')" class="py-2 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md">
+                        Sign In
+                    </button>
+                    <button type="button" id="tab-auth-signup" onclick="switchPromoterAuthTab('signup')" class="py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+                        Apply / Register
+                    </button>
+                </div>
+
+                <!-- Error Container -->
+                <div id="promoter-auth-error" class="hidden p-3 rounded-xl bg-crimson/15 border border-crimson/30 text-xs text-crimson flex items-start space-x-2">
+                    <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                    <span id="promoter-auth-error-text">Authentication failed</span>
+                </div>
+
+                <!-- TAB 1: SIGN IN FORM -->
+                <form id="form-promoter-signin" onsubmit="handlePromoterSignIn(event)" class="space-y-3 font-sans">
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Email Address</label>
+                        <input type="email" id="signin-email" required placeholder="you@network.com" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Password</label>
+                        <input type="password" id="signin-password" required placeholder="••••••••••••" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                    <button type="submit" id="btn-signin-submit" class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-display font-semibold flex items-center justify-center space-x-2">
+                        <span>Sign In to Promoter Desk</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <!-- TAB 2: REGISTER FORM -->
+                <form id="form-promoter-signup" onsubmit="handlePromoterSignUp(event)" class="hidden space-y-3 font-sans">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Full Name</label>
+                            <input type="text" id="signup-fullname" required placeholder="Aarav Sharma" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">WhatsApp Number (+91)</label>
+                            <input type="tel" id="signup-phone" required placeholder="+91 98200 11223" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Email Address</label>
+                            <input type="email" id="signup-email" required placeholder="aarav@college.edu" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Create Password</label>
+                            <input type="password" id="signup-password" required placeholder="••••••••••••" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">City & Network</label>
+                            <input type="text" id="signup-city" required placeholder="Mumbai / NMIMS" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
+                        </div>
+                        <div>
+                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Settlement UPI ID</label>
+                            <input type="text" id="signup-upi" required placeholder="aarav@okhdfcbank" class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                        </div>
+                    </div>
+                    <button type="submit" id="btn-signup-submit" class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-display font-semibold flex items-center justify-center space-x-2">
+                        <span>Activate Official Promoter Pass</span>
+                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <!-- Quick Test Sandbox Fill -->
+                <div class="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
+                    <span class="text-slate-400">Sandbox Test Login:</span>
+                    <button type="button" onclick="fillTestPromoterCredentials()" class="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center space-x-1">
+                        <i data-lucide="zap" class="w-3 h-3"></i>
+                        <span>Load Test Promoter (Aarav S.)</span>
+                    </button>
+                </div>
+
+                <div class="text-xs text-center text-slate-400 font-mono flex items-center justify-center space-x-1.5 pt-1">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <span>Direct UPI settlement. Supabase Auth & RLS Protected.</span>
+                </div>
             </div>
         </div>
     </div>
@@ -2049,12 +2208,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         };
 
         // Initialize cookie banner & chat
-        document.addEventListener('DOMContentLoaded', () => {
-            initCookieBanner();
-            initChatbot();
-        });
-        initCookieBanner();
-        initChatbot();
+        document.addEventListener('DOMContentLoaded', () => { initCookieBanner(); initChatbot(); });
     </script>
 
     <!-- Cookies & Verification Consent Banner -->
@@ -2175,5 +2329,218 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
     </div>
 
+
+        /* =====================================================================
+           TIXORA PROMOTER AUTH & DASHBOARD CONTROLLER
+           Powered by TixoraAuth (@supabase/supabase-js v2)
+           ===================================================================== */
+        async function initPromoterAuth() {
+            if (!window.TixoraAuth) return;
+
+            // Subscribe to real-time auth changes
+            TixoraAuth.onAuthStateChange(async (event, session) => {
+                await refreshPromoterUI();
+            });
+
+            await refreshPromoterUI();
+        }
+
+        async function refreshPromoterUI() {
+            const session = await TixoraAuth.getSession();
+            const navContainer = document.getElementById('nav-auth-container');
+            const deskView = document.getElementById('promoter-desk-view');
+            const authView = document.getElementById('promoter-auth-view');
+
+            if (session && session.user) {
+                const role = await TixoraAuth.getUserRole(session.user);
+                const promoter = await TixoraAuth.getPromoterProfile(session.user);
+
+                // Update Navbar
+                if (navContainer) {
+                    const displayName = (promoter && promoter.full_name) || (session.user.user_metadata && session.user.user_metadata.full_name) || session.user.email.split('@')[0];
+                    const tierName = (promoter && promoter.tier_name) || 'Promoter';
+                    const cutPct = (promoter && promoter.commission_rate) || 8;
+
+                    navContainer.innerHTML = `
+                        ${role === 'admin' ? `
+                            <a href="/admin" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-mono bg-crimson/20 border border-crimson/40 text-white hover:bg-crimson/30 transition-colors">
+                                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-crimson"></i>
+                                <span>Ops Desk</span>
+                            </a>
+                        ` : ''}
+                        <button onclick="openModal('promoter-modal')" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-crimson/40 text-xs font-mono text-white transition-all shadow-lg">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="font-display font-semibold truncate max-w-[120px]">${displayName}</span>
+                            <span class="text-[10px] text-crimson px-1.5 py-0.5 rounded bg-crimson/15">${cutPct}%</span>
+                        </button>
+                        <button onclick="handlePromoterSignOut()" class="p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-400 hover:text-white transition-colors" title="Sign Out">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                }
+
+                // Update Promoter Modal
+                if (deskView && authView) {
+                    deskView.classList.remove('hidden');
+                    authView.classList.add('hidden');
+
+                    const nameEl = document.getElementById('desk-promoter-name');
+                    const tierEl = document.getElementById('desk-tier-badge');
+                    const refInput = document.getElementById('desk-referral-input');
+                    const passesEl = document.getElementById('desk-passes-cleared');
+                    const earnEl = document.getElementById('desk-lifetime-earnings');
+                    const upiEl = document.getElementById('desk-upi-id');
+                    const adminLink = document.getElementById('desk-admin-link');
+                    const waBtn = document.getElementById('desk-whatsapp-btn');
+
+                    const refCode = (promoter && promoter.referral_code) || ('TIX-' + session.user.email.split('@')[0].toUpperCase());
+                    const referralUrl = window.location.origin + '/?ref=' + refCode;
+
+                    if (nameEl) nameEl.textContent = (promoter && promoter.full_name) || session.user.email;
+                    if (tierEl) tierEl.textContent = (promoter && promoter.tier_name ? promoter.tier_name + ' Tier (' + promoter.commission_rate + '% Cut)' : 'Active Promoter Tier');
+                    if (refInput) refInput.value = referralUrl;
+                    if (passesEl) passesEl.textContent = (promoter && promoter.total_passes_sold) ? promoter.total_passes_sold.toLocaleString() : '0';
+                    if (earnEl) earnEl.textContent = (promoter && promoter.total_earnings) ? '₹' + Number(promoter.total_earnings).toLocaleString('en-IN', { minimumFractionDigits: 2 }) : '₹0.00';
+                    if (upiEl) upiEl.textContent = (promoter && promoter.upi_id) || 'Registered UPI ID Active';
+
+                    if (role === 'admin' && adminLink) {
+                        adminLink.classList.remove('hidden');
+                    }
+
+                    if (waBtn) {
+                        const waText = encodeURIComponent(`Official concert pass allocations live on Tixora! Book verified BookMyShow tickets via my link: ${referralUrl}`);
+                        waBtn.href = `https://wa.me/?text=${waText}`;
+                    }
+                }
+            } else {
+                // Unauthenticated State
+                if (navContainer) {
+                    navContainer.innerHTML = `
+                        <button onclick="openModal('promoter-modal')" class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
+                            Promoter Portal
+                        </button>
+                    `;
+                }
+                if (deskView && authView) {
+                    deskView.classList.add('hidden');
+                    authView.classList.remove('hidden');
+                }
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function switchPromoterAuthTab(tab) {
+            const btnSignin = document.getElementById('tab-auth-signin');
+            const btnSignup = document.getElementById('tab-auth-signup');
+            const formSignin = document.getElementById('form-promoter-signin');
+            const formSignup = document.getElementById('form-promoter-signup');
+            const errBox = document.getElementById('promoter-auth-error');
+
+            if (errBox) errBox.classList.add('hidden');
+
+            if (tab === 'signin') {
+                btnSignin.className = 'py-2 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md';
+                btnSignup.className = 'py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all';
+                formSignin.classList.remove('hidden');
+                formSignup.classList.add('hidden');
+            } else {
+                btnSignup.className = 'py-2 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md';
+                btnSignin.className = 'py-2 rounded-lg font-semibold text-slate-400 hover:text-white transition-all';
+                formSignup.classList.remove('hidden');
+                formSignin.classList.add('hidden');
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        async function handlePromoterSignIn(e) {
+            e.preventDefault();
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            const errBox = document.getElementById('promoter-auth-error');
+            const errText = document.getElementById('promoter-auth-error-text');
+            const btn = document.getElementById('btn-signin-submit');
+
+            errBox.classList.add('hidden');
+            btn.disabled = true;
+
+            try {
+                const res = await TixoraAuth.signIn(email, password);
+                showToast(`Welcome back! Signed in as ${res.user.email}`);
+                await refreshPromoterUI();
+            } catch (err) {
+                console.error('Promoter sign-in failed:', err);
+                errText.textContent = err.message || 'Invalid email or password.';
+                errBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        async function handlePromoterSignUp(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('signup-fullname').value;
+            const phone = document.getElementById('signup-phone').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const city = document.getElementById('signup-city').value;
+            const upiId = document.getElementById('signup-upi').value;
+
+            const errBox = document.getElementById('promoter-auth-error');
+            const errText = document.getElementById('promoter-auth-error-text');
+            const btn = document.getElementById('btn-signup-submit');
+
+            errBox.classList.add('hidden');
+            btn.disabled = true;
+
+            try {
+                await TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
+                showToast('Promoter account activated! Your referral tracking code is live.');
+                await refreshPromoterUI();
+            } catch (err) {
+                console.error('Promoter signup failed:', err);
+                errText.textContent = err.message || 'Registration failed. Please check your inputs.';
+                errBox.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
+
+        async function handlePromoterSignOut() {
+            await TixoraAuth.signOut();
+            showToast('Signed out of Promoter Portal.');
+            closeModal('promoter-modal');
+            await refreshPromoterUI();
+        }
+
+        function fillTestPromoterCredentials() {
+            switchPromoterAuthTab('signin');
+            const email = document.getElementById('signin-email');
+            const pass = document.getElementById('signin-password');
+            if (email) email.value = 'aarav.sharma@columbia.edu';
+            if (pass) pass.value = 'tixora2026';
+            showToast('Test promoter credentials loaded.');
+        }
+
+        function copyPromoterReferralLink() {
+            const input = document.getElementById('desk-referral-input');
+            const btnText = document.getElementById('copy-btn-text');
+            if (!input) return;
+            navigator.clipboard.writeText(input.value).then(() => {
+                if (btnText) btnText.textContent = 'Copied!';
+                showToast('Official referral link copied to clipboard!');
+                setTimeout(() => { if (btnText) btnText.textContent = 'Copy'; }, 2500);
+            }).catch(() => {
+                showToast('Referral link copied!');
+            });
+        }
+
+        // Initialize promoter auth controller
+        document.addEventListener('DOMContentLoaded', () => {
+            initPromoterAuth();
+        });
+        initPromoterAuth();
+    </script>
 </body>
 </html>
