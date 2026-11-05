@@ -23,12 +23,8 @@
     function getClient() {
         if (_supabaseClient) return _supabaseClient;
 
-        const url = (window.TIXORA_CONFIG && window.TIXORA_CONFIG.supabaseUrl) ||
-                    localStorage.getItem('tixora_supabase_url') ||
-                    DEFAULT_URL;
-        const key = (window.TIXORA_CONFIG && window.TIXORA_CONFIG.supabaseKey) ||
-                    localStorage.getItem('tixora_supabase_key') ||
-                    DEFAULT_KEY;
+        const url = DEFAULT_URL;
+        const key = DEFAULT_KEY;
 
         if (!url || !key) {
             console.warn('[TixoraAuth] Supabase URL or Key not set.');

@@ -6,19 +6,18 @@
 (function (window) {
     'use strict';
 
-    // Official Supabase credentials for Tixora Project
+    // Official Supabase credentials for new Tixora Project
     const DEFAULT_URL = 'https://hgzcdzlfwweesdljeqdv.supabase.co';
     const DEFAULT_KEY = 'sb_publishable_CyGJeojb0by0XRENmjOlAg_bbjW_Wck';
 
-    // Auto-update to latest live project credentials
-    const currentUrl = localStorage.getItem('tixora_supabase_url');
-    if (!currentUrl || !currentUrl.includes('hgzcdzlfwweesdljeqdv')) {
+    // Force update localStorage to the new project credentials (clearing any old deleted project)
+    try {
         localStorage.setItem('tixora_supabase_url', DEFAULT_URL);
         localStorage.setItem('tixora_supabase_key', DEFAULT_KEY);
-    }
+    } catch (e) {}
 
     window.TIXORA_CONFIG = {
-        supabaseUrl: localStorage.getItem('tixora_supabase_url') || DEFAULT_URL,
-        supabaseKey: localStorage.getItem('tixora_supabase_key') || DEFAULT_KEY
+        supabaseUrl: DEFAULT_URL,
+        supabaseKey: DEFAULT_KEY
     };
 })(window);

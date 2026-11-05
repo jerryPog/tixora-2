@@ -654,7 +654,7 @@
             <div class="space-y-3 text-xs font-mono">
                 <div>
                     <label class="block text-slate-400 mb-1">SUPABASE PROJECT URL</label>
-                    <input type="text" id="cfg-supabase-url" placeholder="https://xyzprojectid.supabase.co" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-crimson">
+                    <input type="text" id="cfg-supabase-url" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-crimson">
                 </div>
                 <div>
                     <label class="block text-slate-400 mb-1">SUPABASE ANON / SERVICE ROLE KEY</label>
@@ -1337,8 +1337,8 @@
                 setTimeout(() => m.classList.remove('opacity-0'), 10);
             }
             if (id === 'supabase-modal') {
-                document.getElementById('cfg-supabase-url').value = localStorage.getItem('tixora_supabase_url') || '';
-                document.getElementById('cfg-supabase-key').value = localStorage.getItem('tixora_supabase_key') || '';
+                document.getElementById('cfg-supabase-url').value = localStorage.getItem('tixora_supabase_url') || 'https://hgzcdzlfwweesdljeqdv.supabase.co';
+                document.getElementById('cfg-supabase-key').value = localStorage.getItem('tixora_supabase_key') || 'sb_publishable_CyGJeojb0by0XRENmjOlAg_bbjW_Wck';
             }
         };
 
