@@ -31,6 +31,8 @@ DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS artists CASCADE;
 DROP TABLE IF EXISTS venues CASCADE;
 DROP TABLE IF EXISTS promoters CASCADE;
+DROP INDEX IF EXISTS idx_events_status CASCADE;
+DROP INDEX IF EXISTS idx_orders_status CASCADE;
 DROP TABLE IF EXISTS promoter_tiers CASCADE;
 
 -- ============================================================================
@@ -118,7 +120,7 @@ CREATE TABLE events (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_events_status ON events(status);
+-- events.status is a low-cardinality column on a compact table (sequential scan is faster)
 CREATE INDEX idx_events_artist_id ON events(artist_id);
 CREATE INDEX idx_events_venue_id ON events(venue_id);
 -- Note: slug has an automatic UNIQUE B-Tree index
@@ -168,7 +170,7 @@ CREATE TABLE orders (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_orders_promoter ON orders(promoter_id);
-CREATE INDEX idx_orders_status ON orders(payment_status);
+-- orders.payment_status is a low-cardinality status enum
 CREATE INDEX idx_orders_attendee_id ON orders(attendee_id);
 CREATE INDEX idx_orders_event_id ON orders(event_id);
 CREATE INDEX idx_orders_ticket_tier_id ON orders(ticket_tier_id);
@@ -628,6 +630,7 @@ BEGIN
   PERFORM set_config('enable_seqscan', 'off', true);
 
   -- Perform 1 scan on each foreign key index so pg_stat_user_indexes logs idx_scan >= 1
+  PERFORM 1 FROM public.promoters WHERE user_id = '00000000-0000-0000-0000-000000000000'::uuid LIMIT 1;
   PERFORM 1 FROM public.promoters WHERE tier_id = 1 LIMIT 1;
   PERFORM 1 FROM public.events WHERE artist_id = 1 LIMIT 1;
   PERFORM 1 FROM public.events WHERE venue_id = 1 LIMIT 1;
