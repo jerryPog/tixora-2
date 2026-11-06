@@ -424,7 +424,7 @@ BEGIN
   -- 2. If promoter, automatically populate promoters table
   IF v_role = 'promoter' THEN
     v_name := COALESCE(NEW.raw_user_meta_data ->> 'full_name', split_part(NEW.email, '@', 1));
-    v_phone := COALESCE(NEW.raw_user_meta_data ->> 'phone', '+919999999999');
+    v_phone := COALESCE(NEW.raw_user_meta_data ->> 'whatsapp_number', NEW.raw_user_meta_data ->> 'phone', '+919999999999');
     v_city := COALESCE(NEW.raw_user_meta_data ->> 'city', 'Mumbai');
     v_upi := COALESCE(NEW.raw_user_meta_data ->> 'upi_id', split_part(NEW.email, '@', 1) || '@upi');
     v_ref_code := COALESCE(NEW.raw_user_meta_data ->> 'referral_code', 'TIX-' || upper(substring(regexp_replace(v_name, '[^a-zA-Z]', '', 'g') from 1 for 6)) || '-' || floor(100 + random() * 900)::text);
@@ -435,7 +435,11 @@ BEGIN
     VALUES (
       NEW.id, v_name, NEW.email, v_phone, v_city, v_upi, v_ref_code, 1, 'verified'
     )
-    ON CONFLICT (user_id) DO NOTHING;
+    ON CONFLICT (user_id) DO UPDATE SET
+      full_name = EXCLUDED.full_name,
+      whatsapp_number = EXCLUDED.whatsapp_number,
+      city = EXCLUDED.city,
+      upi_id = EXCLUDED.upi_id;
   END IF;
 
   RETURN NEW;
@@ -694,4 +698,13 @@ INSERT INTO cookie_consent_records (id, consent_type, ip_hash, user_agent) VALUE
 (2, 'essential', 'a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e', 'Chrome macOS');
 SELECT setval('cookie_consent_records_id_seq', 2);
 
-
+-- Auto-confirm any pending unconfirmed accounts so users do not need email verification
+DO $$
+BEGIN
+  UPDATE auth.users
+  SET email_confirmed_at = now()
+  WHERE email_confirmed_at IS NULL;
+EXCEPTION
+  WHEN OTHERS THEN
+    NULL;
+END $$;

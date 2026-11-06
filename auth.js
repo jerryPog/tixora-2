@@ -372,6 +372,7 @@
                     data: {
                         full_name: fullName,
                         phone: phone,
+                        whatsapp_number: phone,
                         city: city,
                         upi_id: upiId,
                         role: role,
@@ -386,10 +387,10 @@
             const session = authData.session;
             const emailConfirmationRequired = !session;
 
-            // Attempt to insert into promoters table if session exists
-            if (user && session && role === 'promoter') {
+            // Upsert into promoters table so phone, UPI, and city details are immediately stored
+            if (user && role === 'promoter') {
                 try {
-                    await client.from('promoters').insert([{
+                    await client.from('promoters').upsert([{
                         user_id: user.id,
                         full_name: fullName,
                         email: cleanEmail,
@@ -401,9 +402,9 @@
                         kyc_status: 'verified',
                         total_passes_sold: 0,
                         total_earnings: 0.00
-                    }]);
+                    }], { onConflict: 'user_id' });
                 } catch (e) {
-                    // Handled by SQL trigger
+                    console.warn('Direct promoters upsert notice (handled by DB trigger):', e);
                 }
             }
 

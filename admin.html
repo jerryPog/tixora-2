@@ -957,6 +957,7 @@
                         passes: p.total_passes_sold,
                         earnings: p.total_earnings,
                         phone: p.whatsapp_number,
+                        email: p.email,
                         upi: p.upi_id,
                         kyc: p.kyc_status
                     }));
@@ -1066,7 +1067,14 @@
             if (!tbody) return;
             tbody.innerHTML = liveData.promoters.map(p => `
                 <tr class="hover:bg-white/[0.02] transition-colors">
-                    <td class="p-4 font-bold text-white">${p.name}</td>
+                    <td class="p-4 font-bold text-white">
+                        <div class="text-sm font-display font-semibold">${p.name}</div>
+                        <div class="text-[11px] font-mono text-slate-400 font-normal flex flex-wrap items-center gap-1.5 mt-0.5">
+                            ${p.phone ? `<span>📱 ${p.phone}</span>` : ''}
+                            ${p.phone && p.email ? `<span class="text-slate-600">•</span>` : ''}
+                            ${p.email ? `<span class="text-slate-400">✉ ${p.email}</span>` : ''}
+                        </div>
+                    </td>
                     <td class="p-4 font-mono text-slate-300">${p.code}</td>
                     <td class="p-4 text-slate-400">${p.city}</td>
                     <td class="p-4">
