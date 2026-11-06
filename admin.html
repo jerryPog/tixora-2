@@ -928,38 +928,127 @@
         async function loadDataFromSupabase() {
             if (!supabase) return;
             try {
-                // Fetch events
-                const { data: eventsData, error: evErr } = await supabase.from('events').select('*');
+                // 1. Fetch Events with venues & ticket tier quotas
+                const { data: eventsData } = await supabase
+                    .from('events')
+                    .select('*, venues(name, city), ticket_tiers(total_quota, available_quota)')
+                    .order('id', { ascending: true });
+
                 if (eventsData && eventsData.length > 0) {
-                    liveData.tours = eventsData.map(e => ({
-                        id: e.id,
-                        title: e.title,
-                        city: e.city || 'India',
-                        venue: e.venue || 'Official Venue',
-                        date: new Date(e.event_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-                        partner: e.partner_engine || 'BookMyShow',
-                        mrp: e.starting_price,
-                        cut: e.promoter_cut_pct,
-                        status: e.status
-                    }));
+                    liveData.tours = eventsData.map(e => {
+                        const totalQuota = (e.ticket_tiers || []).reduce((acc, t) => acc + (t.total_quota || 0), 0) || 7000;
+                        const availQuota = (e.ticket_tiers || []).reduce((acc, t) => acc + (t.available_quota || 0), 0) || 2500;
+                        return {
+                            id: e.id,
+                            title: e.title,
+                            city: (e.venues && e.venues.city) || e.city || 'India',
+                            venue: (e.venues && e.venues.name) || e.venue || 'Official Venue',
+                            date: new Date(e.event_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+                            partner: e.partner_engine || 'BookMyShow',
+                            mrp: e.starting_price,
+                            cut: e.promoter_cut_pct,
+                            status: e.status,
+                            quotaTotal: totalQuota,
+                            quotaAvailable: availQuota
+                        };
+                    });
                 }
 
-                // Fetch promoters
-                const { data: promData } = await supabase.from('promoters').select('*');
+                // 2. Fetch Promoters with tiers
+                const { data: promData } = await supabase
+                    .from('promoters')
+                    .select('*, promoter_tiers(tier_name, commission_rate)')
+                    .order('id', { ascending: true });
+
                 if (promData && promData.length > 0) {
                     liveData.promoters = promData.map(p => ({
                         id: p.id,
                         name: p.full_name,
                         code: p.referral_code,
                         city: p.city,
-                        tier: p.tier_id === 4 ? 'Patron' : p.tier_id === 3 ? 'Syndicate' : p.tier_id === 2 ? 'Capo' : 'Scout',
-                        tierCut: p.tier_id === 4 ? 16 : p.tier_id === 3 ? 13.5 : p.tier_id === 2 ? 11 : 8,
+                        tier: (p.promoter_tiers && p.promoter_tiers.tier_name) || (p.tier_id === 4 ? 'Patron' : p.tier_id === 3 ? 'Syndicate' : p.tier_id === 2 ? 'Capo' : 'Scout'),
+                        tierCut: (p.promoter_tiers && p.promoter_tiers.commission_rate) || (p.tier_id === 4 ? 16 : p.tier_id === 3 ? 13.5 : p.tier_id === 2 ? 11 : 8),
                         passes: p.total_passes_sold,
                         earnings: p.total_earnings,
                         phone: p.whatsapp_number,
                         email: p.email,
                         upi: p.upi_id,
                         kyc: p.kyc_status
+                    }));
+                }
+
+                // 3. Fetch Orders (Pass Bookings)
+                const { data: ordersData } = await supabase
+                    .from('orders')
+                    .select('*, attendees(full_name), events(title), promoters(referral_code)')
+                    .order('id', { ascending: false });
+
+                if (ordersData && ordersData.length > 0) {
+                    liveData.orders = ordersData.map(o => ({
+                        id: o.id,
+                        orderNum: o.order_number,
+                        attendee: (o.attendees && o.attendees.full_name) || 'Fan Attendee',
+                        event: (o.events && o.events.title) || 'Live Tour',
+                        tier: 'General / VIP Pass',
+                        qty: o.quantity || 1,
+                        total: o.total_amount || 0,
+                        ref: (o.promoters && o.promoters.referral_code) || 'DIRECT',
+                        channel: o.delivery_channel || 'BookMyShow / District Wallet',
+                        status: o.delivery_status || 'delivered'
+                    }));
+                }
+
+                // 4. Fetch Gate Turnstile Scans
+                const { data: scansData } = await supabase
+                    .from('gate_verification_logs')
+                    .select('*, issued_passes(pass_code)')
+                    .order('id', { ascending: false })
+                    .limit(10);
+
+                if (scansData && scansData.length > 0) {
+                    liveData.gateScans = scansData.map(s => ({
+                        pass: (s.issued_passes && s.issued_passes.pass_code) || `PASS-${s.pass_id}`,
+                        gate: s.gate_name || 'Gate 1 Turnstile',
+                        terminal: s.scanner_terminal_id || 'TERM-LIVE-01',
+                        time: new Date(s.scanned_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                        status: (s.result || 'granted').toUpperCase(),
+                        note: s.notes || 'Verified QR Pass Token'
+                    }));
+                }
+
+                // 5. Fetch Bot Defense Incidents
+                const { data: botsData } = await supabase
+                    .from('anti_scalping_events')
+                    .select('*')
+                    .order('id', { ascending: false })
+                    .limit(10);
+
+                if (botsData && botsData.length > 0) {
+                    liveData.botBlocks = botsData.map(b => ({
+                        ip: b.ip_address || '127.0.0.1',
+                        type: (b.event_type || 'BOT_BLOCK').toUpperCase().replace(/_/g, ' '),
+                        details: b.details || 'Rate limit triggered',
+                        action: (b.action_taken || 'BLOCKED').toUpperCase()
+                    }));
+                }
+
+                // 6. Fetch UPI Payout Logs
+                const { data: payoutsData } = await supabase
+                    .from('upi_payout_logs')
+                    .select('*, promoters(full_name)')
+                    .order('id', { ascending: false })
+                    .limit(10);
+
+                if (payoutsData && payoutsData.length > 0) {
+                    liveData.payouts = payoutsData.map(p => ({
+                        id: p.id,
+                        promoter: (p.promoters && p.promoters.full_name) || 'Promoter',
+                        upi: p.upi_id,
+                        amount: p.amount,
+                        speed: p.settlement_time_seconds || 35,
+                        rrn: p.bank_rrn || 'NPCI-LIVE',
+                        status: p.status || 'success',
+                        time: new Date(p.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
                     }));
                 }
             } catch (err) {
