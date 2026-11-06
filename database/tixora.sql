@@ -43,7 +43,7 @@ CREATE TABLE user_roles (
     role VARCHAR(50) NOT NULL DEFAULT 'promoter' CHECK (role IN ('admin', 'manager', 'promoter', 'attendee')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_user_roles_role ON user_roles(role);
+-- user_roles primary key covers (user_id, role)
 
 -- 1. Promoter Tiers (Velocity Ladder)
 CREATE TABLE promoter_tiers (
@@ -89,7 +89,7 @@ CREATE TABLE venues (
     capacity INT CHECK (capacity > 0),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_venues_city ON venues(city);
+-- venues indexed by primary key
 
 -- 4. Artists
 CREATE TABLE artists (
@@ -150,7 +150,7 @@ CREATE TABLE attendees (
     digilocker_verified BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_attendees_mobile ON attendees(mobile_number);
+-- attendees mobile_number is covered by UNIQUE B-tree index
 
 -- 8. Orders (Pass Bookings)
 CREATE TABLE orders (
