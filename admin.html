@@ -125,7 +125,7 @@
     <!-- ========================================================= -->
     <!-- AUTHENTICATION STATE 1: LOADING BARRIER -->
     <!-- ========================================================= -->
-    <div id="admin-loading-barrier" class="flex-1 flex flex-col items-center justify-center p-8 space-y-4">
+    <div id="admin-loading-barrier" class="hidden flex-1 flex flex-col items-center justify-center p-8 space-y-4">
         <div class="relative w-16 h-16 flex items-center justify-center">
             <div class="absolute inset-0 rounded-full border-2 border-crimson/20 border-t-crimson animate-spin"></div>
             <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto object-contain">
@@ -139,7 +139,7 @@
     <!-- ========================================================= -->
     <!-- AUTHENTICATION STATE 2: PROTECTED ADMIN LOGIN GATE -->
     <!-- ========================================================= -->
-    <div id="admin-auth-gate" class="hidden flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+    <div id="admin-auth-gate" class="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
         <div class="glass-panel rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 bg-[#0D0F17]/95 border border-white/[0.15] shadow-2xl relative overflow-hidden">
             <!-- Background Glow -->
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-crimson/20 rounded-full blur-3xl pointer-events-none"></div>
@@ -842,7 +842,7 @@
 
     <!-- Application Script -->
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
 
         // --------------------------------------------------------------------
         // TIXORA INITIAL LIVE SEED STATE (Used seamlessly if Supabase not yet keyed)
@@ -912,77 +912,65 @@
                 if (window.lucide) lucide.createIcons();
             };
 
-            // Hard failsafe timer: NEVER let the loading spinner hang for more than 1.2s!
-            const failsafeTimer = setTimeout(() => {
-                if (loadingBarrier && !loadingBarrier.classList.contains('hidden') && workspace && workspace.classList.contains('hidden')) {
-                    console.warn('[AdminPortal] Auth check timed out after 1.2s, presenting Login Gate.');
-                    showLoginGate();
-                }
-            }, 1200);
-
             if (!window.TixoraAuth) {
-                console.warn('[AdminPortal] TixoraAuth not ready, opening login gate.');
-                clearTimeout(failsafeTimer);
                 showLoginGate();
                 return;
             }
 
             try {
-                // Route Guard verification
-                await TixoraAuth.guardAdminRoute({
-                    onAuthorized: (user, role) => {
-                        clearTimeout(failsafeTimer);
-                        if (loadingBarrier) loadingBarrier.classList.add('hidden');
-                        if (authGate) authGate.classList.add('hidden');
-                        if (forbiddenGate) forbiddenGate.classList.add('hidden');
-                        if (workspace) workspace.classList.remove('hidden');
+                // Check if user has an active session
+                const session = await TixoraAuth.getSession();
+                if (!session || !session.user) {
+                    showLoginGate();
+                    return;
+                }
 
-                        const emailDisplay = (user && user.email) || 'Admin';
-                        if (userEmailEl) userEmailEl.textContent = emailDisplay;
-                        if (userRoleBadge) userRoleBadge.textContent = (role || 'ADMIN').toUpperCase();
-                        if (userAvatarEl) {
-                            const initials = emailDisplay.substring(0, 2).toUpperCase();
-                            userAvatarEl.textContent = initials;
-                        }
+                // Check user role
+                const role = await TixoraAuth.getUserRole(session.user);
+                if (role === 'admin' || role === 'manager') {
+                    if (loadingBarrier) loadingBarrier.classList.add('hidden');
+                    if (authGate) authGate.classList.add('hidden');
+                    if (forbiddenGate) forbiddenGate.classList.add('hidden');
+                    if (workspace) workspace.classList.remove('hidden');
 
-                        supabase = TixoraAuth.getClient();
-                        if (supabase && TixoraAuth.isConfigured()) {
-                            if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                            if (statusText) statusText.textContent = 'Supabase Connected (Live Auth)';
-                            if (alertBanner) alertBanner.classList.add('hidden');
-                            loadDataFromSupabase();
-                        } else {
-                            if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-                            if (statusText) statusText.textContent = 'Local Mode (Supabase Unset)';
-                            if (alertBanner) alertBanner.classList.remove('hidden');
-                            renderAllViews();
-                        }
-                        if (window.lucide) lucide.createIcons();
-                    },
-                    onForbidden: (user, role) => {
-                        clearTimeout(failsafeTimer);
-                        if (loadingBarrier) loadingBarrier.classList.add('hidden');
-                        if (workspace) workspace.classList.add('hidden');
-                        if (authGate) authGate.classList.add('hidden');
-                        if (forbiddenGate) forbiddenGate.classList.remove('hidden');
-
-                        const forEmail = document.getElementById('forbidden-user-email');
-                        const forRole = document.getElementById('forbidden-user-role');
-                        const sqlCmd = document.getElementById('forbidden-sql-cmd');
-                        if (forEmail) forEmail.textContent = (user && user.email) || 'Authenticated User';
-                        if (forRole) forRole.textContent = role || 'promoter';
-                        if (sqlCmd && user && user.email) sqlCmd.textContent = `SELECT assign_admin_role('${user.email}');`;
-                        if (window.lucide) lucide.createIcons();
-                    },
-                    onUnauthenticated: () => {
-                        clearTimeout(failsafeTimer);
-                        showLoginGate();
+                    const emailDisplay = session.user.email || 'Admin';
+                    if (userEmailEl) userEmailEl.textContent = emailDisplay;
+                    if (userRoleBadge) userRoleBadge.textContent = role.toUpperCase();
+                    if (userAvatarEl) {
+                        userAvatarEl.textContent = emailDisplay.substring(0, 2).toUpperCase();
                     }
-                });
+
+                    supabase = TixoraAuth.getClient();
+                    if (supabase && TixoraAuth.isConfigured()) {
+                        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                        if (statusText) statusText.textContent = 'Supabase Connected (Live Auth)';
+                        if (alertBanner) alertBanner.classList.add('hidden');
+                        loadDataFromSupabase();
+                    } else {
+                        if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                        if (statusText) statusText.textContent = 'Local Mode (Supabase Unset)';
+                        if (alertBanner) alertBanner.classList.remove('hidden');
+                        renderAllViews();
+                    }
+                } else {
+                    // Logged in as non-admin: show forbidden gate with one-click logout
+                    if (loadingBarrier) loadingBarrier.classList.add('hidden');
+                    if (workspace) workspace.classList.add('hidden');
+                    if (authGate) authGate.classList.add('hidden');
+                    if (forbiddenGate) forbiddenGate.classList.remove('hidden');
+
+                    const forEmail = document.getElementById('forbidden-user-email');
+                    const forRole = document.getElementById('forbidden-user-role');
+                    const sqlCmd = document.getElementById('forbidden-sql-cmd');
+                    if (forEmail) forEmail.textContent = session.user.email || 'Authenticated User';
+                    if (forRole) forRole.textContent = role || 'promoter';
+                    if (sqlCmd && session.user.email) sqlCmd.textContent = `SELECT assign_admin_role('${session.user.email}');`;
+                }
             } catch (err) {
-                console.error('[AdminPortal] Error evaluating clearance:', err);
-                clearTimeout(failsafeTimer);
+                console.warn('[AdminPortal] evaluateAdminAccess notice:', err);
                 showLoginGate();
+            } finally {
+                if (window.lucide) lucide.createIcons();
             }
         }
 
@@ -1013,7 +1001,7 @@
                     errText.textContent = err.message || 'Authentication failed. Check your email, password, and Supabase config.';
                 }
                 errBox.classList.remove('hidden');
-                lucide.createIcons();
+                if (window.lucide) lucide.createIcons();
             } finally {
                 btn.disabled = false;
                 btnText.textContent = 'Authenticate & Enter Desk';
@@ -1204,7 +1192,7 @@
             renderOrdersTable();
             renderPayoutsTable();
             renderGateScans();
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         function renderOverview() {
@@ -1417,7 +1405,7 @@
                     }
                 }
             });
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         }
 
         // --------------------------------------------------------------------

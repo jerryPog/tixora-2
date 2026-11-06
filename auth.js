@@ -17,6 +17,25 @@
     let _cachedPromoter = null;
     const _authListeners = [];
 
+    function getSafeStorage() {
+        try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+                const k = '__tixora_test__';
+                window.localStorage.setItem(k, k);
+                window.localStorage.removeItem(k);
+                return window.localStorage;
+            }
+        } catch (e) {
+            console.warn('[TixoraAuth] localStorage not available, using memory storage fallback:', e);
+        }
+        const mem = {};
+        return {
+            getItem: (key) => mem[key] || null,
+            setItem: (key, val) => { mem[key] = String(val); },
+            removeItem: (key) => { delete mem[key]; }
+        };
+    }
+
     /**
      * Get or initialize Supabase client
      */
@@ -42,7 +61,7 @@
                     persistSession: true,
                     autoRefreshToken: true,
                     detectSessionInUrl: true,
-                    storage: window.localStorage
+                    storage: getSafeStorage()
                 }
             });
 

@@ -2064,7 +2064,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
     <!-- JavaScript Application Engines -->
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         /* =====================================================================
