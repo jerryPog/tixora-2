@@ -298,7 +298,7 @@ CREATE OR REPLACE FUNCTION trg_fn_update_promoter_tier()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = public, pg_temp
 AS $$
 DECLARE
     v_total_passes INT;
@@ -337,7 +337,7 @@ CREATE OR REPLACE FUNCTION trg_fn_decrement_ticket_quota()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = public, pg_temp
 AS $$
 BEGIN
     IF NEW.payment_status = 'successful' THEN
@@ -385,9 +385,9 @@ ALTER TABLE cookie_consent_records ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN
 LANGUAGE sql
-SECURITY DEFINER
+SECURITY INVOKER
 STABLE
-SET search_path = ''
+SET search_path = public, pg_temp
 AS $$
   SELECT EXISTS (
     SELECT 1 FROM public.user_roles
@@ -397,14 +397,15 @@ AS $$
   );
 $$;
 
-GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated, service_role;
+REVOKE EXECUTE ON FUNCTION public.is_admin() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated, service_role;
 
 -- Automatic user provisioning trigger on auth.users
 CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
+SET search_path = public, pg_temp
 AS $$
 DECLARE
   v_role TEXT;
@@ -464,11 +465,14 @@ CREATE OR REPLACE FUNCTION public.assign_admin_role(target_email TEXT)
 RETURNS TEXT
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = ''
-AS $$
+SET search_path = public, pg_temp
+AS $
 DECLARE
   v_user_id UUID;
 BEGIN
+  IF (SELECT auth.role()) <> 'service_role' AND NOT (SELECT public.is_admin()) THEN
+    RAISE EXCEPTION 'Access denied: Only administrators can assign admin roles.';
+  END IF;
   SELECT id INTO v_user_id FROM auth.users WHERE email = target_email LIMIT 1;
   IF v_user_id IS NULL THEN
     RETURN 'User with email ' || target_email || ' not found in auth.users. Please sign up first!';
@@ -528,7 +532,13 @@ CREATE POLICY "Public Read promoters" ON promoters FOR SELECT TO anon, authentic
 
 -- Authenticated users can register as a promoter linked to their auth.uid()
 CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO anon, authenticated
-  WITH CHECK (true);
+  WITH CHECK (
+    full_name IS NOT NULL AND length(trim(full_name)) > 0
+    AND email IS NOT NULL AND length(trim(email)) > 3
+    AND whatsapp_number IS NOT NULL AND length(trim(whatsapp_number)) > 5
+    AND referral_code IS NOT NULL AND length(trim(referral_code)) > 0
+    AND city IS NOT NULL AND length(trim(city)) > 0
+  );
 
 -- Promoters can update their own contact details / UPI ID
 CREATE POLICY "Promoter update own profile" ON promoters FOR UPDATE TO authenticated
@@ -542,10 +552,23 @@ CREATE POLICY "Admin manage promoters" ON promoters FOR ALL TO authenticated
 -- ----------------------------------------------------------------------------
 -- POLICIES: 4. Attendees & Orders
 -- ----------------------------------------------------------------------------
-CREATE POLICY "Public create attendees" ON attendees FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Public create attendees" ON attendees FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    full_name IS NOT NULL AND length(trim(full_name)) > 0
+    AND email IS NOT NULL AND length(trim(email)) > 3
+    AND phone IS NOT NULL AND length(trim(phone)) > 5
+  );
 CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
-CREATE POLICY "Public create orders" ON orders FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Public create orders" ON orders FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    order_number IS NOT NULL AND length(trim(order_number)) > 0
+    AND quantity > 0
+    AND total_amount >= 0
+    AND event_id IS NOT NULL
+    AND ticket_tier_id IS NOT NULL
+    AND attendee_id IS NOT NULL
+  );
 CREATE POLICY "Promoters read referred orders" ON orders FOR SELECT TO authenticated
   USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin manage orders" ON orders FOR ALL TO authenticated
@@ -572,13 +595,22 @@ CREATE POLICY "Admin manage upi payouts" ON upi_payout_logs FOR ALL TO authentic
 -- ----------------------------------------------------------------------------
 -- POLICIES: 6. Logs & Compliance
 -- ----------------------------------------------------------------------------
-CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    gate_name IS NOT NULL AND length(trim(gate_name)) > 0
+    AND result IS NOT NULL AND length(trim(result)) > 0
+  );
 CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
-CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated
+  WITH CHECK (event_type IS NOT NULL AND length(trim(event_type)) > 0);
 CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
-CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated WITH CHECK (true);
+CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    ip_hash IS NOT NULL AND length(trim(ip_hash)) > 0
+    AND consent_status IS NOT NULL AND length(trim(consent_status)) > 0
+  );
 CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 
