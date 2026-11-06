@@ -75,9 +75,8 @@ CREATE TABLE promoters (
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_promoters_user ON promoters(user_id);
-CREATE INDEX idx_promoters_ref ON promoters(referral_code);
-CREATE INDEX idx_promoters_phone ON promoters(whatsapp_number);
-CREATE INDEX idx_promoters_tier ON promoters(tier_id);
+CREATE INDEX idx_promoters_tier_id ON promoters(tier_id);
+-- promoters referral_code and whatsapp_number have automatic UNIQUE B-tree indexes
 
 -- 3. Venues
 CREATE TABLE venues (
@@ -119,11 +118,10 @@ CREATE TABLE events (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_events_slug ON events(slug);
 CREATE INDEX idx_events_status ON events(status);
-CREATE INDEX idx_events_date ON events(event_date);
-CREATE INDEX idx_events_artist ON events(artist_id);
-CREATE INDEX idx_events_venue ON events(venue_id);
+CREATE INDEX idx_events_artist_id ON events(artist_id);
+CREATE INDEX idx_events_venue_id ON events(venue_id);
+-- events slug has an automatic UNIQUE B-tree index
 
 -- 6. Ticket Tiers / Quotas
 CREATE TABLE ticket_tiers (
@@ -170,12 +168,12 @@ CREATE TABLE orders (
     delivery_status VARCHAR(30) DEFAULT 'dispatched' CHECK (delivery_status IN ('pending', 'dispatched', 'delivered', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_orders_num ON orders(order_number);
 CREATE INDEX idx_orders_promoter ON orders(promoter_id);
 CREATE INDEX idx_orders_status ON orders(payment_status);
-CREATE INDEX idx_orders_attendee ON orders(attendee_id);
-CREATE INDEX idx_orders_event ON orders(event_id);
-CREATE INDEX idx_orders_ticket_tier ON orders(ticket_tier_id);
+CREATE INDEX idx_orders_attendee_id ON orders(attendee_id);
+CREATE INDEX idx_orders_event_id ON orders(event_id);
+CREATE INDEX idx_orders_ticket_tier_id ON orders(ticket_tier_id);
+-- orders order_number has an automatic UNIQUE B-tree index
 
 -- 9. Issued Passes (Dynamic QR Mesh Protocol)
 CREATE TABLE issued_passes (
@@ -188,9 +186,8 @@ CREATE TABLE issued_passes (
     scanned_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_passes_code ON issued_passes(pass_code);
-CREATE INDEX idx_passes_phone ON issued_passes(attendee_phone);
-CREATE INDEX idx_passes_order ON issued_passes(order_id);
+CREATE INDEX idx_issued_passes_order_id ON issued_passes(order_id);
+-- issued_passes pass_code has an automatic UNIQUE B-tree index
 
 -- 10. Promoter Commissions (Ledger)
 CREATE TABLE promoter_commissions (
@@ -207,7 +204,7 @@ CREATE TABLE promoter_commissions (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_comm_promoter ON promoter_commissions(promoter_id);
-CREATE INDEX idx_comm_order ON promoter_commissions(order_id);
+CREATE INDEX idx_promoter_commissions_order_id ON promoter_commissions(order_id);
 
 -- 11. UPI Payout Logs (<60s Settlement SLA)
 CREATE TABLE upi_payout_logs (
@@ -222,8 +219,8 @@ CREATE TABLE upi_payout_logs (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_payouts_promoter ON upi_payout_logs(promoter_id);
-CREATE INDEX idx_payouts_rrn ON upi_payout_logs(bank_rrn);
-CREATE INDEX idx_payouts_commission ON upi_payout_logs(commission_id);
+CREATE INDEX idx_upi_payout_logs_commission_id ON upi_payout_logs(commission_id);
+-- upi_payout_logs bank_rrn has an automatic UNIQUE B-tree index
 
 -- 12. Gate Verification Logs (Turnstile Scans)
 CREATE TABLE gate_verification_logs (
@@ -235,6 +232,7 @@ CREATE TABLE gate_verification_logs (
     result VARCHAR(30) NOT NULL CHECK (result IN ('granted', 'denied_duplicate', 'denied_expired', 'denied_invalid')),
     notes TEXT
 );
+CREATE INDEX idx_gate_verification_logs_pass_id ON gate_verification_logs(pass_id);
 
 -- 13. Anti-Scalping Events (Bot & Scraper Shield)
 CREATE TABLE anti_scalping_events (
