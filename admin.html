@@ -361,9 +361,9 @@
                                 <i data-lucide="trending-up" class="w-4 h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-gmv">₹2,89,980</div>
-                        <div class="text-[11px] text-emerald-400 font-mono flex items-center space-x-1">
-                            <span>+24.8% vs previous drop</span>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-gmv">₹0</div>
+                        <div class="text-[11px] text-slate-400 font-mono flex items-center space-x-1">
+                            <span>Awaiting initial bookings</span>
                         </div>
                     </div>
 
@@ -374,9 +374,9 @@
                                 <i data-lucide="ticket" class="w-4 h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-passes">562 passes</div>
-                        <div class="text-[11px] text-slate-400 font-mono">
-                            Across 8 national tour dates
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-passes">0 passes</div>
+                        <div class="text-[11px] text-slate-400 font-mono" id="metric-passes-sub">
+                            No active tour dates
                         </div>
                     </div>
 
@@ -387,7 +387,7 @@
                                 <i data-lucide="zap" class="w-4 h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-commissions">₹3,47,180</div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-white font-display" id="metric-commissions">₹0</div>
                         <div class="text-[11px] text-emerald-400 font-mono">
                             100% automated UPI delivery
                         </div>
@@ -400,7 +400,7 @@
                                 <i data-lucide="clock" class="w-4 h-4"></i>
                             </div>
                         </div>
-                        <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono" id="metric-latency">38.2s</div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono" id="metric-latency">--</div>
                         <div class="text-[11px] text-slate-400 font-mono">
                             Guaranteed under 60-second SLA
                         </div>
@@ -852,45 +852,15 @@
         if (window.lucide) lucide.createIcons();
 
         // --------------------------------------------------------------------
-        // TIXORA INITIAL LIVE SEED STATE (Used seamlessly if Supabase not yet keyed)
+        // TIXORA INITIAL LIVE SEED STATE (Empty state - populates from Supabase)
         // --------------------------------------------------------------------
         const INITIAL_DATA = {
-            tours: [
-                { id: 1, title: 'Anyma presents ÆDEN', city: 'Mumbai', venue: 'Mahalaxmi Racecourse', date: '21 NOV 2026 • 4:00 PM', partner: 'BookMyShow', mrp: 4250, cut: 16, status: 'active', quotaTotal: 7000, quotaAvailable: 2328 },
-                { id: 2, title: "Guns N' Roses India Tour", city: 'New Delhi', venue: 'JLN Stadium', date: '28 NOV 2026 • 5:30 PM', partner: 'BookMyShow', mrp: 5499, cut: 14, status: 'active', quotaTotal: 11800, quotaAvailable: 3955 },
-                { id: 3, title: 'Fred again.. Live in Delhi', city: 'New Delhi', venue: 'The Warehouse Okhla', date: '05 DEC 2026 • 6:00 PM', partner: 'District', mrp: 3999, cut: 12, status: 'active', quotaTotal: 5000, quotaAvailable: 1430 },
-                { id: 4, title: 'The Chainsmokers Sunburn Arena', city: 'Bengaluru', venue: 'BIEC Grounds', date: '19 DEC 2026 • 4:00 PM', partner: 'BookMyShow', mrp: 3499, cut: 15, status: 'active', quotaTotal: 8000, quotaAvailable: 3230 },
-                { id: 5, title: 'Fred again.. Live in Mumbai', city: 'Mumbai', venue: 'Nesco Center', date: '08 DEC 2026 • 6:00 PM', partner: 'District', mrp: 4200, cut: 12, status: 'active', quotaTotal: 5700, quotaAvailable: 1200 },
-                { id: 6, title: 'Khalid Live in Delhi', city: 'New Delhi', venue: 'Major Dhyan Chand Stadium', date: '13 DEC 2026 • 6:00 PM', partner: 'BookMyShow', mrp: 2999, cut: 15, status: 'active', quotaTotal: 6200, quotaAvailable: 2030 },
-                { id: 7, title: 'Sunburn Goa 2026', city: 'Vagator, Goa', venue: 'Vagator Beach Arena', date: '28 DEC 2026 • 2:00 PM', partner: 'BookMyShow', mrp: 4999, cut: 16, status: 'active', quotaTotal: 13000, quotaAvailable: 4720 },
-                { id: 8, title: 'Karan Aujla — It Was All A Dream', city: 'New Delhi', venue: 'JLN Stadium', date: '15 NOV 2026 • 6:30 PM', partner: 'BookMyShow', mrp: 3499, cut: 15, status: 'active', quotaTotal: 9000, quotaAvailable: 2610 }
-            ],
-            promoters: [
-                { id: 1, name: 'Aarav Sharma', code: 'TIX-AARAV-MUM', city: 'Mumbai', tier: 'Patron', tierCut: 16, passes: 344, earnings: 233920.00, phone: '+91 98200 11223', upi: 'aarav.sharma@okhdfcbank', kyc: 'verified' },
-                { id: 2, name: 'Rohan Kapoor', code: 'TIX-ROHAN-DEL', city: 'New Delhi', tier: 'Syndicate', tierCut: 13.5, passes: 151, earnings: 84942.09, phone: '+91 98110 44556', upi: 'rohankapoor@paytm', kyc: 'verified' },
-                { id: 3, name: 'Ananya Sen', code: 'TIX-ANANYA-BLR', city: 'Bengaluru', tier: 'Capo', tierCut: 11, passes: 56, earnings: 26149.78, phone: '+91 98450 77889', upi: 'ananya@oksbi', kyc: 'verified' },
-                { id: 4, name: 'Kabir Mehta', code: 'TIX-KABIR-GOA', city: 'Goa', tier: 'Scout', tierCut: 8, passes: 18, earnings: 6120.00, phone: '+91 98765 01234', upi: 'kabirmehta@icici', kyc: 'verified' }
-            ],
-            orders: [
-                { id: 1, orderNum: 'TXR-ORD-2026-9801', attendee: 'Vikramaditya Rao', event: 'Anyma presents ÆDEN', tier: 'GA Phase 1', qty: 2, total: 8500, ref: 'TIX-AARAV-MUM', channel: 'BookMyShow Wallet', status: 'delivered' },
-                { id: 2, orderNum: 'TXR-ORD-2026-9802', attendee: 'Simran Walia', event: "Guns N' Roses India Tour", tier: 'Silver Field', qty: 1, total: 5499, ref: 'TIX-ROHAN-DEL', channel: 'BookMyShow Wallet', status: 'delivered' },
-                { id: 3, orderNum: 'TXR-ORD-2026-9803', attendee: 'Nikhil Verma', event: 'Fred again.. Live in Delhi', tier: 'Warehouse Floor', qty: 2, total: 7998, ref: 'TIX-ROHAN-DEL', channel: 'BookMyShow Wallet', status: 'delivered' },
-                { id: 4, orderNum: 'TXR-ORD-2026-9804', attendee: 'Pooja Hegde', event: 'The Chainsmokers Sunburn', tier: 'General Arena', qty: 2, total: 6998, ref: 'TIX-ANANYA-BLR', channel: 'BookMyShow Wallet', status: 'dispatched' }
-            ],
-            payouts: [
-                { id: 1, promoter: 'Aarav Sharma', upi: 'aarav.sharma@okhdfcbank', amount: 1360.00, speed: 38, rrn: 'NPCI20261105001298401928', status: 'success', time: '10 mins ago' },
-                { id: 2, promoter: 'Rohan Kapoor', upi: 'rohankapoor@paytm', amount: 742.36, speed: 42, rrn: 'NPCI20261105001288391029', status: 'success', time: '28 mins ago' },
-                { id: 3, promoter: 'Rohan Kapoor', upi: 'rohankapoor@paytm', amount: 1079.73, speed: 29, rrn: 'NPCI20261105001277291038', status: 'success', time: '41 mins ago' },
-                { id: 4, promoter: 'Ananya Sen', upi: 'ananya@oksbi', amount: 769.78, speed: 34, rrn: 'NPCI20261105001266192837', status: 'success', time: '52 mins ago' }
-            ],
-            gateScans: [
-                { pass: 'TIX-ANYMA-PASS-001A', gate: 'Gate 3 VIP Turnstile', terminal: 'TERM-MUM-G3-01', time: '17:12:44 IST', status: 'GRANTED', note: 'Dynamic QR token verified. Attendee identity matched.' },
-                { pass: 'TIX-ANYMA-PASS-001B', gate: 'Gate 3 VIP Turnstile', terminal: 'TERM-MUM-G3-01', time: '17:13:02 IST', status: 'GRANTED', note: 'Second pass cleared. Turnstile released.' }
-            ],
-            botBlocks: [
-                { ip: '185.220.101.4', type: 'RAPID BOT SCRAPER', details: '140 checkout requests in 2 seconds. Rate limit triggered.', action: 'BLOCKED' },
-                { ip: '49.36.120.88', type: 'SCREENSHOT REPLAY ATTEMPT', details: 'Expired dynamic QR presented at Gate 2.', action: 'FLAGGED' }
-            ]
+            tours: [],
+            promoters: [],
+            orders: [],
+            payouts: [],
+            gateScans: [],
+            botBlocks: []
         };
 
         let liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
@@ -1158,15 +1128,15 @@
             try {
                 // 1. Fetch Events with venues & ticket tier quotas
                 try {
-                    const { data: eventsData } = await _adminClient
+                    const { data: eventsData, error: errEvents } = await _adminClient
                         .from('events')
                         .select('*, venues(name, city), ticket_tiers(total_quota, available_quota)')
                         .order('id', { ascending: true });
 
-                    if (eventsData && eventsData.length > 0) {
+                    if (!errEvents && Array.isArray(eventsData)) {
                         liveData.tours = eventsData.map(e => {
                             const totalQuota = (e.ticket_tiers || []).reduce((acc, t) => acc + (t.total_quota || 0), 0) || 7000;
-                            const availQuota = (e.ticket_tiers || []).reduce((acc, t) => acc + (t.available_quota || 0), 0) || 2500;
+                            const availQuota = (e.ticket_tiers || []).reduce((acc, t) => acc + (t.available_quota || 0), 0) || totalQuota;
                             return {
                                 id: e.id,
                                 title: e.title,
@@ -1190,12 +1160,12 @@
 
                 // 2. Fetch Promoters with tiers
                 try {
-                    const { data: promData } = await _adminClient
+                    const { data: promData, error: errProm } = await _adminClient
                         .from('promoters')
                         .select('*, promoter_tiers(tier_name, commission_rate)')
                         .order('id', { ascending: true });
 
-                    if (promData && promData.length > 0) {
+                    if (!errProm && Array.isArray(promData)) {
                         liveData.promoters = promData.map(p => ({
                             id: p.id,
                             name: p.full_name,
@@ -1217,12 +1187,12 @@
 
                 // 3. Fetch Orders (Pass Bookings)
                 try {
-                    const { data: ordersData } = await _adminClient
+                    const { data: ordersData, error: errOrders } = await _adminClient
                         .from('orders')
                         .select('*, attendees(full_name), events(title), promoters(referral_code)')
                         .order('id', { ascending: false });
 
-                    if (ordersData && ordersData.length > 0) {
+                    if (!errOrders && Array.isArray(ordersData)) {
                         liveData.orders = ordersData.map(o => ({
                             id: o.id,
                             orderNum: o.order_number || `TXR-ORD-${o.id}`,
@@ -1242,13 +1212,13 @@
 
                 // 4. Fetch Gate Turnstile Scans
                 try {
-                    const { data: scansData } = await _adminClient
+                    const { data: scansData, error: errScans } = await _adminClient
                         .from('gate_verification_logs')
                         .select('*, issued_passes(pass_code)')
                         .order('id', { ascending: false })
                         .limit(10);
 
-                    if (scansData && scansData.length > 0) {
+                    if (!errScans && Array.isArray(scansData)) {
                         liveData.gateScans = scansData.map(s => ({
                             pass: (s.issued_passes && s.issued_passes.pass_code) || `PASS-${s.pass_id}`,
                             gate: s.gate_name || 'Gate 1 Turnstile',
@@ -1264,13 +1234,13 @@
 
                 // 5. Fetch Bot Defense Incidents
                 try {
-                    const { data: botsData } = await _adminClient
+                    const { data: botsData, error: errBots } = await _adminClient
                         .from('anti_scalping_events')
                         .select('*')
                         .order('id', { ascending: false })
                         .limit(10);
 
-                    if (botsData && botsData.length > 0) {
+                    if (!errBots && Array.isArray(botsData)) {
                         liveData.botBlocks = botsData.map(b => ({
                             ip: b.ip_address || '127.0.0.1',
                             type: (b.event_type || 'BOT_BLOCK').toUpperCase().replace(/_/g, ' '),
@@ -1284,13 +1254,13 @@
 
                 // 6. Fetch UPI Payout Logs
                 try {
-                    const { data: payoutsData } = await _adminClient
+                    const { data: payoutsData, error: errPayouts } = await _adminClient
                         .from('upi_payout_logs')
                         .select('*, promoters(full_name)')
                         .order('id', { ascending: false })
                         .limit(10);
 
-                    if (payoutsData && payoutsData.length > 0) {
+                    if (!errPayouts && Array.isArray(payoutsData)) {
                         liveData.payouts = payoutsData.map(p => ({
                             id: p.id,
                             promoter: (p.promoters && p.promoters.full_name) || 'Promoter',
@@ -1312,6 +1282,7 @@
         }
 
         // --------------------------------------------------------------------
+        // --------------------------------------------------------------------
         // VIEW RENDERERS
         // --------------------------------------------------------------------
         function renderAllViews() {
@@ -1325,60 +1296,127 @@
         }
 
         function renderOverview() {
+            // Update Dynamic KPI Metrics
+            const totalGmv = (liveData.orders || []).reduce((acc, o) => acc + (Number(o.total) || 0), 0);
+            const totalPasses = (liveData.orders || []).reduce((acc, o) => acc + (Number(o.qty) || 0), 0);
+            const totalCommissions = (liveData.payouts || []).reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
+            const avgSpeed = liveData.payouts && liveData.payouts.length > 0
+                ? (liveData.payouts.reduce((a, b) => a + (Number(b.speed) || 35), 0) / liveData.payouts.length).toFixed(1) + 's'
+                : '--';
+
+            const elGmv = document.getElementById('metric-gmv');
+            if (elGmv) elGmv.textContent = `₹${totalGmv.toLocaleString('en-IN')}`;
+
+            const elPasses = document.getElementById('metric-passes');
+            if (elPasses) elPasses.textContent = `${totalPasses.toLocaleString()} passes`;
+
+            const elPassesSub = document.getElementById('metric-passes-sub');
+            if (elPassesSub) {
+                elPassesSub.textContent = liveData.tours && liveData.tours.length > 0
+                    ? `Across ${liveData.tours.length} national tour date${liveData.tours.length > 1 ? 's' : ''}`
+                    : 'No active tour dates';
+            }
+
+            const elCommissions = document.getElementById('metric-commissions');
+            if (elCommissions) elCommissions.textContent = `₹${totalCommissions.toLocaleString('en-IN')}`;
+
+            const elLatency = document.getElementById('metric-latency');
+            if (elLatency) elLatency.textContent = avgSpeed;
+
             // Quota list
             const container = document.getElementById('overview-quotas-list');
             if (container) {
-                container.innerHTML = liveData.tours.slice(0, 5).map(t => {
-                    const total = t.quotaTotal || 7000;
-                    const avail = t.quotaAvailable || 2500;
-                    const sold = total - avail;
-                    const pct = Math.round((sold / total) * 100);
-                    return `
-                        <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] space-y-1.5">
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="font-bold text-white font-display">${t.title}</span>
-                                <span class="font-mono text-slate-400 text-[11px]">${sold.toLocaleString()} / ${total.toLocaleString()} passes sold (${pct}%)</span>
-                            </div>
-                            <div class="w-full h-2 rounded-full bg-white/[0.08] overflow-hidden">
-                                <div class="h-full bg-gradient-to-r from-crimson to-orange-500 rounded-full" style="width: ${pct}%"></div>
-                            </div>
+                if (!liveData.tours || liveData.tours.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-8 text-center rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+                            <i data-lucide="calendar" class="w-6 h-6 text-slate-500 mx-auto"></i>
+                            <div class="text-xs text-slate-400 font-mono">No active tour allocations.</div>
+                            <button onclick="openModal('add-tour-modal')" class="text-[11px] text-crimson font-bold hover:underline">
+                                + Allocate First Tour
+                            </button>
                         </div>
                     `;
-                }).join('');
+                } else {
+                    container.innerHTML = liveData.tours.slice(0, 5).map(t => {
+                        const total = t.quotaTotal || 7000;
+                        const avail = t.quotaAvailable !== undefined ? t.quotaAvailable : total;
+                        const sold = Math.max(0, total - avail);
+                        const pct = total > 0 ? Math.round((sold / total) * 100) : 0;
+                        return `
+                            <div class="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] space-y-1.5">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="font-bold text-white font-display">${t.title}</span>
+                                    <span class="font-mono text-slate-400 text-[11px]">${sold.toLocaleString()} / ${total.toLocaleString()} passes sold (${pct}%)</span>
+                                </div>
+                                <div class="w-full h-2 rounded-full bg-white/[0.08] overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-crimson to-orange-500 rounded-full" style="width: ${pct}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
             }
 
             // Activity stream
             const feed = document.getElementById('overview-activity-feed');
             if (feed) {
-                feed.innerHTML = `
-                    <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 mt-0.5"></i>
-                        <div>
-                            <span class="text-white font-bold">Turnstile Gate 3 verified pass</span>
-                            <span class="text-slate-400 block text-[10px]">TIX-ANYMA-PASS-001B • Mahalaxmi Racecourse</span>
+                const recentScans = (liveData.gateScans || []).slice(0, 2);
+                const recentPayouts = (liveData.payouts || []).slice(0, 2);
+                const recentOrders = (liveData.orders || []).slice(0, 2);
+
+                if (recentScans.length === 0 && recentPayouts.length === 0 && recentOrders.length === 0) {
+                    feed.innerHTML = `
+                        <div class="p-8 text-center rounded-2xl bg-white/[0.02] border border-white/[0.06] text-slate-500 font-mono text-xs">
+                            Awaiting real-time concert allocations and booking activity...
                         </div>
-                    </div>
-                    <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
-                        <i data-lucide="zap" class="w-4 h-4 text-crimson mt-0.5"></i>
-                        <div>
-                            <span class="text-white font-bold">Instant UPI Payout ₹1,360 settled</span>
-                            <span class="text-slate-400 block text-[10px]">To Aarav Sharma in 38s via NPCI Bank RRN</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
-                        <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-400 mt-0.5"></i>
-                        <div>
-                            <span class="text-white font-bold">New Booking Dispatched</span>
-                            <span class="text-slate-400 block text-[10px]">2x Guns N' Roses India Tour passes synced to BMS</span>
-                        </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    let itemsHtml = '';
+                    recentScans.forEach(s => {
+                        itemsHtml += `
+                            <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 mt-0.5"></i>
+                                <div>
+                                    <span class="text-white font-bold">${s.gate} verified pass</span>
+                                    <span class="text-slate-400 block text-[10px]">${s.pass} • ${s.time}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    recentPayouts.forEach(p => {
+                        itemsHtml += `
+                            <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
+                                <i data-lucide="zap" class="w-4 h-4 text-crimson mt-0.5"></i>
+                                <div>
+                                    <span class="text-white font-bold">Instant UPI Payout ₹${Number(p.amount).toLocaleString()} settled</span>
+                                    <span class="text-slate-400 block text-[10px]">To ${p.promoter} (${p.speed}s)</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    recentOrders.forEach(o => {
+                        itemsHtml += `
+                            <div class="flex items-start space-x-2.5 p-2 rounded-xl bg-white/[0.02]">
+                                <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-400 mt-0.5"></i>
+                                <div>
+                                    <span class="text-white font-bold">Booking Dispatched</span>
+                                    <span class="text-slate-400 block text-[10px]">${o.qty}x ${o.event} synced</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    feed.innerHTML = itemsHtml;
+                }
             }
         }
 
         function renderToursTable() {
             const tbody = document.getElementById('tours-table-body');
             if (!tbody) return;
+            if (!liveData.tours || liveData.tours.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No tour allocations active. Click "+ Allocate New Tour" above to publish your first live concert on Tixora.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = liveData.tours.map(t => `
                 <tr class="hover:bg-white/[0.02] transition-colors">
                     <td class="p-4 font-bold text-white font-display">${t.title}</td>
@@ -1413,6 +1451,10 @@
         function renderPromotersTable() {
             const tbody = document.getElementById('promoters-table-body');
             if (!tbody) return;
+            if (!liveData.promoters || liveData.promoters.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400 font-mono text-xs">No promoters registered yet. When fans sign up as promoters on the website, they will appear here.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = liveData.promoters.map(p => `
                 <tr class="hover:bg-white/[0.02] transition-colors">
                     <td class="p-4 font-bold text-white">
@@ -1450,6 +1492,10 @@
         function renderOrdersTable() {
             const tbody = document.getElementById('orders-table-body');
             if (!tbody) return;
+            if (!liveData.orders || liveData.orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No orders placed yet. Live pass bookings will stream here in real time.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = liveData.orders.map(o => `
                 <tr class="hover:bg-white/[0.02] transition-colors">
                     <td class="p-4 font-mono text-slate-300 font-bold">${o.orderNum}</td>
@@ -1471,6 +1517,10 @@
         function renderPayoutsTable() {
             const tbody = document.getElementById('payouts-table-body');
             if (!tbody) return;
+            if (!liveData.payouts || liveData.payouts.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No payout settlements recorded yet.</td></tr>`;
+                return;
+            }
             tbody.innerHTML = liveData.payouts.map(p => `
                 <tr class="hover:bg-white/[0.02] transition-colors font-mono">
                     <td class="p-4 text-slate-400">#SETTLE-${p.id}</td>
@@ -1488,31 +1538,39 @@
         function renderGateScans() {
             const scanList = document.getElementById('gate-scans-list');
             if (scanList) {
-                scanList.innerHTML = liveData.gateScans.map(s => `
-                    <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
-                        <div>
-                            <div class="text-white font-bold">${s.pass} • ${s.gate}</div>
-                            <div class="text-slate-500 text-[11px]">${s.note}</div>
+                if (!liveData.gateScans || liveData.gateScans.length === 0) {
+                    scanList.innerHTML = `<div class="p-6 text-center text-slate-500 font-mono text-xs">No turnstile gate scans recorded yet. Live turnstile scans will log here during concert entry.</div>`;
+                } else {
+                    scanList.innerHTML = liveData.gateScans.map(s => `
+                        <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+                            <div>
+                                <div class="text-white font-bold">${s.pass} • ${s.gate}</div>
+                                <div class="text-slate-500 text-[11px]">${s.note}</div>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400">${s.status}</span>
+                                <div class="text-slate-500 text-[10px] mt-1">${s.time}</div>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400">${s.status}</span>
-                            <div class="text-slate-500 text-[10px] mt-1">${s.time}</div>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             }
 
             const blockList = document.getElementById('bot-blocks-list');
             if (blockList) {
-                blockList.innerHTML = liveData.botBlocks.map(b => `
-                    <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
-                        <div>
-                            <div class="text-crimson font-bold">${b.type} — ${b.ip}</div>
-                            <div class="text-slate-400 text-[11px]">${b.details}</div>
+                if (!liveData.botBlocks || liveData.botBlocks.length === 0) {
+                    blockList.innerHTML = `<div class="p-6 text-center text-slate-500 font-mono text-xs">Anti-scalping shield active. 0 malicious bot scrapers detected.</div>`;
+                } else {
+                    blockList.innerHTML = liveData.botBlocks.map(b => `
+                        <div class="p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
+                            <div>
+                                <div class="text-crimson font-bold">${b.type} — ${b.ip}</div>
+                                <div class="text-slate-400 text-[11px]">${b.details}</div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-crimson/20 text-crimson font-bold">${b.action}</span>
                         </div>
-                        <span class="px-2 py-0.5 rounded text-[10px] bg-crimson/20 text-crimson font-bold">${b.action}</span>
-                    </div>
-                `).join('');
+                    `).join('');
+                }
             }
         }
 
@@ -1800,10 +1858,15 @@
         }
 
         function simulateNewPayout() {
+            const prom = (liveData.promoters && liveData.promoters.length > 0) ? liveData.promoters[0] : null;
+            if (!prom) {
+                showToast('No registered promoters found. Register a promoter first to trigger settlement.');
+                return;
+            }
             const newPayout = {
                 id: liveData.payouts.length + 1,
-                promoter: 'Aarav Sharma',
-                upi: 'aarav.sharma@okhdfcbank',
+                promoter: prom.name,
+                upi: prom.upi,
                 amount: 680.00,
                 speed: Math.floor(Math.random() * 20) + 25,
                 rrn: 'NPCI' + Date.now().toString(),
@@ -1812,20 +1875,24 @@
             };
             liveData.payouts.unshift(newPayout);
             renderPayoutsTable();
-            showToast(`Instant UPI Settlement of ₹680 triggered (<${newPayout.speed}s)`);
+            renderOverview();
+            showToast(`Instant UPI Settlement of ₹680 triggered (<${newPayout.speed}s) to ${prom.name}`);
         }
 
         function simulateGateScan() {
+            const tour = (liveData.tours && liveData.tours.length > 0) ? liveData.tours[0] : null;
+            const code = tour ? `TIX-PASS-${tour.id}-${Math.floor(Math.random() * 900 + 100)}` : 'TIX-PASS-001';
             const newScan = {
-                pass: 'TIX-GNR-PASS-002A',
+                pass: code,
                 gate: 'Gate 1 Turnstile',
-                terminal: 'TERM-DEL-G1-04',
+                terminal: 'TERM-GATE-01',
                 time: new Date().toLocaleTimeString('en-US', { hour12: false }) + ' IST',
                 status: 'GRANTED',
                 note: 'Dynamic rotating token authenticated. Entry unlocked.'
             };
             liveData.gateScans.unshift(newScan);
             renderGateScans();
+            renderOverview();
             showToast('Mesh Protocol Turnstile scan verified successfully!');
         }
 
