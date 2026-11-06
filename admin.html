@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en" class="dark scroll-smooth overflow-x-hidden">
 <head>
@@ -189,7 +191,7 @@
 
             <!-- Quick Demo Login & Setup Guidance -->
             <div class="space-y-3 pt-2 border-t border-white/[0.08]">
-                <button type="button" onclick="quickLoginAdmin()" class="w-full py-2.5 rounded-xl text-xs font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all flex items-center justify-center space-x-2">
+                <button type="button" id="btn-quick-admin" onclick="quickLoginAdmin()" class="w-full py-2.5 rounded-xl text-xs font-mono font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 transition-all flex items-center justify-center space-x-2">
                     <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
                     <span>⚡ One-Click Instant Admin Access (admin@tixora.live)</span>
                 </button>
@@ -892,7 +894,7 @@
         };
 
         let liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
-        let supabase = null;
+        let _adminClient = null;
 
         // --------------------------------------------------------------------
         // MODALS & TOAST UTILITIES (Hoisted)
@@ -985,8 +987,8 @@
                         userAvatarEl.textContent = emailDisplay.substring(0, 2).toUpperCase();
                     }
 
-                    supabase = TixoraAuth.getClient();
-                    if (supabase && TixoraAuth.isConfigured()) {
+                    _adminClient = TixoraAuth.getClient();
+                    if (_adminClient && TixoraAuth.isConfigured()) {
                         if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
                         if (statusText) statusText.textContent = 'Supabase Connected (Live Auth)';
                         if (alertBanner) alertBanner.classList.add('hidden');
@@ -1076,8 +1078,8 @@
 
                 showToast(`Welcome back, ${displayEmail}! Operations clearance verified.`);
 
-                supabase = TixoraAuth.getClient();
-                if (supabase) {
+                _adminClient = TixoraAuth.getClient();
+                if (_adminClient) {
                     await loadDataFromSupabase();
                 } else {
                     renderAllViews();
@@ -1137,7 +1139,7 @@
                 if (client) {
                     client.channel('admin:realtime:events')
                         .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async (payload) => {
-                            if (supabase) {
+                            if (_adminClient) {
                                 await loadDataFromSupabase();
                             }
                         })
@@ -1149,14 +1151,14 @@
         }
 
         async function loadDataFromSupabase() {
-            if (!supabase) {
+            if (!_adminClient) {
                 renderAllViews();
                 return;
             }
             try {
                 // 1. Fetch Events with venues & ticket tier quotas
                 try {
-                    const { data: eventsData } = await supabase
+                    const { data: eventsData } = await _adminClient
                         .from('events')
                         .select('*, venues(name, city), ticket_tiers(total_quota, available_quota)')
                         .order('id', { ascending: true });
@@ -1188,7 +1190,7 @@
 
                 // 2. Fetch Promoters with tiers
                 try {
-                    const { data: promData } = await supabase
+                    const { data: promData } = await _adminClient
                         .from('promoters')
                         .select('*, promoter_tiers(tier_name, commission_rate)')
                         .order('id', { ascending: true });
@@ -1215,7 +1217,7 @@
 
                 // 3. Fetch Orders (Pass Bookings)
                 try {
-                    const { data: ordersData } = await supabase
+                    const { data: ordersData } = await _adminClient
                         .from('orders')
                         .select('*, attendees(full_name), events(title), promoters(referral_code)')
                         .order('id', { ascending: false });
@@ -1240,7 +1242,7 @@
 
                 // 4. Fetch Gate Turnstile Scans
                 try {
-                    const { data: scansData } = await supabase
+                    const { data: scansData } = await _adminClient
                         .from('gate_verification_logs')
                         .select('*, issued_passes(pass_code)')
                         .order('id', { ascending: false })
@@ -1262,7 +1264,7 @@
 
                 // 5. Fetch Bot Defense Incidents
                 try {
-                    const { data: botsData } = await supabase
+                    const { data: botsData } = await _adminClient
                         .from('anti_scalping_events')
                         .select('*')
                         .order('id', { ascending: false })
@@ -1282,7 +1284,7 @@
 
                 // 6. Fetch UPI Payout Logs
                 try {
-                    const { data: payoutsData } = await supabase
+                    const { data: payoutsData } = await _adminClient
                         .from('upi_payout_logs')
                         .select('*, promoters(full_name)')
                         .order('id', { ascending: false })
@@ -1554,15 +1556,15 @@
                 return;
             }
 
-            if (supabase) {
+            if (_adminClient) {
                 try {
-                    const { error: delErr } = await supabase.from('events').delete().eq('id', id);
+                    const { error: delErr } = await _adminClient.from('events').delete().eq('id', id);
                     if (delErr) {
                         console.error('Supabase event deletion error:', delErr);
                         // If FK constraint prevents hard delete (e.g. orders placed), offer status update
                         if (delErr.code === '23503') {
                             if (confirm(`"${tourTitle}" already has active ticket orders in the database. Would you like to mark its status as 'cancelled' so it is hidden from the website instead?`)) {
-                                await supabase.from('events').update({ status: 'cancelled' }).eq('id', id);
+                                await _adminClient.from('events').update({ status: 'cancelled' }).eq('id', id);
                                 await loadDataFromSupabase();
                                 showToast(`Event "${tourTitle}" cancelled and hidden from website.`);
                             }
@@ -1609,15 +1611,15 @@
                 eventDateISO = parsedDate.toISOString();
             }
 
-            if (supabase) {
+            if (_adminClient) {
                 try {
                     let venueId = null;
                     try {
-                        const { data: vData } = await supabase.from('venues').select('id').ilike('name', `%${venueName}%`).maybeSingle();
+                        const { data: vData } = await _adminClient.from('venues').select('id').ilike('name', `%${venueName}%`).maybeSingle();
                         if (vData && vData.id) {
                             venueId = vData.id;
                         } else {
-                            const { data: newV } = await supabase.from('venues').insert([{
+                            const { data: newV } = await _adminClient.from('venues').insert([{
                                 name: venueName,
                                 city: cityName,
                                 capacity: quota > 0 ? quota * 2 : 30000
@@ -1629,7 +1631,7 @@
                     }
 
                     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Math.floor(100 + Math.random() * 900);
-                    const { data: insData, error: insErr } = await supabase.from('events').insert([{
+                    const { data: insData, error: insErr } = await _adminClient.from('events').insert([{
                         title,
                         slug,
                         venue_id: venueId,
@@ -1646,7 +1648,7 @@
 
                     if (insData && insData.id) {
                         try {
-                            await supabase.from('ticket_tiers').insert([{
+                            await _adminClient.from('ticket_tiers').insert([{
                                 event_id: insData.id,
                                 name: 'General Admission',
                                 price: mrp,
@@ -1735,7 +1737,7 @@
             const venueName = parts[0] ? parts[0].trim() : venueRaw;
             const cityName = parts[1] ? parts[1].trim() : 'India';
 
-            if (supabase) {
+            if (_adminClient) {
                 try {
                     const updates = {
                         title,
@@ -1753,12 +1755,12 @@
                         updates.event_date = parsedDate.toISOString();
                     }
 
-                    const { error: updErr } = await supabase.from('events').update(updates).eq('id', id);
+                    const { error: updErr } = await _adminClient.from('events').update(updates).eq('id', id);
                     if (updErr) throw updErr;
 
                     // Also sync ticket tiers price & cut if exists
                     try {
-                        await supabase.from('ticket_tiers').update({
+                        await _adminClient.from('ticket_tiers').update({
                             price: mrp,
                             promoter_cut_pct: cut
                         }).eq('event_id', id);
@@ -1867,7 +1869,7 @@
             const icon = document.getElementById('refresh-icon');
             if (icon) icon.classList.add('animate-spin');
             setTimeout(() => {
-                if (supabase) {
+                if (_adminClient) {
                     loadDataFromSupabase();
                 } else {
                     renderAllViews();
