@@ -475,11 +475,11 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-medium text-slate-400">Gross Booking Volume</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-emerald">+14.2% MoM</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-gmv-badge">Live DB Synced</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-gmv">₹3.28 Cr</div>
-                            <div class="text-xs text-slate-400">Average pass value ₹4,105</div>
+                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-gmv">₹0.00</div>
+                            <div class="text-xs text-slate-400" id="metric-gmv-sub">0 Confirmed Bookings</div>
                         </div>
                     </div>
 
@@ -487,11 +487,11 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-medium text-slate-400">Pass Inventory Utilization</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-cyan">84.6% Reserved</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-passes-badge">0% Reserved</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-passes">42,000 passes</div>
-                            <div class="text-xs text-slate-400" id="metric-passes-sub">6,480 passes remaining in pool</div>
+                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-passes">0 passes</div>
+                            <div class="text-xs text-slate-400" id="metric-passes-sub">0.0% reserved • 8 Tours on sale</div>
                         </div>
                     </div>
 
@@ -499,11 +499,11 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-medium text-slate-400">Instant UPI Settlement Pool</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-emerald">&lt;38s Avg SLA</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-commissions-badge">Rail Ready</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-commissions">₹48.6 L</div>
-                            <div class="text-xs text-slate-400">100% NPCI immediate rail execution</div>
+                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-commissions">₹0.00</div>
+                            <div class="text-xs text-slate-400" id="metric-commissions-sub">0 UPI Disbursals Logged</div>
                         </div>
                     </div>
                 </div>
@@ -532,7 +532,7 @@
                                     <circle cx="50" cy="50" r="40" stroke="#0284c7" stroke-width="10" fill="none" stroke-dasharray="35 251" stroke-dashoffset="-195" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                                    <span class="text-base font-bold text-white tabular-nums" id="chart-center-val">₹48.6L</span>
+                                    <span class="text-base font-bold text-white tabular-nums" id="chart-center-val">₹0.00</span>
                                     <span class="text-[9px] font-mono text-slate-400 uppercase tracking-wider">Settled</span>
                                 </div>
                             </div>
@@ -548,7 +548,7 @@
                                     </div>
                                     <div class="text-[10px] text-slate-400">Under-45-second gate verification settlement</div>
                                 </div>
-                                <span class="font-mono text-white tabular-nums font-semibold flex-shrink-0">₹34,800</span>
+                                <span class="font-mono text-slate-400 tabular-nums font-semibold flex-shrink-0" id="chart-upi-val">₹0.00</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="min-w-0 pr-2">
@@ -558,7 +558,7 @@
                                     </div>
                                     <div class="text-[10px] text-slate-400">Dynamic rotating barcode tokens provisioned</div>
                                 </div>
-                                <span class="font-mono text-white tabular-nums font-semibold flex-shrink-0">₹86,500</span>
+                                <span class="font-mono text-slate-400 tabular-nums font-semibold flex-shrink-0" id="chart-bms-val">₹0.00</span>
                             </div>
                         </div>
                     </div>
@@ -589,27 +589,27 @@
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-medium text-slate-400">
                             <span>Total Platform Volume</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald">+14.2%</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-gmv-badge">Live DB</span>
                         </div>
-                        <div class="text-2xl font-bold text-white tabular-nums">₹3,28,45,000</div>
-                        <div class="text-xs text-slate-400">Audited national concert GMV</div>
+                        <div class="text-2xl font-bold text-white tabular-nums" id="telemetry-gmv">₹0.00</div>
+                        <div class="text-xs text-slate-400" id="telemetry-gmv-sub">0 Confirmed Orders</div>
                     </div>
 
                     <!-- Pass Velocity -->
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-medium text-slate-400">
                             <span>Verified Pass Drops Sold</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald">+18.3%</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-passes-badge">0% Sold</span>
                         </div>
-                        <div class="text-2xl font-bold text-white tabular-nums">42,000 passes</div>
-                        <div class="text-xs text-slate-400">Across 8 confirmed tour stages</div>
+                        <div class="text-2xl font-bold text-white tabular-nums" id="telemetry-passes">0 passes</div>
+                        <div class="text-xs text-slate-400" id="telemetry-passes-sub">Across 8 confirmed tour stages</div>
                     </div>
 
                     <!-- Turnstile Throughput -->
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-medium text-slate-400">
                             <span>Turnstile Gate Scans</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald">99.8% SLA</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-scans-badge">Awaiting Ingress</span>
                         </div>
                         <div class="text-2xl font-bold text-white tabular-nums">12,480 scans</div>
                         <div class="text-xs text-slate-400">Verified dynamic QR token ingress</div>
@@ -1912,20 +1912,80 @@
         }
 
         function renderOverview() {
-            // Update Top 4 KPIs
-            const tourCount = (liveData.tours && liveData.tours.length) || 8;
+            const orders = liveData.orders || [];
+            const tours = liveData.tours || [];
+            const payouts = liveData.payouts || [];
+            const scans = liveData.gateScans || [];
+
+            // 1. Metric: Tours Count
+            const tourCount = tours.length || 8;
             const elTours = document.getElementById('metric-tours-count');
             if (elTours) elTours.textContent = `${tourCount} Tours`;
+
+            // 2. Metric: Gross Booking Volume
+            const totalGMV = orders.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
+            const elGmv = document.getElementById('metric-gmv');
+            if (elGmv) elGmv.textContent = totalGMV > 0 ? `₹${totalGMV.toLocaleString('en-IN')}` : '₹0.00';
+            const elGmvSub = document.getElementById('metric-gmv-sub');
+            if (elGmvSub) elGmvSub.textContent = `${orders.length} Confirmed Bookings`;
+            const elGmvBadge = document.getElementById('metric-gmv-badge');
+            if (elGmvBadge) elGmvBadge.textContent = orders.length > 0 ? `${orders.length} Live Orders` : 'Live DB Synced';
+
+            const elTelGmv = document.getElementById('telemetry-gmv');
+            if (elTelGmv) elTelGmv.textContent = totalGMV > 0 ? `₹${totalGMV.toLocaleString('en-IN')}` : '₹0.00';
+            const elTelGmvSub = document.getElementById('telemetry-gmv-sub');
+            if (elTelGmvSub) elTelGmvSub.textContent = `${orders.length} Confirmed Orders`;
+            const elTelGmvBadge = document.getElementById('telemetry-gmv-badge');
+            if (elTelGmvBadge) elTelGmvBadge.textContent = orders.length > 0 ? `${orders.length} Orders` : '0 Orders';
+
+            // 3. Metric: Pass Inventory Utilization
+            const totalCapacity = tours.reduce((acc, t) => acc + (Number(t.quotaTotal) || 7000), 0);
+            const totalSold = orders.reduce((acc, o) => acc + (Number(o.qty) || 1), 0);
+            const utilPct = totalCapacity > 0 ? ((totalSold / totalCapacity) * 100).toFixed(1) : '0.0';
+            
+            const elPasses = document.getElementById('metric-passes');
+            if (elPasses) elPasses.textContent = `${totalSold.toLocaleString()} passes`;
+            const elPassesSub = document.getElementById('metric-passes-sub');
+            if (elPassesSub) elPassesSub.textContent = `${utilPct}% utilized • ${totalCapacity.toLocaleString()} total quota`;
+            const elPassesBadge = document.getElementById('metric-passes-badge');
+            if (elPassesBadge) elPassesBadge.textContent = `${utilPct}% Reserved`;
+
+            const elTelPasses = document.getElementById('telemetry-passes');
+            if (elTelPasses) elTelPasses.textContent = `${totalSold.toLocaleString()} passes`;
+            const elTelPassesBadge = document.getElementById('telemetry-passes-badge');
+            if (elTelPassesBadge) elTelPassesBadge.textContent = `${utilPct}% Sold`;
+
+            // 4. Metric: Instant UPI Settlement Pool
+            const totalPayouts = payouts.reduce((acc, p) => acc + (Number(p.amount) || 0), 0);
+            const elCommissions = document.getElementById('metric-commissions');
+            if (elCommissions) elCommissions.textContent = totalPayouts > 0 ? `₹${totalPayouts.toLocaleString('en-IN')}` : '₹0.00';
+            const elCommissionsSub = document.getElementById('metric-commissions-sub');
+            if (elCommissionsSub) elCommissionsSub.textContent = `${payouts.length} UPI Disbursals Logged`;
+            const elCommissionsBadge = document.getElementById('metric-commissions-badge');
+            if (elCommissionsBadge) elCommissionsBadge.textContent = payouts.length > 0 ? `${payouts.length} Disbursed` : 'Rail Ready';
+
+            const elChartCenter = document.getElementById('chart-center-val');
+            if (elChartCenter) elChartCenter.textContent = totalPayouts > 0 ? `₹${totalPayouts.toLocaleString('en-IN')}` : '₹0.00';
+            const elChartUpi = document.getElementById('chart-upi-val');
+            if (elChartUpi) elChartUpi.textContent = totalPayouts > 0 ? `₹${totalPayouts.toLocaleString('en-IN')}` : '₹0.00';
+            const elChartBms = document.getElementById('chart-bms-val');
+            if (elChartBms) elChartBms.textContent = totalGMV > 0 ? `₹${totalGMV.toLocaleString('en-IN')}` : '₹0.00';
+
+            // 5. Metric: Scans
+            const elTelScans = document.getElementById('telemetry-scans');
+            if (elTelScans) elTelScans.textContent = `${scans.length.toLocaleString()} scans`;
+            const elTelScansBadge = document.getElementById('telemetry-scans-badge');
+            if (elTelScansBadge) elTelScansBadge.textContent = scans.length > 0 ? `${scans.length} Scanned` : 'Awaiting Ingress';
 
             // Render Dynamic Projects List in Overview
             const projectsList = document.getElementById('overview-projects-list');
             if (projectsList) {
-                if (liveData.tours && liveData.tours.length > 0) {
-                    projectsList.innerHTML = liveData.tours.slice(0, 6).map((t, idx) => {
+                if (tours && tours.length > 0) {
+                    projectsList.innerHTML = tours.slice(0, 6).map((t, idx) => {
                         const total = t.quotaTotal || 7000;
                         const avail = t.quotaAvailable !== undefined ? t.quotaAvailable : total;
                         const sold = Math.max(0, total - avail);
-                        const pct = total > 0 ? Math.round((sold / total) * 100) : 74;
+                        const pct = total > 0 ? Math.round((sold / total) * 100) : 0;
 
                         return `
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg ops-card-subtle gap-2 hover:border-[#2a3248] transition-colors">
@@ -1936,7 +1996,7 @@
                                     <div class="min-w-0">
                                         <div class="font-semibold text-white truncate text-xs flex items-center space-x-2">
                                             <span>${t.title}</span>
-                                            ${t.isFeatured ? `<span class="badge-amber px-1.5 py-0.2 rounded text-[9px] font-mono font-medium">Hero Active</span>` : ''}
+                                            ${t.isFeatured ? '<span class="badge-amber px-1.5 py-0.2 rounded text-[9px] font-mono font-medium">Hero Active</span>' : ''}
                                         </div>
                                         <div class="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
                                             <span>${t.venue}, ${t.city}</span>
@@ -1965,7 +2025,7 @@
             }
 
             // Render Featured Headliner Spotlight Card
-            const featuredTour = (liveData.tours || []).find(t => t.isFeatured) || (liveData.tours && liveData.tours[0]);
+            const featuredTour = (tours || []).find(t => t.isFeatured) || (tours && tours[0]);
             if (featuredTour) {
                 const elPoster = document.getElementById('spotlight-poster');
                 if (elPoster) {
@@ -1986,7 +2046,7 @@
                 const total = featuredTour.quotaTotal || 7000;
                 const avail = featuredTour.quotaAvailable !== undefined ? featuredTour.quotaAvailable : total;
                 const sold = Math.max(0, total - avail);
-                const pct = total > 0 ? Math.round((sold / total) * 100) : 74;
+                const pct = total > 0 ? Math.round((sold / total) * 100) : 0;
 
                 const elQuotaText = document.getElementById('spotlight-quota-text');
                 if (elQuotaText) elQuotaText.textContent = `${sold.toLocaleString()} / ${total.toLocaleString()} passes (${pct}%)`;
@@ -1994,37 +2054,34 @@
                 if (elQuotaBar) elQuotaBar.style.width = `${pct}%`;
             }
 
-            // Render Order Status Table
+            // Render Order Status Table on Overview
             const ordersTable = document.getElementById('overview-orders-table');
             if (ordersTable) {
-                const orders = (liveData.orders && liveData.orders.length > 0) ? liveData.orders : [
-                    { id: 1, orderNum: 'TXR-8841', attendee: 'Aarav Sharma', total: 8500, event: 'Anyma presents ÆDEN', mode: 'UPI Instant', date: '06 Nov 2026', status: 'Approved' },
-                    { id: 2, orderNum: 'TXR-8842', attendee: 'Riya Sen', total: 9898, event: "Guns N' Roses India Tour", mode: 'Credit Card', date: '06 Nov 2026', status: 'Approved' },
-                    { id: 3, orderNum: 'TXR-8843', attendee: 'Kabir Mehta', total: 3999, event: 'Fred again.. Live in Delhi', mode: 'UPI Instant', date: '05 Nov 2026', status: 'Pending' },
-                    { id: 4, orderNum: 'TXR-8844', attendee: 'Ananya Roy', total: 4999, event: 'Sunburn Goa 2026', mode: 'UPI Instant', date: '05 Nov 2026', status: 'Approved' },
-                    { id: 5, orderNum: 'TXR-8845', attendee: 'Dev Malhotra', total: 3499, event: 'The Chainsmokers Sunburn Arena', mode: 'NetBanking', date: '04 Nov 2026', status: 'Approved' }
-                ];
-                ordersTable.innerHTML = orders.slice(0, 5).map(o => `
-                    <tr class="hover:bg-white/[0.02] transition-colors">
-                        <td class="py-3 px-3"><input type="checkbox" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0"></td>
-                        <td class="py-3 px-3 flex items-center space-x-2">
-                            <div class="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-[10px] font-bold">
-                                ${o.attendee ? o.attendee.slice(0, 2).toUpperCase() : 'FN'}
-                            </div>
-                            <span class="text-white font-medium">${o.attendee}</span>
-                        </td>
-                        <td class="py-3 px-3 font-mono text-slate-400">${o.orderNum}</td>
-                        <td class="py-3 px-3 font-mono text-white font-semibold tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
-                        <td class="py-3 px-3 text-slate-300 truncate max-w-[160px]">${o.event}</td>
-                        <td class="py-3 px-3 text-slate-400 font-mono">${o.mode || 'UPI Instant'}</td>
-                        <td class="py-3 px-3 text-slate-400 font-mono">${o.date || '06 Nov 2026'}</td>
-                        <td class="py-3 px-3">
-                            <span class="${(o.status || 'Approved') === 'Approved' ? 'badge-emerald' : 'badge-amber'} px-2.5 py-0.5 rounded-md text-[10px] font-medium font-mono uppercase">
-                                ${o.status || 'Approved'}
-                            </span>
-                        </td>
-                    </tr>
-                `).join('');
+                if (orders && orders.length > 0) {
+                    ordersTable.innerHTML = orders.slice(0, 5).map(o => `
+                        <tr class="hover:bg-white/[0.02] transition-colors">
+                            <td class="py-3 px-3"><input type="checkbox" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0"></td>
+                            <td class="py-3 px-3 flex items-center space-x-2">
+                                <div class="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-[10px] font-bold">
+                                    ${o.attendee ? o.attendee.slice(0, 2).toUpperCase() : 'FN'}
+                                </div>
+                                <span class="text-white font-medium">${o.attendee}</span>
+                            </td>
+                            <td class="py-3 px-3 font-mono text-slate-400">${o.orderNum}</td>
+                            <td class="py-3 px-3 font-mono text-white font-semibold tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
+                            <td class="py-3 px-3 text-slate-300 truncate max-w-[160px]">${o.event}</td>
+                            <td class="py-3 px-3 text-slate-400 font-mono">${o.mode || 'UPI Instant'}</td>
+                            <td class="py-3 px-3 text-slate-400 font-mono">${o.date || '06 Nov 2026'}</td>
+                            <td class="py-3 px-3">
+                                <span class="${(o.status || 'Approved') === 'Approved' ? 'badge-emerald' : 'badge-amber'} px-2.5 py-0.5 rounded-md text-[10px] font-medium font-mono uppercase">
+                                    ${o.status || 'Approved'}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here as they occur.</td></tr>';
+                }
             }
         }
 
