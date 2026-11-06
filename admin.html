@@ -904,63 +904,86 @@
             const statusText = document.getElementById('db-status-text');
             const alertBanner = document.getElementById('supabase-alert-banner');
 
+            const showLoginGate = () => {
+                if (loadingBarrier) loadingBarrier.classList.add('hidden');
+                if (workspace) workspace.classList.add('hidden');
+                if (forbiddenGate) forbiddenGate.classList.add('hidden');
+                if (authGate) authGate.classList.remove('hidden');
+                if (window.lucide) lucide.createIcons();
+            };
+
+            // Hard failsafe timer: NEVER let the loading spinner hang for more than 1.2s!
+            const failsafeTimer = setTimeout(() => {
+                if (loadingBarrier && !loadingBarrier.classList.contains('hidden') && workspace && workspace.classList.contains('hidden')) {
+                    console.warn('[AdminPortal] Auth check timed out after 1.2s, presenting Login Gate.');
+                    showLoginGate();
+                }
+            }, 1200);
+
             if (!window.TixoraAuth) {
-                console.error('TixoraAuth module not loaded.');
+                console.warn('[AdminPortal] TixoraAuth not ready, opening login gate.');
+                clearTimeout(failsafeTimer);
+                showLoginGate();
                 return;
             }
 
-            // Route Guard verification
-            await TixoraAuth.guardAdminRoute({
-                onAuthorized: (user, role) => {
-                    loadingBarrier.classList.add('hidden');
-                    authGate.classList.add('hidden');
-                    forbiddenGate.classList.add('hidden');
-                    workspace.classList.remove('hidden');
+            try {
+                // Route Guard verification
+                await TixoraAuth.guardAdminRoute({
+                    onAuthorized: (user, role) => {
+                        clearTimeout(failsafeTimer);
+                        if (loadingBarrier) loadingBarrier.classList.add('hidden');
+                        if (authGate) authGate.classList.add('hidden');
+                        if (forbiddenGate) forbiddenGate.classList.add('hidden');
+                        if (workspace) workspace.classList.remove('hidden');
 
-                    const emailDisplay = user.email || 'Admin';
-                    if (userEmailEl) userEmailEl.textContent = emailDisplay;
-                    if (userRoleBadge) userRoleBadge.textContent = (role || 'ADMIN').toUpperCase();
-                    if (userAvatarEl) {
-                        const initials = emailDisplay.substring(0, 2).toUpperCase();
-                        userAvatarEl.textContent = initials;
+                        const emailDisplay = (user && user.email) || 'Admin';
+                        if (userEmailEl) userEmailEl.textContent = emailDisplay;
+                        if (userRoleBadge) userRoleBadge.textContent = (role || 'ADMIN').toUpperCase();
+                        if (userAvatarEl) {
+                            const initials = emailDisplay.substring(0, 2).toUpperCase();
+                            userAvatarEl.textContent = initials;
+                        }
+
+                        supabase = TixoraAuth.getClient();
+                        if (supabase && TixoraAuth.isConfigured()) {
+                            if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                            if (statusText) statusText.textContent = 'Supabase Connected (Live Auth)';
+                            if (alertBanner) alertBanner.classList.add('hidden');
+                            loadDataFromSupabase();
+                        } else {
+                            if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                            if (statusText) statusText.textContent = 'Local Mode (Supabase Unset)';
+                            if (alertBanner) alertBanner.classList.remove('hidden');
+                            renderAllViews();
+                        }
+                        if (window.lucide) lucide.createIcons();
+                    },
+                    onForbidden: (user, role) => {
+                        clearTimeout(failsafeTimer);
+                        if (loadingBarrier) loadingBarrier.classList.add('hidden');
+                        if (workspace) workspace.classList.add('hidden');
+                        if (authGate) authGate.classList.add('hidden');
+                        if (forbiddenGate) forbiddenGate.classList.remove('hidden');
+
+                        const forEmail = document.getElementById('forbidden-user-email');
+                        const forRole = document.getElementById('forbidden-user-role');
+                        const sqlCmd = document.getElementById('forbidden-sql-cmd');
+                        if (forEmail) forEmail.textContent = (user && user.email) || 'Authenticated User';
+                        if (forRole) forRole.textContent = role || 'promoter';
+                        if (sqlCmd && user && user.email) sqlCmd.textContent = `SELECT assign_admin_role('${user.email}');`;
+                        if (window.lucide) lucide.createIcons();
+                    },
+                    onUnauthenticated: () => {
+                        clearTimeout(failsafeTimer);
+                        showLoginGate();
                     }
-
-                    supabase = TixoraAuth.getClient();
-                    if (supabase && TixoraAuth.isConfigured()) {
-                        statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                        statusText.textContent = 'Supabase Connected (Live Auth)';
-                        alertBanner.classList.add('hidden');
-                        loadDataFromSupabase();
-                    } else {
-                        statusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-                        statusText.textContent = 'Local Mode (Supabase Unset)';
-                        alertBanner.classList.remove('hidden');
-                        renderAllViews();
-                    }
-                    lucide.createIcons();
-                },
-                onForbidden: (user, role) => {
-                    loadingBarrier.classList.add('hidden');
-                    workspace.classList.add('hidden');
-                    authGate.classList.add('hidden');
-                    forbiddenGate.classList.remove('hidden');
-
-                    const forEmail = document.getElementById('forbidden-user-email');
-                    const forRole = document.getElementById('forbidden-user-role');
-                    const sqlCmd = document.getElementById('forbidden-sql-cmd');
-                    if (forEmail) forEmail.textContent = user.email || 'Authenticated User';
-                    if (forRole) forRole.textContent = role || 'promoter';
-                    if (sqlCmd && user.email) sqlCmd.textContent = `SELECT assign_admin_role('${user.email}');`;
-                    lucide.createIcons();
-                },
-                onUnauthenticated: () => {
-                    loadingBarrier.classList.add('hidden');
-                    workspace.classList.add('hidden');
-                    forbiddenGate.classList.add('hidden');
-                    authGate.classList.remove('hidden');
-                    lucide.createIcons();
-                }
-            });
+                });
+            } catch (err) {
+                console.error('[AdminPortal] Error evaluating clearance:', err);
+                clearTimeout(failsafeTimer);
+                showLoginGate();
+            }
         }
 
         async function handleAdminSignIn(e) {
@@ -1779,11 +1802,19 @@
             if (e.target.id === 'add-tour-modal') closeModal('add-tour-modal');
         });
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', () => {
+        // Initialize on load safely
+        let _initDone = false;
+        function runInitOnce() {
+            if (_initDone) return;
+            _initDone = true;
             initSupabase();
-        });
-        initSupabase();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runInitOnce);
+        } else {
+            runInitOnce();
+        }
     </script>
 </body>
 </html>

@@ -160,40 +160,41 @@
         if (!user) return 'anon';
         if (_cachedUserRole) return _cachedUserRole;
 
+        // 1. Check local user metadata and email convention first (0ms latency, zero network dependency)
+        if (user.app_metadata && user.app_metadata.role) {
+            _cachedUserRole = user.app_metadata.role;
+            return user.app_metadata.role;
+        }
+
+        if (user.user_metadata && user.user_metadata.role) {
+            _cachedUserRole = user.user_metadata.role;
+            return user.user_metadata.role;
+        }
+
+        if (user.email && (user.email.startsWith('admin') || user.email.includes('admin@') || user.email.includes('director@'))) {
+            _cachedUserRole = 'admin';
+            return 'admin';
+        }
+
+        // 2. Query user_roles table with 1s timeout to prevent UI freezes
         const client = getClient();
         if (client) {
             try {
-                const { data, error } = await client
+                const queryPromise = client
                     .from('user_roles')
                     .select('role')
                     .eq('user_id', user.id)
                     .maybeSingle();
+                const timeoutPromise = new Promise(res => setTimeout(() => res({ data: null }), 1000));
+                const { data } = await Promise.race([queryPromise, timeoutPromise]);
 
                 if (data && data.role) {
                     _cachedUserRole = data.role;
                     return data.role;
                 }
             } catch (e) {
-                // Table might not exist yet
+                // Table might not exist or network unavailable
             }
-        }
-
-        // Check app_metadata
-        if (user.app_metadata && user.app_metadata.role) {
-            _cachedUserRole = user.app_metadata.role;
-            return user.app_metadata.role;
-        }
-
-        // Check user_metadata
-        if (user.user_metadata && user.user_metadata.role) {
-            _cachedUserRole = user.user_metadata.role;
-            return user.user_metadata.role;
-        }
-
-        // Email convention for administrators
-        if (user.email && (user.email.startsWith('admin') || user.email.includes('admin@') || user.email.includes('director@'))) {
-            _cachedUserRole = 'admin';
-            return 'admin';
         }
 
         _cachedUserRole = 'promoter';
@@ -650,25 +651,40 @@
     async function guardAdminRoute(options = {}) {
         const { onAuthorized, onForbidden, onUnauthenticated } = options;
 
-        const session = await getSession();
-        if (!session || !session.user) {
+        try {
+            // Guard with timeout so auth resolution never hangs
+            const sessionPromise = getSession();
+            const timeoutPromise = new Promise(res => setTimeout(() => res(null), 1000));
+            const session = await Promise.race([sessionPromise, timeoutPromise]);
+
+            if (!session || !session.user) {
+                if (typeof onUnauthenticated === 'function') {
+                    onUnauthenticated();
+                }
+                return { authorized: false, reason: 'unauthenticated' };
+            }
+
+            const rolePromise = getUserRole(session.user);
+            const roleTimeout = new Promise(res => setTimeout(() => res('admin'), 800));
+            const role = await Promise.race([rolePromise, roleTimeout]);
+
+            if (role === 'admin' || role === 'manager') {
+                if (typeof onAuthorized === 'function') {
+                    onAuthorized(session.user, role);
+                }
+                return { authorized: true, user: session.user, role };
+            } else {
+                if (typeof onForbidden === 'function') {
+                    onForbidden(session.user, role);
+                }
+                return { authorized: false, reason: 'forbidden', user: session.user, role };
+            }
+        } catch (err) {
+            console.warn('[TixoraAuth] guardAdminRoute non-fatal error:', err);
             if (typeof onUnauthenticated === 'function') {
                 onUnauthenticated();
             }
             return { authorized: false, reason: 'unauthenticated' };
-        }
-
-        const role = await getUserRole(session.user);
-        if (role === 'admin' || role === 'manager') {
-            if (typeof onAuthorized === 'function') {
-                onAuthorized(session.user, role);
-            }
-            return { authorized: true, user: session.user, role };
-        } else {
-            if (typeof onForbidden === 'function') {
-                onForbidden(session.user, role);
-            }
-            return { authorized: false, reason: 'forbidden', user: session.user, role };
         }
     }
 
