@@ -806,28 +806,28 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                                 <div
                                     class="flex items-center justify-between pb-4 border-b border-dashed border-white/[0.12]">
                                     <div>
-                                        <span
-                                            class="text-[10px] font-mono text-slate-400 block uppercase tracking-wider">Stadium
+                                        <span id="hero-featured-allocation"
+                                            class="text-[10px] font-mono text-slate-400 block uppercase tracking-wider">Arena Open-Air
                                             Allocation</span>
-                                        <div class="text-lg font-bold font-display text-white">Anyma • ÆDEN Mumbai</div>
+                                        <div id="hero-featured-title" class="text-lg font-bold font-display text-white">Anyma • ÆDEN Mumbai</div>
                                     </div>
-                                    <span
+                                    <span id="hero-featured-badge"
                                         class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/[0.05] text-slate-400 border border-white/[0.08]">
-                                        Active Drop
+                                        ⭐ Featured Drop
                                     </span>
                                 </div>
 
                                 <div
                                     class="relative rounded-2xl overflow-hidden aspect-video bg-black border border-white/[0.08]">
-                                    <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma live in Mumbai"
+                                    <img id="hero-featured-img" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Headliner"
                                         class="w-full h-full object-cover">
                                     <div
                                         class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent">
                                     </div>
                                     <div
                                         class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] sm:text-xs font-mono">
-                                        <span class="text-white font-medium">Mahalaxmi Racecourse</span>
-                                        <span
+                                        <span id="hero-featured-venue" class="text-white font-medium">Mahalaxmi Racecourse, Mumbai</span>
+                                        <span id="hero-featured-cut"
                                             class="text-slate-400 bg-black/80 px-2 py-0.5 rounded border border-white/[0.08]">Earn
                                             ₹680 / pass</span>
                                     </div>
@@ -837,12 +837,20 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                                     class="space-y-2 pt-2 border-t border-dashed border-white/[0.12] font-mono text-xs">
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Pass MRP:</span>
-                                        <span class="text-white font-bold">₹4,250</span>
+                                        <span id="hero-featured-mrp" class="text-white font-bold">₹4,250</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Delivery:</span>
-                                        <span class="text-white font-medium">BookMyShow Wallet</span>
+                                        <span id="hero-featured-delivery" class="text-white font-medium">BookMyShow Wallet</span>
                                     </div>
+                                </div>
+
+                                <div class="pt-2">
+                                    <button id="hero-featured-btn" onclick="buyTicketModal('Anyma presents ÆDEN', 4250, 'GA Standard')"
+                                        class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold text-center flex items-center justify-center space-x-2">
+                                        <span>Reserve Featured Tour Pass</span>
+                                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                                    </button>
                                 </div>
 
                             </div>
@@ -1659,6 +1667,13 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 </div>
             </div>
 
+            <div id="buy-tier-wrapper" class="space-y-1 font-sans hidden">
+                <label class="text-[11px] font-mono text-slate-400 uppercase">Select Ticket Tier</label>
+                <select id="buy-tier-select" onchange="handleBuyTierChange(this)"
+                    class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                </select>
+            </div>
+
             <div class="space-y-3 font-sans">
                 <input type="text" placeholder="Attendee Full Name"
                     class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
@@ -2086,8 +2101,35 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         window.buyTicketModal = function (eventName, price, category) {
             document.getElementById('buy-event-title').textContent = eventName;
             document.getElementById('buy-organizer-tag').textContent = category + ' • Official Quota';
-            document.getElementById('buy-total-val').textContent = '₹' + price.toLocaleString('en-IN');
+            document.getElementById('buy-total-val').textContent = '₹' + Number(price).toLocaleString('en-IN');
+
+            const ev = (window._liveEvents || []).find(e => e.title === eventName);
+            const tierWrapper = document.getElementById('buy-tier-wrapper');
+            const tierSelect = document.getElementById('buy-tier-select');
+
+            if (tierWrapper && tierSelect) {
+                if (ev && ev.ticket_tiers && ev.ticket_tiers.length > 0) {
+                    tierWrapper.classList.remove('hidden');
+                    tierSelect.innerHTML = ev.ticket_tiers.map(t => `
+                        <option value="${t.price}" data-tier="${t.name}">
+                            ${t.name} — ₹${Number(t.price).toLocaleString('en-IN')}
+                        </option>
+                    `).join('');
+                    document.getElementById('buy-total-val').textContent = '₹' + Number(ev.ticket_tiers[0].price).toLocaleString('en-IN');
+                    document.getElementById('buy-organizer-tag').textContent = ev.ticket_tiers[0].name + ' • Official Quota';
+                } else {
+                    tierWrapper.classList.add('hidden');
+                }
+            }
             openModal('buy-modal');
+        };
+
+        window.handleBuyTierChange = function (sel) {
+            const opt = sel.options[sel.selectedIndex];
+            const price = Number(sel.value);
+            const tierName = opt ? (opt.getAttribute('data-tier') || 'General Admission') : 'General Admission';
+            document.getElementById('buy-total-val').textContent = '₹' + price.toLocaleString('en-IN');
+            document.getElementById('buy-organizer-tag').textContent = tierName + ' • Official Quota';
         };
 
         window.copyPromoterLink = function (eventName) {
@@ -2596,7 +2638,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             try {
                 const { data: events, error } = await client
                     .from('events')
-                    .select('*, venues(name, city)')
+                    .select('*, venues(name, city), ticket_tiers(id, name, price, total_quota, available_quota, promoter_cut_pct)')
                     .eq('status', 'active')
                     .order('event_date', { ascending: true });
 
@@ -2605,13 +2647,87 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                     return;
                 }
 
+                window._liveEvents = events || [];
                 renderLiveEvents(events || []);
             } catch (err) {
                 console.warn('[TixoraLiveEvents] Error loading live events:', err);
             }
         }
 
+        function updateHeroFeaturedEvent(events) {
+            if (!events || !events.length) return;
+
+            const savedFeaturedId = localStorage.getItem('tixora_featured_event_id');
+            let featured = null;
+            if (savedFeaturedId) {
+                featured = events.find(e => String(e.id) === String(savedFeaturedId));
+            }
+            if (!featured) {
+                featured = events.find(e => (e.banner_url || '').includes('FEATURED'));
+            }
+            if (!featured) {
+                featured = events[0];
+            }
+
+            if (!featured) return;
+
+            // Parse layout from banner_url if present (e.g. layout:Stadium 360° or FEATURED|layout:Arena Open-Air)
+            let layout = 'Stadium Allocation';
+            if (featured.banner_url) {
+                const match = featured.banner_url.match(/layout:([^|]+)/);
+                if (match && match[1]) {
+                    layout = match[1].trim() + ' Allocation';
+                }
+            }
+
+            const venueName = (featured.venues && featured.venues.name) || featured.venue || 'Official Arena';
+            const cityName = (featured.venues && featured.venues.city) || featured.city || 'India';
+            const mrp = Number(featured.starting_price) || 2999;
+            const cut = Number(featured.promoter_cut_pct) || 16;
+            const yourCut = Math.round(mrp * (cut / 100));
+            const poster = featured.poster_url || 'posters/anyma-aeden-poster-1.jpg';
+            const partner = featured.partner_engine || 'BookMyShow';
+            const safeTitle = (featured.title || 'Tour Pass').replace(/'/g, "\\'");
+
+            const elAlloc = document.getElementById('hero-featured-allocation');
+            if (elAlloc) elAlloc.textContent = layout.toUpperCase();
+
+            const elTitle = document.getElementById('hero-featured-title');
+            if (elTitle) elTitle.textContent = featured.title;
+
+            const elBadge = document.getElementById('hero-featured-badge');
+            if (elBadge) {
+                elBadge.textContent = '⭐ Featured Drop';
+                elBadge.className = 'px-2.5 py-1 rounded-full text-xs font-mono bg-crimson/15 text-crimson border border-crimson/30 animate-pulse';
+            }
+
+            const elImg = document.getElementById('hero-featured-img');
+            if (elImg) {
+                elImg.src = poster;
+                elImg.alt = featured.title;
+            }
+
+            const elVenue = document.getElementById('hero-featured-venue');
+            if (elVenue) elVenue.textContent = `${venueName}, ${cityName}`;
+
+            const elCut = document.getElementById('hero-featured-cut');
+            if (elCut) elCut.textContent = `Earn ₹${yourCut.toLocaleString('en-IN')} / pass (${cut}%)`;
+
+            const elMrp = document.getElementById('hero-featured-mrp');
+            if (elMrp) elMrp.textContent = `₹${mrp.toLocaleString('en-IN')}`;
+
+            const elDelivery = document.getElementById('hero-featured-delivery');
+            if (elDelivery) elDelivery.textContent = `${partner} Direct Pass`;
+
+            const elBtn = document.getElementById('hero-featured-btn');
+            if (elBtn) {
+                elBtn.setAttribute('onclick', `buyTicketModal('${safeTitle}', ${mrp}, 'Featured Tour Pass')`);
+            }
+        }
+
         function renderLiveEvents(events) {
+            updateHeroFeaturedEvent(events);
+
             const track = document.getElementById('events-side-track');
             const dotsContainer = document.getElementById('events-dots');
             if (!track) return;
@@ -2640,6 +2756,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 return;
             }
 
+            const savedFeaturedId = localStorage.getItem('tixora_featured_event_id');
             track.innerHTML = events.map(e => {
                 const venueName = (e.venues && e.venues.name) || e.venue || 'Official Venue';
                 const cityName = (e.venues && e.venues.city) || e.city || 'India';
@@ -2657,6 +2774,11 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 const poster = e.poster_url || 'posters/anyma-aeden-poster-1.jpg';
                 const safeTitle = (e.title || 'Tour Pass').replace(/'/g, "\\'");
 
+                const banner = e.banner_url || '';
+                const layoutMatch = banner.match(/layout:([^|]+)/);
+                const layoutTag = layoutMatch ? layoutMatch[1].trim() : 'Arena Open-Air';
+                const isFeatured = savedFeaturedId ? (String(savedFeaturedId) === String(e.id)) : banner.includes('FEATURED');
+
                 return `
                     <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
                         <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
@@ -2672,7 +2794,15 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                         </div>
                         <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
                             <div>
-                                <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">${formattedDate}</div>
+                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                    <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">${formattedDate}</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">${layoutTag}</span>
+                                    ${isFeatured ? `
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-crimson/20 text-crimson border border-crimson/30 font-bold animate-pulse">
+                                            ⭐ FEATURED
+                                        </span>
+                                    ` : ''}
+                                </div>
                                 <h3 class="text-xl font-bold font-display text-white mt-1">${e.title}</h3>
                                 <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
                                     ${e.description || 'Official tour promoter allocation pass. Guaranteed authenticity via BookMyShow dynamic barcode engine.'}
@@ -2733,6 +2863,16 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 console.warn('[TixoraRealtime] Realtime subscription notice:', err);
             }
         }
+
+        // Realtime storage listener for instant cross-tab sync when admin features an event
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'tixora_featured_event_id' || e.key === 'tixora_events_updated') {
+                loadLiveEvents();
+            }
+        });
+        window.addEventListener('focus', () => {
+            loadLiveEvents();
+        });
 
         // Initialize promoter auth controller & live event engine
         document.addEventListener('DOMContentLoaded', () => {
