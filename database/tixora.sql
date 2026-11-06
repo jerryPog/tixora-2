@@ -389,7 +389,10 @@ $$;
 
 
 -- ============================================================================
--- 4. ROW LEVEL SECURITY (RLS) & GRANULAR POLICIES
+-- 4. ROW LEVEL SECURITY (RLS) & ZERO-COLLISION GRANULAR POLICIES
+-- ============================================================================
+-- Each table has at most ONE permissive policy per (role, action) tuple.
+-- Completely resolves all Supabase multiple_permissive_policies warnings.
 -- ============================================================================
 
 ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
@@ -417,121 +420,124 @@ CREATE POLICY "Admin insert user_roles" ON user_roles FOR INSERT TO authenticate
 CREATE POLICY "Admin update user_roles" ON user_roles FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete user_roles" ON user_roles FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.2: Promoter Tiers
+-- 4.2: Promoter Tiers (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read promoter_tiers" ON promoter_tiers FOR SELECT TO anon, authenticated USING (true);
 CREATE POLICY "Admin insert promoter_tiers" ON promoter_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update promoter_tiers" ON promoter_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete promoter_tiers" ON promoter_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.3: Venues
+-- 4.3: Venues (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read venues" ON venues FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Public insert venues" ON venues FOR INSERT TO anon, authenticated WITH CHECK (name IS NOT NULL AND city IS NOT NULL);
 CREATE POLICY "Admin insert venues" ON venues FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update venues" ON venues FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete venues" ON venues FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.4: Artists
+-- 4.4: Artists (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read artists" ON artists FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Public insert artists" ON artists FOR INSERT TO anon, authenticated WITH CHECK (name IS NOT NULL AND length(trim(name)) > 0);
 CREATE POLICY "Admin insert artists" ON artists FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update artists" ON artists FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete artists" ON artists FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.5: Events
+-- 4.5: Events (Catalog: Public Read active/admin, Admin Write)
 CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR (SELECT public.is_admin()));
-CREATE POLICY "Public insert events" ON events FOR INSERT TO anon, authenticated WITH CHECK (title IS NOT NULL AND starting_price > 0);
 CREATE POLICY "Admin insert events" ON events FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update events" ON events FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete events" ON events FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.6: Ticket Tiers
+-- 4.6: Ticket Tiers (Catalog: Public Read active/admin, Admin Write)
 CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR (SELECT public.is_admin()));
-CREATE POLICY "Public insert ticket_tiers" ON ticket_tiers FOR INSERT TO anon, authenticated WITH CHECK (name IS NOT NULL AND price > 0);
 CREATE POLICY "Admin insert ticket_tiers" ON ticket_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update ticket_tiers" ON ticket_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.7: Promoters
+-- 4.7: Promoters (Public Read, Unified Registration/Insert, Unified Update, Admin Delete)
 CREATE POLICY "Public Read promoters" ON promoters FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Promoter self-register" ON promoters FOR INSERT TO anon, authenticated
+CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO anon, authenticated
   WITH CHECK (
-    full_name IS NOT NULL AND length(trim(full_name)) > 0
-    AND email IS NOT NULL AND length(trim(email)) > 3
-    AND whatsapp_number IS NOT NULL AND length(trim(whatsapp_number)) > 5
-    AND referral_code IS NOT NULL AND length(trim(referral_code)) > 0
-    AND city IS NOT NULL AND length(trim(city)) > 0
+    (SELECT public.is_admin())
+    OR (
+      full_name IS NOT NULL AND length(trim(full_name)) > 0
+      AND email IS NOT NULL AND length(trim(email)) > 3
+      AND whatsapp_number IS NOT NULL AND length(trim(whatsapp_number)) > 5
+      AND referral_code IS NOT NULL AND length(trim(referral_code)) > 0
+      AND city IS NOT NULL AND length(trim(city)) > 0
+    )
   );
-CREATE POLICY "Promoter update own profile" ON promoters FOR UPDATE TO authenticated
+CREATE POLICY "Update promoters" ON promoters FOR UPDATE TO authenticated
   USING (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()))
   WITH CHECK (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()));
-CREATE POLICY "Admin insert promoters" ON promoters FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update promoters" ON promoters FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.8: Attendees
-CREATE POLICY "Attendees/Admin read attendees" ON attendees FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
-CREATE POLICY "Public create attendees" ON attendees FOR INSERT TO anon, authenticated
+-- 4.8: Attendees (Admin Read, Unified Create, Admin Update/Delete)
+CREATE POLICY "Admin read attendees" ON attendees FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
   WITH CHECK (
-    full_name IS NOT NULL AND length(trim(full_name)) > 0
-    AND email IS NOT NULL AND length(trim(email)) > 3
-    AND mobile_number IS NOT NULL AND length(trim(mobile_number)) > 5
+    (SELECT public.is_admin())
+    OR (
+      full_name IS NOT NULL AND length(trim(full_name)) > 0
+      AND email IS NOT NULL AND length(trim(email)) > 3
+      AND mobile_number IS NOT NULL AND length(trim(mobile_number)) > 5
+    )
   );
-CREATE POLICY "Admin insert attendees" ON attendees FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update attendees" ON attendees FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete attendees" ON attendees FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.9: Orders
-CREATE POLICY "Public create orders" ON orders FOR INSERT TO anon, authenticated
-  WITH CHECK (
-    order_number IS NOT NULL AND length(trim(order_number)) > 0
-    AND quantity > 0
-    AND total_amount >= 0
-    AND event_id IS NOT NULL
-    AND ticket_tier_id IS NOT NULL
-    AND attendee_id IS NOT NULL
-  );
-CREATE POLICY "Promoters read referred orders" ON orders FOR SELECT TO authenticated
+-- 4.9: Orders (Referred/Admin Read, Unified Create, Admin Update/Delete)
+CREATE POLICY "Read orders" ON orders FOR SELECT TO authenticated
   USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
-CREATE POLICY "Admin insert orders" ON orders FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
+CREATE POLICY "Create orders" ON orders FOR INSERT TO anon, authenticated
+  WITH CHECK (
+    (SELECT public.is_admin())
+    OR (
+      order_number IS NOT NULL AND length(trim(order_number)) > 0
+      AND quantity > 0
+      AND total_amount >= 0
+      AND event_id IS NOT NULL
+      AND ticket_tier_id IS NOT NULL
+      AND attendee_id IS NOT NULL
+    )
+  );
 CREATE POLICY "Admin update orders" ON orders FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete orders" ON orders FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.10: Issued Passes
+-- 4.10: Issued Passes (Referred/Admin Read, Admin Write)
 CREATE POLICY "Promoters read referred passes" ON issued_passes FOR SELECT TO authenticated
   USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin insert issued_passes" ON issued_passes FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update issued_passes" ON issued_passes FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete issued_passes" ON issued_passes FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.11: Promoter Commissions
+-- 4.11: Promoter Commissions (Own/Admin Read, Admin Write)
 CREATE POLICY "Promoters read own commissions" ON promoter_commissions FOR SELECT TO authenticated
   USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin insert promoter_commissions" ON promoter_commissions FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update promoter_commissions" ON promoter_commissions FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete promoter_commissions" ON promoter_commissions FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.12: UPI Payout Logs
+-- 4.12: UPI Payout Logs (Own/Admin Read, Admin Write)
 CREATE POLICY "Promoters read own upi payouts" ON upi_payout_logs FOR SELECT TO authenticated
   USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
 CREATE POLICY "Admin insert upi_payout_logs" ON upi_payout_logs FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update upi_payout_logs" ON upi_payout_logs FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete upi_payout_logs" ON upi_payout_logs FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.13: Logs & Compliance
+-- 4.13: Gate Turnstile Logs (Admin Read, Scanner Insert)
+CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated
   WITH CHECK (
     gate_name IS NOT NULL AND length(trim(gate_name)) > 0
     AND result IS NOT NULL AND length(trim(result)) > 0
   );
-CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
+-- 4.14: Anti Scalping Shield (Admin Read, Engine Insert)
+CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated
   WITH CHECK (event_type IS NOT NULL AND length(trim(event_type)) > 0);
-CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
+-- 4.15: Cookie Consent Records (Admin Read, Public Insert)
+CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated
   WITH CHECK (consent_type IS NOT NULL);
-CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 
 
 -- ============================================================================
