@@ -684,16 +684,16 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- MODAL 2: CREATE / EDIT TOUR ALLOCATION -->
+    <!-- MODAL 2: CREATE TOUR ALLOCATION -->
     <!-- ========================================================= -->
     <div id="add-tour-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 space-y-4 relative bg-[#0D0F17]/95 border border-white/[0.15]">
+        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 space-y-4 relative bg-[#0D0F17]/95 border border-white/[0.15] max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('add-tour-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="space-y-1">
                 <h3 class="text-xl font-bold font-display text-white">Create New Tour Quota</h3>
-                <p class="text-xs text-slate-400">Launch an authorized concert allocation on Tixora.</p>
+                <p class="text-xs text-slate-400">Launch an authorized concert allocation on Tixora. Updates the fan site immediately.</p>
             </div>
 
             <form onsubmit="handleCreateTourSubmit(event)" class="space-y-3 text-xs font-sans">
@@ -707,7 +707,7 @@
                         <input type="text" id="tour-venue" required placeholder="e.g. Manpho Convention, Bengaluru" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Date</label>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Date & Time</label>
                         <input type="text" id="tour-date" required placeholder="e.g. 18 DEC 2026 • 6:00 PM" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
                     </div>
                 </div>
@@ -729,9 +729,105 @@
                         </select>
                     </div>
                 </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Poster Image (URL or path)</label>
+                        <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Initial Quota Passes</label>
+                        <input type="number" id="tour-quota" value="5000" placeholder="5000" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Description</label>
+                    <textarea id="tour-desc" rows="2" placeholder="Official tour promoter allocation pass. Guaranteed authenticity." class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson resize-none"></textarea>
+                </div>
                 <div class="pt-2">
-                    <button type="submit" class="btn-crimson w-full py-3 rounded-xl text-xs font-display font-semibold">
-                        Publish Tour Allocation to Database
+                    <button type="submit" class="btn-crimson w-full py-3 rounded-xl text-xs font-display font-semibold shadow-lg shadow-crimson/25">
+                        Publish Tour Allocation to Database & Web
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- MODAL 3: EDIT TOUR ALLOCATION -->
+    <!-- ========================================================= -->
+    <div id="edit-tour-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+        <div class="glass-panel rounded-3xl max-w-lg w-full p-6 space-y-4 relative bg-[#0D0F17]/95 border border-white/[0.15] max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('edit-tour-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-400 border border-amber-500/30">Edit Mode</span>
+                    <h3 class="text-xl font-bold font-display text-white">Modify Event Details</h3>
+                </div>
+                <p class="text-xs text-slate-400">Edits sync live to Supabase and reflect instantly on the public website.</p>
+            </div>
+
+            <form onsubmit="handleEditTourSubmit(event)" class="space-y-3 text-xs font-sans">
+                <input type="hidden" id="edit-tour-id">
+                <div>
+                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Title / Headliner Event</label>
+                    <input type="text" id="edit-tour-title" required class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson">
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">City & Venue</label>
+                        <input type="text" id="edit-tour-venue" required class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Date & Time</label>
+                        <input type="text" id="edit-tour-date" required class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2.5">
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Starting MRP (₹)</label>
+                        <input type="number" id="edit-tour-mrp" required class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Promoter Cut (%)</label>
+                        <input type="number" id="edit-tour-cut" required class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Status</label>
+                        <select id="edit-tour-status" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-crimson">
+                            <option value="active">Active (Visible)</option>
+                            <option value="draft">Draft (Hidden)</option>
+                            <option value="sold_out">Sold Out</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Partner Engine</label>
+                        <select id="edit-tour-partner" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-2.5 py-2 text-white focus:outline-none focus:border-crimson">
+                            <option value="BookMyShow">BookMyShow</option>
+                            <option value="District">District</option>
+                            <option value="Direct">Direct</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Poster Image URL</label>
+                        <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson font-mono">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Description</label>
+                    <textarea id="edit-tour-desc" rows="2" class="w-full bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2 text-white focus:outline-none focus:border-crimson resize-none"></textarea>
+                </div>
+                <div class="pt-2 flex items-center space-x-2">
+                    <button type="button" onclick="closeModal('edit-tour-modal')" class="w-1/3 py-2.5 rounded-xl text-xs font-mono bg-white/[0.08] hover:bg-white/[0.14] text-slate-300 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="w-2/3 py-2.5 rounded-xl text-xs font-display font-semibold bg-gradient-to-r from-amber-500 to-crimson hover:from-amber-400 hover:to-crimson/90 text-white shadow-lg shadow-crimson/20">
+                        Save Changes & Sync to Web
                     </button>
                 </div>
             </form>
@@ -923,6 +1019,22 @@
                 evaluateAdminAccess();
             });
             evaluateAdminAccess();
+
+            // Realtime sync for events table
+            try {
+                const client = TixoraAuth.getClient();
+                if (client) {
+                    client.channel('admin:realtime:events')
+                        .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async (payload) => {
+                            if (supabase) {
+                                await loadDataFromSupabase();
+                            }
+                        })
+                        .subscribe();
+                }
+            } catch (e) {
+                console.warn('Realtime channel notice:', e);
+            }
         }
 
         async function loadDataFromSupabase() {
@@ -948,6 +1060,8 @@
                             mrp: e.starting_price,
                             cut: e.promoter_cut_pct,
                             status: e.status,
+                            poster_url: e.poster_url,
+                            description: e.description,
                             quotaTotal: totalQuota,
                             quotaAvailable: availQuota
                         };
@@ -1143,9 +1257,14 @@
                         </span>
                     </td>
                     <td class="p-4 text-right">
-                        <button onclick="deleteTour(${t.id})" class="text-slate-500 hover:text-crimson p-1 transition-colors" title="Remove Allocation">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <div class="flex items-center justify-end space-x-1">
+                            <button onclick="openEditTourModal(${t.id})" class="text-slate-400 hover:text-amber-400 hover:bg-white/[0.06] p-1.5 rounded-lg transition-colors" title="Edit Tour Details">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="deleteTour(${t.id})" class="text-slate-400 hover:text-crimson hover:bg-white/[0.06] p-1.5 rounded-lg transition-colors" title="Remove Allocation">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -1290,58 +1409,254 @@
             }
         }
 
-        function deleteTour(id) {
+        async function deleteTour(id) {
+            const tour = liveData.tours.find(t => t.id === id);
+            const tourTitle = tour ? tour.title : 'this event';
+            if (!confirm(`Are you sure you want to permanently delete "${tourTitle}" from the database and remove it from the live fan site?`)) {
+                return;
+            }
+
+            if (supabase) {
+                try {
+                    const { error: delErr } = await supabase.from('events').delete().eq('id', id);
+                    if (delErr) {
+                        console.error('Supabase event deletion error:', delErr);
+                        // If FK constraint prevents hard delete (e.g. orders placed), offer status update
+                        if (delErr.code === '23503') {
+                            if (confirm(`"${tourTitle}" already has active ticket orders in the database. Would you like to mark its status as 'cancelled' so it is hidden from the website instead?`)) {
+                                await supabase.from('events').update({ status: 'cancelled' }).eq('id', id);
+                                await loadDataFromSupabase();
+                                showToast(`Event "${tourTitle}" cancelled and hidden from website.`);
+                            }
+                            return;
+                        }
+                        showToast('Database delete error: ' + delErr.message);
+                        return;
+                    }
+                } catch (err) {
+                    console.error('Delete error:', err);
+                    showToast('Failed to delete event: ' + err.message);
+                    return;
+                }
+            }
+
             liveData.tours = liveData.tours.filter(t => t.id !== id);
             renderToursTable();
             renderOverview();
-            showToast('Tour allocation removed.');
+            showToast(`Event "${tourTitle}" deleted and removed from the website!`);
         }
 
         async function handleCreateTourSubmit(e) {
             e.preventDefault();
-            const title = document.getElementById('tour-title').value;
-            const venue = document.getElementById('tour-venue').value;
-            const date = document.getElementById('tour-date').value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
+
+            const title = document.getElementById('tour-title').value.trim();
+            const venueRaw = document.getElementById('tour-venue').value.trim();
+            const dateRaw = document.getElementById('tour-date').value.trim();
             const mrp = Number(document.getElementById('tour-mrp').value);
             const cut = Number(document.getElementById('tour-cut').value);
             const partner = document.getElementById('tour-partner').value;
+            const posterUrl = document.getElementById('tour-poster') ? document.getElementById('tour-poster').value.trim() : '';
+            const quota = Number(document.getElementById('tour-quota')?.value || 5000);
+            const desc = document.getElementById('tour-desc') ? document.getElementById('tour-desc').value.trim() : '';
 
+            const parts = venueRaw.split(',');
+            const venueName = parts[0] ? parts[0].trim() : venueRaw;
+            const cityName = parts[1] ? parts[1].trim() : 'India';
+
+            let eventDateISO = new Date().toISOString();
+            const parsedDate = new Date(dateRaw);
+            if (!isNaN(parsedDate.getTime())) {
+                eventDateISO = parsedDate.toISOString();
+            }
+
+            if (supabase) {
+                try {
+                    let venueId = null;
+                    try {
+                        const { data: vData } = await supabase.from('venues').select('id').ilike('name', `%${venueName}%`).maybeSingle();
+                        if (vData && vData.id) {
+                            venueId = vData.id;
+                        } else {
+                            const { data: newV } = await supabase.from('venues').insert([{
+                                name: venueName,
+                                city: cityName,
+                                capacity: quota > 0 ? quota * 2 : 30000
+                            }]).select('id').single();
+                            if (newV && newV.id) venueId = newV.id;
+                        }
+                    } catch (vErr) {
+                        console.warn('Venue resolution notice:', vErr);
+                    }
+
+                    const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + Math.floor(100 + Math.random() * 900);
+                    const { data: insData, error: insErr } = await supabase.from('events').insert([{
+                        title,
+                        slug,
+                        venue_id: venueId,
+                        event_date: eventDateISO,
+                        starting_price: mrp,
+                        promoter_cut_pct: cut,
+                        partner_engine: partner,
+                        poster_url: posterUrl || 'posters/anyma-aeden-poster-1.jpg',
+                        description: desc || `${title} live concert tour. Official promoter allocation pass.`,
+                        status: 'active'
+                    }]).select('*').single();
+
+                    if (insErr) throw insErr;
+
+                    if (insData && insData.id) {
+                        try {
+                            await supabase.from('ticket_tiers').insert([{
+                                event_id: insData.id,
+                                name: 'General Admission',
+                                price: mrp,
+                                total_quota: quota,
+                                available_quota: quota,
+                                promoter_cut_pct: cut
+                            }]);
+                        } catch (ttErr) {
+                            console.warn('Ticket tier notice:', ttErr);
+                        }
+                    }
+
+                    await loadDataFromSupabase();
+                    closeModal('add-tour-modal');
+                    e.target.reset();
+                    showToast(`Event "${title}" published and live on website!`);
+                    return;
+                } catch (err) {
+                    console.error('Supabase tour insert error:', err);
+                    showToast('Database error: ' + (err.message || err));
+                    if (btn) btn.disabled = false;
+                    return;
+                }
+            }
+
+            // Fallback for offline mode
             const newTour = {
                 id: Date.now(),
                 title,
-                city: venue.split(',')[1]?.trim() || 'India',
-                venue,
-                date,
+                city: cityName,
+                venue: venueName,
+                date: dateRaw,
                 partner,
                 mrp,
                 cut,
                 status: 'active',
-                quotaTotal: 6000,
-                quotaAvailable: 6000
+                poster_url: posterUrl || 'posters/anyma-aeden-poster-1.jpg',
+                description: desc,
+                quotaTotal: quota,
+                quotaAvailable: quota
             };
-
             liveData.tours.unshift(newTour);
+            closeModal('add-tour-modal');
+            e.target.reset();
+            renderToursTable();
+            renderOverview();
+            showToast(`Tour "${title}" published locally!`);
+            if (btn) btn.disabled = false;
+        }
+
+        function openEditTourModal(id) {
+            const tour = liveData.tours.find(t => t.id === id);
+            if (!tour) return;
+
+            document.getElementById('edit-tour-id').value = tour.id;
+            document.getElementById('edit-tour-title').value = tour.title || '';
+            document.getElementById('edit-tour-venue').value = `${tour.venue || ''}${tour.city ? ', ' + tour.city : ''}`;
+            document.getElementById('edit-tour-date').value = tour.date || '';
+            document.getElementById('edit-tour-mrp').value = tour.mrp || '';
+            document.getElementById('edit-tour-cut').value = tour.cut || '';
+            document.getElementById('edit-tour-status').value = tour.status || 'active';
+            document.getElementById('edit-tour-partner').value = tour.partner || 'BookMyShow';
+            document.getElementById('edit-tour-poster').value = tour.poster_url || '';
+            document.getElementById('edit-tour-desc').value = tour.description || '';
+
+            openModal('edit-tour-modal');
+        }
+
+        async function handleEditTourSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
+
+            const id = Number(document.getElementById('edit-tour-id').value);
+            const title = document.getElementById('edit-tour-title').value.trim();
+            const venueRaw = document.getElementById('edit-tour-venue').value.trim();
+            const dateRaw = document.getElementById('edit-tour-date').value.trim();
+            const mrp = Number(document.getElementById('edit-tour-mrp').value);
+            const cut = Number(document.getElementById('edit-tour-cut').value);
+            const status = document.getElementById('edit-tour-status').value;
+            const partner = document.getElementById('edit-tour-partner').value;
+            const posterUrl = document.getElementById('edit-tour-poster').value.trim();
+            const desc = document.getElementById('edit-tour-desc').value.trim();
+
+            const parts = venueRaw.split(',');
+            const venueName = parts[0] ? parts[0].trim() : venueRaw;
+            const cityName = parts[1] ? parts[1].trim() : 'India';
 
             if (supabase) {
                 try {
-                    await supabase.from('events').insert([{
+                    const updates = {
                         title,
-                        slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-                        event_date: new Date().toISOString(),
                         starting_price: mrp,
                         promoter_cut_pct: cut,
                         partner_engine: partner,
-                        status: 'active'
-                    }]);
+                        status: status,
+                        updated_at: new Date().toISOString()
+                    };
+                    if (posterUrl) updates.poster_url = posterUrl;
+                    if (desc) updates.description = desc;
+
+                    const parsedDate = new Date(dateRaw);
+                    if (!isNaN(parsedDate.getTime())) {
+                        updates.event_date = parsedDate.toISOString();
+                    }
+
+                    const { error: updErr } = await supabase.from('events').update(updates).eq('id', id);
+                    if (updErr) throw updErr;
+
+                    // Also sync ticket tiers price & cut if exists
+                    try {
+                        await supabase.from('ticket_tiers').update({
+                            price: mrp,
+                            promoter_cut_pct: cut
+                        }).eq('event_id', id);
+                    } catch (ttErr) {}
+
+                    await loadDataFromSupabase();
+                    closeModal('edit-tour-modal');
+                    showToast(`Event "${title}" updated and synced live!`);
+                    return;
                 } catch (err) {
-                    console.warn('Supabase sync warning:', err);
+                    console.error('Supabase edit error:', err);
+                    showToast('Database update error: ' + (err.message || err));
+                    if (btn) btn.disabled = false;
+                    return;
                 }
             }
 
-            closeModal('add-tour-modal');
+            // Fallback for offline mode
+            const tour = liveData.tours.find(t => t.id === id);
+            if (tour) {
+                tour.title = title;
+                tour.venue = venueName;
+                tour.city = cityName;
+                tour.date = dateRaw;
+                tour.mrp = mrp;
+                tour.cut = cut;
+                tour.status = status;
+                tour.partner = partner;
+                if (posterUrl) tour.poster_url = posterUrl;
+                if (desc) tour.description = desc;
+            }
+            closeModal('edit-tour-modal');
             renderToursTable();
             renderOverview();
-            showToast(`Tour "${title}" published successfully!`);
+            showToast(`Event "${title}" updated!`);
+            if (btn) btn.disabled = false;
         }
 
         function simulateNewPayout() {
