@@ -482,6 +482,14 @@ BEGIN
 END;
 $$;
 
+-- Automatically elevate default administrator if already created
+DO $$
+BEGIN
+  PERFORM public.assign_admin_role('admin@tixora.live');
+EXCEPTION WHEN OTHERS THEN
+  NULL;
+END $$;
+
 -- ----------------------------------------------------------------------------
 -- POLICIES: 1. User Roles
 -- ----------------------------------------------------------------------------

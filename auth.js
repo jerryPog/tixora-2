@@ -17,23 +17,39 @@
     let _cachedPromoter = null;
     const _authListeners = [];
 
-    function getSafeStorage() {
-        try {
-            if (typeof window !== 'undefined' && window.localStorage) {
-                const k = '__tixora_test__';
-                window.localStorage.setItem(k, k);
-                window.localStorage.removeItem(k);
-                return window.localStorage;
-            }
-        } catch (e) {
-            console.warn('[TixoraAuth] localStorage not available, using memory storage fallback:', e);
+    // Shared singleton safe-storage adapter
+    const _safeMem = {};
+    const _safeStorage = {
+        getItem: (key) => {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    return window.localStorage.getItem(key);
+                }
+            } catch (e) {}
+            return _safeMem[key] || null;
+        },
+        setItem: (key, val) => {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    window.localStorage.setItem(key, String(val));
+                    return;
+                }
+            } catch (e) {}
+            _safeMem[key] = String(val);
+        },
+        removeItem: (key) => {
+            try {
+                if (typeof window !== 'undefined' && window.localStorage) {
+                    window.localStorage.removeItem(key);
+                    return;
+                }
+            } catch (e) {}
+            delete _safeMem[key];
         }
-        const mem = {};
-        return {
-            getItem: (key) => mem[key] || null,
-            setItem: (key, val) => { mem[key] = String(val); },
-            removeItem: (key) => { delete mem[key]; }
-        };
+    };
+
+    function getSafeStorage() {
+        return _safeStorage;
     }
 
     /**
@@ -121,8 +137,8 @@
      * Save Supabase credentials
      */
     function setCredentials(url, key) {
-        if (url) localStorage.setItem('tixora_supabase_url', url.trim());
-        if (key) localStorage.setItem('tixora_supabase_key', key.trim());
+        if (url) _safeStorage.setItem('tixora_supabase_url', url.trim());
+        if (key) _safeStorage.setItem('tixora_supabase_key', key.trim());
         if (window.TIXORA_CONFIG) {
             window.TIXORA_CONFIG.supabaseUrl = url;
             window.TIXORA_CONFIG.supabaseKey = key;
@@ -135,8 +151,9 @@
      * Clear Supabase credentials
      */
     function clearCredentials() {
-        localStorage.removeItem('tixora_supabase_url');
-        localStorage.removeItem('tixora_supabase_key');
+        _safeStorage.removeItem('tixora_supabase_url');
+        _safeStorage.removeItem('tixora_supabase_key');
+        _safeStorage.removeItem('tixora_demo_session');
         _supabaseClient = null;
         _cachedSession = null;
         _cachedUserRole = null;
@@ -147,11 +164,17 @@
      * Get current active session
      */
     async function getSession() {
+        // 1. In-memory session first (0ms latency)
+        if (_cachedSession && _cachedSession.user) {
+            return _cachedSession;
+        }
+
+        // 2. Query Supabase client
         const client = getClient();
         if (client) {
             try {
                 const { data, error } = await client.auth.getSession();
-                if (!error && data.session) {
+                if (!error && data && data.session) {
                     _cachedSession = data.session;
                     return data.session;
                 }
@@ -160,8 +183,14 @@
             }
         }
 
-        // Check local demo session fallback
-        return getLocalDemoSession();
+        // 3. Check safe storage demo session fallback
+        const demo = getLocalDemoSession();
+        if (demo && demo.user) {
+            _cachedSession = demo;
+            return demo;
+        }
+
+        return null;
     }
 
     /**
@@ -473,7 +502,7 @@
             }
         }
 
-        localStorage.removeItem('tixora_demo_session');
+        _safeStorage.removeItem('tixora_demo_session');
         _cachedSession = null;
         _cachedUserRole = null;
         _cachedPromoter = null;
@@ -487,7 +516,7 @@
      */
     function getLocalUsers() {
         try {
-            const raw = localStorage.getItem('tixora_local_users');
+            const raw = _safeStorage.getItem('tixora_local_users');
             return raw ? JSON.parse(raw) : [];
         } catch (e) {
             return [];
@@ -503,7 +532,7 @@
             } else {
                 users.push(userData);
             }
-            localStorage.setItem('tixora_local_users', JSON.stringify(users));
+            _safeStorage.setItem('tixora_local_users', JSON.stringify(users));
         } catch (e) {}
     }
 
@@ -544,7 +573,7 @@
             }
         };
 
-        localStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
+        _safeStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
         _cachedSession = demoSession;
         _cachedUserRole = demoSession.role;
         _cachedPromoter = demoSession.promoter;
@@ -577,7 +606,7 @@
 
     function getLocalDemoSession() {
         try {
-            const raw = localStorage.getItem('tixora_demo_session');
+            const raw = _safeStorage.getItem('tixora_demo_session');
             return raw ? JSON.parse(raw) : null;
         } catch (e) {
             return null;
@@ -615,7 +644,7 @@
             }
         };
 
-        localStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
+        _safeStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
         _cachedSession = demoSession;
         _cachedUserRole = demoSession.role;
         _cachedPromoter = demoSession.promoter;
@@ -655,7 +684,7 @@
             }
         };
 
-        localStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
+        _safeStorage.setItem('tixora_demo_session', JSON.stringify(demoSession));
         _cachedSession = demoSession;
         _cachedUserRole = role;
         _cachedPromoter = demoSession.promoter;
