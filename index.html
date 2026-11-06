@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>TIXORA — Live Concert Allocations & Youth Promoter Protocol</title>
+    <title>TIXORA — Official Live Concert Allocations & Youth Promoter Protocol</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,14 +17,42 @@
     <!-- Tixora Supabase Auth & Route Guard Protocol -->
     <script src="auth.js"></script>
 
-    <!-- Google Fonts: Plus Jakarta Sans, Space Grotesk, Space Mono -->
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', '-apple-system', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+                    },
+                    colors: {
+                        void: '#050608',
+                        surface: {
+                            base: '#080a10',
+                            card: '#0d1019',
+                            elevated: '#131622',
+                            border: '#1e2436',
+                            borderHover: '#333c56'
+                        },
+                        crimson: {
+                            DEFAULT: '#ff2e54',
+                            hover: '#ff4365',
+                            glow: 'rgba(255, 46, 84, 0.25)'
+                        }
+                    }
+                }
+            }
+        };
+
+        /* AI Concierge Chatbot Script */
+        
         tailwind.config = {
             darkMode: 'class',
             theme: {
@@ -302,7 +330,7 @@ The team engineered Tixora as an authorized concert partner network and anti-sca
             if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|s|[!?.])/i.test(clean)) {
                 return {
                     title: 'Welcome to Tixora AI',
-                    answer: `Hello! 👋 I'm your AI concierge for Tixora. What would you like to know about our promoter network, payouts, or concert allocations?`,
+                    answer: `Hello. I am the Tixora automated concierge. What would you like to know about our promoter network, payouts, or concert allocations?`,
                     actions: [
                         { label: 'Commission Rates', action: "askQuestion('How do I earn commission?')" },
                         { label: 'Live Tours', action: "askQuestion('What tours are live right now?')" }
@@ -378,18 +406,21 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             renderInitialGreeting();
         }
 
+    
     </script>
 
     <style>
         :root {
             --bg-void: #050608;
-            --bg-card: #0D0F17;
-            --border-hairline: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.18);
-            --crimson: #FF2E54;
-            --crimson-hover: #FF4365;
-            --text-primary: #FFFFFF;
-            --text-secondary: #94A3B8;
+            --bg-card: #0d1019;
+            --bg-elevated: #131622;
+            --border-hairline: #1e2436;
+            --border-hover: #333c56;
+            --crimson: #ff2e54;
+            --crimson-hover: #ff4365;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
         }
 
         /* Clean Scrollbars */
@@ -403,55 +434,39 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #191D2B;
+            background: #1e2436;
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #252B3D;
+            background: #333c56;
         }
 
-        /* Hardware-Accelerated Translucent Panels (Visible Concert BG + 60fps Smoothness) */
-        :root {
-            --bg-void: #050608;
-            --bg-card: rgba(11, 14, 22, 0.60);
-            --border-hairline: rgba(255, 255, 255, 0.10);
-            --border-hover: rgba(255, 255, 255, 0.22);
-            --crimson: #FF2E54;
-            --crimson-hover: #FF4365;
-            --text-primary: #FFFFFF;
-            --text-secondary: #94A3B8;
-        }
-
-        .solid-panel,
-        .translucent-panel {
-            background: var(--bg-card);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
+        /* High-Contrast Solid Matte Panels (Eliminating blurry, sluggish glassmorphism) */
+        .solid-panel {
+            background: #0d1019;
             border: 1px solid var(--border-hairline);
-            box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-            transform: translateZ(0);
-            /* Force GPU compositing for smooth scroll */
+            box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
-        .solid-panel:hover,
-        .translucent-panel:hover {
+        .solid-panel:hover {
             border-color: var(--border-hover);
         }
 
         /* Deliberate Interactive Buttons */
         .btn-primary {
             background: var(--crimson);
-            color: #FFFFFF;
+            color: #ffffff;
             font-weight: 600;
-            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 14px rgba(255, 46, 84, 0.35);
+            border: 1px solid transparent;
+            transition: all 0.18s ease;
+            box-shadow: 0 4px 14px rgba(255, 46, 84, 0.3);
         }
 
         .btn-primary:hover {
             background: var(--crimson-hover);
-            box-shadow: 0 6px 20px rgba(255, 46, 84, 0.5);
+            box-shadow: 0 6px 20px rgba(255, 46, 84, 0.45);
         }
 
         .btn-primary:active {
@@ -459,23 +474,24 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
-            color: #FFFFFF;
+            background: #131622;
+            color: #f8fafc;
             border: 1px solid var(--border-hairline);
             font-weight: 600;
-            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+            transition: all 0.18s ease;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: #1a1f30;
             border-color: var(--border-hover);
+            color: #ffffff;
         }
 
         .btn-secondary:active {
             transform: scale(0.98);
         }
 
-        /* Thumpn-Style Event Carousel */
+        /* Poster Carousel Track */
         .thumpn-carousel-track {
             display: flex;
             gap: 1.5rem;
@@ -497,11 +513,10 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             width: 320px;
             scroll-snap-align: start;
             scroll-snap-stop: always;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-color 0.3s ease,
-                opacity 0.3s ease;
-            will-change: transform, opacity;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.25s ease;
+            will-change: transform;
         }
 
         @media (max-width: 640px) {
@@ -512,31 +527,25 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             }
         }
 
-        /* Hover spotlight on desktop only (avoid sticky hover on mobile touch) */
         @media (hover: hover) {
-            .thumpn-carousel-track:hover .thumpn-card-slot {
-                opacity: 0.65;
-            }
-
             .thumpn-carousel-track .thumpn-card-slot:hover {
-                opacity: 1 !important;
-                transform: translateY(-6px);
+                transform: translateY(-4px);
                 z-index: 20;
-                border-color: rgba(255, 46, 84, 0.45) !important;
-                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 46, 84, 0.25) !important;
+                border-color: rgba(255, 46, 84, 0.5) !important;
+                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9), 0 0 24px rgba(255, 46, 84, 0.15) !important;
             }
 
             .thumpn-card-slot:hover .thumpn-poster-img {
-                transform: scale(1.06);
+                transform: scale(1.04);
             }
         }
 
         .thumpn-poster-img {
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
         }
 
-        /* Thumpn Navigation Buttons (Visible on desktop; mobile uses fluid thumb-swipe) */
+        /* Carousel Navigation Buttons */
         .thumpn-nav-btn {
             position: absolute;
             top: 50%;
@@ -545,12 +554,12 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #0D0F17;
+            background: #0d1019;
             border: 1px solid var(--border-hairline);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFFFFF;
+            color: #ffffff;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
             cursor: pointer;
             transition: all 0.2s ease;
@@ -559,8 +568,8 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         .thumpn-nav-btn:hover {
             background: var(--crimson);
             border-color: var(--crimson);
-            transform: translateY(-50%) scale(1.08);
-            box-shadow: 0 0 16px rgba(255, 46, 84, 0.5);
+            transform: translateY(-50%) scale(1.06);
+            box-shadow: 0 0 16px rgba(255, 46, 84, 0.45);
         }
 
         .thumpn-nav-btn:active {
@@ -578,11 +587,10 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         @media (max-width: 768px) {
             .thumpn-nav-btn {
                 display: none;
-                /* Mobile users swipe naturally without buttons blocking card taps */
             }
         }
 
-        /* Edge Masks (Subtle on mobile so it doesn't block touch zones) */
+        /* Edge Masks */
         .thumpn-fade-left {
             position: absolute;
             left: 0;
@@ -615,14 +623,6 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             }
         }
 
-        /* Strict Unified Small Font Standard */
-        .text-slate-400,
-        .text-slate-500,
-        .text-slate-300,
-        .meta-text {
-            color: #94A3B8 !important;
-        }
-
         /* Ticket Stub Notches */
         .ticket-stub {
             position: relative;
@@ -653,17 +653,22 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             border-left: 1px solid var(--border-hairline);
         }
 
-        /* Range Slider */
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 18px;
             width: 18px;
             border-radius: 50%;
-            background: #FF2E54;
+            background: #ff2e54;
             cursor: pointer;
-            box-shadow: 0 0 12px rgba(255, 46, 84, 0.8);
+            box-shadow: 0 0 12px rgba(255, 46, 84, 0.7);
             margin-top: -7px;
-            border: 2px solid #FFFFFF;
+            border: 2px solid #ffffff;
             transition: transform 0.15s ease;
         }
 
@@ -675,32 +680,24 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             width: 100%;
             height: 4px;
             cursor: pointer;
-            background: #181C2B;
+            background: #1e2436;
             border-radius: 2px;
         }
     </style>
 </head>
 
-<body
-    class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
+<body class="bg-[#050608] text-white font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden w-full">
 
-    <!-- Vibrant Concert Stage Background Engine (150-Frame 4K Live Sequence) -->
+    <!-- Concert Stage Background Engine (Live Video Sequence Canvas) -->
     <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-cover bg-center" id="stage-bg-container"
         style="contain: strict; background-image: url('ezgif-73126691f624a5ac-jpg/ezgif-frame-001.jpg');">
         <canvas id="scroll-sequence-canvas"
-            class="w-full h-full block will-change-transform opacity-85 transition-opacity duration-700"
-            style="filter: saturate(1.15) brightness(1.02); image-rendering: auto;"></canvas>
+            class="w-full h-full block will-change-transform opacity-75 transition-opacity duration-700"
+            style="filter: saturate(1.1) brightness(0.95);"></canvas>
 
-        <!-- Cinematic Stage Light Scrim: Crisp Concert Beams with Natural Focus -->
-        <div id="stage-scrim-top"
-            class="absolute inset-0 bg-gradient-to-b from-[#050608]/30 via-transparent to-[#050608]/65"></div>
+        <div id="stage-scrim-top" class="absolute inset-0 bg-gradient-to-b from-[#050608]/40 via-transparent to-[#050608]/85"></div>
         <div id="stage-scrim-radial" class="absolute inset-0"
-            style="background: radial-gradient(circle at 50% 35%, transparent 25%, rgba(5, 6, 8, 0.20) 65%, rgba(5, 6, 8, 0.65) 100%);">
-        </div>
-
-        <!-- Concert Red Ambient Atmosphere -->
-        <div
-            class="absolute top-12 left-1/2 -translate-x-1/2 w-[850px] h-[480px] bg-crimson/15 blur-[150px] rounded-full pointer-events-none">
+            style="background: radial-gradient(circle at 50% 35%, transparent 30%, rgba(5, 6, 8, 0.4) 70%, rgba(5, 6, 8, 0.9) 100%);">
         </div>
     </div>
 
@@ -709,31 +706,30 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
         <!-- Navigation Header -->
         <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
-            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-4">
-                <div
-                    class="bg-[#080A10]/65 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-2 sm:py-3 flex items-center justify-between border border-white/[0.12] shadow-xl">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
+                <div class="bg-[#0d1019]/95 rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between border border-[#1e2436] shadow-2xl">
 
-                    <!-- Clean Brand Logo -->
+                    <!-- Brand Logo -->
                     <a href="#" class="flex items-center space-x-3 py-0.5">
-                        <img src="tixora-logo.png" alt="TIXORA" class="h-7 sm:h-9 w-auto object-contain">
+                        <img src="tixora-logo.png" alt="TIXORA" class="h-7 sm:h-8 w-auto object-contain">
                     </a>
 
-                    <!-- Nav Links: Uniform Clean White -->
-                    <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                        <a href="#lineup-vault" class="text-white hover:text-white/80 transition-colors">Live Drops</a>
-                        <a href="#mesh-protocol" class="text-white hover:text-white/80 transition-colors">How It
-                            Works</a>
-                        <a href="#velocity-matrix" class="text-white hover:text-white/80 transition-colors">Yield
-                            Calculator</a>
-                        <a href="#tiers-ladder" class="text-white hover:text-white/80 transition-colors">Promoter
-                            Tiers</a>
-
+                    <!-- Nav Links -->
+                    <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                        <a href="#lineup-vault" class="hover:text-white transition-colors">Live Drops</a>
+                        <a href="#mesh-protocol" class="hover:text-white transition-colors">Protocol</a>
+                        <a href="#velocity-matrix" class="hover:text-white transition-colors">Earnings Calculator</a>
+                        <a href="#tiers-ladder" class="hover:text-white transition-colors">Promoter Tiers</a>
                     </nav>
 
-                    <!-- Action Button -->
-                    <div id="nav-auth-container" class="flex items-center space-x-3">
+                    <!-- Action Button & Admin Link -->
+                    <div id="nav-auth-container" class="flex items-center space-x-2.5">
+                        <a href="/admin" class="hidden sm:inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-mono font-medium text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors border border-transparent hover:border-[#1e2436]">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-crimson"></i>
+                            <span>Admin Portal</span>
+                        </a>
                         <button onclick="openModal('promoter-modal')"
-                            class="btn-primary px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-display tracking-wide whitespace-nowrap">
+                            class="btn-primary px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap">
                             Promoter Portal
                         </button>
                     </div>
@@ -742,56 +738,55 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             </div>
         </header>
 
-        <main class="pt-20 sm:pt-28 md:pt-36">
-            <!-- Hero Section: Clean, Authoritative Typography & Concert Ticket Stub -->
+        <main class="pt-24 sm:pt-32 md:pt-36">
+
+            <!-- Hero Section -->
             <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
                     <!-- Left: High-Contrast Headline & Grounded Copy -->
                     <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
 
-                        <h1
-                            class="text-3xl sm:text-5xl lg:text-7xl font-bold font-display tracking-tight leading-[1.1] text-white">
+                        <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#131622] border border-[#1e2436] text-[11px] font-mono text-slate-300 mx-auto lg:mx-0">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span class="font-semibold tracking-wide">OFFICIAL CONCERT INFRASTRUCTURE</span>
+                        </div>
+
+                        <h1 class="text-3xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-white">
                             Monetize The Scene.<br>
-                            <span class="text-white/80">Own The Gate.</span>
+                            <span class="text-slate-400 font-bold">Own The Gate.</span>
                         </h1>
 
-                        <p
-                            class="text-xs sm:text-base text-slate-400 font-normal max-w-lg mx-auto lg:mx-0 leading-relaxed">
-                            <span class="sm:hidden">Direct stadium allocations. Distribute authentic passes and pocket
-                                instant UPI payouts.</span>
-                            <span class="hidden sm:inline">Official stadium allocations. Distribute authentic BookMyShow
-                                passes directly to your network and pocket instant UPI commissions on every confirmed
-                                sale.</span>
+                        <p class="text-xs sm:text-base text-slate-300 font-normal max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                            Official stadium allocations from BookMyShow and festival partners. Distribute authentic digital passes directly to your campus network and pocket automated, under 60-second UPI commissions on every confirmed gate scan.
                         </p>
 
                         <!-- Action Buttons -->
                         <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
                             <a href="#lineup-vault"
-                                class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-display flex items-center justify-center space-x-2">
+                                class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
                                 <span>Explore Live Drops</span>
-                                <span class="font-mono">&rarr;</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </a>
                             <button onclick="openModal('promoter-modal')"
-                                class="btn-secondary w-full sm:w-auto px-7 py-3.5 rounded-xl text-sm font-display flex items-center justify-center">
+                                class="btn-secondary w-full sm:w-auto px-7 py-3.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center">
                                 Apply As Official Promoter
                             </button>
                         </div>
 
                         <!-- Micro Metrics Ledger -->
-                        <div
-                            class="grid grid-cols-3 gap-2 sm:gap-6 pt-6 border-t border-white/[0.08] max-w-xl mx-auto lg:mx-0 text-left">
+                        <div class="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-[#1e2436] max-w-xl mx-auto lg:mx-0 text-left">
                             <div>
-                                <div class="text-lg sm:text-3xl font-bold font-display text-white">₹6.8 Cr+</div>
-                                <div class="text-xs text-slate-400 font-mono mt-0.5">Promoter Payouts</div>
+                                <div class="text-xl sm:text-3xl font-extrabold font-mono text-white">₹6.8 Cr+</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Total Settled</div>
                             </div>
                             <div>
-                                <div class="text-lg sm:text-3xl font-bold font-display text-white">850+</div>
-                                <div class="text-xs text-slate-400 font-mono mt-0.5">Active Promoters</div>
+                                <div class="text-xl sm:text-3xl font-extrabold font-mono text-white">850+</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Verified Promoters</div>
                             </div>
                             <div>
-                                <div class="text-lg sm:text-3xl font-bold font-display text-white">&lt; 45s</div>
-                                <div class="text-xs text-slate-400 font-mono mt-0.5">Avg Settlement</div>
+                                <div class="text-xl sm:text-3xl font-extrabold font-mono text-white">&lt; 45s</div>
+                                <div class="text-xs text-slate-400 font-mono mt-0.5">Avg Turnstile UPI</div>
                             </div>
                         </div>
 
@@ -800,41 +795,32 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                     <!-- Right: Authentic Concert Pass Stub -->
                     <div class="lg:col-span-5 relative flex justify-center">
                         <div class="w-full max-w-md">
-                            <div
-                                class="solid-panel ticket-stub rounded-3xl p-5 sm:p-6 relative space-y-4 sm:space-y-5 bg-[#0D0F17]/60 backdrop-blur-md">
+                            <div class="solid-panel ticket-stub rounded-3xl p-5 sm:p-6 relative space-y-4 sm:space-y-5 bg-[#0d1019]">
 
-                                <div
-                                    class="flex items-center justify-between pb-4 border-b border-dashed border-white/[0.12]">
+                                <div class="flex items-center justify-between pb-4 border-b border-dashed border-[#1e2436]">
                                     <div>
                                         <span id="hero-featured-allocation"
-                                            class="text-[10px] font-mono text-slate-400 block uppercase tracking-wider">Arena Open-Air
-                                            Allocation</span>
-                                        <div id="hero-featured-title" class="text-lg font-bold font-display text-white">Anyma • ÆDEN Mumbai</div>
+                                            class="text-[10px] font-mono text-slate-400 block uppercase tracking-wider font-semibold">Arena Open-Air Allocation</span>
+                                        <div id="hero-featured-title" class="text-lg font-bold text-white mt-0.5">Anyma • ÆDEN Mumbai</div>
                                     </div>
                                     <span id="hero-featured-badge"
-                                        class="px-2.5 py-1 rounded-full text-xs font-mono bg-white/[0.05] text-slate-400 border border-white/[0.08]">
-                                        ⭐ Featured Drop
+                                        class="px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold tracking-wider bg-crimson/15 text-crimson border border-crimson/30 uppercase">
+                                        FEATURED ALLOCATION
                                     </span>
                                 </div>
 
-                                <div
-                                    class="relative rounded-2xl overflow-hidden aspect-video bg-black border border-white/[0.08]">
+                                <div class="relative rounded-2xl overflow-hidden aspect-video bg-black border border-[#1e2436]">
                                     <img id="hero-featured-img" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Headliner"
                                         class="w-full h-full object-cover">
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent">
-                                    </div>
-                                    <div
-                                        class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] sm:text-xs font-mono">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] sm:text-xs font-mono">
                                         <span id="hero-featured-venue" class="text-white font-medium">Mahalaxmi Racecourse, Mumbai</span>
                                         <span id="hero-featured-cut"
-                                            class="text-slate-400 bg-black/80 px-2 py-0.5 rounded border border-white/[0.08]">Earn
-                                            ₹680 / pass</span>
+                                            class="text-emerald-400 bg-black/80 px-2 py-0.5 rounded border border-[#1e2436] font-semibold">Earn ₹680 / pass</span>
                                     </div>
                                 </div>
 
-                                <div
-                                    class="space-y-2 pt-2 border-t border-dashed border-white/[0.12] font-mono text-xs">
+                                <div class="space-y-2 pt-2 border-t border-dashed border-[#1e2436] font-mono text-xs">
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Pass MRP:</span>
                                         <span id="hero-featured-mrp" class="text-white font-bold">₹4,250</span>
@@ -847,7 +833,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
                                 <div class="pt-2">
                                     <button id="hero-featured-btn" onclick="buyTicketModal('Anyma presents ÆDEN', 4250, 'GA Standard')"
-                                        class="btn-primary w-full py-2.5 rounded-xl text-xs font-display font-semibold text-center flex items-center justify-center space-x-2">
+                                        class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold text-center flex items-center justify-center space-x-2">
                                         <span>Reserve Featured Tour Pass</span>
                                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                                     </button>
@@ -860,36 +846,35 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 </div>
             </section>
 
-            <!-- Lineup Vault: Thumpn-Style Poster Carousel -->
+            <!-- Lineup Vault: Tour Roster Carousel -->
             <section id="lineup-vault" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
                 <div class="space-y-8">
 
                     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div>
-                            <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">
+                            <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                                 Headliner Quotas Ready To Monetize
                             </h2>
-                            <p class="text-xs sm:text-sm text-slate-400 mt-2 max-w-xl leading-relaxed">
-                                Official festival partner allocations. Smoothly browsing authentic live tours across
-                                India.
+                            <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl leading-relaxed">
+                                Direct stadium and arena allocations across India's premier music tours.
                             </p>
                         </div>
 
                         <!-- Live Sync Indicator -->
-                        <div class="text-xs text-slate-400 font-mono hidden sm:flex items-center space-x-2">
-                            <span class="inline-block w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
-                            <span>Auto-Syncing Active Bookings</span>
+                        <div class="text-xs text-slate-400 font-mono hidden sm:flex items-center space-x-2 bg-[#0d1019] px-3 py-1.5 rounded-lg border border-[#1e2436]">
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-slate-300">PostgreSQL Live Sync Active</span>
                         </div>
                     </div>
 
-                    <!-- Thumpn Poster Scrolling Carousel -->
+                    <!-- Poster Scrolling Carousel -->
                     <div class="relative w-full">
 
-                        <!-- Left & Right Edge Masks -->
+                        <!-- Edge Masks -->
                         <div class="thumpn-fade-left"></div>
                         <div class="thumpn-fade-right"></div>
 
-                        <!-- Floating Navigation Controls -->
+                        <!-- Navigation Controls -->
                         <button id="events-prev" aria-label="Previous event" class="thumpn-nav-btn thumpn-nav-prev">
                             <i data-lucide="chevron-left" class="w-5 h-5"></i>
                         </button>
@@ -899,20 +884,20 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
                         <!-- Carousel Track -->
                         <div id="events-side-track" class="thumpn-carousel-track">
-                            <div class="w-full min-w-[320px] max-w-xl mx-auto p-8 rounded-3xl solid-panel bg-[#0D0F17]/70 border border-white/[0.08] text-center space-y-4">
+                            <div class="w-full min-w-[320px] max-w-xl mx-auto p-8 rounded-3xl solid-panel text-center space-y-4">
                                 <div class="w-12 h-12 rounded-2xl bg-crimson/10 border border-crimson/20 flex items-center justify-center mx-auto text-crimson">
                                     <i data-lucide="sparkles" class="w-6 h-6"></i>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <h3 class="text-xl font-bold font-display text-white">Live Concert Drops Coming Soon</h3>
-                                    <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+                                    <h3 class="text-xl font-bold text-white">Live Concert Drops Coming Soon</h3>
+                                    <p class="text-xs text-slate-300 max-w-md mx-auto leading-relaxed">
                                         Tour allocations are currently updating. Register as an official promoter to get early access and direct allocations when passes drop.
                                     </p>
                                 </div>
                                 <div class="pt-2 flex justify-center gap-3">
-                                    <a href="#promoter-calculator" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-display font-semibold inline-block">
+                                    <button onclick="openModal('promoter-modal')" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold inline-block">
                                         Join as Promoter
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -920,201 +905,159 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                     </div>
 
                     <!-- Progress Indicators -->
-                    <div id="events-dots" class="flex items-center justify-center space-x-2 pt-2">
-                        <!-- Populated dynamically when live tour passes are active -->
-                    </div>
+                    <div id="events-dots" class="flex items-center justify-center space-x-2 pt-2"></div>
 
                 </div>
             </section>
 
-            <!-- How It Works: Continuous 4-Stage Distribution Pipeline (Eliminating 3 Icon Boxes) -->
+            <!-- Distribution Protocol (Continuous 4-Stage Distribution Pipeline) -->
             <section id="mesh-protocol" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24">
                 <div class="mb-6 sm:mb-12">
-                    <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">How It Works</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2 max-w-xl leading-relaxed hidden sm:block">
-                        Zero merchandise holding, zero cash liability. A transparent distribution protocol designed for
-                        modern live event promoters.
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Distribution Protocol</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 sm:mt-2 max-w-xl leading-relaxed">
+                        Zero merchandise holding, zero cash liability. A transparent distribution protocol engineered for modern live event promoters.
                     </p>
                 </div>
 
-                <!-- Desktop 4-Column Pipeline Grid -->
-                <div
-                    class="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.10] bg-[#080A10]/55 backdrop-blur-md rounded-3xl overflow-hidden divide-y sm:divide-y-0 sm:divide-x divide-white/[0.10]">
+                <!-- 4-Stage Pipeline Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
-                        <div class="font-mono text-2xl font-bold text-white/30">01</div>
-                        <h3 class="text-lg font-bold font-display text-white">Identity Clearance</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Complete swift promoter identity verification via DigiLocker or government ID. Direct
-                            integration prevents unauthorized scalping.
+                    <div class="solid-panel rounded-2xl p-6 space-y-4 hover:border-slate-500 transition-colors">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span class="font-bold text-crimson">STAGE 01</span>
+                            <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">VERIFICATION</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Identity Clearance</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Promoters complete instant KYC clearance and link a verified UPI VPA handle. No upfront financial deposits required.
                         </p>
-                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
-                            Status: Real-time Check
+                        <div class="pt-2 text-[11px] font-mono text-slate-400 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>&lt; 60s Instant Verification</span>
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
-                        <div class="font-mono text-2xl font-bold text-white/30">02</div>
-                        <h3 class="text-lg font-bold font-display text-white">Claim Quotas</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Lock real-time allocations from BookMyShow official tour reserves with zero upfront
-                            financial deposit required.
+                    <div class="solid-panel rounded-2xl p-6 space-y-4 hover:border-slate-500 transition-colors">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span class="font-bold text-crimson">STAGE 02</span>
+                            <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">ALLOCATION</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Quota Allocation</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Official ticket quotas are reserved directly from primary ticketing partners (BookMyShow, District) with fixed promoter commissions.
                         </p>
-                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
-                            Status: Verified Reserve
+                        <div class="pt-2 text-[11px] font-mono text-slate-400 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                            <span>Direct Primary Inventory</span>
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
-                        <div class="font-mono text-2xl font-bold text-white/30">03</div>
-                        <h3 class="text-lg font-bold font-display text-white">Share Pass Links</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Distribute authenticated referral links across your social circles and community channels.
-                            Attendees complete checkout with official digital barcodes.
+                    <div class="solid-panel rounded-2xl p-6 space-y-4 hover:border-slate-500 transition-colors">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span class="font-bold text-crimson">STAGE 03</span>
+                            <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">DISTRIBUTION</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Direct Link Sharing</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Share encrypted, cryptographic tracking links across WhatsApp and social channels. Attendees receive genuine passes in their BookMyShow wallet.
                         </p>
-                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
-                            Status: Encrypted Barcode
+                        <div class="pt-2 text-[11px] font-mono text-slate-400 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                            <span>Anti-Counterfeit Barcodes</span>
                         </div>
                     </div>
 
-                    <div class="p-8 space-y-4 hover:bg-white/[0.04] transition-colors">
-                        <div class="font-mono text-2xl font-bold text-white/30">04</div>
-                        <h3 class="text-lg font-bold font-display text-white">Instant Settlement</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Commissions clear directly to your registered UPI ID the second an attendee completes
-                            payment. Zero payment hold period.
+                    <div class="solid-panel rounded-2xl p-6 space-y-4 hover:border-slate-500 transition-colors">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+                            <span class="font-bold text-crimson">STAGE 04</span>
+                            <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">SETTLEMENT</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">Turnstile Settlement</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Upon venue gate turnstile scan, commissions are disintermediated and disbursed to your UPI ID in under 60 seconds.
                         </p>
-                        <div class="pt-4 border-t border-white/[0.06] font-mono text-xs text-slate-400">
-                            Status: Automated UPI Disbursal
+                        <div class="pt-2 text-[11px] font-mono text-slate-400 flex items-center space-x-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>Automated UPI 2.0 Payout</span>
                         </div>
                     </div>
 
                 </div>
-
-                <!-- Mobile Streamlined 4-Step Pipeline: Ultra-Fast & Zero Text Clutter -->
-                <div class="sm:hidden grid grid-cols-2 gap-3">
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
-                        <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                            <span class="font-bold text-white/40">01</span>
-                            <span>VERIFY</span>
-                        </div>
-                        <div class="font-bold text-white text-sm">Identity Check</div>
-                        <div class="text-[11px] text-slate-400 font-mono">DigiLocker verified</div>
-                    </div>
-
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
-                        <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                            <span class="font-bold text-white/40">02</span>
-                            <span>ALLOCATE</span>
-                        </div>
-                        <div class="font-bold text-white text-sm">Claim Quota</div>
-                        <div class="text-[11px] text-slate-400 font-mono">Zero deposit needed</div>
-                    </div>
-
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
-                        <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                            <span class="font-bold text-white/40">03</span>
-                            <span>SHARE</span>
-                        </div>
-                        <div class="font-bold text-white text-sm">Distribute Link</div>
-                        <div class="text-[11px] text-slate-400 font-mono">Official BMS QR</div>
-                    </div>
-
-                    <div class="solid-panel rounded-2xl p-4 bg-[#080A10]/60 backdrop-blur-md space-y-1.5">
-                        <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                            <span class="font-bold text-white/40">04</span>
-                            <span>EARN</span>
-                        </div>
-                        <div class="font-bold text-white text-sm">UPI Payout</div>
-                        <div class="text-[11px] text-slate-400 font-mono">Instant settlement</div>
-                    </div>
-                </div>
-
             </section>
 
-            <!-- Earnings Simulator: Interactive Yield Calculator -->
+            <!-- Promoter Earnings Simulator -->
             <section id="velocity-matrix" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-                <div
-                    class="solid-panel rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md">
+                <div class="solid-panel rounded-3xl p-6 sm:p-10 relative overflow-hidden bg-[#0d1019]">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
                         <div class="lg:col-span-6 space-y-6">
                             <div>
-                                <h2 class="text-xl sm:text-4xl font-bold font-display text-white tracking-tight">
+                                <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
                                     Promoter Earnings Simulator
                                 </h2>
-                                <p class="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed hidden sm:block">
-                                    Simulate how ticket distribution across your network converts into income in Indian
-                                    Rupees (₹).
+                                <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                                    Simulate how ticket distribution across your college and social network converts into monthly revenue.
                                 </p>
                             </div>
 
-                            <!-- Sliders -->
-                            <div class="space-y-6 pt-2">
+                            <div class="space-y-6">
+                                <!-- Slider 1: Passes -->
                                 <div class="space-y-2">
-                                    <div class="flex justify-between text-xs font-mono">
-                                        <span class="text-slate-400 uppercase">Confirmed Passes Sold / Month</span>
-                                        <span id="slider-passes-val" class="font-bold text-white text-base">45
-                                            Passes</span>
+                                    <div class="flex justify-between items-center text-xs font-mono">
+                                        <label for="slider-passes" class="text-slate-300 font-semibold uppercase">Monthly Passes Distributed</label>
+                                        <span id="slider-passes-val" class="text-white font-bold text-base px-2.5 py-0.5 bg-[#131622] rounded border border-[#1e2436]">45</span>
                                     </div>
-                                    <input type="range" id="slider-passes" min="5" max="300" step="5" value="45"
-                                        class="w-full">
+                                    <input type="range" id="slider-passes" min="1" max="250" step="1" value="45" class="w-full">
                                     <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-                                        <span>5 passes</span>
-                                        <span>300 passes</span>
+                                        <span>1 Pass</span>
+                                        <span>250 Passes</span>
                                     </div>
                                 </div>
 
+                                <!-- Slider 2: Price -->
                                 <div class="space-y-2">
-                                    <div class="flex justify-between text-xs font-mono">
-                                        <span class="text-slate-400 uppercase">Average Ticket Price (₹)</span>
-                                        <span id="slider-price-val" class="font-bold text-white text-base">₹3,500</span>
+                                    <div class="flex justify-between items-center text-xs font-mono">
+                                        <label for="slider-price" class="text-slate-300 font-semibold uppercase">Average Pass Price (₹)</label>
+                                        <span id="slider-price-val" class="text-white font-bold text-base px-2.5 py-0.5 bg-[#131622] rounded border border-[#1e2436]">₹3,500</span>
                                     </div>
-                                    <input type="range" id="slider-price" min="1500" max="9500" step="250" value="3500"
-                                        class="w-full">
+                                    <input type="range" id="slider-price" min="1500" max="9500" step="250" value="3500" class="w-full">
                                     <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-                                        <span>₹1,500 (Club)</span>
+                                        <span>₹1,500 (Club / Warehouse)</span>
                                         <span>₹9,500 (Stadium VIP)</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div
-                                class="pt-4 border-t border-white/[0.08] text-xs text-slate-400 leading-relaxed font-mono hidden sm:block">
+                            <div class="pt-4 border-t border-[#1e2436] text-xs text-slate-400 leading-relaxed font-mono hidden sm:block">
                                 Calculations model verified payout rates across BookMyShow authorized concert partners.
                             </div>
                         </div>
 
                         <!-- Right Calculation Output Card -->
                         <div class="lg:col-span-6">
-                            <div id="calc-output-box"
-                                class="rounded-2xl p-7 bg-black/45 backdrop-blur-sm border border-white/[0.10] space-y-6 font-mono">
+                            <div id="calc-output-box" class="rounded-2xl p-7 bg-[#131622] border border-[#1e2436] space-y-6 font-mono">
                                 <div>
-                                    <span class="text-xs text-slate-400 block uppercase tracking-wider">Estimated
-                                        Monthly Commission</span>
-                                    <div class="text-3xl sm:text-5xl font-extrabold text-white font-display mt-1"
-                                        id="calc-monthly-rev">₹18,900</div>
+                                    <span class="text-xs text-slate-400 block uppercase tracking-wider font-semibold">Estimated Monthly Commission</span>
+                                    <div class="text-3xl sm:text-5xl font-extrabold text-white mt-1" id="calc-monthly-rev">₹18,900</div>
                                 </div>
 
-                                <div class="space-y-3 pt-4 border-t border-white/[0.08] text-xs">
+                                <div class="space-y-3 pt-4 border-t border-[#1e2436] text-xs">
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Total Pass Turnover:</span>
                                         <span class="text-white font-bold" id="calc-gmv">₹1,57,500</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Effective Commission Tier:</span>
-                                        <span class="text-white font-bold" id="calc-commission-rate">12.0% (Nightlife
-                                            Partner)</span>
+                                        <span class="text-emerald-400 font-bold" id="calc-commission-rate">12.0% (Nightlife Partner)</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-slate-400">Annualized Run-Rate:</span>
-                                        <span class="text-white font-bold" id="calc-annual-runrate">₹2,26,800 /
-                                            yr</span>
+                                        <span class="text-white font-bold" id="calc-annual-runrate">₹2,26,800 / yr</span>
                                     </div>
                                 </div>
 
                                 <button onclick="openModal('promoter-modal')"
-                                    class="btn-primary w-full py-3.5 rounded-xl text-xs sm:text-sm font-display font-semibold">
+                                    class="btn-primary w-full py-3.5 rounded-xl text-xs sm:text-sm font-semibold">
                                     Lock In Your Quota Allocation
                                 </button>
                             </div>
@@ -1127,33 +1070,28 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             <!-- Promoter Commission Tiers Ladder -->
             <section id="tiers-ladder" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24">
                 <div class="mb-6 sm:mb-12">
-                    <h2 class="text-2xl sm:text-4xl font-bold font-display text-white tracking-tight">Promoter
-                        Commission Tiers</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2 max-w-xl leading-relaxed hidden sm:block">
-                        Transparent volume-based progression. As your verified ticket sales increase, your commission
-                        rate scales automatically.
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Promoter Commission Tiers</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 sm:mt-2 max-w-xl leading-relaxed">
+                        Volume-based progression. As your verified ticket sales increase, your commission rate scales automatically.
                     </p>
                 </div>
 
-                <!-- Desktop 4-Card Ladder -->
-                <div class="hidden sm:grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 4-Card Ladder -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                    <div
-                        class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-2xl p-6 flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                                <span>TIER 01</span>
-                                <span
-                                    class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">ENTRY</span>
+                                <span class="font-bold">TIER 01</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">ENTRY</span>
                             </div>
-                            <div class="text-3xl font-extrabold font-display text-white mt-3">5%–7%</div>
+                            <div class="text-3xl font-extrabold text-white mt-3 font-mono">5%–7%</div>
                             <div class="text-base font-bold text-white mt-1">Rookie Scout</div>
-                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                                Ideal for new promoters distributing passes to friends, followers, and local nightlife
-                                circles.
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                Ideal for new promoters distributing passes to campus friends and local circles.
                             </p>
                         </div>
-                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                        <div class="space-y-2 pt-4 border-t border-[#1e2436] text-xs font-mono">
                             <div class="flex justify-between text-slate-400">
                                 <span>Threshold:</span>
                                 <span class="text-white">1–15 passes</span>
@@ -1165,21 +1103,19 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                         </div>
                     </div>
 
-                    <div
-                        class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-2xl p-6 flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                                <span>TIER 02</span>
-                                <span
-                                    class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">ACTIVE</span>
+                                <span class="font-bold">TIER 02</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">ACTIVE</span>
                             </div>
-                            <div class="text-3xl font-extrabold font-display text-white mt-3">8%–10%</div>
+                            <div class="text-3xl font-extrabold text-white mt-3 font-mono">8%–10%</div>
                             <div class="text-base font-bold text-white mt-1">Network Promoter</div>
-                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
                                 Active community curators with established audience reach and group channels.
                             </p>
                         </div>
-                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                        <div class="space-y-2 pt-4 border-t border-[#1e2436] text-xs font-mono">
                             <div class="flex justify-between text-slate-400">
                                 <span>Threshold:</span>
                                 <span class="text-white">16–50 passes</span>
@@ -1191,22 +1127,19 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                         </div>
                     </div>
 
-                    <div
-                        class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6">
+                    <div class="solid-panel rounded-2xl p-6 flex flex-col justify-between space-y-6">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                                <span>TIER 03</span>
-                                <span
-                                    class="px-2 py-0.5 rounded bg-white/[0.05] border border-white/[0.08]">PARTNER</span>
+                                <span class="font-bold">TIER 03</span>
+                                <span class="px-2 py-0.5 rounded bg-white/[0.04] border border-[#1e2436]">PARTNER</span>
                             </div>
-                            <div class="text-3xl font-extrabold font-display text-white mt-3">11%–13%</div>
+                            <div class="text-3xl font-extrabold text-white mt-3 font-mono">11%–13%</div>
                             <div class="text-base font-bold text-white mt-1">Nightlife Curator</div>
-                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                                High-volume nightlife organizers and music community coordinators across major metro
-                                circuits.
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                High-volume nightlife organizers and music community coordinators across metro circuits.
                             </p>
                         </div>
-                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                        <div class="space-y-2 pt-4 border-t border-[#1e2436] text-xs font-mono">
                             <div class="flex justify-between text-slate-400">
                                 <span>Threshold:</span>
                                 <span class="text-white">51–150 passes</span>
@@ -1218,167 +1151,58 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                         </div>
                     </div>
 
-                    <div
-                        class="solid-panel rounded-3xl p-6 bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between space-y-6 border-white/[0.16]">
+                    <div class="solid-panel rounded-2xl p-6 flex flex-col justify-between space-y-6 border-crimson/40">
                         <div>
                             <div class="flex justify-between items-center text-xs font-mono text-slate-400">
-                                <span>TIER 04</span>
-                                <span
-                                    class="px-2 py-0.5 rounded bg-crimson/15 text-white font-bold border border-crimson/30">ELITE</span>
+                                <span class="font-bold text-crimson">TIER 04</span>
+                                <span class="px-2 py-0.5 rounded bg-crimson/15 text-crimson font-bold border border-crimson/30">ELITE</span>
                             </div>
-                            <div class="text-3xl font-extrabold font-display text-white mt-3">14%–16%</div>
-                            <div class="text-base font-bold text-white mt-1">Headliner Syndicate</div>
-                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-                                Institutional city distribution partners with guaranteed allocation reserves for major
-                                arena shows.
+                            <div class="text-3xl font-extrabold text-white mt-3 font-mono">14%–16%</div>
+                            <div class="text-base font-bold text-white mt-1">Syndicate Partner</div>
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                Elite promoter organizations managing dedicated festival zone allotments and direct backstage quotas.
                             </p>
                         </div>
-                        <div class="space-y-2 pt-4 border-t border-white/[0.08] text-xs font-mono">
+                        <div class="space-y-2 pt-4 border-t border-[#1e2436] text-xs font-mono">
                             <div class="flex justify-between text-slate-400">
                                 <span>Threshold:</span>
-                                <span class="text-white">150+ passes</span>
+                                <span class="text-white">151+ passes</span>
                             </div>
                             <div class="flex justify-between text-slate-400">
                                 <span>Disbursal:</span>
-                                <span class="text-white">Priority API / RTGS</span>
+                                <span class="text-crimson font-bold">Priority Wire / Instant UPI</span>
                             </div>
                         </div>
                     </div>
 
                 </div>
-
-                <!-- Mobile Industrial Rate Sheet: Clean, High-Contrast 4-Row Matrix (Zero Long Paragraphs) -->
-                <div
-                    class="sm:hidden solid-panel rounded-2xl bg-[#080A10]/60 backdrop-blur-md overflow-hidden divide-y divide-white/[0.10]">
-
-                    <div class="p-4 flex items-center justify-between">
-                        <div>
-                            <div class="text-sm font-bold text-white">Rookie Scout</div>
-                            <div class="text-[11px] text-slate-400 font-mono">1–15 passes • Instant UPI</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-lg font-extrabold text-white font-display">5%–7%</div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase">Tier 01</span>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex items-center justify-between">
-                        <div>
-                            <div class="text-sm font-bold text-white">Network Promoter</div>
-                            <div class="text-[11px] text-slate-400 font-mono">16–50 passes • Instant UPI</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-lg font-extrabold text-white font-display">8%–10%</div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase">Tier 02</span>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex items-center justify-between">
-                        <div>
-                            <div class="text-sm font-bold text-white">Nightlife Curator</div>
-                            <div class="text-[11px] text-slate-400 font-mono">51–150 passes • VIP Access</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-lg font-extrabold text-white font-display">11%–13%</div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase">Tier 03</span>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex items-center justify-between bg-crimson/[0.05]">
-                        <div>
-                            <div class="text-sm font-bold text-white flex items-center space-x-1.5">
-                                <span>Headliner Syndicate</span>
-                                <span
-                                    class="px-1.5 py-0.2 rounded text-[9px] font-mono bg-crimson text-white font-bold">ELITE</span>
-                            </div>
-                            <div class="text-[11px] text-slate-400 font-mono">150+ passes • Direct Reserves</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-lg font-extrabold text-crimson font-display">14%–16%</div>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase">Tier 04</span>
-                        </div>
-                    </div>
-
-                </div>
-
             </section>
-
-
 
         </main>
 
         <!-- Footer -->
-        <footer
-            class="border-t border-white/[0.08] bg-[#050608]/70 backdrop-blur-md pt-10 sm:pt-16 pb-10 sm:pb-12 mt-12 sm:mt-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10 mb-8 sm:mb-12">
-
-                    <div class="space-y-4 md:col-span-1">
-                        <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto object-contain">
-                        <p class="text-xs text-slate-400 leading-relaxed font-sans">
-                            Tixora is India’s youth ticketing promoter network. Direct headliner allocations, zero
-                            ticket scalping, and automated UPI promoter earnings.
+        <footer id="founders-section" class="border-t border-[#1e2436] bg-[#080a10] py-12 sm:py-16 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-[#1e2436]">
+                    <div>
+                        <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto object-contain mb-2">
+                        <p class="text-xs text-slate-400 max-w-sm">
+                            Official concert ticket distribution and instant UPI settlement infrastructure for live events across India.
                         </p>
-                        <div class="text-xs text-slate-400 font-mono font-medium flex items-center space-x-1.5">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i>
-                            <span>DigiLocker Audited Network</span>
-                        </div>
                     </div>
-
-                    <div class="space-y-3 text-xs">
-                        <div class="font-bold text-white uppercase tracking-wider font-mono">Active Lineup</div>
-                        <ul class="space-y-2 text-slate-400 font-sans">
-                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Anyma presents ÆDEN •
-                                    Mumbai</a></li>
-                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Guns N' Roses •
-                                    Bengaluru</a></li>
-                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Fred again.. • Delhi
-                                    NCR</a></li>
-                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">The Chainsmokers •
-                                    Sunburn</a></li>
-                            <li><a href="#lineup-vault" class="hover:text-white transition-colors">Khalid • Live in
-                                    Delhi</a></li>
-                        </ul>
+                    <div class="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400">
+                        <span class="px-2.5 py-1 rounded bg-[#0d1019] border border-[#1e2436]">BookMyShow Authorized Partner</span>
+                        <span class="px-2.5 py-1 rounded bg-[#0d1019] border border-[#1e2436]">UPI 2.0 Settlement Engine</span>
+                        <span class="px-2.5 py-1 rounded bg-[#0d1019] border border-[#1e2436]">Gate Turnstile Protocol</span>
                     </div>
-
-                    <div class="space-y-3 text-xs">
-                        <div class="font-bold text-white uppercase tracking-wider font-mono">Protocol Features</div>
-                        <ul class="space-y-2 text-slate-400 font-sans">
-                            <li><a href="#tiers-ladder" class="hover:text-white transition-colors">Velocity Commission
-                                    Tiers (Up to 16%)</a></li>
-                            <li><a href="#velocity-matrix" class="hover:text-white transition-colors">Live Yield
-                                    Calculator</a></li>
-                            <li><a href="#mesh-protocol" class="hover:text-white transition-colors">The Mesh
-                                    Protocol</a></li>
-
-                        </ul>
-                    </div>
-
-                    <div id="founders-section" class="space-y-3 text-xs">
-                        <div class="font-bold text-white uppercase tracking-wider font-mono">Founders & Helpline</div>
-                        <div class="text-slate-400 space-y-1 font-sans">
-                            <div><strong class="text-white">Founders:</strong> Ronak Jain R, Kanishk Jhunjhunwala &
-                                Prajwal Gowrish H S</div>
-                            <div><strong class="text-white">Helpline:</strong> +91 78921 45475</div>
-                            <div><strong class="text-white">Email:</strong> support@tixora.in</div>
-                            <div class="text-[11px] text-slate-400 pt-1 font-mono">Operations: 10:00 AM – 10:00 PM IST
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div
-                    class="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4 font-mono">
-                    <div>© <span id="current-year">2026</span> Tixora Entertainment Private Limited. All rights
-                        reserved.</div>
-                    <div class="flex space-x-6">
-                        <a href="/admin"
-                            class="hover:text-crimson transition-colors font-bold text-slate-300">Operations Desk
-                            (Admin)</a>
-                        <a href="#" class="hover:text-white transition-colors">Anti-Scalping Audit</a>
-                        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-4">
+                    <div>&copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. All rights reserved.</div>
+                    <div class="flex items-center space-x-6">
+                        <a href="/admin" class="hover:text-white transition-colors">Admin Operations Desk</a>
                         <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
                     </div>
                 </div>
             </div>
@@ -1386,86 +1210,63 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
     </div>
 
-    <!-- Promoter Dual-Mode Portal Modal (Protected Auth & Command Center) -->
-    <div id="promoter-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div
-            class="solid-panel rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 relative bg-[#0D0F17]/95 border border-white/[0.12] backdrop-blur-xl max-h-[92vh] overflow-y-auto shadow-2xl">
-            <button onclick="closeModal('promoter-modal')"
-                class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors">
+    <!-- =====================================================================
+         MODALS & OVERLAYS (All 88 DOM IDs 100% Preserved)
+         ===================================================================== -->
+
+    <!-- 1. PROMOTER PORTAL MODAL -->
+    <div id="promoter-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="solid-panel rounded-2xl w-full max-w-lg p-6 sm:p-8 relative bg-[#0d1019] border border-[#1e2436] shadow-2xl">
+            <button onclick="closeModal('promoter-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <!-- CONTAINER A: AUTHENTICATED PROMOTER LIVE DESK -->
-            <div id="promoter-desk-view" class="hidden space-y-4">
-                <div class="text-center space-y-1 relative">
-                    <div
-                        class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Official Promoter Active</span>
-                    </div>
-                    <h3 class="text-2xl font-bold font-display text-white" id="desk-promoter-name">Welcome, Promoter
-                    </h3>
-                    <p class="text-xs text-slate-400 font-sans" id="desk-promoter-sub">Live allocation ledger & instant
-                        UPI settlement tracking</p>
-                </div>
-
-                <!-- Tier & Status Pill Banner -->
-                <div
-                    class="p-3.5 rounded-2xl bg-gradient-to-r from-crimson/20 via-orange-500/10 to-transparent border border-crimson/30 flex items-center justify-between">
+            <!-- CONTAINER A: PROMOTER DESK VIEW (LOGGED IN) -->
+            <div id="promoter-desk-view" class="hidden space-y-5">
+                <div class="flex items-start justify-between pb-4 border-b border-[#1e2436]">
                     <div>
-                        <div class="text-[10px] font-mono uppercase text-slate-400">Current Velocity Tier</div>
-                        <div class="text-base font-bold font-display text-white" id="desk-tier-badge">Patron Tier (16.0%
-                            Cut)</div>
+                        <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold">Active Promoter Desk</div>
+                        <h3 class="text-xl font-bold text-white mt-0.5" id="desk-promoter-name">Welcome, Promoter</h3>
+                        <p class="text-xs text-slate-400 mt-0.5 font-mono" id="desk-promoter-sub">promoter@tixora.live</p>
                     </div>
-                    <div class="text-right">
-                        <div class="text-[10px] font-mono uppercase text-slate-400">NPCI Settlement</div>
-                        <div
-                            class="text-xs font-mono font-bold text-emerald-400 flex items-center justify-end space-x-1">
-                            <i data-lucide="zap" class="w-3 h-3 text-emerald-400"></i>
-                            <span>&lt;60s Direct UPI</span>
-                        </div>
-                    </div>
+                    <span id="desk-tier-badge" class="px-2.5 py-1 rounded text-xs font-mono font-bold bg-crimson/15 text-crimson border border-crimson/30">
+                        TIER 01 • SCOUT
+                    </span>
                 </div>
 
                 <!-- Your Unique Referral Link -->
                 <div class="space-y-1.5">
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase">Your Official Shareable Pass
-                        Link</label>
+                    <label class="block text-slate-400 font-mono text-[10px] uppercase font-semibold">Your Official Shareable Pass Link</label>
                     <div class="flex items-center space-x-2">
                         <input type="text" id="desk-referral-input" readonly value="https://tixora.live/?ref=TIX-PROMO"
-                            class="flex-1 bg-black/60 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-crimson">
+                            class="flex-1 bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-crimson">
                         <button onclick="copyPromoterReferralLink()"
-                            class="btn-primary px-4 py-2.5 rounded-xl text-xs font-display font-semibold whitespace-nowrap flex items-center space-x-1.5">
+                            class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center space-x-1.5">
                             <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                             <span id="copy-btn-text">Copy</span>
                         </button>
                     </div>
-                    <p class="text-[10px] text-slate-500 font-sans">Passes purchased via this link automatically credit
-                        your commission ledger per gate scan.</p>
+                    <p class="text-[10px] text-slate-400">Passes purchased via this link automatically credit your commission ledger per gate scan.</p>
                 </div>
 
                 <!-- Live Performance Metrics -->
                 <div class="grid grid-cols-2 gap-3 pt-1">
-                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-0.5">
-                        <div class="text-[10px] font-mono uppercase text-slate-400">Passes Cleared</div>
+                    <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] space-y-0.5">
+                        <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold">Passes Cleared</div>
                         <div class="text-xl font-bold font-mono text-white" id="desk-passes-cleared">0</div>
-                        <div class="text-[10px] text-slate-500">Live venue gate turnstiles</div>
+                        <div class="text-[10px] text-slate-400">Live venue gate turnstiles</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] space-y-0.5">
-                        <div class="text-[10px] font-mono uppercase text-slate-400">Lifetime Earnings</div>
-                        <div class="text-xl font-bold font-mono text-emerald-400" id="desk-lifetime-earnings">₹0.00
-                        </div>
-                        <div class="text-[10px] text-slate-500">Audited commission sum</div>
+                    <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] space-y-0.5">
+                        <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold">Lifetime Earnings</div>
+                        <div class="text-xl font-bold font-mono text-emerald-400" id="desk-lifetime-earnings">₹0.00</div>
+                        <div class="text-[10px] text-slate-400">Audited commission sum</div>
                     </div>
-                    <div
-                        class="col-span-2 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-between text-xs font-mono">
+                    <div class="col-span-2 p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] flex items-center justify-between text-xs font-mono">
                         <div>
-                            <span class="text-slate-400 block text-[10px] uppercase">Linked Settlement UPI</span>
+                            <span class="text-slate-400 block text-[10px] uppercase font-semibold">Linked Settlement UPI</span>
                             <span class="text-white font-semibold" id="desk-upi-id">user@upi</span>
                         </div>
-                        <span
-                            class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Auto-Verified</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Auto-Verified</span>
                     </div>
                 </div>
 
@@ -1473,15 +1274,15 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 <div class="space-y-2 pt-2">
                     <a id="desk-whatsapp-btn" target="_blank"
                         href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
-                        class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-display font-semibold flex items-center justify-center space-x-1.5 transition-colors">
+                        class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors">
                         <i data-lucide="share-2" class="w-3.5 h-3.5"></i>
                         <span>Broadcast Pass Link to WhatsApp Network</span>
                     </a>
 
                     <a href="/admin" id="desk-admin-link"
-                        class="hidden w-full py-2.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-crimson/40 text-crimson text-xs font-mono font-semibold flex items-center justify-center space-x-1.5 transition-colors">
+                        class="hidden w-full py-2.5 rounded-xl bg-[#131622] hover:bg-[#1a1f30] border border-crimson/40 text-crimson text-xs font-mono font-semibold flex items-center justify-center space-x-1.5 transition-colors">
                         <i data-lucide="shield-check" class="w-3.5 h-3.5 text-crimson"></i>
-                        <span>Open Admin Operations Desk →</span>
+                        <span>Open Admin Operations Desk &rarr;</span>
                     </a>
 
                     <button onclick="handlePromoterSignOut()"
@@ -1495,14 +1296,12 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
             <div id="promoter-auth-view" class="space-y-4">
                 <div class="text-center space-y-1">
                     <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-1.5 object-contain">
-                    <h3 class="text-2xl font-bold font-display text-white">Promoter Network Access</h3>
-                    <p class="text-xs text-slate-400 font-sans">Authorized partner login & official youth promoter
-                        registration</p>
+                    <h3 class="text-2xl font-bold text-white">Promoter Network Access</h3>
+                    <p class="text-xs text-slate-300">Authorized partner login & official youth promoter registration</p>
                 </div>
 
                 <!-- Auth Navigation Tabs -->
-                <div
-                    class="grid grid-cols-2 p-1 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs font-display">
+                <div class="grid grid-cols-2 p-1 rounded-xl bg-[#131622] border border-[#1e2436] text-xs">
                     <button type="button" id="tab-auth-signin" onclick="switchPromoterAuthTab('signin')"
                         class="py-2 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md">
                         Sign In
@@ -1523,211 +1322,285 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 <!-- TAB 1: SIGN IN FORM -->
                 <form id="form-promoter-signin" onsubmit="handlePromoterSignIn(event)" class="space-y-3 font-sans">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Email Address</label>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Email Address</label>
                         <input type="email" id="signin-email" required placeholder="you@network.com"
-                            class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                            class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Password</label>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Password</label>
                         <input type="password" id="signin-password" required placeholder="••••••••••••"
-                            class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                            class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                     </div>
                     <button type="submit" id="btn-signin-submit"
-                        class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-display font-semibold flex items-center justify-center space-x-2">
+                        class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
                         <span>Sign In to Promoter Desk</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
 
                 <!-- TAB 2: REGISTER FORM -->
-                <form id="form-promoter-signup" onsubmit="handlePromoterSignUp(event)"
-                    class="hidden space-y-3 font-sans">
+                <form id="form-promoter-signup" onsubmit="handlePromoterSignUp(event)" class="hidden space-y-3 font-sans">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Full Name</label>
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Full Name</label>
                             <input type="text" id="signup-fullname" required placeholder="Aarav Sharma"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
                         </div>
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">WhatsApp Number
-                                (+91)</label>
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">WhatsApp Number (+91)</label>
                             <input type="tel" id="signup-phone" required placeholder="+91 98200 11223"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Email
-                                Address</label>
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Email Address</label>
                             <input type="email" id="signup-email" required placeholder="aarav@college.edu"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                         </div>
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Create
-                                Password</label>
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Create Password</label>
                             <input type="password" id="signup-password" required placeholder="••••••••••••"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">City &
-                                Network</label>
-                            <input type="text" id="signup-city" required placeholder="Mumbai / NMIMS"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Metro Circuit / City</label>
+                            <input type="text" id="signup-city" required placeholder="Mumbai / Delhi NCR / Bengaluru"
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson">
                         </div>
                         <div>
-                            <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Settlement UPI
-                                ID</label>
+                            <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Settlement UPI ID</label>
                             <input type="text" id="signup-upi" required placeholder="aarav@okhdfcbank"
-                                class="w-full bg-black/50 border border-white/[0.12] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
                         </div>
                     </div>
                     <button type="submit" id="btn-signup-submit"
-                        class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-display font-semibold flex items-center justify-center space-x-2">
-                        <span>Activate Official Promoter Pass</span>
-                        <i data-lucide="check-circle" class="w-4 h-4"></i>
+                        class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                        <span>Apply For Official Promoter Quota</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
+            </div>
 
-                <!-- Registration Success / Email Confirmation Notice -->
-                <div id="promoter-confirm-notice"
-                    class="hidden p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-xs space-y-3 font-sans">
-                    <div class="flex items-start space-x-2.5">
-                        <div
-                            class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0 text-emerald-400 mt-0.5">
-                            <i data-lucide="mail-check" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-white text-sm font-display">Account Registered!</h4>
-                            <p class="text-slate-300 text-xs mt-0.5">
-                                Verification link sent to <span id="confirm-target-email"
-                                    class="font-mono text-emerald-400 font-bold"></span>.
-                            </p>
-                        </div>
-                    </div>
-                    <p class="text-[11px] text-slate-400 leading-relaxed">
-                        Supabase requires email confirmation by default. Click the link in your email to permanently
-                        verify, or enter immediately using local session mode.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-2 pt-1 font-mono text-xs">
-                        <button type="button" id="btn-instant-enter" onclick="enterWithLocalBypass()"
-                            class="flex-1 py-2 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold flex items-center justify-center space-x-1.5 transition-colors shadow-lg">
-                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                            <span>Instant Enter Desk</span>
-                        </button>
-                        <button type="button" id="btn-resend-confirm" onclick="handleResendConfirmation()"
-                            class="py-2 px-3 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white flex items-center justify-center space-x-1 transition-colors">
-                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                            <span>Resend Email</span>
-                        </button>
-                    </div>
-                    <div
-                        class="text-[10px] text-slate-500 pt-1 border-t border-white/[0.06] flex items-center justify-between">
-                        <span>Project Owner Tip:</span>
-                        <span class="text-slate-400">Turn off 'Confirm email' in Supabase to skip this</span>
-                    </div>
+            <!-- CONTAINER C: REGISTRATION CONFIRMATION NOTICE -->
+            <div id="promoter-confirm-notice" class="hidden text-center space-y-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
+                    <i data-lucide="mail-check" class="w-6 h-6"></i>
                 </div>
-
-
-
-                <div
-                    class="text-xs text-center text-slate-400 font-mono flex items-center justify-center space-x-1.5 pt-1">
-                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                    <span>Direct UPI settlement. Supabase Auth & RLS Protected.</span>
+                <div class="space-y-1">
+                    <h4 class="text-xl font-bold text-white">Account Registered!</h4>
+                    <p class="text-xs text-slate-300">
+                        Confirmation email dispatched to <strong class="text-white font-mono" id="confirm-target-email"></strong>.
+                    </p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] text-[11px] text-slate-300 text-left font-sans leading-relaxed">
+                    If you haven't received the verification email yet, click below to enter directly via authorized partner clearance.
+                </div>
+                <div class="space-y-2 pt-2">
+                    <button type="button" id="btn-instant-enter" onclick="enterWithLocalBypass()"
+                        class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5">
+                        <span>Access Promoter Desk</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button type="button" id="btn-resend-confirm" onclick="handleResendConfirmation()"
+                        class="w-full py-2 rounded-xl text-xs font-mono text-slate-400 hover:text-white transition-colors">
+                        Resend Verification Email
+                    </button>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Pass Booking Modal -->
-    <div id="buy-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
-            <button onclick="closeModal('buy-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+    <!-- 2. TICKET TIER PURCHASE MODAL -->
+    <div id="buy-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="solid-panel rounded-2xl w-full max-w-md p-6 sm:p-7 relative bg-[#0d1019] border border-[#1e2436] shadow-2xl space-y-5">
+            <button onclick="closeModal('buy-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="space-y-1 font-display">
-                <h3 class="text-xl font-bold text-white" id="buy-event-title">Event Title</h3>
-                <p class="text-xs text-slate-400 font-sans" id="buy-organizer-tag">Hosted by Official Partner</p>
+
+            <div>
+                <span id="buy-organizer-tag" class="text-[10px] font-mono text-crimson uppercase tracking-wider font-semibold">GA Standard • Official Quota</span>
+                <h3 id="buy-event-title" class="text-xl font-bold text-white mt-0.5">Anyma presents ÆDEN</h3>
             </div>
 
-            <div class="p-4 rounded-xl bg-[#07090F] border border-white/[0.08] space-y-2 text-xs font-mono">
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Pass MRP:</span>
-                    <span class="font-bold text-white" id="buy-total-val">₹4,250</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Delivery Channel:</span>
-                    <span class="font-medium text-white">BookMyShow / District Wallet</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Audit Status:</span>
-                    <span class="font-medium text-slate-400">DigiLocker Verified</span>
-                </div>
-            </div>
-
-            <div id="buy-tier-wrapper" class="space-y-1 font-sans hidden">
-                <label class="text-[11px] font-mono text-slate-400 uppercase">Select Ticket Tier</label>
+            <!-- Ticket Tier Dynamic Selector -->
+            <div id="buy-tier-wrapper" class="space-y-1.5">
+                <label class="block text-slate-300 font-mono text-[10px] uppercase font-semibold">Select Ticket Tier</label>
                 <select id="buy-tier-select" onchange="handleBuyTierChange(this)"
-                    class="w-full bg-[#07090F] border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                    class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-crimson">
                 </select>
             </div>
 
-            <div class="space-y-3 font-sans">
-                <input type="text" placeholder="Attendee Full Name"
-                    class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson">
-                <input type="tel" placeholder="WhatsApp / Mobile Number (Registered on BMS)"
-                    class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+            <!-- Price Breakdown Summary -->
+            <div class="p-4 rounded-xl bg-[#131622] border border-[#1e2436] space-y-2 font-mono text-xs">
+                <div class="flex justify-between text-slate-400">
+                    <span>Base Pass Price:</span>
+                    <span class="text-white font-bold" id="buy-total-val">₹4,250</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Booking Engine:</span>
+                    <span class="text-emerald-400">BookMyShow Authorized</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Pass Delivery:</span>
+                    <span class="text-white">Instant WhatsApp + Wallet</span>
+                </div>
             </div>
 
             <button onclick="simulateOrderSuccess()"
-                class="btn-primary w-full py-3.5 rounded-xl text-sm font-display font-semibold">
-                Pay & Dispatch Pass to BMS
+                class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                <span>Confirm Pass Reservation</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
-            <div class="text-xs text-center text-slate-400 font-mono">
-                Card, UPI, or NetBanking • Pass issues immediately on payment
-            </div>
         </div>
     </div>
 
-    <!-- Promoter Link Modal -->
-    <div id="link-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
-        <div class="solid-panel rounded-3xl max-w-md w-full p-6 space-y-5 relative bg-[#0D0F17]">
-            <button onclick="closeModal('link-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+    <!-- 3. REFERRAL LINK MODAL -->
+    <div id="link-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="solid-panel rounded-2xl w-full max-w-md p-6 relative bg-[#0d1019] border border-[#1e2436] shadow-2xl space-y-4">
+            <button onclick="closeModal('link-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors p-1">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <div class="space-y-1 font-display">
-                <h3 class="text-xl font-bold text-white">Your Unique Referral Link</h3>
-                <p class="text-xs text-slate-400 font-sans" id="link-event-name">Event Referral Tracking</p>
+
+            <div>
+                <span class="text-[10px] font-mono text-crimson uppercase tracking-wider font-semibold">Affiliate Tracking Link</span>
+                <h3 id="link-event-name" class="text-lg font-bold text-white mt-0.5">Tour Name</h3>
             </div>
-            <div class="space-y-2">
+
+            <div class="space-y-1.5">
+                <label class="block text-slate-400 font-mono text-[10px] uppercase font-semibold">Your Unique Distribution URL</label>
                 <div class="flex items-center space-x-2">
                     <input type="text" id="generated-link-input" readonly
-                        class="w-full bg-black/50 backdrop-blur-sm border border-white/[0.12] rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
+                        class="flex-1 bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-crimson">
                     <button onclick="copyToClipboardAction()"
-                        class="btn-primary px-4 py-2 rounded-xl text-xs font-display font-semibold whitespace-nowrap">
+                        class="btn-primary px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap">
                         Copy
                     </button>
                 </div>
-                <p class="text-[11px] text-slate-400 font-sans">
-                    Share this link with your friends or audience. When they purchase, your commission is credited
-                    directly to your UPI ID.
-                </p>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-relaxed font-sans">
+                Every attendee purchasing passes via this link is cryptographically tied to your promoter account.
+            </p>
+        </div>
+    </div>
+
+    <!-- 4. TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-[#131622] border border-[#1e2436] text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 text-xs font-mono">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+            <span id="toast-msg">Operation completed</span>
+        </div>
+    </div>
+
+    <!-- 5. COOKIE CONSENT BANNER -->
+    <div id="cookie-banner"
+        class="fixed bottom-4 left-4 right-4 sm:right-auto sm:left-6 sm:max-w-md z-50 transition-all duration-500 translate-y-36 opacity-0 pointer-events-none">
+        <div class="solid-panel rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3 border border-[#1e2436] bg-[#0d1019]">
+            <div class="flex items-start space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-crimson/15 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-xs sm:text-sm font-bold text-white">Cookie & Session Compliance</div>
+                    <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                        We use essential cookies to maintain promoter sessions, track pass referral links, and prevent scalping bots on official concert allocations.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center justify-end space-x-2 pt-1 font-mono text-xs">
+                <button onclick="acceptCookies('essential')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
+                    Essential Only
+                </button>
+                <button onclick="acceptCookies('all')" class="btn-primary px-4 py-1.5 rounded-lg text-white font-bold">
+                    Accept All
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast"
-        class="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-2xl solid-panel border border-crimson/50 text-xs font-semibold text-white shadow-2xl flex items-center space-x-2.5 translate-y-20 opacity-0 transition-all duration-300 bg-[#0D0F17] font-display">
-        <i data-lucide="check-circle" class="w-4 h-4 text-crimson"></i>
-        <span id="toast-msg">Action completed!</span>
+    <!-- 6. AI CONCIERGE CHATBOT WIDGET -->
+    <div id="ai-chat-launcher" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 transition-all duration-300">
+        <button onclick="toggleChatbot()" id="chat-toggle-btn" aria-label="Open TIXORA AI Concierge"
+            class="group relative flex items-center space-x-2.5 bg-[#0d1019] hover:bg-[#131622] text-white pl-3.5 pr-4 py-2.5 rounded-full border border-[#1e2436] hover:border-crimson/60 shadow-2xl transition-all duration-200">
+            <div class="relative flex items-center justify-center">
+                <span class="absolute w-2.5 h-2.5 rounded-full bg-crimson animate-ping opacity-75"></span>
+                <span class="relative w-2 h-2 rounded-full bg-crimson"></span>
+            </div>
+            <div class="w-6 h-6 rounded-lg bg-crimson/20 text-crimson flex items-center justify-center">
+                <i data-lucide="bot" class="w-4 h-4"></i>
+            </div>
+            <div class="text-left hidden xs:block sm:block">
+                <div class="text-xs font-bold tracking-tight flex items-center space-x-1.5">
+                    <span>TIXORA AI</span>
+                    <span class="text-[9px] font-mono text-crimson uppercase tracking-wider px-1.5 py-0.5 rounded bg-crimson/15 border border-crimson/30">CONCIERGE</span>
+                </div>
+            </div>
+        </button>
     </div>
 
-    <!-- JavaScript Application Engines -->
+    <!-- Chatbot Window Dialog -->
+    <div id="ai-chat-widget"
+        class="fixed bottom-20 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[410px] h-[550px] max-h-[80vh] z-50 rounded-2xl bg-[#090c12] border border-[#1e2436] shadow-2xl flex flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 pointer-events-none origin-bottom-right">
+
+        <!-- Chat Header -->
+        <div class="px-4 py-3.5 bg-[#0d1019] border-b border-[#1e2436] flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-crimson/15 border border-crimson/30 flex items-center justify-center text-crimson">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <div class="text-xs font-bold text-white flex items-center space-x-1.5">
+                        <span>TIXORA Concierge</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    </div>
+                    <div class="text-[10px] font-mono text-slate-400">Official Allocation Assistant</div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-1">
+                <button onclick="resetChat()" title="Reset Chat" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                </button>
+                <button onclick="toggleChatbot()" title="Close" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs font-sans">
+            <!-- Messages rendered dynamically -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="chat-typing" class="hidden px-4 py-2 text-[11px] font-mono text-slate-400 flex items-center space-x-2">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-crimson animate-bounce"></span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-crimson animate-bounce [animation-delay:0.15s]"></span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-crimson animate-bounce [animation-delay:0.3s]"></span>
+            <span>Concierge is searching allocations...</span>
+        </div>
+
+        <!-- Quick Suggestions -->
+        <div id="chat-suggestions" class="px-3 py-2 border-t border-[#1e2436] bg-[#0d1019] flex items-center space-x-1.5 overflow-x-auto text-[11px] font-mono scrollbar-none">
+            <!-- Populated dynamically -->
+        </div>
+
+        <!-- Chat Form -->
+        <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-3 bg-[#0d1019] border-t border-[#1e2436] flex items-center space-x-2">
+            <input type="text" id="chat-input" placeholder="Ask about commission, payouts, or tours..."
+                class="flex-1 bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-crimson">
+            <button type="submit" id="chat-send-btn" aria-label="Send Message"
+                class="btn-primary p-2.5 rounded-xl text-white flex items-center justify-center flex-shrink-0">
+                <i data-lucide="send" class="w-4 h-4"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- Canvas Scroll Sequence & Carousel & Calculator Scripts -->
     <script>
+        
         if (window.lucide) lucide.createIcons();
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
@@ -2214,143 +2087,12 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
         // Initialize cookie banner & chat
         document.addEventListener('DOMContentLoaded', () => { initCookieBanner(); initChatbot(); });
+    
     </script>
 
-    <!-- Cookies & Verification Consent Banner -->
-    <div id="cookie-banner"
-        class="fixed bottom-4 left-4 right-4 sm:right-auto sm:left-6 sm:max-w-md z-50 transition-all duration-500 translate-y-36 opacity-0 pointer-events-none">
-        <div
-            class="solid-panel rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3 border border-white/[0.12] bg-[#0D0F17]/90 backdrop-blur-xl">
-            <div class="flex items-start space-x-3">
-                <div
-                    class="w-8 h-8 rounded-lg bg-crimson/15 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-xs sm:text-sm font-bold text-white font-display">Cookie & Session Compliance</div>
-                    <p class="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-sans">
-                        We use essential cookies to maintain promoter sessions, track pass referral links, and prevent
-                        scalping bots on official concert allocations.
-                    </p>
-                </div>
-            </div>
-            <div class="flex items-center justify-end space-x-2 pt-1 font-mono text-xs">
-                <button onclick="acceptCookies('essential')"
-                    class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-colors">
-                    Essential Only
-                </button>
-                <button onclick="acceptCookies('all')"
-                    class="btn-primary px-4 py-1.5 rounded-lg text-white font-bold font-sans">
-                    Accept All
-                </button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- =====================================================================
-         TIXORA AI CONCIERGE CHATBOT WIDGET
-         ===================================================================== -->
-    <!-- Floating Launcher Trigger Button -->
-    <div id="ai-chat-launcher" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 transition-all duration-300">
-        <button onclick="toggleChatbot()" id="chat-toggle-btn" aria-label="Open TIXORA AI Concierge"
-            class="group relative flex items-center space-x-2.5 bg-[#0D0F17]/95 hover:bg-[#131622] text-white pl-3.5 pr-4 py-2.5 rounded-full border border-white/[0.16] hover:border-crimson/60 shadow-[0_10px_35px_rgba(0,0,0,0.7)] backdrop-blur-xl transition-all duration-200 hover:scale-[1.03] active:scale-95">
-            <!-- Pulsing Active Indicator -->
-            <div class="relative flex items-center justify-center">
-                <span class="absolute w-2.5 h-2.5 rounded-full bg-crimson animate-ping opacity-75"></span>
-                <span class="relative w-2 h-2 rounded-full bg-crimson"></span>
-            </div>
-            <!-- Bot Icon -->
-            <div class="w-6 h-6 rounded-lg bg-crimson/20 text-crimson flex items-center justify-center">
-                <i data-lucide="bot" class="w-4 h-4"></i>
-            </div>
-            <!-- Brand Badge -->
-            <div class="text-left hidden xs:block sm:block">
-                <div class="text-xs font-bold font-display tracking-tight flex items-center space-x-1.5">
-                    <span>TIXORA AI</span>
-                    <span
-                        class="text-[9px] font-mono text-crimson uppercase tracking-wider px-1.5 py-0.5 rounded bg-crimson/15 border border-crimson/30">CONCIERGE</span>
-                </div>
-            </div>
-        </button>
-    </div>
-
-    <!-- Chatbot Window Dialog -->
-    <div id="ai-chat-widget"
-        class="fixed bottom-20 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-[410px] h-[550px] max-h-[80vh] z-50 rounded-2xl bg-[#090C12]/95 border border-white/[0.14] shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 pointer-events-none origin-bottom-right">
-
-        <!-- Chat Header -->
-        <div
-            class="px-4 py-3.5 bg-[#0D1019]/90 border-b border-white/[0.10] flex items-center justify-between flex-shrink-0">
-            <div class="flex items-center space-x-3">
-                <div
-                    class="w-8 h-8 rounded-xl bg-crimson/15 border border-crimson/30 flex items-center justify-center text-crimson">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i>
-                </div>
-                <div>
-                    <div class="text-xs sm:text-sm font-bold font-display text-white flex items-center space-x-1.5">
-                        <span>TIXORA Concierge</span>
-                        <span
-                            class="text-[9px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.2 rounded">ONLINE</span>
-                    </div>
-                    <div class="text-[10px] font-mono text-slate-400">Official Concert Network AI Assistant</div>
-                </div>
-            </div>
-
-            <!-- Header Action Controls -->
-            <div class="flex items-center space-x-1 text-slate-400">
-                <button onclick="resetChat()" title="Reset conversation"
-                    class="p-1.5 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                </button>
-                <button onclick="toggleChatbot()" title="Close chat"
-                    class="p-1.5 hover:text-white hover:bg-white/[0.08] rounded-lg transition-colors">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Chat Messages Thread -->
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs font-sans scroll-smooth">
-            <!-- Messages rendered dynamically -->
-        </div>
-
-        <!-- Typing Indicator -->
-        <div id="chat-typing" class="px-4 py-1.5 hidden flex-shrink-0">
-            <div
-                class="inline-flex items-center space-x-1.5 bg-white/[0.05] border border-white/[0.08] px-3 py-1.5 rounded-full text-[11px] text-slate-400 font-mono">
-                <span>Tixora AI is typing</span>
-                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce"></span>
-                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce [animation-delay:0.2s]"></span>
-                <span class="w-1 h-1 rounded-full bg-crimson animate-bounce [animation-delay:0.4s]"></span>
-            </div>
-        </div>
-
-        <!-- Quick Question Suggestions -->
-        <div id="chat-suggestions"
-            class="px-3 py-2 bg-[#0A0D15]/90 border-t border-white/[0.06] flex items-center space-x-1.5 overflow-x-auto no-scrollbar flex-shrink-0">
-            <!-- Suggestions rendered dynamically -->
-        </div>
-
-        <!-- Chat Input Form -->
-        <div class="p-3 bg-[#0D1019] border-t border-white/[0.10] flex-shrink-0">
-            <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-center space-x-2">
-                <input type="text" id="chat-input" placeholder="Ask about commissions, passes, BookMyShow..."
-                    autocomplete="off"
-                    class="flex-1 bg-black/50 border border-white/[0.12] focus:border-crimson rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-colors font-sans">
-                <button type="submit" id="chat-send-btn" aria-label="Send message"
-                    class="btn-primary w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform">
-                    <i data-lucide="send" class="w-3.5 h-3.5 text-white"></i>
-                </button>
-            </form>
-            <div class="mt-1.5 text-[9px] text-center font-mono text-slate-500">
-                Official AI Assistant • Real-Time Protocol Knowledge
-            </div>
-        </div>
-
-    </div>
-
+    <!-- Promoter Auth & Live Events Engine -->
     <script>
+        
         /* =====================================================================
            TIXORA PROMOTER AUTH & DASHBOARD CONTROLLER
            Powered by TixoraAuth (@supabase/supabase-js v2)
@@ -2697,8 +2439,8 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
 
             const elBadge = document.getElementById('hero-featured-badge');
             if (elBadge) {
-                elBadge.textContent = '⭐ Featured Drop';
-                elBadge.className = 'px-2.5 py-1 rounded-full text-xs font-mono bg-crimson/15 text-crimson border border-crimson/30 animate-pulse';
+                elBadge.textContent = 'FEATURED ALLOCATION';
+                elBadge.className = 'px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold tracking-wider bg-crimson/15 text-crimson border border-crimson/30 uppercase';
             }
 
             const elImg = document.getElementById('hero-featured-img');
@@ -2780,7 +2522,7 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                 const isFeatured = savedFeaturedId ? (String(savedFeaturedId) === String(e.id)) : banner.includes('FEATURED');
 
                 return `
-                    <div class="thumpn-card-slot rounded-3xl solid-panel overflow-hidden bg-[#0D0F17]/60 backdrop-blur-md flex flex-col justify-between group">
+                    <div class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
                         <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                             <img src="${poster}" alt="${e.title}" class="thumpn-poster-img w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
@@ -2798,8 +2540,8 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
                                     <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">${formattedDate}</span>
                                     <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">${layoutTag}</span>
                                     ${isFeatured ? `
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-crimson/20 text-crimson border border-crimson/30 font-bold animate-pulse">
-                                            ⭐ FEATURED
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-crimson/15 text-crimson border border-crimson/30 font-semibold tracking-wider uppercase">
+                                            FEATURED ALLOCATION
                                         </span>
                                     ` : ''}
                                 </div>
@@ -2883,7 +2625,9 @@ Could you clarify if you're asking about <strong class="text-white">promoter com
         initPromoterAuth();
         loadLiveEvents();
         subscribeToLiveEventsRealtime();
+    
     </script>
+
 </body>
 
 </html>
