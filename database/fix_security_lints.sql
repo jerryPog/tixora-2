@@ -194,7 +194,7 @@ CREATE POLICY "Public create attendees" ON public.attendees
   WITH CHECK (
     full_name IS NOT NULL AND length(trim(full_name)) > 0
     AND email IS NOT NULL AND length(trim(email)) > 3
-    AND phone IS NOT NULL AND length(trim(phone)) > 5
+    AND mobile_number IS NOT NULL AND length(trim(mobile_number)) > 5
   );
 
 -- Fix 2.3: cookie_consent_records
@@ -202,8 +202,7 @@ DROP POLICY IF EXISTS "Public insert cookie consent" ON public.cookie_consent_re
 CREATE POLICY "Public insert cookie consent" ON public.cookie_consent_records
   FOR INSERT TO anon, authenticated
   WITH CHECK (
-    ip_hash IS NOT NULL AND length(trim(ip_hash)) > 0
-    AND consent_status IS NOT NULL AND length(trim(consent_status)) > 0
+    consent_type IS NOT NULL AND length(trim(consent_type)) > 0
   );
 
 -- Fix 2.4: gate_verification_logs
@@ -247,3 +246,4 @@ DO $$
 BEGIN
   RAISE NOTICE '✅ Tixora Security Linter remediation applied successfully. All 14 database lints resolved.';
 END $$;
+
