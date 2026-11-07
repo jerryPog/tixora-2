@@ -78,6 +78,10 @@ const server = http.createServer((req, res) => {
     resolvedPath = path.join(ROOT_DIR, 'about.html');
   } else if (relFromRoot === 'faq') {
     resolvedPath = path.join(ROOT_DIR, 'faq.html');
+  } else if (relFromRoot === 'privacy') {
+    resolvedPath = path.join(ROOT_DIR, 'privacy.html');
+  } else if (relFromRoot === 'terms') {
+    resolvedPath = path.join(ROOT_DIR, 'terms.html');
   } else if (relFromRoot === 'sitemap') {
     resolvedPath = path.join(ROOT_DIR, 'sitemap.xml');
   } else if (relFromRoot === 'robots') {

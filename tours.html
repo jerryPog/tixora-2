@@ -3,6 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Production Console Warning Filter -->
+    <script>
+        (function () {
+            var origWarn = console.warn;
+            console.warn = function () {
+                if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].indexOf('cdn.tailwindcss.com') !== -1) return;
+                origWarn.apply(console, arguments);
+            };
+        })();
+    </script>
     <!-- Refresh to Home Page Controller -->
     <script>
         (function () {
@@ -1188,6 +1198,8 @@
                         <div class="text-slate-400">Live Support Desk:</div>
                         <div><a href="https://chat.whatsapp.com/H4mZS6rRy3fD1iP4m0wdhP" target="_blank" rel="noopener noreferrer" class="font-mono text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center space-x-1.5"><span>WhatsApp Community</span> <span>&rarr;</span></a></div>
                         <div class="font-mono text-slate-200">Email: support@tixora.live</div>
+                        <div class="font-mono text-slate-200">Grievance: grievance@tixora.live</div>
+                        <div class="pt-1"><a href="/terms#refund-policy" class="text-emerald-400 hover:underline text-[11px] font-mono">100% Cancellation Refund Guarantee &rarr;</a></div>
                     </div>
                 </div>
 
@@ -1195,12 +1207,12 @@
 
             <!-- Bottom Legal Bar -->
             <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-4 pt-2">
-                <div class="text-center sm:text-left">
-                    &copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. All rights reserved. Authorized primary partner network.
+                <div class="text-center sm:text-left text-[11px] leading-relaxed">
+                    &copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. All rights reserved. Live music event allocations fulfilled via primary authorized ticketing partners (BookMyShow / District).
                 </div>
                 <div class="flex items-center space-x-5">
-                    <a href="#privacy-policy" onclick="openPrivacyModal(event)" class="hover:text-slate-200 transition-colors">Privacy Policy</a>
-                    <a href="#terms-of-service" onclick="openTermsModal(event)" class="hover:text-slate-200 transition-colors">Terms of Service</a>
+                    <a href="/privacy" class="hover:text-slate-200 transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="hover:text-slate-200 transition-colors">Terms of Service</a>
                     <a href="/faq" class="hover:text-slate-200 transition-colors">FAQ</a>
                     <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hover:text-white transition-colors flex items-center space-x-1">
                         <span>Top</span>

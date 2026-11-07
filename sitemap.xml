@@ -98,4 +98,20 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <!-- 7. Privacy Policy -->
+  <url>
+    <loc>https://tixoralive.vercel.app/privacy</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- 8. Terms of Service & Refund Policy -->
+  <url>
+    <loc>https://tixoralive.vercel.app/terms</loc>
+    <lastmod>2026-11-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

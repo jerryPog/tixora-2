@@ -2,6 +2,16 @@
 <html lang="en" class="scroll-smooth overflow-x-hidden w-full">
 
 <head>
+    <!-- Production Console Warning Filter -->
+    <script>
+        (function () {
+            var origWarn = console.warn;
+            console.warn = function () {
+                if (arguments[0] && typeof arguments[0] === 'string' && arguments[0].indexOf('cdn.tailwindcss.com') !== -1) return;
+                origWarn.apply(console, arguments);
+            };
+        })();
+    </script>
     <meta charset="UTF-8">
     <!-- Refresh to Home Page Controller -->
     <script>
@@ -128,343 +138,326 @@
       "description": "Discover official live concert passes and primary tour allocations for Anyma, Guns N' Roses, Fred again.., The Chainsmokers, and more. Direct venue allocations and instant UPI promoter payouts.",
       "inLanguage": "en-US"
     },
-    {
-      "@type": "ItemList",
-      "@id": "https://tixoralive.vercel.app/#lineup-vault",
-      "name": "Live Concert Headliner Quotas Ready To Monetize",
-      "description": "Authorized primary stadium and arena allocations across India's premier music tours.",
-      "numberOfItems": 8,
-      "itemListElement": [
         {
-          "@type": "ListItem",
-          "position": 1,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-anyma-genesys-mumbai-2026",
-            "name": "Anyma Presents Genesys Live Mumbai",
-            "description": "The premier world-touring immersive audio-visual electronic showcase arrives in Mumbai for one monolithic evening at Mahalaxmi Racecourse.",
-            "startDate": "2026-11-21T17:00:00+05:30",
-            "endDate": "2026-11-21T23:30:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "Mahalaxmi Racecourse",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Dr E Moses Marg, Royal Western India Turf Club, Mahalaxmi",
-                "addressLocality": "Mumbai",
-                "addressRegion": "Maharashtra",
-                "addressCountry": "IN"
-              }
+        "@type": "ItemList",
+        "@id": "https://tixoralive.vercel.app/#lineup-vault",
+        "name": "Live Concert Headliner Quotas Ready To Monetize",
+        "description": "Authorized primary stadium and arena allocations across India's premier music tours.",
+        "numberOfItems": 8,
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-anyma-genesys-mumbai-2026",
+                    "name": "Anyma Presents Genesys Live",
+                    "description": "The premier world-touring immersive audio-visual electronic showcase arrives in Mumbai for one monolithic evening at Mahalaxmi Racecourse.",
+                    "startDate": "2026-11-21T17:00:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Mahalaxmi Racecourse",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Mumbai",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/anyma-aeden-poster-1.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Anyma"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 3499,
+                        "highPrice": 8748,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#anyma-genesys-mumbai-2026"
+                    }
+                }
             },
-            "image": "https://tixoralive.vercel.app/posters/anyma-aeden-poster-1.jpg",
-            "performer": {
-              "@type": "MusicGroup",
-              "name": "Anyma"
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-gnr-live-delhi-2026",
+                    "name": "Guns N' Roses Live in Delhi",
+                    "description": "Axl Rose and Slash tear through the capital for an electrifying 3-hour rock epic at the iconic Jawaharlal Nehru Stadium.",
+                    "startDate": "2026-12-05T18:30:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Jawaharlal Nehru Stadium",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "New Delhi",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/guns-n-roses-india-poster.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Guns N' Roses"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 4999,
+                        "highPrice": 12498,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#gnr-live-delhi-2026"
+                    }
+                }
             },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-fred-again-usb-bengaluru-2026",
+                    "name": "Fred again.. USB India Tour",
+                    "description": "The Grammy-winning UK producer performs his emotive, high-energy USB club sets for his debut stadium performance in Bengaluru.",
+                    "startDate": "2026-12-12T17:30:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "NICE Grounds, BIEC",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Bengaluru",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/fred-again-india-poster-1.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Fred again.."
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 2999,
+                        "highPrice": 7498,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#fred-again-usb-bengaluru-2026"
+                    }
+                }
             },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 3499,
-              "highPrice": 14999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "validFrom": "2026-11-01T00:00:00+05:30",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-chainsmokers-arena-goa-2026",
+                    "name": "The Chainsmokers Arena India",
+                    "description": "Year-end stadium madness at Vagator Hilltop Arena featuring the chart-topping American duo alongside international supporting acts.",
+                    "startDate": "2026-12-30T18:00:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Vagator Hilltop Arena",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Goa",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/chainsmokers-bengaluru-banner.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "The Chainsmokers"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 3999,
+                        "highPrice": 9998,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#chainsmokers-arena-goa-2026"
+                    }
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 5,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-karan-aujla-chandigarh-2026",
+                    "name": "Karan Aujla It Was All A Dream",
+                    "description": "Global Punjabi sensation Karan Aujla brings his massive record-breaking live tour production to his home state for an unprecedented night.",
+                    "startDate": "2026-10-18T18:30:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Sector 34 Exhibition Ground",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Chandigarh",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/karan-aujla-poster-1.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Karan Aujla"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 2499,
+                        "highPrice": 6248,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#karan-aujla-chandigarh-2026"
+                    }
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 6,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-boris-brejcha-delhi-2026",
+                    "name": "Boris Brejcha In Concert",
+                    "description": "The King of High-Tech Minimal brings his world-famous Joker-masked performance to Delhi for an immersive visual journey.",
+                    "startDate": "2026-01-16T20:00:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "Indira Gandhi Arena",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "New Delhi",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/boris-brejcha-india-poster.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Boris Brejcha"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 2799,
+                        "highPrice": 6998,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#boris-brejcha-delhi-2026"
+                    }
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 7,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-martin-garrix-mumbai-2026",
+                    "name": "Martin Garrix India Arena Tour",
+                    "description": "4-time World #1 DJ Martin Garrix lights up DY Patil Stadium with custom laser arrays, unreleased IDs, and pyrotechnics.",
+                    "startDate": "2026-02-20T17:00:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "DY Patil Stadium",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Mumbai",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/martin-garrix-india-poster.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Martin Garrix"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 3299,
+                        "highPrice": 8248,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#martin-garrix-mumbai-2026"
+                    }
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 8,
+                "item": {
+                    "@type": "MusicEvent",
+                    "@id": "https://tixoralive.vercel.app/#tour-dua-lipa-mumbai-2026",
+                    "name": "Dua Lipa Radical Optimism Tour",
+                    "description": "Global pop queen Dua Lipa brings her dazzling disco-pop stadium spectacle to Mumbai with full choreography and live band.",
+                    "startDate": "2026-03-15T18:00:00+05:30",
+                    "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": {
+                        "@type": "Place",
+                        "name": "MMRDA Grounds, BKC",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Mumbai",
+                            "addressCountry": "IN"
+                        }
+                    },
+                    "image": "https://tixoralive.vercel.app/posters/dua-lipa-india-poster.webp",
+                    "performer": {
+                        "@type": "MusicGroup",
+                        "name": "Dua Lipa"
+                    },
+                    "organizer": {
+                        "@id": "https://tixoralive.vercel.app/#organization"
+                    },
+                    "offers": {
+                        "@type": "AggregateOffer",
+                        "lowPrice": 4499,
+                        "highPrice": 11248,
+                        "priceCurrency": "INR",
+                        "availability": "https://schema.org/InStock",
+                        "validFrom": "2026-10-01T00:00:00+05:30",
+                        "url": "https://tixoralive.vercel.app/tours#dua-lipa-mumbai-2026"
+                    }
+                }
             }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-gnr-live-delhi-2026",
-            "name": "Guns N' Roses Live in Delhi",
-            "description": "Axl Rose and Slash tear through the capital for an electrifying 3-hour rock epic at the iconic Jawaharlal Nehru Stadium.",
-            "startDate": "2026-12-05T18:30:00+05:30",
-            "endDate": "2026-12-05T23:00:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "Jawaharlal Nehru Stadium",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Pragati Vihar, Bhisham Pitamah Marg",
-                "addressLocality": "New Delhi",
-                "addressRegion": "Delhi",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/posters/guns-n-roses-india-poster.jpg",
-            "performer": {
-              "@type": "MusicGroup",
-              "name": "Guns N' Roses"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 4999,
-              "highPrice": 18999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-fred-again-usb-bengaluru-2026",
-            "name": "Fred again.. USB India Tour Bengaluru",
-            "description": "Euphoric club tracks, spontaneous acoustic keys, and raw live energy as Fred again.. brings his signature USB journey to NICE Grounds.",
-            "startDate": "2026-12-12T17:30:00+05:30",
-            "endDate": "2026-12-12T23:30:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "NICE Grounds, BIEC",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "10th Mile, Tumkur Road, Madavara",
-                "addressLocality": "Bengaluru",
-                "addressRegion": "Karnataka",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/posters/fred-again-india-poster-1.png",
-            "performer": {
-              "@type": "Person",
-              "name": "Fred again.."
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 2999,
-              "highPrice": 6499,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-the-chainsmokers-goa-2026",
-            "name": "The Chainsmokers Arena India Goa",
-            "description": "The chart-topping duo returns to ignite Goa's year-end festival coastline with a full stadium laser package and unreleased anthems.",
-            "startDate": "2026-12-29T19:00:00+05:30",
-            "endDate": "2026-12-30T01:00:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "Vagator Hilltop Arena",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Small Vagator, Anjuna, Bardez",
-                "addressLocality": "Goa",
-                "addressRegion": "Goa",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/posters/chainsmokers-bengaluru-banner.jpg",
-            "performer": {
-              "@type": "MusicGroup",
-              "name": "The Chainsmokers"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 3499,
-              "highPrice": 7999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 5,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-ap-dhillon-brownprint-hyderabad-2027",
-            "name": "AP Dhillon Brownprint Arena Hyderabad",
-            "description": "The global Punjabi pioneer stages his cinematic arena spectacle complete with full band arrangement and stage architecture in Hyderabad.",
-            "startDate": "2027-01-16T18:00:00+05:30",
-            "endDate": "2027-01-16T22:30:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "GMR Arena, Shamshabad",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Near RGI Airport, Shamshabad",
-                "addressLocality": "Hyderabad",
-                "addressRegion": "Telangana",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/artists/khalid.jpg",
-            "performer": {
-              "@type": "Person",
-              "name": "AP Dhillon"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 2499,
-              "highPrice": 5999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 6,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-martin-garrix-navi-mumbai-2027",
-            "name": "Martin Garrix Sunburn Stadium Navi Mumbai",
-            "description": "Progressive house fireworks, soaring melodies, and 50,000 voices singing in unison at the world-class DY Patil Sports Stadium.",
-            "startDate": "2027-01-23T16:30:00+05:30",
-            "endDate": "2027-01-23T23:00:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "DY Patil Sports Stadium",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Sector 7, Nerul, Navi Mumbai",
-                "addressLocality": "Navi Mumbai",
-                "addressRegion": "Maharashtra",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/artists/chainsmokers.jpg",
-            "performer": {
-              "@type": "Person",
-              "name": "Martin Garrix"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 1999,
-              "highPrice": 6999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 7,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-diljit-dosanjh-ahmedabad-2027",
-            "name": "Diljit Dosanjh Dil-Luminati Tour Ahmedabad",
-            "description": "Experience the monumental Punjabi tour phenomenon with high-energy bhangra, stunning staging, and timeless hits in Gujarat.",
-            "startDate": "2027-02-06T18:00:00+05:30",
-            "endDate": "2027-02-06T22:30:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "YMCA International Centre",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Sarkhej - Gandhinagar Hwy, Makarba",
-                "addressLocality": "Ahmedabad",
-                "addressRegion": "Gujarat",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/artists/anyma.jpg",
-            "performer": {
-              "@type": "Person",
-              "name": "Diljit Dosanjh"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 3999,
-              "highPrice": 7999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        },
-        {
-          "@type": "ListItem",
-          "position": 8,
-          "item": {
-            "@type": "MusicEvent",
-            "@id": "https://tixoralive.vercel.app/#tour-boris-brejcha-kolkata-2027",
-            "name": "Boris Brejcha In Concert Kolkata",
-            "description": "The masked virtuoso brings the underground High-Tech Minimal sound to Eastern India with an exclusive 3-hour headlining performance.",
-            "startDate": "2027-02-20T17:00:00+05:30",
-            "endDate": "2027-02-20T23:00:00+05:30",
-            "eventStatus": "https://schema.org/EventScheduled",
-            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {
-              "@type": "Place",
-              "name": "Eco Park Fairgrounds",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Major Arterial Road, Action Area II, New Town",
-                "addressLocality": "Kolkata",
-                "addressRegion": "West Bengal",
-                "addressCountry": "IN"
-              }
-            },
-            "image": "https://tixoralive.vercel.app/artists/fred-again.jpg",
-            "performer": {
-              "@type": "Person",
-              "name": "Boris Brejcha"
-            },
-            "organizer": {
-              "@id": "https://tixoralive.vercel.app/#organization"
-            },
-            "offers": {
-              "@type": "AggregateOffer",
-              "lowPrice": 2199,
-              "highPrice": 7999,
-              "priceCurrency": "INR",
-              "availability": "https://schema.org/InStock",
-              "url": "https://tixoralive.vercel.app/#lineup-vault"
-            }
-          }
-        }
-      ]
+        ]
     },
     {
       "@type": "FAQPage",
@@ -1069,7 +1062,7 @@
                         <div
                             class="text-xs text-slate-400 font-mono hidden sm:flex items-center space-x-2 bg-[#0d1019] px-3 py-1.5 rounded-lg border border-[#1e2436]">
                             <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-slate-300">PostgreSQL Live Sync Active</span>
+                            <span class="text-slate-300">Primary Allocation Sync Active</span>
                         </div>
                     </div>
 
@@ -1119,36 +1112,29 @@
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
                                             <time datetime="2026-11-21T17:00:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">21
-                                                NOV 2026 • 5:00 PM</time>
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">21 NOV 2026 • 5:00 PM</time>
                                             <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Arena
-                                                Open-Air</span>
-
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Arena Open-Air</span>
+                                            
                                             <span
                                                 class="px-2 py-0.5 rounded text-[10px] font-mono bg-crimson/15 text-crimson border border-crimson/30 font-semibold tracking-wider uppercase">
                                                 FEATURED ALLOCATION
                                             </span>
-
                                         </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Anyma Presents
-                                            Genesys Live</h3>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Anyma Presents Genesys Live</h3>
                                         <p
                                             class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            The premier world-touring immersive audio-visual electronic showcase arrives
-                                            in Mumbai for one monolithic evening at Mahalaxmi Racecourse.
+                                            The premier world-touring immersive audio-visual electronic showcase arrives in Mumbai for one monolithic evening at Mahalaxmi Racecourse.
                                         </p>
                                     </div>
                                     <div class="space-y-3 pt-3 border-t border-white/[0.08]">
                                         <div class="flex items-center justify-between text-xs font-mono">
                                             <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
                                                 <span class="text-base font-bold text-white">₹3,499</span>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
                                                 <span class="text-base font-bold text-emerald-400">Earn ₹490</span>
                                             </div>
                                         </div>
@@ -1198,43 +1184,37 @@
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
                                             <time datetime="2026-12-05T18:30:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">05
-                                                DEC 2026 • 6:30 PM</time>
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">05 DEC 2026 • 6:30 PM</time>
                                             <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Stadium
-                                                360°</span>
-
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Stadium 360°</span>
+                                            
                                         </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Guns N' Roses Live in
-                                            Delhi</h3>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Guns N' Roses Live in Delhi</h3>
                                         <p
                                             class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            Axl Rose and Slash tear through the capital for an electrifying 3-hour rock
-                                            epic at the iconic Jawaharlal Nehru Stadium.
+                                            Axl Rose and Slash tear through the capital for an electrifying 3-hour rock epic at the iconic Jawaharlal Nehru Stadium.
                                         </p>
                                     </div>
                                     <div class="space-y-3 pt-3 border-t border-white/[0.08]">
                                         <div class="flex items-center justify-between text-xs font-mono">
                                             <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
                                                 <span class="text-base font-bold text-white">₹4,999</span>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
                                                 <span class="text-base font-bold text-emerald-400">Earn ₹600</span>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
                                             <button
                                                 onclick="buyTicketModal('Guns N\' Roses Live in Delhi', 4999, 'GA Standard')"
-                                                aria-label="Reserve official pass for Guns N' Roses Live in Delhi"
+                                                aria-label="Reserve official pass for Guns N\' Roses Live in Delhi"
                                                 class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
                                             <button onclick="copyPromoterLink('Guns N\' Roses Live in Delhi')"
-                                                aria-label="Share promoter link for Guns N' Roses Live in Delhi"
+                                                aria-label="Share promoter link for Guns N\' Roses Live in Delhi"
                                                 class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
@@ -1249,7 +1229,7 @@
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <picture>
                                         <source srcset="posters/fred-again-india-poster-1.webp" type="image/webp">
-                                        <img src="posters/fred-again-india-poster-1.png"
+                                        <img src="posters/fred-again-india-poster-1.jpg"
                                             alt="Fred again.. USB India Tour — Live Concert Tour in Bengaluru at NICE Grounds, BIEC"
                                             width="384" height="320" loading="lazy" decoding="async"
                                             class="thumpn-poster-img w-full h-full object-cover"
@@ -1272,31 +1252,25 @@
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
                                             <time datetime="2026-12-12T17:30:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">12
-                                                DEC 2026 • 5:30 PM</time>
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">12 DEC 2026 • 5:30 PM</time>
                                             <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Festival
-                                                Enclosure</span>
-
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Open Air Grounds</span>
+                                            
                                         </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Fred again.. USB
-                                            India Tour</h3>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Fred again.. USB India Tour</h3>
                                         <p
                                             class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            Euphoric club tracks, spontaneous acoustic keys, and raw live energy as Fred
-                                            again.. brings his signature USB journey to NICE Grounds.
+                                            The Grammy-winning UK producer performs his emotive, high-energy USB club sets for his debut stadium performance in Bengaluru.
                                         </p>
                                     </div>
                                     <div class="space-y-3 pt-3 border-t border-white/[0.08]">
                                         <div class="flex items-center justify-between text-xs font-mono">
                                             <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
                                                 <span class="text-base font-bold text-white">₹2,999</span>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
                                                 <span class="text-base font-bold text-emerald-400">Earn ₹450</span>
                                             </div>
                                         </div>
@@ -1318,7 +1292,7 @@
                             </article>
 
 
-                            <article id="tour-the-chainsmokers-goa-2026"
+                            <article id="tour-chainsmokers-arena-goa-2026"
                                 class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <picture>
@@ -1334,7 +1308,7 @@
                                     </div>
                                     <span
                                         class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
-                                        12.5% CUT
+                                        12% CUT
                                     </span>
                                     <span
                                         class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
@@ -1345,38 +1319,32 @@
                                 <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <time datetime="2026-12-29T19:00:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">29
-                                                DEC 2026 • 7:00 PM</time>
+                                            <time datetime="2026-12-30T18:00:00+05:30"
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">30 DEC 2026 • 6:00 PM</time>
                                             <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Coastal
-                                                Arena</span>
-
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Festival Amphitheatre</span>
+                                            
                                         </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">The Chainsmokers
-                                            Arena India</h3>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">The Chainsmokers Arena India</h3>
                                         <p
                                             class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            The chart-topping duo returns to ignite Goa's year-end festival coastline
-                                            with a full stadium laser package and unreleased anthems.
+                                            Year-end stadium madness at Vagator Hilltop Arena featuring the chart-topping American duo alongside international supporting acts.
                                         </p>
                                     </div>
                                     <div class="space-y-3 pt-3 border-t border-white/[0.08]">
                                         <div class="flex items-center justify-between text-xs font-mono">
                                             <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
-                                                <span class="text-base font-bold text-white">₹3,499</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹3,999</span>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
-                                                <span class="text-base font-bold text-emerald-400">Earn ₹437</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
+                                                <span class="text-base font-bold text-emerald-400">Earn ₹480</span>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
                                             <button
-                                                onclick="buyTicketModal('The Chainsmokers Arena India', 3499, 'GA Standard')"
+                                                onclick="buyTicketModal('The Chainsmokers Arena India', 3999, 'GA Standard')"
                                                 aria-label="Reserve official pass for The Chainsmokers Arena India"
                                                 class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
@@ -1392,234 +1360,13 @@
                             </article>
 
 
-                            <article id="tour-ap-dhillon-brownprint-hyderabad-2027"
+                            <article id="tour-karan-aujla-chandigarh-2026"
                                 class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
                                 <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
                                     <picture>
-                                        <source srcset="artists/khalid.webp" type="image/webp">
-                                        <img src="artists/khalid.jpg"
-                                            alt="AP Dhillon Brownprint Arena — Live Concert Tour in Hyderabad at GMR Arena, Shamshabad"
-                                            width="384" height="320" loading="lazy" decoding="async"
-                                            class="thumpn-poster-img w-full h-full object-cover"
-                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
-                                    </picture>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
-                                    </div>
-                                    <span
-                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
-                                        16% CUT
-                                    </span>
-                                    <span
-                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
-                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
-                                        <span class="truncate max-w-[200px]">GMR Arena, Shamshabad, Hyderabad</span>
-                                    </span>
-                                </div>
-                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                                    <div>
-                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <time datetime="2027-01-16T18:00:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">16
-                                                JAN 2027 • 6:00 PM</time>
-                                            <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Runway
-                                                Arena</span>
-
-                                        </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">AP Dhillon Brownprint
-                                            Arena</h3>
-                                        <p
-                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            The global Punjabi pioneer stages his cinematic arena spectacle complete
-                                            with full band arrangement and stage architecture in Hyderabad.
-                                        </p>
-                                    </div>
-                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
-                                        <div class="flex items-center justify-between text-xs font-mono">
-                                            <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
-                                                <span class="text-base font-bold text-white">₹2,499</span>
-                                            </div>
-                                            <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
-                                                <span class="text-base font-bold text-emerald-400">Earn ₹400</span>
-                                            </div>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button
-                                                onclick="buyTicketModal('AP Dhillon Brownprint Arena', 2499, 'GA Standard')"
-                                                aria-label="Reserve official pass for AP Dhillon Brownprint Arena"
-                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
-                                                Reserve Pass
-                                            </button>
-                                            <button onclick="copyPromoterLink('AP Dhillon Brownprint Arena')"
-                                                aria-label="Share promoter link for AP Dhillon Brownprint Arena"
-                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
-                                                Share Link
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-
-
-                            <article id="tour-martin-garrix-navi-mumbai-2027"
-                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
-                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
-                                    <picture>
-                                        <source srcset="artists/chainsmokers.webp" type="image/webp">
-                                        <img src="artists/chainsmokers.jpg"
-                                            alt="Martin Garrix Sunburn Stadium — Live Concert Tour in Navi Mumbai at DY Patil Sports Stadium"
-                                            width="384" height="320" loading="lazy" decoding="async"
-                                            class="thumpn-poster-img w-full h-full object-cover"
-                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
-                                    </picture>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
-                                    </div>
-                                    <span
-                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
-                                        14.5% CUT
-                                    </span>
-                                    <span
-                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
-                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
-                                        <span class="truncate max-w-[200px]">DY Patil Sports Stadium, Navi Mumbai</span>
-                                    </span>
-                                </div>
-                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                                    <div>
-                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <time datetime="2027-01-23T16:30:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">23
-                                                JAN 2027 • 4:30 PM</time>
-                                            <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Stadium
-                                                Arena</span>
-
-                                        </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Martin Garrix Sunburn
-                                            Stadium</h3>
-                                        <p
-                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            Progressive house fireworks, soaring melodies, and 50,000 voices singing in
-                                            unison at the world-class DY Patil Sports Stadium.
-                                        </p>
-                                    </div>
-                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
-                                        <div class="flex items-center justify-between text-xs font-mono">
-                                            <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
-                                                <span class="text-base font-bold text-white">₹1,999</span>
-                                            </div>
-                                            <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
-                                                <span class="text-base font-bold text-emerald-400">Earn ₹290</span>
-                                            </div>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button
-                                                onclick="buyTicketModal('Martin Garrix Sunburn Stadium', 1999, 'GA Standard')"
-                                                aria-label="Reserve official pass for Martin Garrix Sunburn Stadium"
-                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
-                                                Reserve Pass
-                                            </button>
-                                            <button onclick="copyPromoterLink('Martin Garrix Sunburn Stadium')"
-                                                aria-label="Share promoter link for Martin Garrix Sunburn Stadium"
-                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
-                                                Share Link
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-
-
-                            <article id="tour-diljit-dosanjh-ahmedabad-2027"
-                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
-                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
-                                    <picture>
-                                        <source srcset="artists/anyma.webp" type="image/webp">
-                                        <img src="artists/anyma.jpg"
-                                            alt="Diljit Dosanjh Dil-Luminati Tour — Live Concert Tour in Ahmedabad at YMCA International Centre"
-                                            width="384" height="320" loading="lazy" decoding="async"
-                                            class="thumpn-poster-img w-full h-full object-cover"
-                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
-                                    </picture>
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
-                                    </div>
-                                    <span
-                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
-                                        11% CUT
-                                    </span>
-                                    <span
-                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
-                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
-                                        <span class="truncate max-w-[200px]">YMCA International Centre, Ahmedabad</span>
-                                    </span>
-                                </div>
-                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                                    <div>
-                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <time datetime="2027-02-06T18:00:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">06
-                                                FEB 2027 • 6:00 PM</time>
-                                            <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Grandstand</span>
-
-                                        </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Diljit Dosanjh
-                                            Dil-Luminati Tour</h3>
-                                        <p
-                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            Experience the monumental Punjabi tour phenomenon with high-energy bhangra,
-                                            stunning staging, and timeless hits in Gujarat.
-                                        </p>
-                                    </div>
-                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
-                                        <div class="flex items-center justify-between text-xs font-mono">
-                                            <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
-                                                <span class="text-base font-bold text-white">₹3,999</span>
-                                            </div>
-                                            <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
-                                                <span class="text-base font-bold text-emerald-400">Earn ₹440</span>
-                                            </div>
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-2 pt-1">
-                                            <button
-                                                onclick="buyTicketModal('Diljit Dosanjh Dil-Luminati Tour', 3999, 'GA Standard')"
-                                                aria-label="Reserve official pass for Diljit Dosanjh Dil-Luminati Tour"
-                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
-                                                Reserve Pass
-                                            </button>
-                                            <button onclick="copyPromoterLink('Diljit Dosanjh Dil-Luminati Tour')"
-                                                aria-label="Share promoter link for Diljit Dosanjh Dil-Luminati Tour"
-                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
-                                                Share Link
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-
-
-                            <article id="tour-boris-brejcha-kolkata-2027"
-                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
-                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
-                                    <picture>
-                                        <source srcset="artists/fred-again.webp" type="image/webp">
-                                        <img src="artists/fred-again.jpg"
-                                            alt="Boris Brejcha In Concert — Live Concert Tour in Kolkata at Eco Park Fairgrounds"
+                                        <source srcset="posters/karan-aujla-poster-1.webp" type="image/webp">
+                                        <img src="posters/karan-aujla-poster-1.jpg"
+                                            alt="Karan Aujla It Was All A Dream — Live Concert Tour in Chandigarh at Sector 34 Exhibition Ground"
                                             width="384" height="320" loading="lazy" decoding="async"
                                             class="thumpn-poster-img w-full h-full object-cover"
                                             onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
@@ -1634,50 +1381,248 @@
                                     <span
                                         class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
                                         <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
-                                        <span class="truncate max-w-[200px]">Eco Park Fairgrounds, Kolkata</span>
+                                        <span class="truncate max-w-[200px]">Sector 34 Exhibition Ground, Chandigarh</span>
                                     </span>
                                 </div>
                                 <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
                                     <div>
                                         <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                            <time datetime="2027-02-20T17:00:00+05:30"
-                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">20
-                                                FEB 2027 • 5:00 PM</time>
+                                            <time datetime="2026-10-18T18:30:00+05:30"
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">18 OCT 2026 • 6:30 PM</time>
                                             <span
-                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Underground
-                                                Minimal</span>
-
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Arena Pitch</span>
+                                            
                                         </div>
-                                        <h3 class="text-xl font-bold font-display text-white mt-1">Boris Brejcha In
-                                            Concert</h3>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Karan Aujla It Was All A Dream</h3>
                                         <p
                                             class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                            The masked virtuoso brings the underground High-Tech Minimal sound to
-                                            Eastern India with an exclusive 3-hour headlining performance.
+                                            Global Punjabi sensation Karan Aujla brings his massive record-breaking live tour production to his home state for an unprecedented night.
                                         </p>
                                     </div>
                                     <div class="space-y-3 pt-3 border-t border-white/[0.08]">
                                         <div class="flex items-center justify-between text-xs font-mono">
                                             <div>
-                                                <span class="text-slate-400 text-[10px] block uppercase">Starting
-                                                    MRP</span>
-                                                <span class="text-base font-bold text-white">₹2,199</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹2,499</span>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter
-                                                    Yield</span>
-                                                <span class="text-base font-bold text-emerald-400">Earn ₹330</span>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
+                                                <span class="text-base font-bold text-emerald-400">Earn ₹375</span>
                                             </div>
                                         </div>
                                         <div class="grid grid-cols-2 gap-2 pt-1">
                                             <button
-                                                onclick="buyTicketModal('Boris Brejcha In Concert', 2199, 'GA Standard')"
+                                                onclick="buyTicketModal('Karan Aujla It Was All A Dream', 2499, 'GA Standard')"
+                                                aria-label="Reserve official pass for Karan Aujla It Was All A Dream"
+                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Karan Aujla It Was All A Dream')"
+                                                aria-label="Share promoter link for Karan Aujla It Was All A Dream"
+                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <article id="tour-boris-brejcha-delhi-2026"
+                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
+                                    <picture>
+                                        <source srcset="posters/boris-brejcha-india-poster.webp" type="image/webp">
+                                        <img src="posters/boris-brejcha-india-poster.jpg"
+                                            alt="Boris Brejcha In Concert — Live Concert Tour in New Delhi at Indira Gandhi Arena"
+                                            width="384" height="320" loading="lazy" decoding="async"
+                                            class="thumpn-poster-img w-full h-full object-cover"
+                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                                    </picture>
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
+                                    </div>
+                                    <span
+                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
+                                        14% CUT
+                                    </span>
+                                    <span
+                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span class="truncate max-w-[200px]">Indira Gandhi Arena, New Delhi</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <time datetime="2026-01-16T20:00:00+05:30"
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">16 JAN 2026 • 8:00 PM</time>
+                                            <span
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Indoor Superdome</span>
+                                            
+                                        </div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Boris Brejcha In Concert</h3>
+                                        <p
+                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
+                                            The King of High-Tech Minimal brings his world-famous Joker-masked performance to Delhi for an immersive visual journey.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹2,799</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
+                                                <span class="text-base font-bold text-emerald-400">Earn ₹390</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button
+                                                onclick="buyTicketModal('Boris Brejcha In Concert', 2799, 'GA Standard')"
                                                 aria-label="Reserve official pass for Boris Brejcha In Concert"
                                                 class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
                                                 Reserve Pass
                                             </button>
                                             <button onclick="copyPromoterLink('Boris Brejcha In Concert')"
                                                 aria-label="Share promoter link for Boris Brejcha In Concert"
+                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <article id="tour-martin-garrix-mumbai-2026"
+                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
+                                    <picture>
+                                        <source srcset="posters/martin-garrix-india-poster.webp" type="image/webp">
+                                        <img src="posters/martin-garrix-india-poster.jpg"
+                                            alt="Martin Garrix India Arena Tour — Live Concert Tour in Mumbai at DY Patil Stadium"
+                                            width="384" height="320" loading="lazy" decoding="async"
+                                            class="thumpn-poster-img w-full h-full object-cover"
+                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                                    </picture>
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
+                                    </div>
+                                    <span
+                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
+                                        14% CUT
+                                    </span>
+                                    <span
+                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span class="truncate max-w-[200px]">DY Patil Stadium, Mumbai</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <time datetime="2026-02-20T17:00:00+05:30"
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">20 FEB 2026 • 5:00 PM</time>
+                                            <span
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Stadium Mega-Stage</span>
+                                            
+                                        </div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Martin Garrix India Arena Tour</h3>
+                                        <p
+                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
+                                            4-time World #1 DJ Martin Garrix lights up DY Patil Stadium with custom laser arrays, unreleased IDs, and pyrotechnics.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹3,299</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
+                                                <span class="text-base font-bold text-emerald-400">Earn ₹460</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button
+                                                onclick="buyTicketModal('Martin Garrix India Arena Tour', 3299, 'GA Standard')"
+                                                aria-label="Reserve official pass for Martin Garrix India Arena Tour"
+                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Martin Garrix India Arena Tour')"
+                                                aria-label="Share promoter link for Martin Garrix India Arena Tour"
+                                                class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
+                                                Share Link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+
+                            <article id="tour-dua-lipa-mumbai-2026"
+                                class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
+                                <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
+                                    <picture>
+                                        <source srcset="posters/dua-lipa-india-poster.webp" type="image/webp">
+                                        <img src="posters/dua-lipa-india-poster.jpg"
+                                            alt="Dua Lipa Radical Optimism Tour — Live Concert Tour in Mumbai at MMRDA Grounds, BKC"
+                                            width="384" height="320" loading="lazy" decoding="async"
+                                            class="thumpn-poster-img w-full h-full object-cover"
+                                            onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                                    </picture>
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent pointer-events-none">
+                                    </div>
+                                    <span
+                                        class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-300 border border-white/[0.08]">
+                                        13% CUT
+                                    </span>
+                                    <span
+                                        class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-300 border border-white/[0.08] flex items-center space-x-1.5">
+                                        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+                                        <span class="truncate max-w-[200px]">MMRDA Grounds, BKC, Mumbai</span>
+                                    </span>
+                                </div>
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                            <time datetime="2026-03-15T18:00:00+05:30"
+                                                class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">15 MAR 2026 • 6:00 PM</time>
+                                            <span
+                                                class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">Festival Grounds</span>
+                                            
+                                        </div>
+                                        <h3 class="text-xl font-bold font-display text-white mt-1">Dua Lipa Radical Optimism Tour</h3>
+                                        <p
+                                            class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
+                                            Global pop queen Dua Lipa brings her dazzling disco-pop stadium spectacle to Mumbai with full choreography and live band.
+                                        </p>
+                                    </div>
+                                    <div class="space-y-3 pt-3 border-t border-white/[0.08]">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <div>
+                                                <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
+                                                <span class="text-base font-bold text-white">₹4,499</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="text-slate-400 text-[10px] block uppercase">Promoter Yield</span>
+                                                <span class="text-base font-bold text-emerald-400">Earn ₹580</span>
+                                            </div>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 pt-1">
+                                            <button
+                                                onclick="buyTicketModal('Dua Lipa Radical Optimism Tour', 4499, 'GA Standard')"
+                                                aria-label="Reserve official pass for Dua Lipa Radical Optimism Tour"
+                                                class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
+                                                Reserve Pass
+                                            </button>
+                                            <button onclick="copyPromoterLink('Dua Lipa Radical Optimism Tour')"
+                                                aria-label="Share promoter link for Dua Lipa Radical Optimism Tour"
                                                 class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
                                                 Share Link
                                             </button>
@@ -2205,6 +2150,8 @@
                         <div class="text-slate-400">Live Support Desk:</div>
                         <div><a href="https://chat.whatsapp.com/H4mZS6rRy3fD1iP4m0wdhP" target="_blank" rel="noopener noreferrer" class="font-mono text-emerald-400 hover:text-emerald-300 transition-colors inline-flex items-center space-x-1.5"><span>WhatsApp Community</span> <span>&rarr;</span></a></div>
                         <div class="font-mono text-slate-200">Email: support@tixora.live</div>
+                        <div class="font-mono text-slate-200">Grievance: grievance@tixora.live</div>
+                        <div class="pt-1"><a href="/terms#refund-policy" class="text-emerald-400 hover:underline text-[11px] font-mono">100% Cancellation Refund Guarantee &rarr;</a></div>
                     </div>
                 </div>
 
@@ -2216,8 +2163,8 @@
                     &copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. All rights reserved. Authorized primary partner network.
                 </div>
                 <div class="flex items-center space-x-5">
-                    <a href="#privacy-policy" onclick="openPrivacyModal(event)" class="hover:text-slate-200 transition-colors">Privacy Policy</a>
-                    <a href="#terms-of-service" onclick="openTermsModal(event)" class="hover:text-slate-200 transition-colors">Terms of Service</a>
+                    <a href="/privacy" class="hover:text-slate-200 transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="hover:text-slate-200 transition-colors">Terms of Service</a>
                     <a href="/faq" class="hover:text-slate-200 transition-colors">FAQ</a>
                     <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hover:text-white transition-colors flex items-center space-x-1">
                         <span>Top</span>
@@ -4094,13 +4041,10 @@
         }
 
         /* =====================================================================
-           LIVE EVENTS DYNAMIC LOADER & REALTIME SYNC (from Supabase Database)
+           LIVE EVENTS DYNAMIC LOADER & REALTIME SYNC (Fail-Safe)
            ===================================================================== */
         async function loadLiveEvents() {
-            const track = document.getElementById('events-side-track');
-            const dotsContainer = document.getElementById('events-dots');
-            if (!track || !window.TixoraAuth) return;
-
+            if (!window.TixoraAuth) return;
             const client = window.TixoraAuth.getClient();
             if (!client) return;
 
@@ -4112,208 +4056,17 @@
                     .order('event_date', { ascending: true });
 
                 if (error) {
-                    console.warn('[TixoraLiveEvents] Could not query Supabase events:', error);
+                    // Fail gracefully without error flood
                     return;
                 }
 
-                window._liveEvents = events || [];
-                renderLiveEvents(events || []);
-            } catch (err) {
-                console.warn('[TixoraLiveEvents] Error loading live events:', err);
-            }
-        }
-
-        function updateHeroFeaturedEvent(events) {
-            if (!events || !events.length) return;
-
-            const savedFeaturedId = localStorage.getItem('tixora_featured_event_id');
-            let featured = null;
-            if (savedFeaturedId) {
-                featured = events.find(e => String(e.id) === String(savedFeaturedId));
-            }
-            if (!featured) {
-                featured = events.find(e => (e.banner_url || '').includes('FEATURED'));
-            }
-            if (!featured) {
-                featured = events[0];
-            }
-
-            if (!featured) return;
-
-            // Parse layout from banner_url if present (e.g. layout:Stadium 360° or FEATURED|layout:Arena Open-Air)
-            let layout = 'Stadium Allocation';
-            if (featured.banner_url) {
-                const match = featured.banner_url.match(/layout:([^|]+)/);
-                if (match && match[1]) {
-                    layout = match[1].trim() + ' Allocation';
+                if (events && events.length > 0) {
+                    window._liveEvents = events;
+                    renderLiveEvents(events);
                 }
+            } catch (err) {
+                // Keep verified catalog running
             }
-
-            const venueName = (featured.venues && featured.venues.name) || featured.venue || 'Official Arena';
-            const cityName = (featured.venues && featured.venues.city) || featured.city || 'India';
-            const mrp = Number(featured.starting_price) || 2999;
-            const cut = Number(featured.promoter_cut_pct) || 16;
-            const yourCut = Math.round(mrp * (cut / 100));
-            const poster = featured.poster_url || 'posters/anyma-aeden-poster-1.jpg';
-            const partner = featured.partner_engine || 'BookMyShow';
-            const safeTitle = (featured.title || 'Tour Pass').replace(/'/g, "\\'");
-
-            const elAlloc = document.getElementById('hero-featured-allocation');
-            if (elAlloc) elAlloc.textContent = layout.toUpperCase();
-
-            const elTitle = document.getElementById('hero-featured-title');
-            if (elTitle) elTitle.textContent = featured.title;
-
-            const elBadge = document.getElementById('hero-featured-badge');
-            if (elBadge) {
-                elBadge.textContent = 'FEATURED ALLOCATION';
-                elBadge.className = 'px-2.5 py-1 rounded-md text-[11px] font-mono font-semibold tracking-wider bg-crimson/15 text-crimson border border-crimson/30 uppercase';
-            }
-
-            const elImg = document.getElementById('hero-featured-img');
-            if (elImg) {
-                elImg.src = poster;
-                elImg.alt = featured.title;
-            }
-
-            const elVenue = document.getElementById('hero-featured-venue');
-            if (elVenue) elVenue.textContent = `${venueName}, ${cityName}`;
-
-            const elCut = document.getElementById('hero-featured-cut');
-            if (elCut) elCut.textContent = `Earn ₹${yourCut.toLocaleString('en-IN')} / pass (${cut}%)`;
-
-            const elMrp = document.getElementById('hero-featured-mrp');
-            if (elMrp) elMrp.textContent = `₹${mrp.toLocaleString('en-IN')}`;
-
-            const elDelivery = document.getElementById('hero-featured-delivery');
-            if (elDelivery) elDelivery.textContent = `${partner} Direct Pass`;
-
-            const elBtn = document.getElementById('hero-featured-btn');
-            if (elBtn) {
-                elBtn.setAttribute('onclick', `buyTicketModal('${safeTitle}', ${mrp}, 'Featured Tour Pass')`);
-            }
-        }
-
-        function renderLiveEvents(events) {
-            updateHeroFeaturedEvent(events);
-
-            const track = document.getElementById('events-side-track');
-            const dotsContainer = document.getElementById('events-dots');
-            if (!track) return;
-
-            if (!events || !events.length) {
-                track.innerHTML = `
-                    <div class="w-full min-w-[320px] max-w-xl mx-auto p-8 rounded-3xl solid-panel bg-[#0D0F17]/70 border border-white/[0.08] text-center space-y-4">
-                        <div class="w-12 h-12 rounded-2xl bg-crimson/10 border border-crimson/20 flex items-center justify-center mx-auto text-crimson">
-                            <i data-lucide="sparkles" class="w-6 h-6"></i>
-                        </div>
-                        <div class="space-y-1.5">
-                            <h3 class="text-xl font-bold font-display text-white">Live Concert Drops Coming Soon</h3>
-                            <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
-                                Tour allocations are currently updating. Register as an official promoter to get early access and direct allocations when passes drop.
-                            </p>
-                        </div>
-                        <div class="pt-2 flex justify-center gap-3">
-                            <a href="#promoter-calculator" class="btn-primary px-5 py-2.5 rounded-xl text-xs font-display font-semibold inline-block">
-                                Join as Promoter
-                            </a>
-                        </div>
-                    </div>
-                `;
-                if (dotsContainer) dotsContainer.innerHTML = '';
-                if (window.lucide) lucide.createIcons();
-                return;
-            }
-
-            const savedFeaturedId = localStorage.getItem('tixora_featured_event_id');
-            track.innerHTML = events.map(e => {
-                const venueName = (e.venues && e.venues.name) || e.venue || 'Official Venue';
-                const cityName = (e.venues && e.venues.city) || e.city || 'India';
-                const location = `${venueName}, ${cityName}`;
-
-                const eventDate = new Date(e.event_date);
-                const formattedDate = isNaN(eventDate.getTime())
-                    ? 'UPCOMING 2026'
-                    : eventDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase() + ' • ' +
-                    eventDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-
-                const mrp = Number(e.starting_price) || 2999;
-                const cut = Number(e.promoter_cut_pct) || 16;
-                const yourCut = Math.round(mrp * (cut / 100));
-                const poster = e.poster_url || 'posters/anyma-aeden-poster-1.jpg';
-                const safeTitle = (e.title || 'Tour Pass').replace(/'/g, "\\'");
-
-                const banner = e.banner_url || '';
-                const layoutMatch = banner.match(/layout:([^|]+)/);
-                const layoutTag = layoutMatch ? layoutMatch[1].trim() : 'Arena Open-Air';
-                const isFeatured = savedFeaturedId ? (String(savedFeaturedId) === String(e.id)) : banner.includes('FEATURED');
-
-                return `
-                    <div class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
-                        <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
-                            <img src="${poster}" alt="${e.title}" width="80" height="80" loading="lazy" decoding="async" class="thumpn-poster-img w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
-                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
-                                ${cut}% CUT
-                            </span>
-                            <span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg text-xs font-mono bg-black/80 text-slate-400 border border-white/[0.08] flex items-center space-x-1.5">
-                                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
-                                <span class="truncate max-w-[200px]">${location}</span>
-                            </span>
-                        </div>
-                        <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
-                            <div>
-                                <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                                    <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">${formattedDate}</span>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-slate-300 border border-white/10">${layoutTag}</span>
-                                    ${isFeatured ? `
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-crimson/15 text-crimson border border-crimson/30 font-semibold tracking-wider uppercase">
-                                            FEATURED ALLOCATION
-                                        </span>
-                                    ` : ''}
-                                </div>
-                                <h3 class="text-xl font-bold font-display text-white mt-1">${e.title}</h3>
-                                <p class="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed hidden sm:block">
-                                    ${e.description || 'Official tour promoter allocation pass. Guaranteed authenticity via BookMyShow dynamic barcode engine.'}
-                                </p>
-                            </div>
-                            <div class="space-y-3 pt-3 border-t border-white/[0.08]">
-                                <div class="flex items-center justify-between text-xs font-mono">
-                                    <div>
-                                        <span class="text-slate-400 text-[10px] block uppercase">Starting MRP</span>
-                                        <span class="text-base font-bold text-white">₹${mrp.toLocaleString('en-IN')}</span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-slate-400 text-[10px] block uppercase">Your Cut</span>
-                                        <span class="text-base font-bold text-slate-400">Earn ₹${yourCut.toLocaleString('en-IN')}</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 pt-1">
-                                    <button onclick="buyTicketModal('${safeTitle}', ${mrp}, 'GA Standard')"
-                                        class="btn-primary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display font-semibold whitespace-nowrap text-center">
-                                        Reserve Pass
-                                    </button>
-                                    <button onclick="copyPromoterLink('${safeTitle}')"
-                                        class="btn-secondary w-full py-2.5 rounded-xl text-[11px] sm:text-xs font-display whitespace-nowrap text-center">
-                                        Share Link
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Dynamically render progress dots
-            if (dotsContainer) {
-                dotsContainer.innerHTML = events.map((_, idx) => `
-                    <button class="${idx === 0 ? 'w-7 h-1.5 rounded-full bg-crimson transition-all duration-300' : 'w-2 h-1.5 rounded-full bg-white/20 transition-all duration-300 hover:bg-white/40'}"
-                        onclick="scrollEventTo(${idx})"></button>
-                `).join('');
-            }
-
-            if (window.lucide) lucide.createIcons();
-            if (typeof updateDots === 'function') updateDots();
         }
 
         function subscribeToLiveEventsRealtime() {
@@ -4322,14 +4075,18 @@
             if (!client) return;
 
             try {
-                client.channel('public:events:realtime')
+                const channel = client.channel('public:events:realtime');
+                channel
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, async (payload) => {
-                        console.log('[TixoraRealtime] Live event change detected, updating fan site:', payload);
                         await loadLiveEvents();
                     })
-                    .subscribe();
+                    .subscribe((status, err) => {
+                        if (status === 'CHANNEL_ERROR' || err) {
+                            try { client.removeChannel(channel); } catch (e) {}
+                        }
+                    });
             } catch (err) {
-                console.warn('[TixoraRealtime] Realtime subscription notice:', err);
+                // Silently fallback to static roster
             }
         }
 
@@ -4339,22 +4096,15 @@
                 loadLiveEvents();
             }
         });
-        window.addEventListener('focus', () => {
-            loadLiveEvents();
-        });
 
-        // Initialize promoter auth controller & live event engine
+        // Initialize promoter auth controller & live event engine cleanly on DOM ready
         document.addEventListener('DOMContentLoaded', () => {
             initPromoterAuth();
             loadLiveEvents();
             subscribeToLiveEventsRealtime();
         });
-        initPromoterAuth();
-        loadLiveEvents();
-        subscribeToLiveEventsRealtime();
 
     </script>
-
 
     <!-- Privacy Policy Modal -->
     <div id="privacy-modal"

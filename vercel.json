@@ -18,6 +18,8 @@
     { "source": "/protocol", "destination": "/protocol.html" },
     { "source": "/about", "destination": "/about.html" },
     { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/terms", "destination": "/terms.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/", "destination": "/index.html" }
   ],
