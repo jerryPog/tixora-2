@@ -5,3 +5,6 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+*.zip
+.env
+.env.*

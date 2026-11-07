@@ -4002,18 +4002,40 @@
 
         async function handlePromoterSignUp(e) {
             e.preventDefault();
-            const fullName = document.getElementById('signup-fullname').value;
-            const phone = document.getElementById('signup-phone').value;
-            const email = document.getElementById('signup-email').value;
+            const fullName = document.getElementById('signup-fullname').value.trim();
+            const phone = document.getElementById('signup-phone').value.trim();
+            const email = document.getElementById('signup-email').value.trim();
             const password = document.getElementById('signup-password').value;
-            const city = document.getElementById('signup-city').value;
-            const upiId = document.getElementById('signup-upi').value;
+            const city = document.getElementById('signup-city').value.trim();
+            const upiId = document.getElementById('signup-upi').value.trim();
 
             const errBox = document.getElementById('promoter-auth-error');
             const errText = document.getElementById('promoter-auth-error-text');
             const btn = document.getElementById('btn-signup-submit');
 
             errBox.classList.add('hidden');
+
+            // Client-side Input Validation & Sanitization
+            const phoneDigits = phone.replace(/[^0-9]/g, '');
+            if (phoneDigits.length < 10) {
+                errText.textContent = 'Please enter a valid 10-digit mobile number for WhatsApp pass alerts.';
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            const upiRegex = /^[\w.\-]{2,64}@[a-zA-Z]{2,64}$/;
+            if (!upiRegex.test(upiId)) {
+                errText.textContent = 'Please enter a valid UPI VPA handle (e.g. name@oksbi, mobile@paytm).';
+                errBox.classList.remove('hidden');
+                return;
+            }
+
+            if (password.length < 6) {
+                errText.textContent = 'Password must be at least 6 characters.';
+                errBox.classList.remove('hidden');
+                return;
+            }
+
             btn.disabled = true;
 
             try {

@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
+const ROOT_DIR = path.resolve(__dirname);
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -33,37 +35,97 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 2. Parse Clean URL Route
-  let reqPath = decodeURI(req.url.split('?')[0]);
-  if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
-  if (reqPath === '/admin' || reqPath === '/admin/') reqPath = '/admin.html';
-  if (reqPath === '/tours' || reqPath === '/tours/') reqPath = '/tours.html';
-  if (reqPath === '/promoter' || reqPath === '/promoter/') reqPath = '/promoter.html';
-  if (reqPath === '/protocol' || reqPath === '/protocol/') reqPath = '/protocol.html';
-  if (reqPath === '/about' || reqPath === '/about/') reqPath = '/about.html';
-  if (reqPath === '/faq' || reqPath === '/faq/') reqPath = '/faq.html';
-  if (reqPath === '/sitemap' || reqPath === '/sitemap/') reqPath = '/sitemap.xml';
-  if (reqPath === '/robots' || reqPath === '/robots/') reqPath = '/robots.txt';
-
-  // Support general clean URLs if a matching .html file exists
-  if (!path.extname(reqPath) && fs.existsSync(path.join(__dirname, reqPath + '.html'))) {
-    reqPath = reqPath + '.html';
+  // 2. Decode and Sanitize URL Path
+  let rawUrl = (req.url || '/').split('?')[0];
+  let decodedPath = '';
+  try {
+    decodedPath = decodeURIComponent(rawUrl);
+  } catch (err) {
+    res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('400 Bad Request: Malformed URI Sequence');
+    return;
   }
 
-  const filePath = path.join(__dirname, reqPath);
+  // Strip null bytes and normalize slashes
+  decodedPath = decodedPath.replace(/\0/g, '');
 
-  // Security & SEO headers
+  // 3. Prevent Path Traversal
+  const normalizedRelPath = path.normalize(decodedPath).replace(/^(\.\.[\/\\])+/, '');
+  const filePath = path.resolve(ROOT_DIR, '.' + path.sep + normalizedRelPath);
+
+  // Strict boundary containment check
+  if (!filePath.startsWith(ROOT_DIR)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('403 Forbidden: Directory Traversal Prohibited');
+    return;
+  }
+
+  // 4. Route Mapping for Clean URLs
+  let resolvedPath = filePath;
+  const relFromRoot = path.relative(ROOT_DIR, filePath).replace(/\\/g, '/');
+
+  if (relFromRoot === '' || relFromRoot === '.') {
+    resolvedPath = path.join(ROOT_DIR, 'index.html');
+  } else if (relFromRoot === 'admin') {
+    resolvedPath = path.join(ROOT_DIR, 'admin.html');
+  } else if (relFromRoot === 'tours') {
+    resolvedPath = path.join(ROOT_DIR, 'tours.html');
+  } else if (relFromRoot === 'promoter') {
+    resolvedPath = path.join(ROOT_DIR, 'promoter.html');
+  } else if (relFromRoot === 'protocol') {
+    resolvedPath = path.join(ROOT_DIR, 'protocol.html');
+  } else if (relFromRoot === 'about') {
+    resolvedPath = path.join(ROOT_DIR, 'about.html');
+  } else if (relFromRoot === 'faq') {
+    resolvedPath = path.join(ROOT_DIR, 'faq.html');
+  } else if (relFromRoot === 'sitemap') {
+    resolvedPath = path.join(ROOT_DIR, 'sitemap.xml');
+  } else if (relFromRoot === 'robots') {
+    resolvedPath = path.join(ROOT_DIR, 'robots.txt');
+  } else if (!path.extname(resolvedPath) && fs.existsSync(resolvedPath + '.html')) {
+    resolvedPath = resolvedPath + '.html';
+  }
+
+  // 5. Block Access to Sensitive Files & Folders
+  const checkRel = path.relative(ROOT_DIR, resolvedPath).replace(/\\/g, '/').toLowerCase();
+  const isBlocked =
+    checkRel.startsWith('database/') ||
+    checkRel === 'database' ||
+    checkRel.startsWith('.agents/') ||
+    checkRel.startsWith('.') ||
+    checkRel.endsWith('.sql') ||
+    checkRel.endsWith('.db') ||
+    checkRel.endsWith('.sqlite') ||
+    checkRel.endsWith('.sqlite3') ||
+    checkRel.endsWith('.zip') ||
+    checkRel.endsWith('.md') ||
+    checkRel.endsWith('.env') ||
+    checkRel.endsWith('.yml') ||
+    checkRel.endsWith('.yaml') ||
+    (checkRel.endsWith('.json') && !checkRel.endsWith('manifest.json') && !checkRel.endsWith('.mcp.json'));
+
   const baseHeaders = {
     'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': reqPath.includes('admin') ? 'DENY' : 'SAMEORIGIN',
+    'X-Frame-Options': checkRel.includes('admin') ? 'DENY' : 'SAMEORIGIN',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
   };
 
-  fs.stat(filePath, (err, stats) => {
-    // 3. Handle 404 with Custom Branded 404.html
+  if (isBlocked) {
+    res.writeHead(404, {
+      ...baseHeaders,
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Robots-Tag': 'noindex, nofollow'
+    });
+    res.end('404 Not Found — Protected Resource');
+    return;
+  }
+
+  fs.stat(resolvedPath, (err, stats) => {
+    // 6. Handle 404 with Custom Branded 404.html
     if (err || !stats.isFile()) {
-      const notFoundPath = path.join(__dirname, '404.html');
+      const notFoundPath = path.join(ROOT_DIR, '404.html');
       fs.readFile(notFoundPath, 'utf8', (readErr, notFoundContent) => {
         if (!readErr && notFoundContent) {
           res.writeHead(404, {
@@ -84,8 +146,8 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    // 4. Serve File with Optimized Caching & Content-Type
-    const ext = path.extname(filePath).toLowerCase();
+    // 7. Serve File with Optimized Caching & Content-Type
+    const ext = path.extname(resolvedPath).toLowerCase();
     const isHtml = ext === '.html';
     const isSitemap = ext === '.xml';
 
@@ -99,15 +161,19 @@ const server = http.createServer((req, res) => {
       'Cache-Control': cacheControl
     };
 
-    if (reqPath.includes('admin')) {
+    if (checkRel.includes('admin')) {
       headers['X-Robots-Tag'] = 'noindex, nofollow';
     }
 
     res.writeHead(200, headers);
-    fs.createReadStream(filePath).pipe(res);
+    fs.createReadStream(resolvedPath).pipe(res);
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Tixora server is live at http://localhost:${PORT}/ (Admin portal: http://localhost:${PORT}/admin)`);
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Tixora server is live at http://localhost:${PORT}/ (Admin portal: http://localhost:${PORT}/admin)`);
+  });
+}
+
+module.exports = server;

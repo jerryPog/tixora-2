@@ -208,25 +208,15 @@
         if (!user) return 'anon';
         if (_cachedUserRole) return _cachedUserRole;
 
-        // 1. Check local user metadata and email convention first (0ms latency, zero network dependency)
+        // 1. Check verified app_metadata signed by Supabase Auth (tamper-proof)
         if (user.app_metadata && user.app_metadata.role) {
             _cachedUserRole = user.app_metadata.role;
             return user.app_metadata.role;
         }
 
-        if (user.user_metadata && user.user_metadata.role) {
-            _cachedUserRole = user.user_metadata.role;
-            return user.user_metadata.role;
-        }
-
-        if (user.email && (user.email.startsWith('admin') || user.email.includes('admin@') || user.email.includes('director@'))) {
-            _cachedUserRole = 'admin';
-            return 'admin';
-        }
-
         // 2. Query user_roles table with 1s timeout to prevent UI freezes
         const client = getClient();
-        if (client) {
+        if (client && user.id) {
             try {
                 const queryPromise = client
                     .from('user_roles')
@@ -243,6 +233,12 @@
             } catch (e) {
                 // Table might not exist or network unavailable
             }
+        }
+
+        // 3. Designated root admin email (strict exact match, never loose substring)
+        if (user.email && user.email.toLowerCase() === 'admin@tixora.live') {
+            _cachedUserRole = 'admin';
+            return 'admin';
         }
 
         _cachedUserRole = 'promoter';
@@ -586,9 +582,12 @@
      * Immediate local bypass login for newly registered user without waiting for email link
      */
     function loginWithLocalBypass(email) {
-        const cleanEmail = (email || '').trim();
+        const cleanEmail = (email || '').trim().toLowerCase();
+        if (cleanEmail === 'admin@tixora.live' || cleanEmail.startsWith('admin@')) {
+            throw new Error('Administrative accounts cannot bypass authentication. Please sign in with your credentials.');
+        }
         const users = getLocalUsers();
-        let match = users.find(u => u.email.toLowerCase() === cleanEmail.toLowerCase());
+        let match = users.find(u => u.email.toLowerCase() === cleanEmail);
         if (!match) {
             match = {
                 email: cleanEmail,
@@ -596,7 +595,7 @@
                 phone: '+919999999999',
                 city: 'Mumbai',
                 upiId: cleanEmail.split('@')[0] + '@upi',
-                role: (cleanEmail.startsWith('admin') || cleanEmail.includes('admin@')) ? 'admin' : 'promoter',
+                role: 'promoter',
                 referralCode: 'TIX-' + cleanEmail.split('@')[0].toUpperCase().slice(0, 8)
             };
             saveLocalUser(match);

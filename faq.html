@@ -285,9 +285,34 @@
                     </p>
                 </div>
 
-                <!-- FAQ Accordion List -->
+                <!-- Instant Search & Category Filter Controls -->
                 <div class="space-y-4">
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" open>
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0d1019] p-3 rounded-2xl border border-[#1e2436]">
+                        <div class="relative w-full sm:max-w-md">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+                            <input type="text" id="faq-search" placeholder="Search questions (e.g. UPI, cut, barcode, delivery)..."
+                                oninput="filterFaq()"
+                                class="w-full bg-[#131622] border border-[#1e2436] rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-crimson transition-colors">
+                        </div>
+                        <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                            <span class="text-xs text-slate-400 font-mono" id="faq-count-badge">Showing 6 of 6 FAQs</span>
+                            <button onclick="resetFaqFilters()" class="text-xs font-mono text-crimson hover:underline pl-2">Reset</button>
+                        </div>
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs font-mono">
+                        <span class="text-slate-400 text-[11px] pr-1">Category:</span>
+                        <button onclick="setFaqCategory('all')" class="faq-cat-btn px-3 py-1.5 rounded-lg bg-crimson text-white font-semibold transition-all" data-cat="all">All (6)</button>
+                        <button onclick="setFaqCategory('promoter')" class="faq-cat-btn px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 transition-all" data-cat="promoter">Promoter &amp; Payouts</button>
+                        <button onclick="setFaqCategory('security')" class="faq-cat-btn px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 transition-all" data-cat="security">Security &amp; QR</button>
+                        <button onclick="setFaqCategory('passes')" class="faq-cat-btn px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 transition-all" data-cat="passes">Passes &amp; Delivery</button>
+                    </div>
+                </div>
+
+                <!-- FAQ Accordion List -->
+                <div class="space-y-4" id="faq-accordion-list">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="promoter" data-keywords="promoter protocol ambassador network campus commission upi pass" open>
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>What is the Tixora Promoter Protocol?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -297,7 +322,7 @@
                         </div>
                     </details>
 
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="promoter" data-keywords="payout upi settlement commission payment bank 60 seconds instant whatsapp">
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>How and when are promoter commissions paid?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -307,7 +332,7 @@
                         </div>
                     </details>
 
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="passes" data-keywords="genuine real authentic bookmyshow district allocation primary scalping fake secondary">
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>Are passes purchased on Tixora genuine and primary?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -317,7 +342,7 @@
                         </div>
                     </details>
 
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="security" data-keywords="dynamic qr mesh anti scalping barcode turnstile screenshot rotating technology">
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>How does the Dynamic QR Mesh anti-scalping technology work?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -327,7 +352,7 @@
                         </div>
                     </details>
 
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="promoter" data-keywords="collateral deposit fee cost join promoter money upfront charge">
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>Is there any collateral, deposit, or sign-up fee to join as a promoter?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -337,7 +362,7 @@
                         </div>
                     </details>
 
-                    <details class="group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50">
+                    <details class="faq-item group bg-[#0d1019] border border-[#1e2436] rounded-2xl overflow-hidden transition-all duration-200 open:border-crimson/50" data-cat="passes" data-keywords="delivery attendee whatsapp bookmyshow ticket wallet phone sms access">
                         <summary class="flex items-center justify-between p-5 cursor-pointer list-none font-display font-bold text-white text-sm sm:text-base select-none">
                             <span>How are passes delivered to attendees after booking?</span>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform"></i>
@@ -346,6 +371,19 @@
                             Confirmed passes are instantly pushed to the attendee's verified mobile number via official WhatsApp notification and populated directly inside their BookMyShow or District Live ticket wallet for one-tap gate access.
                         </div>
                     </details>
+
+                    <!-- Empty Search State -->
+                    <div id="no-faq-found" class="hidden text-center py-12 space-y-3 bg-[#0d1019] border border-[#1e2436] rounded-2xl p-6">
+                        <div class="w-10 h-10 rounded-full bg-crimson/15 text-crimson flex items-center justify-center mx-auto">
+                            <i data-lucide="help-circle" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-white">No questions matching your search</h4>
+                        <p class="text-xs text-slate-400">Try searching for "UPI", "passes", "commission", or ask our AI assistant directly.</p>
+                        <button onclick="toggleChatbot()" class="btn-primary px-4 py-2 rounded-xl text-xs font-semibold inline-flex items-center space-x-1.5 mt-2">
+                            <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                            <span>Ask Tixora AI</span>
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -1612,5 +1650,62 @@
 </body>
 </html>
     
+
+    <script>
+        let currentFaqCat = 'all';
+
+        function filterFaq() {
+            const query = (document.getElementById('faq-search')?.value || '').toLowerCase().trim();
+            const items = document.querySelectorAll('.faq-item');
+            let visible = 0;
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                const keywords = (item.getAttribute('data-keywords') || '').toLowerCase();
+                const cat = item.getAttribute('data-cat') || 'all';
+
+                const matchesQuery = !query || text.includes(query) || keywords.includes(query);
+                const matchesCat = currentFaqCat === 'all' || cat === currentFaqCat;
+
+                if (matchesQuery && matchesCat) {
+                    item.classList.remove('hidden');
+                    if (query.length > 2) item.setAttribute('open', '');
+                    visible++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            const badge = document.getElementById('faq-count-badge');
+            if (badge) badge.innerText = `Showing ${visible} of ${items.length} FAQs`;
+
+            const noRes = document.getElementById('no-faq-found');
+            if (noRes) {
+                if (visible === 0) noRes.classList.remove('hidden');
+                else noRes.classList.add('hidden');
+            }
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        }
+
+        function setFaqCategory(cat) {
+            currentFaqCat = cat;
+            document.querySelectorAll('.faq-cat-btn').forEach(b => {
+                if (b.getAttribute('data-cat') === cat) {
+                    b.classList.remove('bg-white/[0.05]', 'text-slate-300');
+                    b.classList.add('bg-crimson', 'text-white', 'font-semibold');
+                } else {
+                    b.classList.remove('bg-crimson', 'text-white', 'font-semibold');
+                    b.classList.add('bg-white/[0.05]', 'text-slate-300');
+                }
+            });
+            filterFaq();
+        }
+
+        function resetFaqFilters() {
+            const input = document.getElementById('faq-search');
+            if (input) input.value = '';
+            setFaqCategory('all');
+        }
+    </script>
 </body>
 </html>
