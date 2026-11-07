@@ -24,17 +24,22 @@
   "redirects": [
     {
       "source": "/database/:path*",
-      "destination": "/404",
+      "destination": "/404.html",
       "permanent": false
     },
     {
       "source": "/(.*)\\.sql",
-      "destination": "/404",
+      "destination": "/404.html",
       "permanent": false
     },
     {
       "source": "/(.*)\\.md",
-      "destination": "/404",
+      "destination": "/404.html",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)\\.zip",
+      "destination": "/404.html",
       "permanent": false
     },
     {
