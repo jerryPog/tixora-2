@@ -23,6 +23,21 @@
   ],
   "redirects": [
     {
+      "source": "/database/:path*",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)\\.sql",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)\\.md",
+      "destination": "/404",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "has": [
         {
