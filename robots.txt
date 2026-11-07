@@ -51,5 +51,5 @@ Disallow: /admin.html
 # ------------------------------------------------------------------------------
 # Sitemap Index
 # ------------------------------------------------------------------------------
-Sitemap: https://tixora.live/sitemap.xml
+Sitemap: https://tixoralive.vercel.app/sitemap.xml
 
