@@ -1,0 +1,54 @@
+# ==============================================================================
+# Tixora Official Live Concert Passes & Youth Promoter Protocol
+# Production robots.txt — https://tixora.live
+# ==============================================================================
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /database/
+Disallow: /*.sql$
+
+# ------------------------------------------------------------------------------
+# Explicit Rules for Verified Search Engines & Discovery Bots
+# ------------------------------------------------------------------------------
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-Mobile
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+User-agent: Bingbot
+User-agent: msnbot
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+# ------------------------------------------------------------------------------
+# AI Search & Citation Agents (Allowed for conversational search visibility)
+# ------------------------------------------------------------------------------
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+
+# ------------------------------------------------------------------------------
+# Sitemap Index
+# ------------------------------------------------------------------------------
+Sitemap: https://tixora.live/sitemap.xml

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth overflow-x-hidden w-full h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, follow">
+    <title>404 — Pass Allocation Not Found | Tixora Live Concert Protocol</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        void: '#050608',
+                        surface: {
+                            base: '#080a10',
+                            card: '#0d1019',
+                            border: '#1e2436'
+                        },
+                        crimson: {
+                            DEFAULT: '#ff2e54',
+                            hover: '#ff4365'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-[#050608] text-white font-sans antialiased flex flex-col min-h-screen selection:bg-crimson selection:text-white">
+
+    <!-- Top Header -->
+    <header class="border-b border-[#1e2436] bg-[#080a10]/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+        <a href="/" class="flex items-center space-x-3 group">
+            <img src="/tixora-logo.png" alt="Tixora Protocol" class="w-8 h-8 rounded-lg" width="32" height="32">
+            <span class="text-sm font-extrabold tracking-widest font-mono text-white group-hover:text-crimson transition-colors">TIXORA</span>
+        </a>
+        <a href="/" class="text-xs font-mono text-slate-400 hover:text-white transition-colors flex items-center space-x-1.5">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Back to Portal</span>
+        </a>
+    </header>
+
+    <!-- 404 Main Area -->
+    <main class="flex-1 flex items-center justify-center p-6 text-center">
+        <div class="max-w-md w-full space-y-6 bg-[#0d1019] border border-[#1e2436] rounded-3xl p-8 sm:p-10 shadow-2xl">
+            
+            <div class="w-16 h-16 rounded-2xl bg-crimson/10 border border-crimson/20 text-crimson flex items-center justify-center mx-auto">
+                <i data-lucide="shield-alert" class="w-8 h-8"></i>
+            </div>
+
+            <div class="space-y-2">
+                <div class="text-[11px] font-mono uppercase tracking-[0.2em] text-crimson font-semibold">Error 404 — Void Scan</div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">Allocation Not Found</h1>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed pt-1">
+                    The requested route or concert allocation pass does not exist on the Tixora mesh protocol. It may have been expired, rescheduled, or relocated.
+                </p>
+            </div>
+
+            <div class="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="/" class="px-6 py-3 rounded-xl bg-crimson hover:bg-crimson-hover text-white text-xs font-bold font-mono tracking-wider transition-all shadow-lg flex items-center justify-center space-x-2">
+                    <i data-lucide="compass" class="w-4 h-4"></i>
+                    <span>Explore Live Tours</span>
+                </a>
+                <a href="/#mesh-protocol" class="px-6 py-3 rounded-xl bg-[#131622] hover:bg-[#1c2236] text-slate-300 hover:text-white text-xs font-mono border border-[#1e2436] transition-all flex items-center justify-center space-x-2">
+                    <i data-lucide="cpu" class="w-4 h-4"></i>
+                    <span>Protocol Specs</span>
+                </a>
+            </div>
+
+            <div class="pt-6 border-t border-[#1e2436] text-[11px] font-mono text-slate-400">
+                Official BookMyShow & District Live Node • SLA 99.98%
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-[#1e2436] bg-[#080a10] py-6 px-6 text-center text-xs font-mono text-slate-400">
+        &copy; 2026 Tixora Protocol. All rights reserved.
+    </footer>
+
+    <script>
+        if (window.lucide && lucide.createIcons) lucide.createIcons();
+    </script>
+</body>
+</html>
