@@ -525,15 +525,21 @@
 }
     </script>
 
+    <!-- DNS Prefetch for External CDNs -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
     <!-- Supabase JS Client (v2) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <!-- Tixora Supabase Config -->
-    <script src="supabase-config.js"></script>
+    <script src="supabase-config.js" defer></script>
     <!-- Tixora Supabase Auth & Route Guard Protocol -->
-    <script src="auth.js"></script>
+    <script src="auth.js" defer></script>
 
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -570,651 +576,7 @@
                 }
             }
         };
-
-        /* =====================================================================
-           TIXORA AI CHAT ENGINE
-           ===================================================================== */
-        const TIXORA_EVENTS_DB = [
-            {
-                id: 'anyma',
-                names: ['anyma', 'genesys', 'tale of us', 'matteo milleri', 'afterlife'],
-                artist: 'Anyma',
-                tour: 'Anyma Presents Genesys Live Mumbai',
-                genre: 'Melodic Techno / Immersive Audio-Visual',
-                date: 'Saturday, 21 November 2026',
-                timings: 'Gates Open: 5:00 PM • Show: 6:30 PM – 10:30 PM IST',
-                venue: 'Mahalaxmi Racecourse, Mumbai, Maharashtra',
-                mrp: '₹3,499 (GA Standard) • ₹6,999 (VIP)',
-                promoterYield: 'Earn ₹490 per pass (14% yield)',
-                poster: 'posters/anyma-aeden-poster-1.webp',
-                posterAlt: 'Anyma Genesys Live Mumbai Poster',
-                topSongs: [
-                    'Eternity (with Chris Avantgarde)',
-                    'Syren (with Rebūke)',
-                    'Explore Your Future',
-                    'Save Me (with Cassian & Poppy Baskcomb)',
-                    'Pictures of You',
-                    'The Sign (with CamelPhat)',
-                    'Running (feat. Meg Myers)'
-                ],
-                overview: 'The global visual-techno sensation Anyma brings his mind-bending Genesys audio-visual production to Mumbai for a monolithic open-air spectacle at Mahalaxmi Racecourse.'
-            },
-            {
-                id: 'gnr',
-                names: ['guns n roses', 'guns n\' roses', 'guns and roses', 'gnr', 'axl rose', 'slash', 'delhi'],
-                artist: "Guns N' Roses",
-                tour: "Guns N' Roses Live in Delhi — 2026 Stadium Tour",
-                genre: 'Hard Rock / Classic Rock',
-                date: 'Saturday, 05 December 2026',
-                timings: 'Gates Open: 4:30 PM • Opening Act: 6:00 PM • GNR Live: 7:30 PM – 10:30 PM (Full 3-Hour Stadium Set)',
-                venue: 'Jawaharlal Nehru (JLN) Stadium, New Delhi',
-                mrp: '₹4,999 (Silver Stand) • ₹8,999 (Gold Pitch) • ₹14,999 (Platinum Fan Pit)',
-                promoterYield: 'Earn ₹600 per pass (12% yield)',
-                poster: 'posters/guns-n-roses-india-poster.webp',
-                posterAlt: "Guns N' Roses Live in Delhi Poster",
-                topSongs: [
-                    "Sweet Child O' Mine",
-                    'November Rain',
-                    'Welcome to the Jungle',
-                    'Paradise City',
-                    "Don't Cry",
-                    "Knockin' on Heaven's Door",
-                    'Patience',
-                    'Civil War'
-                ],
-                overview: 'Rock and Roll Hall of Famers Axl Rose, Slash, and Duff McKagan bring their full stadium world tour production to New Delhi for an epic 3-hour rock journey.'
-            },
-            {
-                id: 'fredagain',
-                names: ['fred again', 'fred again..', 'fred', 'fredagain', 'usb', 'bengaluru', 'bangalore'],
-                artist: 'Fred again..',
-                tour: 'Fred again.. USB India Tour 2026',
-                genre: 'Electronic / UK Garage / House',
-                date: 'Saturday, 12 December 2026',
-                timings: 'Gates Open: 4:00 PM • Support DJ Sets: 5:30 PM • Fred again.. Live: 8:00 PM – 10:15 PM IST',
-                venue: 'NICE Grounds, BIEC, Tumkur Road, Bengaluru',
-                mrp: '₹2,999 (Early Bird GA) • ₹3,999 (Phase 1 GA) • ₹7,499 (VIP Raised Deck)',
-                promoterYield: 'Earn ₹450 per pass (15% yield)',
-                poster: 'posters/fred-again-india-poster-1.webp',
-                posterAlt: 'Fred again.. USB India Tour Poster',
-                topSongs: [
-                    'Adore U (with Obongjayar)',
-                    'Danielle (smile on my face)',
-                    'Delilah (pull me out of this)',
-                    'Marea (we\'ve lost dancing) [with The Blessed Madonna]',
-                    'Jungle',
-                    'leavemealone (with Baby Keem)',
-                    'Rumble (with Skrillex & Flowdan)',
-                    'places to be (with Anderson .Paak & CHIKA)'
-                ],
-                overview: 'The Grammy-winning electronic pioneer brings his high-energy, emotionally raw USB live set to Bengaluru with custom stage lighting and live sampling.'
-            },
-            {
-                id: 'chainsmokers',
-                names: ['chainsmokers', 'the chainsmokers', 'drew taggart', 'alex pall', 'goa', 'vagator'],
-                artist: 'The Chainsmokers',
-                tour: 'The Chainsmokers Arena India — Goa Year-End Showcase',
-                genre: 'EDM / Dance Pop / Festival',
-                date: 'Wednesday, 30 December 2026',
-                timings: 'Gates Open: 5:00 PM • Festival Openers: 6:30 PM • The Chainsmokers Headline Set: 9:00 PM – 11:00 PM IST',
-                venue: 'Vagator Hilltop Arena, Vagator, North Goa',
-                mrp: '₹3,999 (GA) • ₹8,499 (VIP Sunset Lounge)',
-                promoterYield: 'Earn ₹480 per pass (12% yield)',
-                poster: 'posters/chainsmokers-bengaluru-banner.webp',
-                posterAlt: 'The Chainsmokers Arena India Goa Poster',
-                topSongs: [
-                    'Closer (feat. Halsey)',
-                    'Something Just Like This (with Coldplay)',
-                    'Don\'t Let Me Down (feat. Daya)',
-                    'Roses (feat. ROZES)',
-                    'Paris',
-                    'Takeaway (with ILLENIUM feat. Lennon Stella)',
-                    'Side Effects (feat. Emily Warren)',
-                    'High'
-                ],
-                overview: 'Celebrate the year-end in Goa with the multi-platinum chart-toppers The Chainsmokers, featuring massive live pyrotechnics, anthemic hits, and sunset festival vibes.'
-            },
-            {
-                id: 'karanaujla',
-                names: ['karan aujla', 'aujla', 'geetan di machine', 'chandigarh', 'dream tour'],
-                artist: 'Karan Aujla',
-                tour: 'Karan Aujla — It Was All A Dream India Tour',
-                genre: 'Punjabi Hip-Hop / Pop',
-                date: 'Sunday, 18 October 2026',
-                timings: 'Gates Open: 4:30 PM • Opening Acts: 6:00 PM • Karan Aujla Live: 7:30 PM – 10:00 PM IST',
-                venue: 'Sector 34 Exhibition Grounds, Chandigarh (Also touring Delhi NCR & Mumbai)',
-                mrp: '₹2,499 (Silver Stand) • ₹4,999 (Gold Pitch) • ₹7,999 (VIP Fan Pit)',
-                promoterYield: 'Earn ₹375 per pass (15% yield)',
-                poster: 'posters/karan-aujla-poster-1.webp',
-                posterAlt: 'Karan Aujla It Was All A Dream Tour Poster',
-                topSongs: [
-                    'Tauba Tauba (from Bad Newz)',
-                    'Softly (Making Memories album)',
-                    'Winning Speech',
-                    'Antidote',
-                    'White Brown Black (with Avvy Sra)',
-                    '52 Bars',
-                    'Admiring You (feat. Preston Pablo)',
-                    'Chitta Kurta',
-                    'Mexico'
-                ],
-                overview: 'Global Punjabi powerhouse Karan Aujla performs chart-shattering records from "Making Memories" and "Four Me" backed by a 14-piece live band.'
-            },
-            {
-                id: 'boris',
-                names: ['boris brejcha', 'boris', 'joker', 'high tech minimal', 'minimal'],
-                artist: 'Boris Brejcha',
-                tour: 'Boris Brejcha In Concert — New Delhi Edition',
-                genre: 'High-Tech Minimal Techno',
-                date: 'Friday, 16 January 2026',
-                timings: 'Doors Open: 6:00 PM • Supporting DJs: 7:00 PM • Boris Brejcha 3-Hour Headliner Set: 9:30 PM – 12:30 AM IST',
-                venue: 'Indira Gandhi Indoor Arena, New Delhi',
-                mrp: '₹2,799 (GA) • ₹6,499 (VIP Stage Enclosure)',
-                promoterYield: 'Earn ₹390 per pass (14% yield)',
-                poster: 'posters/boris-brejcha-india-poster.webp',
-                posterAlt: 'Boris Brejcha In Concert Delhi Poster',
-                topSongs: [
-                    'Gravity (feat. Laura Korinth)',
-                    'Purple Noise',
-                    'Space X',
-                    'House Music',
-                    'Take It Smart',
-                    'Level One',
-                    'Vienna (feat. Malena Narvay)',
-                    'Liebe Will'
-                ],
-                overview: 'Donning his signature Venetian carnival Joker mask, Boris Brejcha delivers his mesmerizing, signature High-Tech Minimal soundscapes.'
-            },
-            {
-                id: 'martingarrix',
-                names: ['martin garrix', 'garrix', 'stmpd', 'dy patil', 'animals'],
-                artist: 'Martin Garrix',
-                tour: 'Martin Garrix India Arena Tour — Mumbai Special',
-                genre: 'EDM / Progressive House / Electro',
-                date: 'Saturday, 20 February 2026',
-                timings: 'Gates Open: 4:00 PM • STMPD RCRDS Showcase: 5:30 PM • Martin Garrix Headline Show: 8:00 PM – 10:15 PM IST',
-                venue: 'DY Patil Stadium, Nerul, Navi Mumbai',
-                mrp: '₹3,299 (GA) • ₹6,999 (Arena Gold) • ₹12,999 (VIP Platinum)',
-                promoterYield: 'Earn ₹460 per pass (14% yield)',
-                poster: 'posters/martin-garrix-india-poster.webp',
-                posterAlt: 'Martin Garrix India Arena Tour Poster',
-                topSongs: [
-                    'Animals',
-                    'Scared to Be Lonely (with Dua Lipa)',
-                    'In the Name of Love (with Bebe Rexha)',
-                    'High on Life (feat. Bonn)',
-                    'Summer Days (feat. Macklemore & Patrick Stump)',
-                    'Tremor (with Dimitri Vegas & Like Mike)',
-                    'Starlight (Keep Me Afloat)',
-                    'Pressure (feat. Tove Lo)'
-                ],
-                overview: '4-time World No.1 DJ Martin Garrix lights up Mumbai with a breathtaking stadium laser array, pyrotechnics, and timeless festival anthems.'
-            },
-            {
-                id: 'dualipa',
-                names: ['dua lipa', 'dua', 'radical optimism', 'bkc', 'levitating'],
-                artist: 'Dua Lipa',
-                tour: 'Dua Lipa — Radical Optimism World Tour India',
-                genre: 'Dance-Pop / Nu-Disco',
-                date: 'Sunday, 15 March 2026',
-                timings: 'Gates Open: 4:00 PM • Support Acts: 6:00 PM • Dua Lipa Live on Stage: 8:00 PM – 10:00 PM IST',
-                venue: 'MMRDA Grounds, Bandra-Kurla Complex (BKC), Mumbai',
-                mrp: '₹4,499 (Silver GA) • ₹9,999 (Gold Pitch) • ₹16,999 (Diamond Lounge)',
-                promoterYield: 'Earn ₹580 per pass (13% yield)',
-                poster: 'posters/dua-lipa-india-poster.webp',
-                posterAlt: 'Dua Lipa Radical Optimism Tour Poster',
-                topSongs: [
-                    'Levitating',
-                    "Don't Start Now",
-                    'Houdini',
-                    'Training Season',
-                    'Dance the Night (from Barbie The Album)',
-                    'New Rules',
-                    'Physical',
-                    'One Kiss (with Calvin Harris)',
-                    'Break My Heart'
-                ],
-                overview: 'Global pop superstar Dua Lipa brings her dazzling Radical Optimism stadium spectacular to Mumbai with full choreography, live brass, and disco-pop anthems.'
-            }
-        ];
-
-        const CHAT_SUGGESTIONS = [
-            "Anyma Mumbai info",
-            "Karan Aujla songs",
-            "Guns N' Roses timings",
-            "Fred again.. venue",
-            "Chainsmokers Goa",
-            "Promoter payouts"
-        ];
-
-        let isChatOpen = false;
-
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function toggleChatbot() {
-            const widget = document.getElementById('ai-chat-widget');
-            if (!widget) return;
-
-            isChatOpen = !isChatOpen;
-            if (isChatOpen) {
-                widget.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
-                widget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
-                const input = document.getElementById('chat-input');
-                if (input) setTimeout(() => input.focus(), 200);
-            } else {
-                widget.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
-                widget.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
-            }
-        }
-
-        function resetChat() {
-            renderInitialGreeting();
-        }
-
-        function renderSuggestions() {
-            const container = document.getElementById('chat-suggestions');
-            if (!container) return;
-            container.innerHTML = CHAT_SUGGESTIONS.map(s =>
-                `<button onclick="askQuestion('${s.replace(/'/g, "\\'")}')" class="whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 hover:text-white border border-white/[0.08] transition-colors flex-shrink-0">
-                    ${s}
-                </button>`
-            ).join('');
-        }
-
-        function renderInitialGreeting() {
-            const container = document.getElementById('chat-messages');
-            if (!container) return;
-            container.innerHTML = `
-                <div class="flex items-start space-x-2.5">
-                    <div class="w-6 h-6 rounded-full bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div class="bg-[#121622] border border-white/[0.08] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
-                        <p>
-                            Hi! I'm <strong class="text-white">Tixora AI</strong>.
-                        </p>
-                        <p class="text-xs text-slate-300">
-                            I can tell you about official tour posters, venues, gate timings, and top songs for artists like Anyma, Guns N' Roses, Fred again.., Karan Aujla, The Chainsmokers, and Dua Lipa — plus promoter commissions and instant UPI settlements.
-                        </p>
-                        <p class="text-[11px] text-slate-400 pt-0.5">
-                            Tap a quick topic below or type your question:
-                        </p>
-                    </div>
-                </div>
-            `;
-            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-            renderSuggestions();
-        }
-
-        function appendUserMessage(text) {
-            const container = document.getElementById('chat-messages');
-            if (!container) return;
-            const msgHtml = `
-                <div class="flex items-start justify-end space-x-2">
-                    <div class="bg-crimson text-white rounded-2xl rounded-tr-none px-3.5 py-2 max-w-[85%] leading-relaxed shadow-md font-medium text-xs break-words">
-                        ${escapeHtml(text)}
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', msgHtml);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendBotResponse(item) {
-            const container = document.getElementById('chat-messages');
-            if (!container) return;
-
-            let actionsHtml = '';
-            if (item.actions && item.actions.length > 0) {
-                actionsHtml = `
-                    <div class="pt-2 flex flex-wrap gap-1.5">
-                        ${item.actions.map(act =>
-                    `<button onclick="${act.action}" class="px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-crimson hover:text-white border border-white/[0.12] text-slate-200 text-[10px] tracking-tight transition-all active:scale-95">
-                                ${act.label} →
-                            </button>`
-                ).join('')}
-                    </div>
-                `;
-            }
-
-            const botHtml = `
-                <div class="flex items-start space-x-2.5">
-                    <div class="w-6 h-6 rounded-full bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                    </div>
-                    <div class="bg-[#121622] border border-white/[0.08] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
-                        ${item.title ? `<div class="font-bold text-white font-display text-[12px] pb-0.5 border-b border-white/[0.08]">${item.title}</div>` : ''}
-                        <div>${item.answer}</div>
-                        ${actionsHtml}
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', botHtml);
-            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function escapeHtml(string) {
-            const div = document.createElement('div');
-            div.innerText = string;
-            return div.innerHTML;
-        }
-
-        function findEventByQuery(q) {
-            const clean = q.toLowerCase();
-            return TIXORA_EVENTS_DB.find(ev => ev.names.some(n => clean.includes(n)));
-        }
-
-        function findBestAnswer(query) {
-            const clean = query.toLowerCase().trim();
-
-            // 1. Simple greetings
-            if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|\s|[!?.])/i.test(clean)) {
-                return {
-                    title: 'Welcome to Tixora AI',
-                    answer: 'Hello! What can I help you discover today? Ask me about upcoming concert venues, timings, artist top songs, or promoter payouts.',
-                    actions: [
-                        { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
-                        { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
-                        { label: 'Tour Posters', action: "askQuestion('Show posters')" },
-                        { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
-                    ]
-                };
-            }
-
-            // 2. Specific artist / tour match
-            const ev = findEventByQuery(clean);
-
-            if (ev) {
-                // Popular songs
-                if (/song|songs|track|tracks|hit|hits|music|sing|discography|setlist|album/i.test(clean)) {
-                    return {
-                        title: ev.artist + ' — Top Songs & Hits',
-                        answer: '<div class="space-y-2">' +
-                            '<p class="text-slate-300">Here are the biggest hits and fan-favorite tracks by <strong class="text-white">' + ev.artist + '</strong>:</p>' +
-                            '<ol class="space-y-1 pl-0.5 text-xs">' +
-                            ev.topSongs.map((s, idx) => '<li class="flex items-start space-x-2 text-slate-200"><span class="w-4 text-crimson font-mono font-semibold flex-shrink-0">' + (idx + 1) + '.</span><span>' + s + '</span></li>').join('') +
-                            '</ol>' +
-                            '<div class="pt-1 text-[11px] text-slate-400">Performing live at <strong>' + ev.venue.split(',')[0] + '</strong> on <strong>' + ev.date + '</strong>.</div>' +
-                            '</div>',
-                        actions: [
-                            { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" },
-                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
-                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
-                        ]
-                    };
-                }
-
-                // Venue & location
-                if (/venue|where|location|place|address|city|ground|stadium|racecourse|arena|map/i.test(clean)) {
-                    return {
-                        title: ev.artist + ' — Venue & Location',
-                        answer: '<div class="space-y-2">' +
-                            '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1.5 text-xs text-slate-300">' +
-                            '<div class="text-white font-semibold flex items-center space-x-1.5"><span>📍</span><span>' + ev.venue + '</span></div>' +
-                            '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
-                            '<div><strong>⏰ Timings:</strong> ' + ev.timings + '</div>' +
-                            '</div>' +
-                            '</div>',
-                        actions: [
-                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
-                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
-                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
-                        ]
-                    };
-                }
-
-                // Timings & schedule
-                if (/time|timings|timing|schedule|when|hour|hours|gate|gates|door|doors|start|starts|end/i.test(clean)) {
-                    return {
-                        title: ev.artist + ' — Timings & Schedule',
-                        answer: '<div class="space-y-2">' +
-                            '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1.5 text-xs text-slate-200">' +
-                            '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
-                            '<div><strong>⏰ Schedule:</strong> ' + ev.timings + '</div>' +
-                            '<div><strong>📍 Venue:</strong> ' + ev.venue + '</div>' +
-                            '</div>' +
-                            '<p class="text-[11px] text-slate-400">Gates open promptly. Turnstile dynamic QR barcode activates 3 hours prior to door opening.</p>' +
-                            '</div>',
-                        actions: [
-                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
-                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
-                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
-                        ]
-                    };
-                }
-
-                // Tour Poster
-                if (/poster|posters|image|photo|banner|artwork|picture/i.test(clean)) {
-                    return {
-                        title: ev.artist + ' — Official Tour Poster',
-                        answer: '<div class="space-y-2 text-center">' +
-                            '<div class="rounded-xl overflow-hidden border border-white/[0.1] bg-black max-w-[220px] mx-auto shadow-md">' +
-                            '<img src="' + ev.poster + '" alt="' + ev.posterAlt + '" class="w-full h-auto object-cover rounded-xl">' +
-                            '</div>' +
-                            '<div class="text-xs text-white font-semibold pt-1">' + ev.tour + '</div>' +
-                            '<div class="text-[11px] text-slate-400">' + ev.date + ' • ' + ev.venue.split(',')[0] + '</div>' +
-                            '</div>',
-                        actions: [
-                            { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" },
-                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
-                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
-                        ]
-                    };
-                }
-
-                // General artist details
-                return {
-                    title: ev.tour,
-                    answer: '<div class="space-y-2 text-xs text-slate-300">' +
-                        '<p>' + ev.overview + '</p>' +
-                        '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1 text-slate-300">' +
-                        '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
-                        '<div><strong>⏰ Schedule:</strong> ' + ev.timings.split('•')[0].trim() + '</div>' +
-                        '<div><strong>📍 Venue:</strong> ' + ev.venue + '</div>' +
-                        '<div><strong>🎟️ Starting MRP:</strong> ' + ev.mrp + '</div>' +
-                        '<div><strong>⚡ Promoter Yield:</strong> <span class="text-emerald-400 font-semibold">' + ev.promoterYield + '</span></div>' +
-                        '</div>' +
-                        '</div>',
-                    actions: [
-                        { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
-                        { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
-                        { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" }
-                    ]
-                };
-            }
-
-            // 3. General list of tours / concerts
-            if (/all tours|all concerts|concerts|all events|events|lineup|who is performing|tour list|concert list/i.test(clean)) {
-                return {
-                    title: 'Active 2026 Concert Roster',
-                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
-                        TIXORA_EVENTS_DB.map(e => '• <strong class="text-white">' + e.artist + '</strong>: ' + e.tour.replace(e.artist, '').replace('—', '').replace('Presents', '').trim() + ' (' + e.venue.split(',').slice(-2, -1)[0].trim() + ' • ' + e.mrp.split('•')[0].trim() + ')').join('<br>') +
-                        '</div>',
-                    actions: [
-                        { label: 'Browse Posters', action: "askQuestion('Show posters')" },
-                        { label: 'Explore Passes', action: "scrollToSection('events-track-container')" }
-                    ]
-                };
-            }
-
-            // 4. General posters query
-            if (/poster|posters|artwork/i.test(clean)) {
-                return {
-                    title: 'Official Tour Posters',
-                    answer: 'Select any artist below to view their official tour poster and pass allocations:',
-                    actions: TIXORA_EVENTS_DB.map(e => ({
-                        label: e.artist,
-                        action: "askQuestion('" + e.artist + " poster')"
-                    }))
-                };
-            }
-
-            // 5. General songs query
-            if (/song|songs|track|tracks|music/i.test(clean)) {
-                return {
-                    title: 'Artist Top Songs',
-                    answer: 'Select an artist to view their most popular hits and festival setlists:',
-                    actions: TIXORA_EVENTS_DB.map(e => ({
-                        label: e.artist,
-                        action: "askQuestion('" + e.artist + " popular songs')"
-                    }))
-                };
-            }
-
-            // 6. General venues query
-            if (/venue|venues|where|location|cities/i.test(clean)) {
-                return {
-                    title: 'Tour Venues & Host Cities',
-                    answer: '<div class="space-y-1 text-xs text-slate-300">' +
-                        '• <strong class="text-white">Mumbai</strong>: Mahalaxmi Racecourse (Anyma), DY Patil Stadium (Martin Garrix), MMRDA Grounds BKC (Dua Lipa)<br>' +
-                        '• <strong class="text-white">New Delhi</strong>: JLN Stadium (Guns N Roses), Indira Gandhi Arena (Boris Brejcha)<br>' +
-                        '• <strong class="text-white">Bengaluru</strong>: NICE Grounds BIEC (Fred again..)<br>' +
-                        '• <strong class="text-white">Goa</strong>: Vagator Hilltop Arena (The Chainsmokers)<br>' +
-                        '• <strong class="text-white">Chandigarh</strong>: Sector 34 Exhibition Grounds (Karan Aujla)' +
-                        '</div>',
-                    actions: [
-                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
-                    ]
-                };
-            }
-
-            // 7. General timings query
-            if (/time|timings|timing|schedule|when|dates/i.test(clean)) {
-                return {
-                    title: 'Tour Dates & Gate Opening Timings',
-                    answer: '<div class="space-y-1 text-xs text-slate-300">' +
-                        '• <strong class="text-white">Karan Aujla</strong>: 18 Oct 2026 • Gates 4:30 PM (Chandigarh)<br>' +
-                        '• <strong class="text-white">Anyma</strong>: 21 Nov 2026 • Gates 5:00 PM (Mumbai)<br>' +
-                        '• <strong class="text-white">Guns N Roses</strong>: 05 Dec 2026 • Gates 4:30 PM (Delhi)<br>' +
-                        '• <strong class="text-white">Fred again..</strong>: 12 Dec 2026 • Gates 4:00 PM (Bengaluru)<br>' +
-                        '• <strong class="text-white">The Chainsmokers</strong>: 30 Dec 2026 • Gates 5:00 PM (Goa)<br>' +
-                        '• <strong class="text-white">Boris Brejcha</strong>: 16 Jan 2026 • Doors 6:00 PM (Delhi)<br>' +
-                        '• <strong class="text-white">Martin Garrix</strong>: 20 Feb 2026 • Gates 4:00 PM (Mumbai)<br>' +
-                        '• <strong class="text-white">Dua Lipa</strong>: 15 Mar 2026 • Gates 4:00 PM (Mumbai)' +
-                        '</div>',
-                    actions: [
-                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
-                    ]
-                };
-            }
-
-            // 8. Promoter Commissions
-            if (/commission|earn|yield|rate|money|tier/i.test(clean)) {
-                return {
-                    title: 'Promoter Commission Structure',
-                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
-                        'Promoters earn tiered commissions on every pass scanned at the gate:<br>' +
-                        '• <strong class="text-white">Tier 1 (Scout)</strong>: 8.0% commission<br>' +
-                        '• <strong class="text-white">Tier 2 (Capo)</strong>: 11.0% commission + priority guestlist<br>' +
-                        '• <strong class="text-white">Tier 3 (Syndicate)</strong>: 13.5% commission + VIP lounge<br>' +
-                        '• <strong class="text-white">Tier 4 (Patron)</strong>: 16.0% commission + dedicated tour quota<br><br>' +
-                        'Zero deposit required. Automated UPI payouts settle in under 60 seconds.' +
-                        '</div>',
-                    actions: [
-                        { label: 'Calculate Yields', action: "scrollToSection('velocity-matrix')" },
-                        { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
-                    ]
-                };
-            }
-
-            // 9. Instant UPI Payouts
-            if (/payout|upi|settle|withdraw|bank|transfer/i.test(clean)) {
-                return {
-                    title: 'Instant UPI Settlement (<60s)',
-                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
-                        'Commissions are sent automatically via our direct NPCI settlement bridge:<br>' +
-                        '• Deposited within <strong class="text-white">&lt;60 seconds</strong> of gate turnstile verification.<br>' +
-                        '• Directly to your registered UPI ID (GPay, PhonePe, Paytm, BHIM).<br>' +
-                        '• Zero lock-in, zero minimum balance threshold.' +
-                        '</div>',
-                    actions: [
-                        { label: 'Register UPI Handle', action: "openModal('promoter-modal')" }
-                    ]
-                };
-            }
-
-            // 10. Anti-scalping & Legitimacy
-            if (/scalp|fake|legit|real|bot|authentic|bookmyshow|district/i.test(clean)) {
-                return {
-                    title: 'Official Primary Allocations & Anti-Scalp Mesh',
-                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
-                        'Tixora provides 100% authentic primary tour passes directly from BookMyShow and partner organizers:<br>' +
-                        '• <strong class="text-white">Dynamic Turnstile Barcodes</strong>: Time-rotating QR codes prevent screenshots and scalper resale.<br>' +
-                        '• <strong class="text-white">Instant WhatsApp Delivery</strong>: Digital passes delivered immediately upon booking.' +
-                        '</div>',
-                    actions: [
-                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
-                    ]
-                };
-            }
-
-            // 11. Founders
-            if (/founder|founders|who made|team|ronak|kanishk|prajwal/i.test(clean)) {
-                return {
-                    title: 'Tixora Protocol Leadership',
-                    answer: 'Tixora was founded by <strong class="text-white">Ronak Jain R</strong>, <strong class="text-white">Kanishk Jhunjhunwala</strong>, and <strong class="text-white">Prajwal Gowrish H S</strong> as an authorized live concert partner network and promoter distribution protocol.',
-                    actions: [
-                        { label: 'View Leadership Section', action: "scrollToSection('founders-section')" }
-                    ]
-                };
-            }
-
-            // Fallback
-            return {
-                title: 'Tixora AI Assistant',
-                answer: 'I can help with live concert venues, gate timings, official posters, and popular songs for any artist on tour, as well as promoter commission payouts.<br><br>What would you like to know?',
-                actions: [
-                    { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
-                    { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
-                    { label: 'Fred again.. Poster', action: "askQuestion('Fred again poster')" },
-                    { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
-                ]
-            };
-        }
-
-        function handleChatSubmit(e) {
-            if (e) e.preventDefault();
-            const input = document.getElementById('chat-input');
-            if (!input) return;
-            const query = input.value.trim();
-            if (!query) return;
-
-            input.value = '';
-            askQuestion(query);
-        }
-
-        function askQuestion(query) {
-            if (!isChatOpen) toggleChatbot();
-
-            appendUserMessage(query);
-
-            const typing = document.getElementById('chat-typing');
-            if (typing) typing.classList.remove('hidden');
-
-            const container = document.getElementById('chat-messages');
-            if (container) container.scrollTop = container.scrollHeight;
-
-            setTimeout(() => {
-                if (typing) typing.classList.add('hidden');
-                const answer = findBestAnswer(query);
-                appendBotResponse(answer);
-            }, 300);
-        }
-
-        function initChatbot() {
-            renderInitialGreeting();
-        }
-
-
-    </script>
-
-    <style>
+    </script><style>
         :root {
             --bg-void: #050608;
             --bg-card: #0d1019;
@@ -1519,7 +881,7 @@
 
                     <!-- Brand Logo -->
                     <a href="/" class="flex items-center space-x-3 py-0.5" aria-label="Tixora Homepage">
-                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32"
+                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" loading="eager" decoding="async"
                             class="h-7 sm:h-8 w-auto object-contain">
                     </a>
 
@@ -2760,7 +2122,7 @@
                 <!-- Col 1: Brand & Credibility (Spans 2 cols on lg) -->
                 <div class="lg:col-span-2 space-y-4">
                     <a href="/" class="flex items-center space-x-3 group" aria-label="Tixora Homepage">
-                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" class="h-8 w-auto object-contain">
+                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" loading="lazy" decoding="async" class="h-8 w-auto object-contain">
                     </a>
                     <p class="text-xs text-slate-300 max-w-sm leading-relaxed">
                         Authorized primary live concert ticket allocations &amp; automated promoter clearing protocol. Delivering guaranteed genuine passes and instant UPI performance payouts for India's biggest music tours.
@@ -2962,7 +2324,7 @@
             <!-- CONTAINER B: PROMOTER AUTHENTICATION (SIGN IN / REGISTER) -->
             <div id="promoter-auth-view" class="space-y-4">
                 <div class="text-center space-y-1">
-                    <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-1.5 object-contain">
+                    <img src="tixora-logo.png" alt="TIXORA" width="128" height="32" loading="lazy" decoding="async" class="h-8 w-auto mx-auto mb-1.5 object-contain">
                     <h3 class="text-2xl font-bold text-white">Promoter Network Access</h3>
                     <p class="text-xs text-slate-300">Authorized partner login & official youth promoter registration
                     </p>
@@ -3782,9 +3144,656 @@
                 showToast(type === 'essential' ? 'Essential cookies recorded.' : 'All cookies approved.');
             }
         };
+    </script>
 
-        // Initialize cookie banner & chat
-        document.addEventListener('DOMContentLoaded', () => { initCookieBanner(); initChatbot(); });
+    <!-- Tixora AI Chat Engine -->
+    <script>
+        /* =====================================================================
+           TIXORA AI CHAT ENGINE
+           ===================================================================== */
+        const TIXORA_EVENTS_DB = [
+            {
+                id: 'anyma',
+                names: ['anyma', 'genesys', 'tale of us', 'matteo milleri', 'afterlife'],
+                artist: 'Anyma',
+                tour: 'Anyma Presents Genesys Live Mumbai',
+                genre: 'Melodic Techno / Immersive Audio-Visual',
+                date: 'Saturday, 21 November 2026',
+                timings: 'Gates Open: 5:00 PM • Show: 6:30 PM – 10:30 PM IST',
+                venue: 'Mahalaxmi Racecourse, Mumbai, Maharashtra',
+                mrp: '₹3,499 (GA Standard) • ₹6,999 (VIP)',
+                promoterYield: 'Earn ₹490 per pass (14% yield)',
+                poster: 'posters/anyma-aeden-poster-1.webp',
+                posterAlt: 'Anyma Genesys Live Mumbai Poster',
+                topSongs: [
+                    'Eternity (with Chris Avantgarde)',
+                    'Syren (with Rebūke)',
+                    'Explore Your Future',
+                    'Save Me (with Cassian & Poppy Baskcomb)',
+                    'Pictures of You',
+                    'The Sign (with CamelPhat)',
+                    'Running (feat. Meg Myers)'
+                ],
+                overview: 'The global visual-techno sensation Anyma brings his mind-bending Genesys audio-visual production to Mumbai for a monolithic open-air spectacle at Mahalaxmi Racecourse.'
+            },
+            {
+                id: 'gnr',
+                names: ['guns n roses', 'guns n\' roses', 'guns and roses', 'gnr', 'axl rose', 'slash', 'delhi'],
+                artist: "Guns N' Roses",
+                tour: "Guns N' Roses Live in Delhi — 2026 Stadium Tour",
+                genre: 'Hard Rock / Classic Rock',
+                date: 'Saturday, 05 December 2026',
+                timings: 'Gates Open: 4:30 PM • Opening Act: 6:00 PM • GNR Live: 7:30 PM – 10:30 PM (Full 3-Hour Stadium Set)',
+                venue: 'Jawaharlal Nehru (JLN) Stadium, New Delhi',
+                mrp: '₹4,999 (Silver Stand) • ₹8,999 (Gold Pitch) • ₹14,999 (Platinum Fan Pit)',
+                promoterYield: 'Earn ₹600 per pass (12% yield)',
+                poster: 'posters/guns-n-roses-india-poster.webp',
+                posterAlt: "Guns N' Roses Live in Delhi Poster",
+                topSongs: [
+                    "Sweet Child O' Mine",
+                    'November Rain',
+                    'Welcome to the Jungle',
+                    'Paradise City',
+                    "Don't Cry",
+                    "Knockin' on Heaven's Door",
+                    'Patience',
+                    'Civil War'
+                ],
+                overview: 'Rock and Roll Hall of Famers Axl Rose, Slash, and Duff McKagan bring their full stadium world tour production to New Delhi for an epic 3-hour rock journey.'
+            },
+            {
+                id: 'fredagain',
+                names: ['fred again', 'fred again..', 'fred', 'fredagain', 'usb', 'bengaluru', 'bangalore'],
+                artist: 'Fred again..',
+                tour: 'Fred again.. USB India Tour 2026',
+                genre: 'Electronic / UK Garage / House',
+                date: 'Saturday, 12 December 2026',
+                timings: 'Gates Open: 4:00 PM • Support DJ Sets: 5:30 PM • Fred again.. Live: 8:00 PM – 10:15 PM IST',
+                venue: 'NICE Grounds, BIEC, Tumkur Road, Bengaluru',
+                mrp: '₹2,999 (Early Bird GA) • ₹3,999 (Phase 1 GA) • ₹7,499 (VIP Raised Deck)',
+                promoterYield: 'Earn ₹450 per pass (15% yield)',
+                poster: 'posters/fred-again-india-poster-1.webp',
+                posterAlt: 'Fred again.. USB India Tour Poster',
+                topSongs: [
+                    'Adore U (with Obongjayar)',
+                    'Danielle (smile on my face)',
+                    'Delilah (pull me out of this)',
+                    'Marea (we\'ve lost dancing) [with The Blessed Madonna]',
+                    'Jungle',
+                    'leavemealone (with Baby Keem)',
+                    'Rumble (with Skrillex & Flowdan)',
+                    'places to be (with Anderson .Paak & CHIKA)'
+                ],
+                overview: 'The Grammy-winning electronic pioneer brings his high-energy, emotionally raw USB live set to Bengaluru with custom stage lighting and live sampling.'
+            },
+            {
+                id: 'chainsmokers',
+                names: ['chainsmokers', 'the chainsmokers', 'drew taggart', 'alex pall', 'goa', 'vagator'],
+                artist: 'The Chainsmokers',
+                tour: 'The Chainsmokers Arena India — Goa Year-End Showcase',
+                genre: 'EDM / Dance Pop / Festival',
+                date: 'Wednesday, 30 December 2026',
+                timings: 'Gates Open: 5:00 PM • Festival Openers: 6:30 PM • The Chainsmokers Headline Set: 9:00 PM – 11:00 PM IST',
+                venue: 'Vagator Hilltop Arena, Vagator, North Goa',
+                mrp: '₹3,999 (GA) • ₹8,499 (VIP Sunset Lounge)',
+                promoterYield: 'Earn ₹480 per pass (12% yield)',
+                poster: 'posters/chainsmokers-bengaluru-banner.webp',
+                posterAlt: 'The Chainsmokers Arena India Goa Poster',
+                topSongs: [
+                    'Closer (feat. Halsey)',
+                    'Something Just Like This (with Coldplay)',
+                    'Don\'t Let Me Down (feat. Daya)',
+                    'Roses (feat. ROZES)',
+                    'Paris',
+                    'Takeaway (with ILLENIUM feat. Lennon Stella)',
+                    'Side Effects (feat. Emily Warren)',
+                    'High'
+                ],
+                overview: 'Celebrate the year-end in Goa with the multi-platinum chart-toppers The Chainsmokers, featuring massive live pyrotechnics, anthemic hits, and sunset festival vibes.'
+            },
+            {
+                id: 'karanaujla',
+                names: ['karan aujla', 'aujla', 'geetan di machine', 'chandigarh', 'dream tour'],
+                artist: 'Karan Aujla',
+                tour: 'Karan Aujla — It Was All A Dream India Tour',
+                genre: 'Punjabi Hip-Hop / Pop',
+                date: 'Sunday, 18 October 2026',
+                timings: 'Gates Open: 4:30 PM • Opening Acts: 6:00 PM • Karan Aujla Live: 7:30 PM – 10:00 PM IST',
+                venue: 'Sector 34 Exhibition Grounds, Chandigarh (Also touring Delhi NCR & Mumbai)',
+                mrp: '₹2,499 (Silver Stand) • ₹4,999 (Gold Pitch) • ₹7,999 (VIP Fan Pit)',
+                promoterYield: 'Earn ₹375 per pass (15% yield)',
+                poster: 'posters/karan-aujla-poster-1.webp',
+                posterAlt: 'Karan Aujla It Was All A Dream Tour Poster',
+                topSongs: [
+                    'Tauba Tauba (from Bad Newz)',
+                    'Softly (Making Memories album)',
+                    'Winning Speech',
+                    'Antidote',
+                    'White Brown Black (with Avvy Sra)',
+                    '52 Bars',
+                    'Admiring You (feat. Preston Pablo)',
+                    'Chitta Kurta',
+                    'Mexico'
+                ],
+                overview: 'Global Punjabi powerhouse Karan Aujla performs chart-shattering records from "Making Memories" and "Four Me" backed by a 14-piece live band.'
+            },
+            {
+                id: 'boris',
+                names: ['boris brejcha', 'boris', 'joker', 'high tech minimal', 'minimal'],
+                artist: 'Boris Brejcha',
+                tour: 'Boris Brejcha In Concert — New Delhi Edition',
+                genre: 'High-Tech Minimal Techno',
+                date: 'Friday, 16 January 2026',
+                timings: 'Doors Open: 6:00 PM • Supporting DJs: 7:00 PM • Boris Brejcha 3-Hour Headliner Set: 9:30 PM – 12:30 AM IST',
+                venue: 'Indira Gandhi Indoor Arena, New Delhi',
+                mrp: '₹2,799 (GA) • ₹6,499 (VIP Stage Enclosure)',
+                promoterYield: 'Earn ₹390 per pass (14% yield)',
+                poster: 'posters/boris-brejcha-india-poster.webp',
+                posterAlt: 'Boris Brejcha In Concert Delhi Poster',
+                topSongs: [
+                    'Gravity (feat. Laura Korinth)',
+                    'Purple Noise',
+                    'Space X',
+                    'House Music',
+                    'Take It Smart',
+                    'Level One',
+                    'Vienna (feat. Malena Narvay)',
+                    'Liebe Will'
+                ],
+                overview: 'Donning his signature Venetian carnival Joker mask, Boris Brejcha delivers his mesmerizing, signature High-Tech Minimal soundscapes.'
+            },
+            {
+                id: 'martingarrix',
+                names: ['martin garrix', 'garrix', 'stmpd', 'dy patil', 'animals'],
+                artist: 'Martin Garrix',
+                tour: 'Martin Garrix India Arena Tour — Mumbai Special',
+                genre: 'EDM / Progressive House / Electro',
+                date: 'Saturday, 20 February 2026',
+                timings: 'Gates Open: 4:00 PM • STMPD RCRDS Showcase: 5:30 PM • Martin Garrix Headline Show: 8:00 PM – 10:15 PM IST',
+                venue: 'DY Patil Stadium, Nerul, Navi Mumbai',
+                mrp: '₹3,299 (GA) • ₹6,999 (Arena Gold) • ₹12,999 (VIP Platinum)',
+                promoterYield: 'Earn ₹460 per pass (14% yield)',
+                poster: 'posters/martin-garrix-india-poster.webp',
+                posterAlt: 'Martin Garrix India Arena Tour Poster',
+                topSongs: [
+                    'Animals',
+                    'Scared to Be Lonely (with Dua Lipa)',
+                    'In the Name of Love (with Bebe Rexha)',
+                    'High on Life (feat. Bonn)',
+                    'Summer Days (feat. Macklemore & Patrick Stump)',
+                    'Tremor (with Dimitri Vegas & Like Mike)',
+                    'Starlight (Keep Me Afloat)',
+                    'Pressure (feat. Tove Lo)'
+                ],
+                overview: '4-time World No.1 DJ Martin Garrix lights up Mumbai with a breathtaking stadium laser array, pyrotechnics, and timeless festival anthems.'
+            },
+            {
+                id: 'dualipa',
+                names: ['dua lipa', 'dua', 'radical optimism', 'bkc', 'levitating'],
+                artist: 'Dua Lipa',
+                tour: 'Dua Lipa — Radical Optimism World Tour India',
+                genre: 'Dance-Pop / Nu-Disco',
+                date: 'Sunday, 15 March 2026',
+                timings: 'Gates Open: 4:00 PM • Support Acts: 6:00 PM • Dua Lipa Live on Stage: 8:00 PM – 10:00 PM IST',
+                venue: 'MMRDA Grounds, Bandra-Kurla Complex (BKC), Mumbai',
+                mrp: '₹4,499 (Silver GA) • ₹9,999 (Gold Pitch) • ₹16,999 (Diamond Lounge)',
+                promoterYield: 'Earn ₹580 per pass (13% yield)',
+                poster: 'posters/dua-lipa-india-poster.webp',
+                posterAlt: 'Dua Lipa Radical Optimism Tour Poster',
+                topSongs: [
+                    'Levitating',
+                    "Don't Start Now",
+                    'Houdini',
+                    'Training Season',
+                    'Dance the Night (from Barbie The Album)',
+                    'New Rules',
+                    'Physical',
+                    'One Kiss (with Calvin Harris)',
+                    'Break My Heart'
+                ],
+                overview: 'Global pop superstar Dua Lipa brings her dazzling Radical Optimism stadium spectacular to Mumbai with full choreography, live brass, and disco-pop anthems.'
+            }
+        ];
+
+        const CHAT_SUGGESTIONS = [
+            "Anyma Mumbai info",
+            "Karan Aujla songs",
+            "Guns N' Roses timings",
+            "Fred again.. venue",
+            "Chainsmokers Goa",
+            "Promoter payouts"
+        ];
+
+        let isChatOpen = false;
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function toggleChatbot() {
+            const widget = document.getElementById('ai-chat-widget');
+            if (!widget) return;
+
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                widget.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+                widget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
+                const input = document.getElementById('chat-input');
+                if (input) setTimeout(() => input.focus(), 200);
+            } else {
+                widget.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto');
+                widget.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function resetChat() {
+            renderInitialGreeting();
+        }
+
+        function renderSuggestions() {
+            const container = document.getElementById('chat-suggestions');
+            if (!container) return;
+            container.innerHTML = CHAT_SUGGESTIONS.map(s =>
+                `<button onclick="askQuestion('${s.replace(/'/g, "\\'")}')" class="whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 hover:text-white border border-white/[0.08] transition-colors flex-shrink-0">
+                    ${s}
+                </button>`
+            ).join('');
+        }
+
+        function renderInitialGreeting() {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            container.innerHTML = `
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-6 h-6 rounded-full bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-[#121622] border border-white/[0.08] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
+                        <p>
+                            Hi! I'm <strong class="text-white">Tixora AI</strong>.
+                        </p>
+                        <p class="text-xs text-slate-300">
+                            I can tell you about official tour posters, venues, gate timings, and top songs for artists like Anyma, Guns N' Roses, Fred again.., Karan Aujla, The Chainsmokers, and Dua Lipa — plus promoter commissions and instant UPI settlements.
+                        </p>
+                        <p class="text-[11px] text-slate-400 pt-0.5">
+                            Tap a quick topic below or type your question:
+                        </p>
+                    </div>
+                </div>
+            `;
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            renderSuggestions();
+        }
+
+        function appendUserMessage(text) {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+            const msgHtml = `
+                <div class="flex items-start justify-end space-x-2">
+                    <div class="bg-crimson text-white rounded-2xl rounded-tr-none px-3.5 py-2 max-w-[85%] leading-relaxed shadow-md font-medium text-xs break-words">
+                        ${escapeHtml(text)}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', msgHtml);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendBotResponse(item) {
+            const container = document.getElementById('chat-messages');
+            if (!container) return;
+
+            let actionsHtml = '';
+            if (item.actions && item.actions.length > 0) {
+                actionsHtml = `
+                    <div class="pt-2 flex flex-wrap gap-1.5">
+                        ${item.actions.map(act =>
+                    `<button onclick="${act.action}" class="px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-crimson hover:text-white border border-white/[0.12] text-slate-200 text-[10px] tracking-tight transition-all active:scale-95">
+                                ${act.label} →
+                            </button>`
+                ).join('')}
+                    </div>
+                `;
+            }
+
+            const botHtml = `
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-6 h-6 rounded-full bg-crimson/20 text-crimson flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    </div>
+                    <div class="bg-[#121622] border border-white/[0.08] rounded-2xl rounded-tl-none p-3 space-y-2 text-slate-300 max-w-[88%] leading-relaxed shadow-lg">
+                        ${item.title ? `<div class="font-bold text-white font-display text-[12px] pb-0.5 border-b border-white/[0.08]">${item.title}</div>` : ''}
+                        <div>${item.answer}</div>
+                        ${actionsHtml}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', botHtml);
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function escapeHtml(string) {
+            const div = document.createElement('div');
+            div.innerText = string;
+            return div.innerHTML;
+        }
+
+        function findEventByQuery(q) {
+            const clean = q.toLowerCase();
+            return TIXORA_EVENTS_DB.find(ev => ev.names.some(n => clean.includes(n)));
+        }
+
+        function findBestAnswer(query) {
+            const clean = query.toLowerCase().trim();
+
+            // 1. Simple greetings
+            if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|\s|[!?.])/i.test(clean)) {
+                return {
+                    title: 'Welcome to Tixora AI',
+                    answer: 'Hello! What can I help you discover today? Ask me about upcoming concert venues, timings, artist top songs, or promoter payouts.',
+                    actions: [
+                        { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
+                        { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
+                        { label: 'Tour Posters', action: "askQuestion('Show posters')" },
+                        { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
+                    ]
+                };
+            }
+
+            // 2. Specific artist / tour match
+            const ev = findEventByQuery(clean);
+
+            if (ev) {
+                // Popular songs
+                if (/song|songs|track|tracks|hit|hits|music|sing|discography|setlist|album/i.test(clean)) {
+                    return {
+                        title: ev.artist + ' — Top Songs & Hits',
+                        answer: '<div class="space-y-2">' +
+                            '<p class="text-slate-300">Here are the biggest hits and fan-favorite tracks by <strong class="text-white">' + ev.artist + '</strong>:</p>' +
+                            '<ol class="space-y-1 pl-0.5 text-xs">' +
+                            ev.topSongs.map((s, idx) => '<li class="flex items-start space-x-2 text-slate-200"><span class="w-4 text-crimson font-mono font-semibold flex-shrink-0">' + (idx + 1) + '.</span><span>' + s + '</span></li>').join('') +
+                            '</ol>' +
+                            '<div class="pt-1 text-[11px] text-slate-400">Performing live at <strong>' + ev.venue.split(',')[0] + '</strong> on <strong>' + ev.date + '</strong>.</div>' +
+                            '</div>',
+                        actions: [
+                            { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" },
+                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
+                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
+                        ]
+                    };
+                }
+
+                // Venue & location
+                if (/venue|where|location|place|address|city|ground|stadium|racecourse|arena|map/i.test(clean)) {
+                    return {
+                        title: ev.artist + ' — Venue & Location',
+                        answer: '<div class="space-y-2">' +
+                            '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1.5 text-xs text-slate-300">' +
+                            '<div class="text-white font-semibold flex items-center space-x-1.5"><span>📍</span><span>' + ev.venue + '</span></div>' +
+                            '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
+                            '<div><strong>⏰ Timings:</strong> ' + ev.timings + '</div>' +
+                            '</div>' +
+                            '</div>',
+                        actions: [
+                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
+                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
+                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
+                        ]
+                    };
+                }
+
+                // Timings & schedule
+                if (/time|timings|timing|schedule|when|hour|hours|gate|gates|door|doors|start|starts|end/i.test(clean)) {
+                    return {
+                        title: ev.artist + ' — Timings & Schedule',
+                        answer: '<div class="space-y-2">' +
+                            '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1.5 text-xs text-slate-200">' +
+                            '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
+                            '<div><strong>⏰ Schedule:</strong> ' + ev.timings + '</div>' +
+                            '<div><strong>📍 Venue:</strong> ' + ev.venue + '</div>' +
+                            '</div>' +
+                            '<p class="text-[11px] text-slate-400">Gates open promptly. Turnstile dynamic QR barcode activates 3 hours prior to door opening.</p>' +
+                            '</div>',
+                        actions: [
+                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
+                            { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
+                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
+                        ]
+                    };
+                }
+
+                // Tour Poster
+                if (/poster|posters|image|photo|banner|artwork|picture/i.test(clean)) {
+                    return {
+                        title: ev.artist + ' — Official Tour Poster',
+                        answer: '<div class="space-y-2 text-center">' +
+                            '<div class="rounded-xl overflow-hidden border border-white/[0.1] bg-black max-w-[220px] mx-auto shadow-md">' +
+                            '<img src="' + ev.poster + '" alt="' + ev.posterAlt + '" width="600" height="350" loading="lazy" decoding="async" class="w-full h-auto object-cover rounded-xl">' +
+                            '</div>' +
+                            '<div class="text-xs text-white font-semibold pt-1">' + ev.tour + '</div>' +
+                            '<div class="text-[11px] text-slate-400">' + ev.date + ' • ' + ev.venue.split(',')[0] + '</div>' +
+                            '</div>',
+                        actions: [
+                            { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" },
+                            { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
+                            { label: 'Reserve Pass', action: "scrollToSection('events-track-container')" }
+                        ]
+                    };
+                }
+
+                // General artist details
+                return {
+                    title: ev.tour,
+                    answer: '<div class="space-y-2 text-xs text-slate-300">' +
+                        '<p>' + ev.overview + '</p>' +
+                        '<div class="bg-[#161c28] p-3 rounded-xl border border-white/[0.08] space-y-1 text-slate-300">' +
+                        '<div><strong>📅 Date:</strong> ' + ev.date + '</div>' +
+                        '<div><strong>⏰ Schedule:</strong> ' + ev.timings.split('•')[0].trim() + '</div>' +
+                        '<div><strong>📍 Venue:</strong> ' + ev.venue + '</div>' +
+                        '<div><strong>🎟️ Starting MRP:</strong> ' + ev.mrp + '</div>' +
+                        '<div><strong>⚡ Promoter Yield:</strong> <span class="text-emerald-400 font-semibold">' + ev.promoterYield + '</span></div>' +
+                        '</div>' +
+                        '</div>',
+                    actions: [
+                        { label: 'Top Songs', action: "askQuestion('" + ev.artist + " popular songs')" },
+                        { label: 'Show Poster', action: "askQuestion('" + ev.artist + " poster')" },
+                        { label: 'Venue & Timings', action: "askQuestion('" + ev.artist + " venue and timings')" }
+                    ]
+                };
+            }
+
+            // 3. General list of tours / concerts
+            if (/all tours|all concerts|concerts|all events|events|lineup|who is performing|tour list|concert list/i.test(clean)) {
+                return {
+                    title: 'Active 2026 Concert Roster',
+                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
+                        TIXORA_EVENTS_DB.map(e => '• <strong class="text-white">' + e.artist + '</strong>: ' + e.tour.replace(e.artist, '').replace('—', '').replace('Presents', '').trim() + ' (' + e.venue.split(',').slice(-2, -1)[0].trim() + ' • ' + e.mrp.split('•')[0].trim() + ')').join('<br>') +
+                        '</div>',
+                    actions: [
+                        { label: 'Browse Posters', action: "askQuestion('Show posters')" },
+                        { label: 'Explore Passes', action: "scrollToSection('events-track-container')" }
+                    ]
+                };
+            }
+
+            // 4. General posters query
+            if (/poster|posters|artwork/i.test(clean)) {
+                return {
+                    title: 'Official Tour Posters',
+                    answer: 'Select any artist below to view their official tour poster and pass allocations:',
+                    actions: TIXORA_EVENTS_DB.map(e => ({
+                        label: e.artist,
+                        action: "askQuestion('" + e.artist + " poster')"
+                    }))
+                };
+            }
+
+            // 5. General songs query
+            if (/song|songs|track|tracks|music/i.test(clean)) {
+                return {
+                    title: 'Artist Top Songs',
+                    answer: 'Select an artist to view their most popular hits and festival setlists:',
+                    actions: TIXORA_EVENTS_DB.map(e => ({
+                        label: e.artist,
+                        action: "askQuestion('" + e.artist + " popular songs')"
+                    }))
+                };
+            }
+
+            // 6. General venues query
+            if (/venue|venues|where|location|cities/i.test(clean)) {
+                return {
+                    title: 'Tour Venues & Host Cities',
+                    answer: '<div class="space-y-1 text-xs text-slate-300">' +
+                        '• <strong class="text-white">Mumbai</strong>: Mahalaxmi Racecourse (Anyma), DY Patil Stadium (Martin Garrix), MMRDA Grounds BKC (Dua Lipa)<br>' +
+                        '• <strong class="text-white">New Delhi</strong>: JLN Stadium (Guns N Roses), Indira Gandhi Arena (Boris Brejcha)<br>' +
+                        '• <strong class="text-white">Bengaluru</strong>: NICE Grounds BIEC (Fred again..)<br>' +
+                        '• <strong class="text-white">Goa</strong>: Vagator Hilltop Arena (The Chainsmokers)<br>' +
+                        '• <strong class="text-white">Chandigarh</strong>: Sector 34 Exhibition Grounds (Karan Aujla)' +
+                        '</div>',
+                    actions: [
+                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
+                    ]
+                };
+            }
+
+            // 7. General timings query
+            if (/time|timings|timing|schedule|when|dates/i.test(clean)) {
+                return {
+                    title: 'Tour Dates & Gate Opening Timings',
+                    answer: '<div class="space-y-1 text-xs text-slate-300">' +
+                        '• <strong class="text-white">Karan Aujla</strong>: 18 Oct 2026 • Gates 4:30 PM (Chandigarh)<br>' +
+                        '• <strong class="text-white">Anyma</strong>: 21 Nov 2026 • Gates 5:00 PM (Mumbai)<br>' +
+                        '• <strong class="text-white">Guns N Roses</strong>: 05 Dec 2026 • Gates 4:30 PM (Delhi)<br>' +
+                        '• <strong class="text-white">Fred again..</strong>: 12 Dec 2026 • Gates 4:00 PM (Bengaluru)<br>' +
+                        '• <strong class="text-white">The Chainsmokers</strong>: 30 Dec 2026 • Gates 5:00 PM (Goa)<br>' +
+                        '• <strong class="text-white">Boris Brejcha</strong>: 16 Jan 2026 • Doors 6:00 PM (Delhi)<br>' +
+                        '• <strong class="text-white">Martin Garrix</strong>: 20 Feb 2026 • Gates 4:00 PM (Mumbai)<br>' +
+                        '• <strong class="text-white">Dua Lipa</strong>: 15 Mar 2026 • Gates 4:00 PM (Mumbai)' +
+                        '</div>',
+                    actions: [
+                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
+                    ]
+                };
+            }
+
+            // 8. Promoter Commissions
+            if (/commission|earn|yield|rate|money|tier/i.test(clean)) {
+                return {
+                    title: 'Promoter Commission Structure',
+                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
+                        'Promoters earn tiered commissions on every pass scanned at the gate:<br>' +
+                        '• <strong class="text-white">Tier 1 (Scout)</strong>: 8.0% commission<br>' +
+                        '• <strong class="text-white">Tier 2 (Capo)</strong>: 11.0% commission + priority guestlist<br>' +
+                        '• <strong class="text-white">Tier 3 (Syndicate)</strong>: 13.5% commission + VIP lounge<br>' +
+                        '• <strong class="text-white">Tier 4 (Patron)</strong>: 16.0% commission + dedicated tour quota<br><br>' +
+                        'Zero deposit required. Automated UPI payouts settle in under 60 seconds.' +
+                        '</div>',
+                    actions: [
+                        { label: 'Calculate Yields', action: "scrollToSection('velocity-matrix')" },
+                        { label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }
+                    ]
+                };
+            }
+
+            // 9. Instant UPI Payouts
+            if (/payout|upi|settle|withdraw|bank|transfer/i.test(clean)) {
+                return {
+                    title: 'Instant UPI Settlement (<60s)',
+                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
+                        'Commissions are sent automatically via our direct NPCI settlement bridge:<br>' +
+                        '• Deposited within <strong class="text-white">&lt;60 seconds</strong> of gate turnstile verification.<br>' +
+                        '• Directly to your registered UPI ID (GPay, PhonePe, Paytm, BHIM).<br>' +
+                        '• Zero lock-in, zero minimum balance threshold.' +
+                        '</div>',
+                    actions: [
+                        { label: 'Register UPI Handle', action: "openModal('promoter-modal')" }
+                    ]
+                };
+            }
+
+            // 10. Anti-scalping & Legitimacy
+            if (/scalp|fake|legit|real|bot|authentic|bookmyshow|district/i.test(clean)) {
+                return {
+                    title: 'Official Primary Allocations & Anti-Scalp Mesh',
+                    answer: '<div class="space-y-1.5 text-xs text-slate-300">' +
+                        'Tixora provides 100% authentic primary tour passes directly from BookMyShow and partner organizers:<br>' +
+                        '• <strong class="text-white">Dynamic Turnstile Barcodes</strong>: Time-rotating QR codes prevent screenshots and scalper resale.<br>' +
+                        '• <strong class="text-white">Instant WhatsApp Delivery</strong>: Digital passes delivered immediately upon booking.' +
+                        '</div>',
+                    actions: [
+                        { label: 'Explore Live Tours', action: "scrollToSection('events-track-container')" }
+                    ]
+                };
+            }
+
+            // 11. Founders
+            if (/founder|founders|who made|team|ronak|kanishk|prajwal/i.test(clean)) {
+                return {
+                    title: 'Tixora Protocol Leadership',
+                    answer: 'Tixora was founded by <strong class="text-white">Ronak Jain R</strong>, <strong class="text-white">Kanishk Jhunjhunwala</strong>, and <strong class="text-white">Prajwal Gowrish H S</strong> as an authorized live concert partner network and promoter distribution protocol.',
+                    actions: [
+                        { label: 'View Leadership Section', action: "scrollToSection('founders-section')" }
+                    ]
+                };
+            }
+
+            // Fallback
+            return {
+                title: 'Tixora AI Assistant',
+                answer: 'I can help with live concert venues, gate timings, official posters, and popular songs for any artist on tour, as well as promoter commission payouts.<br><br>What would you like to know?',
+                actions: [
+                    { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
+                    { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
+                    { label: 'Fred again.. Poster', action: "askQuestion('Fred again poster')" },
+                    { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
+                ]
+            };
+        }
+
+        function handleChatSubmit(e) {
+            if (e) e.preventDefault();
+            const input = document.getElementById('chat-input');
+            if (!input) return;
+            const query = input.value.trim();
+            if (!query) return;
+
+            input.value = '';
+            askQuestion(query);
+        }
+
+        function askQuestion(query) {
+            if (!isChatOpen) toggleChatbot();
+
+            appendUserMessage(query);
+
+            const typing = document.getElementById('chat-typing');
+            if (typing) typing.classList.remove('hidden');
+
+            const container = document.getElementById('chat-messages');
+            if (container) container.scrollTop = container.scrollHeight;
+
+            setTimeout(() => {
+                if (typing) typing.classList.add('hidden');
+                const answer = findBestAnswer(query);
+                appendBotResponse(answer);
+            }, 300);
+        }
+
+        function initChatbot() {
+            renderInitialGreeting();
+        }
+
+        // Initialize icons, cookies & chat on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+            initCookieBanner();
+            initChatbot();
+        });
 
     </script>
 
@@ -4244,7 +4253,7 @@
                 return `
                     <div class="thumpn-card-slot rounded-2xl overflow-hidden bg-[#0d1019] border border-[#1e2436] hover:border-slate-500 shadow-xl flex flex-col justify-between group transition-all duration-300">
                         <div class="relative h-60 sm:h-80 w-full overflow-hidden bg-black">
-                            <img src="${poster}" alt="${e.title}" class="thumpn-poster-img w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                            <img src="${poster}" alt="${e.title}" width="80" height="80" loading="lazy" decoding="async" class="thumpn-poster-img w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0D0F17]/80 via-transparent to-transparent"></div>
                             <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-mono font-bold bg-black/80 text-slate-400 border border-white/[0.08]">
                                 ${cut}% CUT

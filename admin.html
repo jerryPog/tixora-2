@@ -7,16 +7,21 @@
     <title>Tixora Operations Desk | Live Tour Inventory & Settlements</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- DNS Prefetch for External CDNs -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
     <!-- Supabase JS Client (v2) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <!-- Tixora Supabase Config -->
-    <script src="supabase-config.js"></script>
+    <script src="supabase-config.js" defer></script>
     <!-- Tixora Supabase Auth & RBAC Route Guard Protocol -->
-    <script src="auth.js"></script>
+    <script src="auth.js" defer></script>
     
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -719,7 +724,7 @@
 
                             <!-- Image Illustration / Headliner Poster -->
                             <div class="rounded-lg overflow-hidden bg-[#161926] mb-3 aspect-[16/9] relative border border-[#22283a]">
-                                <img id="spotlight-poster" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Tour" class="w-full h-full object-cover">
+                                <img id="spotlight-poster" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Tour" width="480" height="270" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#0b0d14]/90 via-transparent to-transparent"></div>
                                 <span id="spotlight-layout-badge" class="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-cyan">
                                     Arena Open-Air
@@ -1935,7 +1940,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg ops-card-subtle gap-2 hover:border-[#2a3248] transition-colors">
                                 <div class="flex items-center space-x-3 min-w-0">
                                     <div class="w-8 h-8 rounded-lg overflow-hidden bg-[#161926] border border-[#22283a] flex-shrink-0">
-                                        <img src="${t.poster_url || 'posters/anyma-aeden-poster-1.jpg'}" alt="${t.title}" class="w-full h-full object-cover">
+                                        <img src="${t.poster_url || 'posters/anyma-aeden-poster-1.jpg'}" alt="${t.title}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                     </div>
                                     <div class="min-w-0">
                                         <div class="font-semibold text-white truncate text-xs flex items-center space-x-2">
@@ -2044,7 +2049,7 @@
                         <td class="p-4">
                             <div class="flex items-center space-x-3">
                                 <div class="w-10 h-10 rounded-lg overflow-hidden bg-[#161926] border border-[#22283a] flex-shrink-0">
-                                    <img src="${poster}" alt="${t.title}" class="w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                                    <img src="${poster}" alt="${t.title}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
                                 </div>
                                 <div>
                                     <div class="font-semibold text-white text-xs">${t.title}</div>
@@ -2764,6 +2769,7 @@
         function runInitOnce() {
             if (_initDone) return;
             _initDone = true;
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
             initSupabase();
         }
 

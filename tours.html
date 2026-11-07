@@ -69,15 +69,20 @@
     <meta name="twitter:description" content="Discover official live concert passes and primary allocations for Anyma, Guns N' Roses, Fred again.., The Chainsmokers, Karan Aujla, Boris Brejcha, Martin Garrix, and Dua Lipa.">
     <meta name="twitter:image" content="https://tixoralive.vercel.app/og-image.jpg">
 
+    <!-- DNS Prefetch for External CDNs -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
     <!-- Supabase JS SDK v2 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <!-- Supabase Project Configuration & Auth Engine -->
-    <script src="supabase-config.js"></script>
-    <script src="auth.js"></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js" defer></script>
 
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -286,6 +291,9 @@
   ]
 }
     </script>
+    
+    <!-- Preload Critical LCP Hero Image -->
+    <link rel="preload" as="image" href="posters/anyma-aeden-poster-1.webp" type="image/webp" fetchpriority="high">
 
     <script>
         tailwind.config = {
@@ -428,7 +436,7 @@
 
                     <!-- Brand Logo -->
                     <a href="/" class="flex items-center space-x-3 py-0.5" aria-label="Tixora Homepage">
-                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32"
+                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" loading="eager" decoding="async"
                             class="h-7 sm:h-8 w-auto object-contain">
                     </a>
 
@@ -526,7 +534,7 @@
                     <picture>
                         <source srcset="posters/anyma-aeden-poster-1.webp" type="image/webp">
                         <img src="posters/anyma-aeden-poster-1.jpg" alt="Anyma Presents Genesys Live official tour poster"
-                            width="480" height="300" loading="lazy" decoding="async"
+                            width="480" height="300" loading="eager" fetchpriority="high" decoding="async"
                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
                     </picture>
                     <div class="absolute inset-0 bg-gradient-to-t from-[#0d1019] via-transparent to-transparent"></div>
@@ -1105,7 +1113,7 @@
                 <!-- Col 1: Brand & Credibility -->
                 <div class="lg:col-span-2 space-y-4">
                     <a href="/" class="flex items-center space-x-3 group" aria-label="Tixora Homepage">
-                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" class="h-8 w-auto object-contain">
+                        <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32" loading="lazy" decoding="async" class="h-8 w-auto object-contain">
                     </a>
                     <p class="text-xs text-slate-300 max-w-sm leading-relaxed">
                         Authorized primary live concert ticket allocations &amp; automated promoter clearing protocol. Delivering guaranteed genuine passes and instant UPI performance payouts for India's biggest music tours.
@@ -1295,7 +1303,7 @@
             <!-- CONTAINER B: PROMOTER AUTHENTICATION (SIGN IN / REGISTER) -->
             <div id="promoter-auth-view" class="space-y-4">
                 <div class="text-center space-y-1">
-                    <img src="tixora-logo.png" alt="TIXORA" class="h-8 w-auto mx-auto mb-1.5 object-contain">
+                    <img src="tixora-logo.png" alt="TIXORA" width="128" height="32" loading="lazy" decoding="async" class="h-8 w-auto mx-auto mb-1.5 object-contain">
                     <h3 class="text-2xl font-bold text-white">Promoter Network Access</h3>
                     <p class="text-xs text-slate-300">Authorized partner login & official youth promoter registration
                     </p>
@@ -2125,7 +2133,7 @@
                         title: ev.artist + ' — Official Tour Poster',
                         answer: '<div class="space-y-2 text-center">' +
                             '<div class="rounded-xl overflow-hidden border border-white/[0.1] bg-black max-w-[220px] mx-auto shadow-md">' +
-                            '<img src="' + ev.poster + '" alt="' + ev.posterAlt + '" class="w-full h-auto object-cover rounded-xl">' +
+                            '<img src="' + ev.poster + '" alt="' + ev.posterAlt + '" width="600" height="350" loading="lazy" decoding="async" class="w-full h-auto object-cover rounded-xl">' +
                             '</div>' +
                             '<div class="text-xs text-white font-semibold pt-1">' + ev.tour + '</div>' +
                             '<div class="text-[11px] text-slate-400">' + ev.date + ' • ' + ev.venue.split(',')[0] + '</div>' +
@@ -2341,6 +2349,12 @@
             renderInitialGreeting();
         }
 
+        // Initialize icons, cookies & chat on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+            initCookieBanner();
+            initChatbot();
+        });
 
     
 

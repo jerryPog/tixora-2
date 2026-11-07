@@ -154,6 +154,9 @@ const server = http.createServer((req, res) => {
     let cacheControl = 'public, max-age=86400, stale-while-revalidate=604800';
     if (isHtml) cacheControl = 'no-cache';
     if (isSitemap) cacheControl = 'public, max-age=3600, stale-while-revalidate=86400';
+    if (['.webp', '.jpg', '.jpeg', '.png', '.svg', '.ico', '.woff2', '.gif'].includes(ext)) {
+      cacheControl = 'public, max-age=31536000, immutable';
+    }
 
     const headers = {
       ...baseHeaders,
