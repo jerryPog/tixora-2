@@ -3,6 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Refresh to Home Page Controller -->
+    <script>
+        (function () {
+            try {
+                var perfNav = window.performance && window.performance.getEntriesByType && window.performance.getEntriesByType('navigation');
+                var isReload = (perfNav && perfNav.length > 0 && perfNav[0].type === 'reload') ||
+                               (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+                if (isReload) {
+                    var p = (window.location.pathname || '/').toLowerCase();
+                    var isHome = p === '/' || p === '/index.html' || p === '';
+                    if (!isHome) {
+                        window.location.replace('/');
+                    } else {
+                        if ('scrollRestoration' in history) {
+                            history.scrollRestoration = 'manual';
+                        }
+                        if (window.location.hash) {
+                            history.replaceState(null, '', '/');
+                        }
+                        document.documentElement.classList.remove('scroll-smooth');
+                        window.scrollTo(0, 0);
+                        window.addEventListener('DOMContentLoaded', function () {
+                            window.scrollTo(0, 0);
+                            document.documentElement.classList.add('scroll-smooth');
+                        });
+                        window.addEventListener('load', function () {
+                            window.scrollTo(0, 0);
+                        });
+                    }
+                }
+            } catch (e) {}
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>Mesh Protocol & Anti-Scalp Architecture | Tixora</title>
     <meta name="description" content="Technical specifications of Tixora dynamic QR mesh, primary ticketing engine integrations, and automated promoter clearing protocols.">
