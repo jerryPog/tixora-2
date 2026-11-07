@@ -1482,32 +1482,49 @@
         <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="navbar">
             <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5">
                 <div
-                    class="bg-[#0d1019]/95 rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between border border-[#1e2436] shadow-2xl">
+                    class="bg-[#0d1019]/95 backdrop-blur-md rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between border border-[#1e2436] shadow-2xl">
 
                     <!-- Brand Logo -->
-                    <a href="#" class="flex items-center space-x-3 py-0.5">
+                    <a href="/" class="flex items-center space-x-3 py-0.5" aria-label="Tixora Homepage">
                         <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="128" height="32"
                             class="h-7 sm:h-8 w-auto object-contain">
                     </a>
 
-                    <!-- Nav Links -->
+                    <!-- Desktop Nav Links -->
                     <nav
-                        class="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
-                        <a href="#lineup-vault" class="hover:text-white transition-colors">Live Drops</a>
-                        <a href="#mesh-protocol" class="hover:text-white transition-colors">Protocol</a>
-                        <a href="#velocity-matrix" class="hover:text-white transition-colors">Earnings Calculator</a>
-                        <a href="#tiers-ladder" class="hover:text-white transition-colors">Promoter Tiers</a>
+                        class="hidden md:flex items-center space-x-7 text-xs font-semibold uppercase tracking-wider">
+                        <a href="/" class="text-white font-bold border-b-2 border-crimson pb-0.5">Home</a>
+                        <a href="/tours" class="text-slate-300 hover:text-white transition-colors">Live Tours</a>
+                        <a href="/promoter" class="text-slate-300 hover:text-white transition-colors">Promoter Yields</a>
+                        <a href="/protocol" class="text-slate-300 hover:text-white transition-colors">Protocol</a>
+                        <a href="/about" class="text-slate-300 hover:text-white transition-colors">About</a>
+                        <a href="/faq" class="text-slate-300 hover:text-white transition-colors">FAQ</a>
                     </nav>
 
-                    <!-- Action Button -->
-                    <div id="nav-auth-container" class="flex items-center space-x-4">
-                        <a href="#faq" class="hover:text-white transition-colors text-xs font-semibold uppercase tracking-wider text-slate-300">FAQ</a>
+                    <!-- Action Button & Mobile Toggle -->
+                    <div id="nav-auth-container" class="flex items-center space-x-3">
                         <button onclick="openModal('promoter-modal')"
-                            class="btn-primary px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap">
+                            class="btn-primary px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap">
                             Promoter Portal
+                        </button>
+                        
+                        <!-- Mobile Hamburger Button -->
+                        <button onclick="toggleMobileMenu()" id="mobile-menu-btn" aria-label="Toggle Navigation Menu"
+                            class="md:hidden p-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-[#1e2436] transition-colors">
+                            <i data-lucide="menu" class="w-4 h-4"></i>
                         </button>
                     </div>
 
+                </div>
+
+                <!-- Mobile Dropdown Menu -->
+                <div id="mobile-nav-menu" class="hidden md:hidden mt-2 p-3 bg-[#0d1019] border border-[#1e2436] rounded-2xl shadow-2xl space-y-1">
+                    <a href="/" class="block px-4 py-2.5 rounded-lg text-sm transition-colors bg-crimson/15 text-white font-bold border-l-2 border-crimson">Home</a>
+                    <a href="/tours" class="block px-4 py-2.5 rounded-lg text-sm transition-colors text-slate-300 hover:bg-white/[0.05] hover:text-white">Live Tours</a>
+                    <a href="/promoter" class="block px-4 py-2.5 rounded-lg text-sm transition-colors text-slate-300 hover:bg-white/[0.05] hover:text-white">Promoter Yields</a>
+                    <a href="/protocol" class="block px-4 py-2.5 rounded-lg text-sm transition-colors text-slate-300 hover:bg-white/[0.05] hover:text-white">Protocol</a>
+                    <a href="/about" class="block px-4 py-2.5 rounded-lg text-sm transition-colors text-slate-300 hover:bg-white/[0.05] hover:text-white">About</a>
+                    <a href="/faq" class="block px-4 py-2.5 rounded-lg text-sm transition-colors text-slate-300 hover:bg-white/[0.05] hover:text-white">FAQ</a>
                 </div>
             </div>
         </header>
@@ -2748,45 +2765,53 @@
 
                 <!-- Col 2: Live Tours -->
                 <div class="space-y-3">
-                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Live Tours 2026</div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Live Tours 2026</div>
+                        <a href="/tours" class="text-crimson hover:underline text-[11px] font-mono">All (8) &rarr;</a>
+                    </div>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#tour-anyma-genesys-mumbai-2026" class="hover:text-white transition-colors">Anyma — Mumbai</a></li>
-                        <li><a href="#tour-gnr-live-delhi-2026" class="hover:text-white transition-colors">Guns N' Roses — Delhi</a></li>
-                        <li><a href="#tour-fred-again-usb-bengaluru-2026" class="hover:text-white transition-colors">Fred again.. — Bengaluru</a></li>
-                        <li><a href="#tour-chainsmokers-arena-goa-2026" class="hover:text-white transition-colors">The Chainsmokers — Goa</a></li>
-                        <li><a href="#lineup-vault" class="hover:text-white transition-colors">Karan Aujla — Chandigarh</a></li>
-                        <li><a href="#lineup-vault" class="hover:text-white transition-colors">Boris Brejcha — Delhi</a></li>
-                        <li><a href="#lineup-vault" class="hover:text-white transition-colors">Martin Garrix — Mumbai</a></li>
-                        <li><a href="#lineup-vault" class="hover:text-white transition-colors">Dua Lipa — Mumbai</a></li>
+                        <li><a href="/tours#anyma-genesys-mumbai-2026" class="hover:text-white transition-colors">Anyma — Mumbai</a></li>
+                        <li><a href="/tours#gnr-live-delhi-2026" class="hover:text-white transition-colors">Guns N' Roses — Delhi</a></li>
+                        <li><a href="/tours#fred-again-usb-bengaluru-2026" class="hover:text-white transition-colors">Fred again.. — Bengaluru</a></li>
+                        <li><a href="/tours#chainsmokers-arena-goa-2026" class="hover:text-white transition-colors">The Chainsmokers — Goa</a></li>
+                        <li><a href="/tours#karan-aujla-chandigarh-2026" class="hover:text-white transition-colors">Karan Aujla — Chandigarh</a></li>
+                        <li><a href="/tours#boris-brejcha-delhi-2026" class="hover:text-white transition-colors">Boris Brejcha — Delhi</a></li>
+                        <li><a href="/tours#martin-garrix-mumbai-2026" class="hover:text-white transition-colors">Martin Garrix — Mumbai</a></li>
+                        <li><a href="/tours#dua-lipa-mumbai-2026" class="hover:text-white transition-colors">Dua Lipa — Mumbai</a></li>
                     </ul>
                 </div>
 
                 <!-- Col 3: Promoter Protocol -->
                 <div class="space-y-3">
-                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Promoter Protocol</div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Promoter Protocol</div>
+                        <a href="/promoter" class="text-crimson hover:underline text-[11px] font-mono">Hub &rarr;</a>
+                    </div>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#promoter-calculator" class="hover:text-white transition-colors">Earnings Calculator</a></li>
-                        <li><a href="#tiers-ladder" class="hover:text-white transition-colors">Commission Tiers (8%–16%)</a></li>
-                        <li><a href="#mesh-protocol" class="hover:text-white transition-colors">Dynamic Turnstile Barcodes</a></li>
+                        <li><a href="/promoter#simulator" class="hover:text-white transition-colors">Earnings Calculator</a></li>
+                        <li><a href="/promoter#tiers" class="hover:text-white transition-colors">Commission Tiers (8%–16%)</a></li>
+                        <li><a href="/protocol" class="hover:text-white transition-colors">Dynamic Turnstile Barcodes</a></li>
                         <li><button onclick="openModal('promoter-modal')" class="hover:text-white transition-colors text-left">Promoter Onboarding Portal</button></li>
-                        <li><a href="#faq" class="hover:text-white transition-colors">Protocol FAQ &amp; Guides</a></li>
+                        <li><a href="/faq" class="hover:text-white transition-colors">Protocol FAQ &amp; Guides</a></li>
                     </ul>
                 </div>
 
                 <!-- Col 4: Leadership & Live Support -->
                 <div class="space-y-3">
-                    <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Founders &amp; Support</div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-xs font-bold font-mono uppercase tracking-wider text-white">Founders &amp; Team</div>
+                        <a href="/about" class="text-crimson hover:underline text-[11px] font-mono">About &rarr;</a>
+                    </div>
                     <div class="space-y-2 text-xs text-slate-300">
-                        <div class="text-slate-400">Founding Team:</div>
-                        <div class="text-white font-medium">Ronak Jain R</div>
-                        <div class="text-white font-medium">Kanishk Jhunjhunwala</div>
-                        <div class="text-white font-medium">Prajwal Gowrish H S</div>
+                        <div class="text-slate-400">Founding Leadership:</div>
+                        <div><a href="/about" class="text-white font-medium hover:text-crimson transition-colors">Ronak Jain R</a></div>
+                        <div><a href="/about" class="text-white font-medium hover:text-crimson transition-colors">Kanishk Jhunjhunwala</a></div>
+                        <div><a href="/about" class="text-white font-medium hover:text-crimson transition-colors">Prajwal Gowrish H S</a></div>
                     </div>
                     <div class="pt-2 space-y-1.5 text-xs">
                         <div class="text-slate-400">Live Support Desk:</div>
                         <div class="font-mono text-slate-200">WhatsApp: +91 98200 TIXORA</div>
                         <div class="font-mono text-slate-200">Email: support@tixora.live</div>
-
                     </div>
                 </div>
 
@@ -2800,7 +2825,7 @@
                 <div class="flex items-center space-x-5">
                     <a href="#privacy-policy" onclick="openPrivacyModal(event)" class="hover:text-slate-200 transition-colors">Privacy Policy</a>
                     <a href="#terms-of-service" onclick="openTermsModal(event)" class="hover:text-slate-200 transition-colors">Terms of Service</a>
-                    <a href="#faq" class="hover:text-slate-200 transition-colors">FAQ</a>
+                    <a href="/faq" class="hover:text-slate-200 transition-colors">FAQ</a>
                     <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="hover:text-white transition-colors flex items-center space-x-1">
                         <span>Top</span>
                         <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
@@ -3586,6 +3611,13 @@
         /* =====================================================================
            MODAL & TOAST CONTROLLERS
            ===================================================================== */
+        window.toggleMobileMenu = function () {
+            const menu = document.getElementById('mobile-nav-menu');
+            if (menu) {
+                menu.classList.toggle('hidden');
+            }
+        };
+
         window.openModal = function (id) {
             const modal = document.getElementById(id);
             if (!modal) return;

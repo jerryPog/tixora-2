@@ -37,8 +37,18 @@ const server = http.createServer((req, res) => {
   let reqPath = decodeURI(req.url.split('?')[0]);
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
   if (reqPath === '/admin' || reqPath === '/admin/') reqPath = '/admin.html';
+  if (reqPath === '/tours' || reqPath === '/tours/') reqPath = '/tours.html';
+  if (reqPath === '/promoter' || reqPath === '/promoter/') reqPath = '/promoter.html';
+  if (reqPath === '/protocol' || reqPath === '/protocol/') reqPath = '/protocol.html';
+  if (reqPath === '/about' || reqPath === '/about/') reqPath = '/about.html';
+  if (reqPath === '/faq' || reqPath === '/faq/') reqPath = '/faq.html';
   if (reqPath === '/sitemap' || reqPath === '/sitemap/') reqPath = '/sitemap.xml';
   if (reqPath === '/robots' || reqPath === '/robots/') reqPath = '/robots.txt';
+
+  // Support general clean URLs if a matching .html file exists
+  if (!path.extname(reqPath) && fs.existsSync(path.join(__dirname, reqPath + '.html'))) {
+    reqPath = reqPath + '.html';
+  }
 
   const filePath = path.join(__dirname, reqPath);
 

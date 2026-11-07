@@ -4,6 +4,11 @@
     { "source": "/googleeaacf2e35d237c68.html", "destination": "/googleeaacf2e35d237c68.html" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/tours", "destination": "/tours.html" },
+    { "source": "/promoter", "destination": "/promoter.html" },
+    { "source": "/protocol", "destination": "/protocol.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/faq", "destination": "/faq.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/", "destination": "/index.html" }
   ],
