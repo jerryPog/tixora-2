@@ -37,3 +37,4 @@
   from = "/admin"
   to = "/admin.html"
   status = 200
+
