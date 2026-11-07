@@ -1,0 +1,12 @@
+database/
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+*.zip
+*.md
+.agents/
+.mcp.json
+skills-lock.json
+.git
+.gitignore
