@@ -82,14 +82,28 @@ function getClientIp(req) {
     return ip || '127.0.0.1';
 }
 
-function checkRateLimit(ip, identifier, action = 'login') {
+const ALLOWED_ACTIONS = ['login', 'signup', 'forgot_password'];
+
+function sanitizeAction(action) {
+    const clean = (action || 'login').toLowerCase().trim();
+    return ALLOWED_ACTIONS.includes(clean) ? clean : 'login';
+}
+
+function sanitizeIdentifier(id) {
+    if (typeof id !== 'string') return '';
+    return id.replace(/[\r\n\t\0]/g, '').trim().slice(0, 150);
+}
+
+function checkRateLimit(ip, identifier, rawAction = 'login') {
+    const action = sanitizeAction(rawAction);
+    const cleanId = sanitizeIdentifier(identifier);
     const rule = RULES[action] || RULES.login;
     const now = Date.now();
     loadCache();
 
     const keysToCheck = [];
     if (ip) keysToCheck.push(`${action}:ip:${ip.toLowerCase()}`);
-    if (identifier) keysToCheck.push(`${action}:id:${identifier.toLowerCase().trim()}`);
+    if (cleanId) keysToCheck.push(`${action}:id:${cleanId.toLowerCase()}`);
 
     for (const key of keysToCheck) {
         const entry = _store.get(key);
@@ -142,14 +156,16 @@ function checkRateLimit(ip, identifier, action = 'login') {
     };
 }
 
-function recordAttempt(ip, identifier, action = 'login', success = false) {
+function recordAttempt(ip, identifier, rawAction = 'login', success = false) {
+    const action = sanitizeAction(rawAction);
+    const cleanId = sanitizeIdentifier(identifier);
     const rule = RULES[action] || RULES.login;
     const now = Date.now();
     loadCache();
 
     const keysToUpdate = [];
     if (ip) keysToUpdate.push(`${action}:ip:${ip.toLowerCase()}`);
-    if (identifier) keysToUpdate.push(`${action}:id:${identifier.toLowerCase().trim()}`);
+    if (cleanId) keysToUpdate.push(`${action}:id:${cleanId.toLowerCase()}`);
 
     if (success && action === 'login') {
         for (const key of keysToUpdate) {

@@ -19,6 +19,25 @@ function parseCookies(cookieHeader) {
   return cookies;
 }
 
+function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getQueryParam(req, paramName) {
+  try {
+    const parsed = new URL(req.url, 'http://localhost');
+    return parsed.searchParams.get(paramName) || '';
+  } catch (e) {
+    return '';
+  }
+}
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -153,7 +172,7 @@ const server = http.createServer((req, res) => {
         </p>
         <div style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid #1e2333; font-family: monospace; font-size: 0.75rem; text-align: left;">
             <div style="color: #64748b;">Active Session Role:</div>
-            <div style="color: #f59e0b; font-weight: 700; text-transform: uppercase;">${userRole}</div>
+            <div style="color: #f59e0b; font-weight: 700; text-transform: uppercase;">${escapeHtml(userRole)}</div>
             <div style="color: #64748b; margin-top: 0.25rem;">Required Clearance:</div>
             <div style="color: #10b981; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
         </div>

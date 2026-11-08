@@ -593,6 +593,241 @@ $$;
 
 GRANT EXECUTE ON FUNCTION public.verify_referral_code(TEXT) TO anon, authenticated;
 
+-- 4.17: Parameterized Query Procedure: Fetch Promoter Profile with Multi-Tenant Clearance
+CREATE OR REPLACE FUNCTION public.get_promoter_profile_parameterized(
+    p_user_id UUID DEFAULT NULL,
+    p_email TEXT DEFAULT NULL
+)
+RETURNS TABLE (
+    id INT,
+    user_id UUID,
+    full_name VARCHAR(150),
+    email VARCHAR(255),
+    whatsapp_number VARCHAR(30),
+    city VARCHAR(100),
+    upi_id VARCHAR(100),
+    referral_code VARCHAR(30),
+    tier_id INT,
+    tier_name VARCHAR(50),
+    commission_rate NUMERIC(5,2),
+    kyc_status VARCHAR(20),
+    total_passes_sold INT,
+    total_earnings NUMERIC(12,2)
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_calling_user_id UUID := auth.uid();
+    v_calling_email TEXT := LOWER(TRIM(auth.jwt() ->> 'email'));
+    v_is_admin BOOLEAN := public.is_admin();
+BEGIN
+    -- Strict Multi-Tenant Authorization Check
+    IF NOT v_is_admin THEN
+        IF p_user_id IS NOT NULL AND p_user_id <> v_calling_user_id THEN
+            RAISE EXCEPTION 'Access Denied: You may only query your own promoter profile.';
+        END IF;
+        IF p_email IS NOT NULL AND LOWER(TRIM(p_email)) <> v_calling_email THEN
+            RAISE EXCEPTION 'Access Denied: You may only query your own promoter profile.';
+        END IF;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        p.id,
+        p.user_id,
+        p.full_name,
+        p.email,
+        p.whatsapp_number,
+        p.city,
+        p.upi_id,
+        p.referral_code,
+        p.tier_id,
+        pt.tier_name,
+        pt.commission_rate,
+        p.kyc_status,
+        p.total_passes_sold,
+        p.total_earnings
+    FROM public.promoters p
+    LEFT JOIN public.promoter_tiers pt ON p.tier_id = pt.tier_id
+    WHERE (p_user_id IS NOT NULL AND p.user_id = p_user_id)
+       OR (p_email IS NOT NULL AND LOWER(TRIM(p.email)) = LOWER(TRIM(p_email)))
+    LIMIT 1;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_promoter_profile_parameterized(UUID, TEXT) TO authenticated, service_role;
+
+-- 4.18: Parameterized Query Procedure: Fetch Orders for Promoter
+CREATE OR REPLACE FUNCTION public.get_orders_parameterized(
+    p_promoter_id INT DEFAULT NULL,
+    p_limit INT DEFAULT 50,
+    p_offset INT DEFAULT 0
+)
+RETURNS TABLE (
+    id INT,
+    order_number VARCHAR(50),
+    event_id INT,
+    event_title VARCHAR(200),
+    event_date TIMESTAMPTZ,
+    ticket_tier_id INT,
+    tier_name VARCHAR(100),
+    tier_price NUMERIC(10,2),
+    quantity INT,
+    total_amount NUMERIC(10,2),
+    delivery_status VARCHAR(30),
+    created_at TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_calling_user_id UUID := auth.uid();
+    v_is_admin BOOLEAN := public.is_admin();
+BEGIN
+    IF NOT v_is_admin THEN
+        IF p_promoter_id IS NULL OR NOT EXISTS (
+            SELECT 1 FROM public.promoters 
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+        ) THEN
+            RAISE EXCEPTION 'Access Denied: You may only query orders assigned to your promoter ID.';
+        END IF;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        o.id,
+        o.order_number,
+        o.event_id,
+        e.title AS event_title,
+        e.event_date,
+        o.ticket_tier_id,
+        tt.name AS tier_name,
+        tt.price AS tier_price,
+        o.quantity,
+        o.total_amount,
+        o.delivery_status,
+        o.created_at
+    FROM public.orders o
+    JOIN public.events e ON o.event_id = e.id
+    JOIN public.ticket_tiers tt ON o.ticket_tier_id = tt.id
+    WHERE (p_promoter_id IS NULL OR o.promoter_id = p_promoter_id)
+    ORDER BY o.created_at DESC
+    LIMIT LEAST(GREATEST(p_limit, 1), 100)
+    OFFSET GREATEST(p_offset, 0);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_orders_parameterized(INT, INT, INT) TO authenticated, service_role;
+
+-- 4.19: Parameterized Query Procedure: Fetch Commissions for Promoter
+CREATE OR REPLACE FUNCTION public.get_commissions_parameterized(
+    p_promoter_id INT,
+    p_limit INT DEFAULT 50,
+    p_offset INT DEFAULT 0
+)
+RETURNS TABLE (
+    id INT,
+    order_id INT,
+    gross_order_amount NUMERIC(10,2),
+    pass_quantity INT,
+    effective_commission_pct NUMERIC(5,2),
+    commission_earned NUMERIC(10,2),
+    payout_status VARCHAR(20),
+    created_at TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_calling_user_id UUID := auth.uid();
+    v_is_admin BOOLEAN := public.is_admin();
+BEGIN
+    IF NOT v_is_admin THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM public.promoters 
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+        ) THEN
+            RAISE EXCEPTION 'Access Denied: You may only query commissions for your own promoter profile.';
+        END IF;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        pc.id,
+        pc.order_id,
+        pc.gross_order_amount,
+        pc.pass_quantity,
+        pc.effective_commission_pct,
+        pc.commission_earned,
+        pc.payout_status,
+        pc.created_at
+    FROM public.promoter_commissions pc
+    WHERE pc.promoter_id = p_promoter_id
+    ORDER BY pc.created_at DESC
+    LIMIT LEAST(GREATEST(p_limit, 1), 100)
+    OFFSET GREATEST(p_offset, 0);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_commissions_parameterized(INT, INT, INT) TO authenticated, service_role;
+
+-- 4.20: Parameterized Query Procedure: Fetch UPI Payout Logs for Promoter
+CREATE OR REPLACE FUNCTION public.get_payouts_parameterized(
+    p_promoter_id INT,
+    p_limit INT DEFAULT 50,
+    p_offset INT DEFAULT 0
+)
+RETURNS TABLE (
+    id INT,
+    commission_id INT,
+    upi_id VARCHAR(100),
+    amount NUMERIC(10,2),
+    status VARCHAR(20),
+    bank_reference_number VARCHAR(100),
+    processed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_calling_user_id UUID := auth.uid();
+    v_is_admin BOOLEAN := public.is_admin();
+BEGIN
+    IF NOT v_is_admin THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM public.promoters 
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+        ) THEN
+            RAISE EXCEPTION 'Access Denied: You may only query payouts for your own promoter profile.';
+        END IF;
+    END IF;
+
+    RETURN QUERY
+    SELECT 
+        upl.id,
+        upl.commission_id,
+        upl.upi_id,
+        upl.amount,
+        upl.status,
+        upl.bank_reference_number,
+        upl.processed_at,
+        upl.created_at
+    FROM public.upi_payout_logs upl
+    WHERE upl.promoter_id = p_promoter_id
+    ORDER BY upl.created_at DESC
+    LIMIT LEAST(GREATEST(p_limit, 1), 100)
+    OFFSET GREATEST(p_offset, 0);
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_payouts_parameterized(INT, INT, INT) TO authenticated, service_role;
+
 
 -- ============================================================================
 -- 5. AUTHENTIC SEED DATA (8 REAL TOURS & AMBASSADORS — 0 PLACEHOLDER ORDERS)
@@ -859,7 +1094,7 @@ BEGIN
         used_at = NOW()
     WHERE email = v_clean_email AND is_used = FALSE;
 
-    v_expires_at := NOW() + (p_validity_minutes || ' minutes')::INTERVAL;
+    v_expires_at := NOW() + make_interval(mins => p_validity_minutes);
 
     INSERT INTO public.password_reset_tokens (
         email,

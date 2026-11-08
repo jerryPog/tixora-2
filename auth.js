@@ -913,6 +913,47 @@
         }
     }
 
+    /**
+     * Parameterized Query Helper: Executes PostgREST queries with strict parameter binding
+     * Ensures all filter conditions use parameter binding instead of string interpolation.
+     */
+    function queryParameterized(table, selectFields = '*', filters = {}) {
+        const client = getClient();
+        if (!client) throw new Error('Database client not initialized');
+        let query = client.from(table).select(selectFields);
+        for (const [col, val] of Object.entries(filters)) {
+            if (val !== undefined && val !== null) {
+                query = query.eq(col, val);
+            }
+        }
+        return query;
+    }
+
+    /**
+     * Parameterized Query: Safely verify a promoter referral code via database RPC
+     * Uses PostgreSQL parameterized binding with zero string concatenation.
+     */
+    async function verifyReferralCode(code) {
+        if (!code || typeof code !== 'string') return { is_valid: false, message: 'Invalid referral code' };
+        const client = getClient();
+        if (!client) return { is_valid: false, message: 'Database client not ready' };
+        const cleanCode = code.trim().slice(0, 30);
+        try {
+            const { data, error } = await client.rpc('verify_referral_code', { code_input: cleanCode });
+            if (error) {
+                console.warn('[TixoraAuth] verifyReferralCode RPC error:', error);
+                return { is_valid: false };
+            }
+            if (Array.isArray(data) && data.length > 0) {
+                return data[0];
+            }
+            return { is_valid: false };
+        } catch (err) {
+            console.warn('[TixoraAuth] verifyReferralCode error:', err);
+            return { is_valid: false };
+        }
+    }
+
     // Export TixoraAuth API to global window
     window.TixoraAuth = {
         getClient,
@@ -926,6 +967,8 @@
         getMyOrders,
         getMyCommissions,
         getMyPayouts,
+        verifyReferralCode,
+        queryParameterized,
         signIn,
         signUp,
         signOut,
