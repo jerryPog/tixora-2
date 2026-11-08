@@ -6,6 +6,7 @@
 const { createResetToken } = require('../../lib/token-store');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 const { validateForgotPassword } = require('../../lib/validator');
+const { csrfGuard } = require('../../lib/csrf');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -35,6 +36,9 @@ function parseBody(req) {
 module.exports = async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    // CSRF Protection Barrier for State-Changing Requests
+    if (!csrfGuard(req, res)) return;
 
     if (req.method !== 'POST') {
         const payload = { error: 'Method Not Allowed. Use POST.' };

@@ -6,6 +6,7 @@
 const crypto = require('crypto');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 const { validateForm } = require('../../lib/validator');
+const { csrfGuard } = require('../../lib/csrf');
 
 function parseCookies(cookieHeader) {
     const list = {};
@@ -64,6 +65,9 @@ module.exports = async (req, res) => {
     // Security & Header hardening
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    // CSRF Protection Barrier for State-Changing Requests
+    if (!csrfGuard(req, res)) return;
 
     const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
 

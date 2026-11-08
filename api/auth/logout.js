@@ -3,9 +3,14 @@
  * Clears HttpOnly, Secure, SameSite=Strict Session Cookies
  */
 
+const { csrfGuard } = require('../../lib/csrf');
+
 module.exports = async (req, res) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    // CSRF Protection Barrier for State-Changing Requests
+    if (!csrfGuard(req, res)) return;
 
     const clearOpts = 'Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
