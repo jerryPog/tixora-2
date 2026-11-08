@@ -844,6 +844,75 @@
         }
     }
 
+    /**
+     * User-Isolated Data Query: Get orders belonging strictly to authenticated promoter
+     */
+    async function getMyOrders() {
+        const user = await getUser();
+        if (!user) return [];
+        const client = getClient();
+        if (!client) return [];
+        const promoter = await getPromoterProfile(user);
+        if (!promoter || !promoter.id) return [];
+        try {
+            const { data } = await client
+                .from('orders')
+                .select('*, ticket_tiers(name, price), events(title, event_date)')
+                .eq('promoter_id', promoter.id)
+                .order('created_at', { ascending: false });
+            return data || [];
+        } catch (e) {
+            console.warn('[TixoraAuth] getMyOrders error:', e);
+            return [];
+        }
+    }
+
+    /**
+     * User-Isolated Data Query: Get commissions belonging strictly to authenticated promoter
+     */
+    async function getMyCommissions() {
+        const user = await getUser();
+        if (!user) return [];
+        const client = getClient();
+        if (!client) return [];
+        const promoter = await getPromoterProfile(user);
+        if (!promoter || !promoter.id) return [];
+        try {
+            const { data } = await client
+                .from('promoter_commissions')
+                .select('*')
+                .eq('promoter_id', promoter.id)
+                .order('created_at', { ascending: false });
+            return data || [];
+        } catch (e) {
+            console.warn('[TixoraAuth] getMyCommissions error:', e);
+            return [];
+        }
+    }
+
+    /**
+     * User-Isolated Data Query: Get payouts belonging strictly to authenticated promoter
+     */
+    async function getMyPayouts() {
+        const user = await getUser();
+        if (!user) return [];
+        const client = getClient();
+        if (!client) return [];
+        const promoter = await getPromoterProfile(user);
+        if (!promoter || !promoter.id) return [];
+        try {
+            const { data } = await client
+                .from('upi_payout_logs')
+                .select('*')
+                .eq('promoter_id', promoter.id)
+                .order('created_at', { ascending: false });
+            return data || [];
+        } catch (e) {
+            console.warn('[TixoraAuth] getMyPayouts error:', e);
+            return [];
+        }
+    }
+
     // Export TixoraAuth API to global window
     window.TixoraAuth = {
         getClient,
@@ -854,6 +923,9 @@
         getUser,
         getUserRole,
         getPromoterProfile,
+        getMyOrders,
+        getMyCommissions,
+        getMyPayouts,
         signIn,
         signUp,
         signOut,

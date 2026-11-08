@@ -452,8 +452,13 @@ CREATE POLICY "Admin insert ticket_tiers" ON ticket_tiers FOR INSERT TO authenti
 CREATE POLICY "Admin update ticket_tiers" ON ticket_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.7: Promoters (Public Read, Unified Registration/Insert, Unified Update, Admin Delete)
-CREATE POLICY "Public Read promoters" ON promoters FOR SELECT TO anon, authenticated USING (true);
+-- 4.7: Promoters (Strict Data Privacy: Promoters read own profile only, Admin Read All)
+CREATE POLICY "Promoters read own profile only" ON promoters FOR SELECT TO authenticated
+  USING (
+    user_id = (SELECT auth.uid()) 
+    OR email = (SELECT auth.jwt() ->> 'email')
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO anon, authenticated
   WITH CHECK (
     (SELECT public.is_admin())
@@ -466,12 +471,16 @@ CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO anon, au
     )
   );
 CREATE POLICY "Update promoters" ON promoters FOR UPDATE TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()))
-  WITH CHECK (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()));
+  USING (user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email') OR (SELECT public.is_admin()))
+  WITH CHECK (user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email') OR (SELECT public.is_admin()));
 CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.8: Attendees (Admin Read, Unified Create, Admin Update/Delete)
-CREATE POLICY "Admin read attendees" ON attendees FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+-- 4.8: Attendees (Strict Data Privacy: Attendees read own record only, Admin Read All)
+CREATE POLICY "Users read own attendee profile only" ON attendees FOR SELECT TO authenticated
+  USING (
+    email = (SELECT auth.jwt() ->> 'email')
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
   WITH CHECK (
     (SELECT public.is_admin())
@@ -484,9 +493,13 @@ CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
 CREATE POLICY "Admin update attendees" ON attendees FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete attendees" ON attendees FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.9: Orders (Referred/Admin Read, Unified Create, Admin Update/Delete)
-CREATE POLICY "Read orders" ON orders FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
+-- 4.9: Orders (Strict Data Privacy: Users only read referred or purchased orders)
+CREATE POLICY "Read own orders only" ON orders FOR SELECT TO authenticated
+  USING (
+    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email'))
+    OR attendee_id IN (SELECT id FROM attendees WHERE email = (SELECT auth.jwt() ->> 'email'))
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Create orders" ON orders FOR INSERT TO anon, authenticated
   WITH CHECK (
     (SELECT public.is_admin())
@@ -502,23 +515,36 @@ CREATE POLICY "Create orders" ON orders FOR INSERT TO anon, authenticated
 CREATE POLICY "Admin update orders" ON orders FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete orders" ON orders FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.10: Issued Passes (Referred/Admin Read, Admin Write)
-CREATE POLICY "Promoters read referred passes" ON issued_passes FOR SELECT TO authenticated
-  USING (order_id IN (SELECT id FROM orders WHERE promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()))) OR (SELECT public.is_admin()));
+-- 4.10: Issued Passes (Strict Data Privacy: Users only read own passes or referred passes)
+CREATE POLICY "Read own passes only" ON issued_passes FOR SELECT TO authenticated
+  USING (
+    order_id IN (
+      SELECT id FROM orders WHERE 
+        promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email'))
+        OR attendee_id IN (SELECT id FROM attendees WHERE email = (SELECT auth.jwt() ->> 'email'))
+    ) 
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Admin insert issued_passes" ON issued_passes FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update issued_passes" ON issued_passes FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete issued_passes" ON issued_passes FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.11: Promoter Commissions (Own/Admin Read, Admin Write)
-CREATE POLICY "Promoters read own commissions" ON promoter_commissions FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
+-- 4.11: Promoter Commissions (Strict Data Privacy: Promoters read own commissions only)
+CREATE POLICY "Promoters read own commissions only" ON promoter_commissions FOR SELECT TO authenticated
+  USING (
+    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email')) 
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Admin insert promoter_commissions" ON promoter_commissions FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update promoter_commissions" ON promoter_commissions FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete promoter_commissions" ON promoter_commissions FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.12: UPI Payout Logs (Own/Admin Read, Admin Write)
-CREATE POLICY "Promoters read own upi payouts" ON upi_payout_logs FOR SELECT TO authenticated
-  USING (promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())) OR (SELECT public.is_admin()));
+-- 4.12: UPI Payout Logs (Strict Data Privacy: Promoters read own payouts only)
+CREATE POLICY "Promoters read own upi payouts only" ON upi_payout_logs FOR SELECT TO authenticated
+  USING (
+    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email')) 
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Admin insert upi_payout_logs" ON upi_payout_logs FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin update upi_payout_logs" ON upi_payout_logs FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete upi_payout_logs" ON upi_payout_logs FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
@@ -540,6 +566,32 @@ CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT T
 CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
 CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated
   WITH CHECK (consent_type IS NOT NULL);
+
+-- 4.16: Safe Referral Code Verification Function (Zero PII Leakage)
+CREATE OR REPLACE FUNCTION public.verify_referral_code(code_input TEXT)
+RETURNS TABLE (
+    is_valid BOOLEAN,
+    referral_code TEXT,
+    promoter_first_name TEXT
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        true AS is_valid,
+        p.referral_code,
+        split_part(trim(p.full_name), ' ', 1) AS promoter_first_name
+    FROM promoters p
+    WHERE LOWER(p.referral_code) = LOWER(trim(code_input))
+      AND p.kyc_status = 'verified'
+    LIMIT 1;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.verify_referral_code(TEXT) TO anon, authenticated;
 
 
 -- ============================================================================
