@@ -5,6 +5,7 @@
 
 const { verifyResetToken } = require('../../lib/token-store');
 const { applySecurityHeaders } = require('../../lib/security-headers');
+const { handleCors } = require('../../lib/cors');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -33,6 +34,7 @@ function parseBody(req) {
 
 module.exports = async (req, res) => {
     applySecurityHeaders(res, { isApi: true });
+    if (handleCors(req, res)) return;
 
     let token = '';
 

@@ -12,9 +12,11 @@ const rateLimitHandler = require('./rate-limit');
 const { handleValidationRequest } = require('../../lib/validator');
 const { handleCsrfEndpoint, validateCsrf } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
+const { handleCors } = require('../../lib/cors');
 
 module.exports = async (req, res) => {
     applySecurityHeaders(res, { isApi: true });
+    if (handleCors(req, res)) return;
     const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
     const pathOnly = rawUrl.split('?')[0].toLowerCase();
 

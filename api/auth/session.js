@@ -8,6 +8,7 @@ const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = re
 const { validateForm } = require('../../lib/validator');
 const { csrfGuard } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
+const { handleCors } = require('../../lib/cors');
 
 function parseCookies(cookieHeader) {
     const list = {};
@@ -65,6 +66,9 @@ function parseBody(req) {
 module.exports = async (req, res) => {
     // Security & Header hardening
     applySecurityHeaders(res, { isApi: true });
+
+    // Domain-Restricted CORS Preflight & Origin Filter
+    if (handleCors(req, res)) return;
 
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;

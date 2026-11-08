@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const { csrfGuard } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
+const { handleCors } = require('../../lib/cors');
 
 const CACHE_FILE = process.env.VERCEL
     ? path.join('/tmp', 'tixora_rate_limits.json')
@@ -254,6 +255,7 @@ function parseBody(req) {
 
 const handler = async (req, res) => {
     applySecurityHeaders(res, { isApi: true });
+    if (handleCors(req, res)) return;
 
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;

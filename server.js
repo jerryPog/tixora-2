@@ -62,6 +62,12 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 1b. Domain-Restricted CORS & Preflight OPTIONS Handler
+  const { handleCors } = require('./lib/cors');
+  if (handleCors(req, res)) {
+    return;
+  }
+
   // 2. Decode and Sanitize URL Path
   let rawUrl = (req.url || '/').split('?')[0];
   let decodedPath = '';

@@ -5,9 +5,11 @@
 
 const { csrfGuard } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
+const { handleCors } = require('../../lib/cors');
 
 module.exports = async (req, res) => {
     applySecurityHeaders(res, { isApi: true });
+    if (handleCors(req, res)) return;
 
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;
