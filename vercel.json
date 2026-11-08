@@ -1,6 +1,9 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/api/auth/(.*)", "destination": "/api/auth/index.js" },
+    { "source": "/api/rate-limit", "destination": "/api/auth/index.js" },
+    { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/database(.*)", "destination": "/404.html" },
     { "source": "/(.*)\\.sql", "destination": "/404.html" },
     { "source": "/(.*)\\.db", "destination": "/404.html" },

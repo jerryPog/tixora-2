@@ -283,9 +283,20 @@ async function consumeResetToken(rawToken, newPassword) {
     };
 }
 
-module.exports = {
-    hashToken,
-    createResetToken,
-    verifyResetToken,
-    consumeResetToken
+const tokenHandler = (req, res) => {
+    const payload = { error: 'Direct access to token-store is forbidden.' };
+    if (typeof res.status === 'function') return res.status(403).json(payload);
+    res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify(payload));
 };
+
+tokenHandler.hashToken = hashToken;
+tokenHandler.createResetToken = createResetToken;
+tokenHandler.verifyResetToken = verifyResetToken;
+tokenHandler.consumeResetToken = consumeResetToken;
+
+module.exports = tokenHandler;
+module.exports.hashToken = hashToken;
+module.exports.createResetToken = createResetToken;
+module.exports.verifyResetToken = verifyResetToken;
+module.exports.consumeResetToken = consumeResetToken;
