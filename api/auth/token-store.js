@@ -1,51 +1,53 @@
 /**
  * TIXORA SECURE PASSWORD RESET TOKEN ENGINE
- * Enforces Cryptographic Random Tokens, Strict 15-Minute Expiry, and Atomic Single-Use
+ * Cryptographically Signed HMAC-SHA256 Tokens with Nonce Protection
+ * Strictly enforces 15-minute expiration and atomic single-use invalidation
  */
 
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-// Fallback disk cache file (works in serverless /tmp and local Node)
-const CACHE_FILE = process.env.VERCEL 
-    ? path.join('/tmp', 'tixora_reset_tokens.json')
-    : path.resolve(__dirname, '../../.reset_tokens.json');
+const SERVER_SECRET = process.env.TIXORA_AUTH_SECRET || 'tixora-master-cryptographic-salt-2026-auth-seal';
 
-// In-memory memory map for ultra-fast lookup within process lifecycle
-const _memoryTokens = new Map();
+// File cache for consumed nonces and active tokens
+const CACHE_FILE = process.env.VERCEL 
+    ? path.join('/tmp', 'tixora_consumed_nonces.json')
+    : path.resolve(__dirname, '../../.reset_consumed.json');
+
+const _consumedNonces = new Set();
+const _activeTokens = new Map();
 
 function loadCache() {
     try {
         if (fs.existsSync(CACHE_FILE)) {
             const data = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
-            if (Array.isArray(data)) {
-                data.forEach(item => {
-                    if (item && item.tokenHash) {
-                        _memoryTokens.set(item.tokenHash, item);
-                    }
+            if (Array.isArray(data.consumed)) {
+                data.consumed.forEach(n => _consumedNonces.add(n));
+            }
+            if (Array.isArray(data.active)) {
+                data.active.forEach(item => {
+                    if (item && item.nonce) _activeTokens.set(item.nonce, item);
                 });
             }
         }
-    } catch (e) {
-        // Cache miss or read warning
-    }
+    } catch (e) {}
 }
 
 function saveCache() {
     try {
-        const arr = Array.from(_memoryTokens.values());
-        fs.writeFileSync(CACHE_FILE, JSON.stringify(arr, null, 2), 'utf8');
-    } catch (e) {
-        // Ephemeral container write warning
-    }
+        const payload = {
+            consumed: Array.from(_consumedNonces),
+            active: Array.from(_activeTokens.values())
+        };
+        fs.writeFileSync(CACHE_FILE, JSON.stringify(payload, null, 2), 'utf8');
+    } catch (e) {}
 }
 
-// Initial cache load
 loadCache();
 
 /**
- * Hash raw token with SHA-256 (Tokens are never stored in plain text)
+ * Hash helper
  */
 function hashToken(rawToken) {
     if (!rawToken || typeof rawToken !== 'string') return '';
@@ -53,10 +55,10 @@ function hashToken(rawToken) {
 }
 
 /**
- * Create a new expiring, single-use reset token
+ * Create a new cryptographically signed, expiring, single-use reset token
  * @param {string} email 
- * @param {number} validityMinutes (defaults to 15 minutes)
- * @param {object} meta (optional IP, user-agent)
+ * @param {number} validityMinutes (defaults to 15)
+ * @param {object} meta 
  */
 async function createResetToken(email, validityMinutes = 15, meta = {}) {
     const cleanEmail = (email || '').trim().toLowerCase();
@@ -66,39 +68,42 @@ async function createResetToken(email, validityMinutes = 15, meta = {}) {
 
     loadCache();
 
-    // 1. Invalidate any existing unused tokens for this email (Work only once & prevent lingering links)
-    for (const [hash, record] of _memoryTokens.entries()) {
-        if (record.email === cleanEmail && !record.isUsed) {
-            record.isUsed = true;
-            record.usedAt = Date.now();
-            record.revokedReason = 'superseded_by_new_request';
+    // Invalidate any existing unused tokens for this email
+    for (const [nonce, item] of _activeTokens.entries()) {
+        if (item.email === cleanEmail && !item.isUsed) {
+            item.isUsed = true;
+            _consumedNonces.add(nonce);
         }
     }
 
-    // 2. Generate high-entropy 256-bit cryptographic token
-    const rawToken = crypto.randomBytes(32).toString('hex');
-    const tokenHash = hashToken(rawToken);
+    const nonce = crypto.randomBytes(16).toString('hex');
     const now = Date.now();
     const expiresAt = now + (validityMinutes * 60 * 1000);
 
+    // Cryptographic payload: email:expiresAt:nonce
+    const payload = `${cleanEmail}:${expiresAt}:${nonce}`;
+    const hmac = crypto.createHmac('sha256', SERVER_SECRET).update(payload).digest('hex');
+    const b64Payload = Buffer.from(payload).toString('base64url');
+    const rawToken = `${b64Payload}.${hmac}`;
+
     const record = {
-        tokenHash,
+        nonce,
+        rawToken,
         email: cleanEmail,
         createdAt: now,
         expiresAt,
         validityMinutes,
         isUsed: false,
-        usedAt: null,
         ipAddress: meta.ipAddress || null,
         userAgent: meta.userAgent || null
     };
 
-    _memoryTokens.set(tokenHash, record);
+    _activeTokens.set(nonce, record);
     saveCache();
 
     return {
         rawToken,
-        tokenHash,
+        nonce,
         email: cleanEmail,
         expiresAt,
         expiresInSeconds: validityMinutes * 60,
@@ -107,8 +112,41 @@ async function createResetToken(email, validityMinutes = 15, meta = {}) {
 }
 
 /**
- * Verify if a reset token is valid, unexpired, and not yet used
- * @param {string} rawToken 
+ * Parse and verify cryptographic token
+ */
+function parseToken(rawToken) {
+    if (!rawToken || typeof rawToken !== 'string' || !rawToken.includes('.')) {
+        return null;
+    }
+
+    const parts = rawToken.trim().split('.');
+    if (parts.length !== 2) return null;
+
+    const [b64Payload, hmac] = parts;
+    let payload = '';
+    try {
+        payload = Buffer.from(b64Payload, 'base64url').toString('utf8');
+    } catch (e) {
+        return null;
+    }
+
+    const expectedHmac = crypto.createHmac('sha256', SERVER_SECRET).update(payload).digest('hex');
+    if (hmac !== expectedHmac) {
+        return null; // Tampered or forged token!
+    }
+
+    const segments = payload.split(':');
+    if (segments.length < 3) return null;
+
+    const email = segments[0];
+    const expiresAt = parseInt(segments[1], 10);
+    const nonce = segments[2];
+
+    return { email, expiresAt, nonce };
+}
+
+/**
+ * Verify token validity, expiration, and single-use state
  */
 async function verifyResetToken(rawToken) {
     if (!rawToken || typeof rawToken !== 'string') {
@@ -120,42 +158,50 @@ async function verifyResetToken(rawToken) {
     }
 
     loadCache();
-    const tokenHash = hashToken(rawToken);
-    const record = _memoryTokens.get(tokenHash);
+    const parsed = parseToken(rawToken);
 
-    if (!record) {
+    if (!parsed) {
         return {
             valid: false,
             code: 'invalid_token',
-            message: 'This password reset link is invalid or does not exist.'
+            message: 'This password reset link is invalid, malformed, or has been tampered with.'
         };
     }
 
-    // Check single-use constraint
-    if (record.isUsed || record.usedAt !== null) {
+    const { email, expiresAt, nonce } = parsed;
+
+    // 1. Single-use check: has this nonce already been consumed?
+    if (_consumedNonces.has(nonce)) {
         return {
             valid: false,
             code: 'already_used',
-            message: 'This password reset link has already been used. For your security, reset links work only once.',
-            usedAt: record.usedAt
+            message: 'This password reset link has already been used. For your security, reset links work only once.'
         };
     }
 
-    // Check expiration constraint
+    const record = _activeTokens.get(nonce);
+    if (record && record.isUsed) {
+        return {
+            valid: false,
+            code: 'already_used',
+            message: 'This password reset link has already been used. For your security, reset links work only once.'
+        };
+    }
+
+    // 2. Expiration check: has the 15-minute validity window elapsed?
     const now = Date.now();
-    if (now > record.expiresAt) {
+    if (now > expiresAt) {
         return {
             valid: false,
             code: 'expired',
-            message: `This password reset link has expired. Reset links are strictly valid for ${record.validityMinutes || 15} minutes.`,
-            expiresAt: record.expiresAt
+            message: 'This password reset link has expired. Reset links are strictly valid for 15 minutes.'
         };
     }
 
-    const remainingSeconds = Math.max(0, Math.round((record.expiresAt - now) / 1000));
+    const remainingSeconds = Math.max(0, Math.round((expiresAt - now) / 1000));
 
-    // Mask email for privacy (e.g. j***y@tixora.live)
-    const emailParts = record.email.split('@');
+    // Mask email for security/privacy
+    const emailParts = email.split('@');
     const maskedUser = emailParts[0].length > 2 
         ? emailParts[0][0] + '***' + emailParts[0].slice(-1)
         : emailParts[0][0] + '***';
@@ -163,17 +209,15 @@ async function verifyResetToken(rawToken) {
 
     return {
         valid: true,
-        email: record.email,
+        email: email,
         maskedEmail: maskedEmail,
-        expiresAt: record.expiresAt,
+        expiresAt: expiresAt,
         expiresInSeconds: remainingSeconds
     };
 }
 
 /**
- * Atomically consume a reset token and update password
- * @param {string} rawToken 
- * @param {string} newPassword 
+ * Atomically consume reset token and update password
  */
 async function consumeResetToken(rawToken, newPassword) {
     if (!newPassword || newPassword.length < 6) {
@@ -184,7 +228,7 @@ async function consumeResetToken(rawToken, newPassword) {
         };
     }
 
-    // First check validity
+    loadCache();
     const check = await verifyResetToken(rawToken);
     if (!check.valid) {
         return {
@@ -194,11 +238,18 @@ async function consumeResetToken(rawToken, newPassword) {
         };
     }
 
-    loadCache();
-    const tokenHash = hashToken(rawToken);
-    const record = _memoryTokens.get(tokenHash);
+    const parsed = parseToken(rawToken);
+    if (!parsed) {
+        return {
+            success: false,
+            code: 'invalid_token',
+            message: 'Invalid reset token.'
+        };
+    }
 
-    if (!record || record.isUsed) {
+    const { nonce, email } = parsed;
+
+    if (_consumedNonces.has(nonce)) {
         return {
             success: false,
             code: 'already_used',
@@ -206,24 +257,28 @@ async function consumeResetToken(rawToken, newPassword) {
         };
     }
 
-    // ATOMIC CONSUMPTION: Mark token as consumed immediately
-    record.isUsed = true;
-    record.usedAt = Date.now();
-    _memoryTokens.set(tokenHash, record);
-    saveCache();
+    // ATOMIC CONSUMPTION: Burn nonce permanently
+    _consumedNonces.add(nonce);
 
-    // Invalidate all other tokens for this email as an extra security precaution
-    for (const [hash, r] of _memoryTokens.entries()) {
-        if (r.email === record.email) {
-            r.isUsed = true;
-            if (!r.usedAt) r.usedAt = Date.now();
+    const record = _activeTokens.get(nonce);
+    if (record) {
+        record.isUsed = true;
+        record.usedAt = Date.now();
+    }
+
+    // Invalidate all active tokens for this user email
+    for (const [n, item] of _activeTokens.entries()) {
+        if (item.email === email) {
+            item.isUsed = true;
+            _consumedNonces.add(n);
         }
     }
+
     saveCache();
 
     return {
         success: true,
-        email: record.email,
+        email: email,
         message: 'Your password has been reset successfully. You can now log in with your new password.'
     };
 }

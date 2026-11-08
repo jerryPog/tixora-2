@@ -9,3 +9,4 @@ Thumbs.db
 .env
 .env.*
 .reset_tokens.json
+.reset_consumed.json
