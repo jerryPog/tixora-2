@@ -13,3 +13,4 @@ Thumbs.db
 .rate_limits.json
 posters/uploads/*
 !posters/uploads/.gitkeep
+scratch/

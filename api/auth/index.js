@@ -24,6 +24,10 @@ module.exports = async (req, res) => {
     if (pathOnly.includes('upload')) {
         return handleUploadEndpoint(req, res);
     }
+    if (pathOnly.includes('checkout') || pathOnly.includes('cart')) {
+        const { handleCartCheckout } = require('../../lib/cart-handler');
+        return handleCartCheckout(req, res);
+    }
     if (pathOnly.includes('rate-limit') || pathOnly.includes('rate-limiter')) {
         return rateLimitHandler(req, res);
     }

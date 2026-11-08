@@ -184,6 +184,13 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2c-4. Pass Cart Checkout Endpoint (10-Minute Hold & Customer Validation)
+  if (decodedPath === '/api/cart/checkout' || decodedPath === '/api/checkout') {
+    const { handleCartCheckout } = require('./lib/cart-handler');
+    handleCartCheckout(req, res);
+    return;
+  }
+
   // 2d. Strictly Lock Admin Routes to Authorized Admins Only
   const isAdminRoute = 
     decodedPath === '/admin' || 

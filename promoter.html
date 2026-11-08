@@ -257,7 +257,13 @@
                     </nav>
 
                     <!-- Action Button & Mobile Toggle -->
-                    <div id="nav-auth-container" class="flex items-center space-x-3">
+                    <div id="nav-auth-container" class="flex items-center space-x-2 sm:space-x-3">
+                        <button onclick="TixoraCart.openCart()" id="navbar-cart-btn" class="relative p-2 sm:px-3 sm:py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white border border-[#1e2436] transition-colors flex items-center space-x-1.5" aria-label="Open Ticket Cart">
+                            <i data-lucide="shopping-bag" class="w-4 h-4 text-crimson"></i>
+                            <span class="text-xs font-mono font-semibold hidden sm:inline">Cart</span>
+                            <span id="navbar-cart-count" class="cart-badge-count hidden text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-crimson text-white font-bold">0</span>
+                        </button>
+
                         <button onclick="openModal('promoter-modal')"
                             class="btn-primary px-3.5 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap">
                             Promoter Portal
@@ -868,11 +874,98 @@
                 </div>
             </div>
 
-            <button onclick="simulateOrderSuccess()"
+            <button onclick="addCurrentModalToCart()"
                 class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
-                <span>Confirm Pass Reservation</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                <span>Add to Cart & Reserve Pass</span>
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TIXORA MINIMALIST PASS RESERVATION CART MODAL -->
+    <!-- ========================================================================= -->
+    <div id="tixora-cart-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="solid-panel rounded-2xl w-full max-w-lg p-5 sm:p-6 relative bg-[#0d1019] border border-[#1e2436] shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-[#1e2436]">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-crimson"></i>
+                    <h3 class="text-base sm:text-lg font-bold text-white">Ticket Cart</h3>
+                </div>
+                <button type="button" onclick="TixoraCart.closeCart()" class="text-slate-400 hover:text-white transition-colors p-1" aria-label="Close cart">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- 10-Minute Hold Expiration Banner -->
+            <div id="cart-hold-banner" class="hidden p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between text-xs font-mono">
+                <span class="text-amber-300 flex items-center space-x-1.5">
+                    <span>⏱️</span>
+                    <span>10-Min Reservation Hold:</span>
+                </span>
+                <span id="cart-countdown-timer" class="text-amber-400 font-bold bg-[#0d1019] px-2 py-0.5 rounded border border-amber-500/20">10:00</span>
+            </div>
+
+            <!-- Expired Hold Warning Notice -->
+            <div id="cart-expired-notice" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 font-mono">
+                ⚠️ Your 10-minute pass hold has expired to release inventory. Please re-select your concert passes.
+            </div>
+
+            <div id="cart-modal-body" class="space-y-4">
+                <!-- Empty Cart State -->
+                <div id="cart-empty-state" class="text-center py-8 space-y-3">
+                    <div class="w-12 h-12 rounded-full bg-white/[0.03] border border-[#1e2436] text-slate-500 mx-auto flex items-center justify-center">
+                        <i data-lucide="ticket" class="w-6 h-6"></i>
+                    </div>
+                    <div class="text-sm font-semibold text-slate-300">Your pass cart is empty</div>
+                    <p class="text-xs text-slate-500 max-w-xs mx-auto">Select a concert tour from the list below to reserve your official passes.</p>
+                </div>
+
+                <!-- Items Container -->
+                <div id="cart-items-container" class="space-y-2"></div>
+
+                <!-- Customer Details Form (Simple & Essential) -->
+                <div id="cart-checkout-section" class="hidden space-y-4 pt-2 border-t border-[#1e2436]">
+                    <div>
+                        <span class="text-[10px] font-mono text-slate-400 uppercase font-semibold block mb-2">Attendee Information</span>
+                        <div class="space-y-2.5 text-xs font-mono">
+                            <div>
+                                <label class="block text-slate-400 mb-1">Customer Full Name *</label>
+                                <input type="text" id="cart-cust-name" placeholder="Rohan Sharma" required
+                                    class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-sans">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">WhatsApp / Mobile Number *</label>
+                                <input type="tel" id="cart-cust-phone" placeholder="+91 98200 11223" required
+                                    class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">Email Address (Pass Delivery) *</label>
+                                <input type="email" id="cart-cust-email" placeholder="rohan@example.com" required
+                                    class="w-full bg-[#131622] border border-[#1e2436] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-crimson font-mono">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total & Confirmation Button -->
+                    <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] flex items-center justify-between font-mono">
+                        <div>
+                            <span class="text-[10px] text-slate-400 uppercase block">Total Due</span>
+                            <span class="text-base font-bold text-white" id="cart-total-amount">₹0</span>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20 font-semibold">BookMyShow Auth</span>
+                    </div>
+
+                    <button type="button" id="cart-checkout-submit-btn" onclick="TixoraCart.submitCheckout(event)"
+                        class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                        <span>Confirm & Reserve Passes</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1737,28 +1830,30 @@
             renderInitialGreeting();
         }
 
-        // Initialize icons, cookies & chat on DOM ready
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide && lucide.createIcons) lucide.createIcons();
-            initCookieBanner();
-            initChatbot();
-        });
+        function addCurrentModalToCart() {
+            const titleEl = document.getElementById('buy-event-title');
+            const title = titleEl ? titleEl.textContent : 'Concert Tour';
+            const tierSelect = document.getElementById('buy-tier-select');
+            let tier = 'GA Standard';
+            let price = 3499;
 
-    
+            if (tierSelect && !document.getElementById('buy-tier-wrapper')?.classList.contains('hidden') && tierSelect.options.length > 0) {
+                const opt = tierSelect.options[tierSelect.selectedIndex];
+                price = Number(tierSelect.value) || price;
+                tier = opt ? (opt.getAttribute('data-tier') || opt.text.split('—')[0].trim()) : tier;
+            } else {
+                const totalVal = (document.getElementById('buy-total-val')?.textContent || '').replace(/[^0-9]/g, '');
+                price = Number(totalVal) || price;
+                const orgTag = document.getElementById('buy-organizer-tag')?.textContent || '';
+                tier = orgTag.split('•')[0].trim() || tier;
+            }
 
-        // Initialize icons, cookies & chat on load
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-            initCookieBanner();
-            initChatbot();
-            if (typeof initPromoterAuth === 'function') initPromoterAuth();
-        });
-    </script>
-</body>
-</html>
-    
+            closeModal('buy-modal');
+            if (window.TixoraCart) {
+                TixoraCart.addItem(title, price, tier);
+            }
+        }
 
-    <script>
         function updatePageCalc() {
             const tickets = parseInt(document.getElementById('page-calc-tickets')?.value || 65);
             const price = parseInt(document.getElementById('page-calc-price')?.value || 3999);
@@ -1794,9 +1889,17 @@
             if (tierEl) tierEl.innerText = tierText;
         }
 
+        // Initialize icons, cookies, chat, auth & page calc on load
         document.addEventListener('DOMContentLoaded', () => {
-            updatePageCalc();
+            if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+            if (typeof initCookieBanner === 'function') initCookieBanner();
+            if (typeof initChatbot === 'function') initChatbot();
+            if (typeof initPromoterAuth === 'function') initPromoterAuth();
+            if (typeof updatePageCalc === 'function') updatePageCalc();
         });
     </script>
+
+    <!-- Tixora Pass Reservation Cart System -->
+    <script src="cart.js"></script>
 </body>
 </html>
