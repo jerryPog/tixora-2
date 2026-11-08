@@ -106,6 +106,67 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2d. Strictly Lock Admin Routes to Authorized Admins Only
+  const isAdminRoute = 
+    decodedPath === '/admin' || 
+    decodedPath === '/admin.html' || 
+    decodedPath.startsWith('/admin/');
+
+  if (isAdminRoute) {
+    const sessionToken = cookies.tixora_session;
+    const userRole = (cookies.tixora_role || '').toLowerCase();
+
+    // If user is authenticated with a non-admin role (e.g. promoter, attendee):
+    // Strictly block access with HTTP 403 Forbidden!
+    if (sessionToken && userRole && userRole !== 'admin' && userRole !== 'manager') {
+      res.writeHead(403, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'X-Robots-Tag': 'noindex, nofollow',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
+      });
+      res.end(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 Forbidden | Tixora Operations Desk</title>
+    <style>
+        body { background: #0b0d14; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 1.5rem; }
+        .card { background: #0e1018; border: 1px solid #1e2333; border-radius: 1rem; max-width: 480px; width: 100%; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 0.375rem; font-size: 0.6875rem; font-family: monospace; text-transform: uppercase; background: rgba(244,63,94,0.15); color: #fb7185; border: 1px solid rgba(244,63,94,0.3); }
+        .btn-primary { display: block; width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.8125rem; font-weight: 600; background: #059669; color: white; text-decoration: none; transition: background 0.15s; margin-top: 1.25rem; box-sizing: border-box; }
+        .btn-primary:hover { background: #10b981; }
+        .btn-secondary { display: block; width: 100%; padding: 0.625rem 1rem; border-radius: 0.5rem; font-size: 0.75rem; background: #161926; color: #94a3b8; text-decoration: none; margin-top: 0.5rem; border: 1px solid #22283a; box-sizing: border-box; }
+        .btn-secondary:hover { color: white; background: #1e2333; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🛡️</div>
+        <div class="badge">Security Clearance Restricted</div>
+        <h1 style="font-size: 1.5rem; font-weight: 700; margin: 0.75rem 0 0.5rem; letter-spacing: -0.025em;">403 Forbidden</h1>
+        <p style="font-size: 0.8125rem; color: #94a3b8; line-height: 1.5; margin: 0;">
+            The Tixora Operations Desk (<code style="color: #34d399; font-family: monospace;">/admin</code>) is locked to verified Administrator clearance.
+        </p>
+        <div style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid #1e2333; font-family: monospace; font-size: 0.75rem; text-align: left;">
+            <div style="color: #64748b;">Active Session Role:</div>
+            <div style="color: #f59e0b; font-weight: 700; text-transform: uppercase;">${userRole}</div>
+            <div style="color: #64748b; margin-top: 0.25rem;">Required Clearance:</div>
+            <div style="color: #10b981; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
+        </div>
+        <a href="/dashboard" class="btn-primary">Return to Promoter Command Center</a>
+        <a href="/" class="btn-secondary">Go to Live Concert Tours</a>
+        <a href="/api/auth/logout" class="btn-secondary" style="color: #f43f5e;">Sign Out & Switch to Admin Account</a>
+    </div>
+</body>
+</html>`);
+      return;
+    }
+  }
+
   // 3. Prevent Path Traversal
   const normalizedRelPath = path.normalize(decodedPath).replace(/^(\.\.[\/\\])+/, '');
   const filePath = path.resolve(ROOT_DIR, '.' + path.sep + normalizedRelPath);
@@ -231,6 +292,8 @@ const server = http.createServer((req, res) => {
 
     if (checkRel.includes('admin')) {
       headers['X-Robots-Tag'] = 'noindex, nofollow';
+      headers['X-Frame-Options'] = 'DENY';
+      headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0';
     }
 
     // Auto-provision secure HttpOnly SameSite=Strict session cookie for HTML pages

@@ -1570,6 +1570,8 @@
                     const forRole = document.getElementById('forbidden-user-role');
                     if (forEmail) forEmail.textContent = session.user.email || 'user';
                     if (forRole) forRole.textContent = (role || 'promoter').toUpperCase();
+                    liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
+                    showToast('Access Denied: Account lacks Administrator clearance.');
                     return;
                 }
 
@@ -1655,6 +1657,8 @@
                 const forRole = document.getElementById('forbidden-user-role');
                 if (forEmail) forEmail.textContent = session.user.email || 'user';
                 if (forRole) forRole.textContent = (role || 'promoter').toUpperCase();
+                liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
+                showToast('Access Denied: Account lacks Administrator clearance.');
                 return;
             }
 

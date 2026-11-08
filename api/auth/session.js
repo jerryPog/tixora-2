@@ -6,6 +6,38 @@
 const crypto = require('crypto');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 
+function parseCookies(cookieHeader) {
+    const list = {};
+    if (!cookieHeader) return list;
+    cookieHeader.split(';').forEach(cookie => {
+        let [name, ...rest] = cookie.split('=');
+        name = name.trim();
+        if (!name) return;
+        const value = rest.join('=').trim();
+        if (!value) return;
+        try {
+            list[name] = decodeURIComponent(value);
+        } catch (e) {
+            list[name] = value;
+        }
+    });
+    return list;
+}
+
+function extractJwtPayload(token) {
+    if (!token || typeof token !== 'string') return null;
+    try {
+        const parts = token.split('.');
+        if (parts.length === 3) {
+            const b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+            const padded = b64.padEnd(b64.length + (4 - (b64.length % 4)) % 4, '=');
+            const jsonStr = Buffer.from(padded, 'base64').toString('utf8');
+            return JSON.parse(jsonStr);
+        }
+    } catch (e) {}
+    return null;
+}
+
 function parseBody(req) {
     return new Promise((resolve) => {
         if (req.body !== undefined) {
@@ -57,14 +89,39 @@ module.exports = async (req, res) => {
         }
 
         const token = body.access_token || crypto.randomBytes(32).toString('hex');
-        const role = body.role || 'promoter';
+        
+        // Anti-Privilege-Escalation Check: Verify admin / manager credentials
+        const requestedRole = (body.role || 'promoter').toLowerCase();
+        let verifiedRole = 'promoter';
+
+        if (requestedRole === 'admin' || requestedRole === 'manager') {
+            const jwtPayload = extractJwtPayload(token);
+            const tokenEmail = (jwtPayload && jwtPayload.email ? jwtPayload.email : '').toLowerCase().trim();
+            const tokenRole = (jwtPayload && jwtPayload.app_metadata && jwtPayload.app_metadata.role ? jwtPayload.app_metadata.role : '').toLowerCase().trim();
+            const reqEmail = (email || '').toLowerCase().trim();
+
+            const isAuthorizedAdmin = 
+                reqEmail === 'admin@tixora.live' || 
+                tokenEmail === 'admin@tixora.live' || 
+                tokenRole === 'admin' || 
+                tokenRole === 'manager';
+
+            if (isAuthorizedAdmin) {
+                verifiedRole = requestedRole;
+            } else {
+                // Deny unverified administrative privilege escalation
+                verifiedRole = 'promoter';
+            }
+        } else {
+            verifiedRole = requestedRole;
+        }
 
         // Successful authentication: Reset failed counter
         recordAttempt(clientIp, email, 'login', true);
 
         res.setHeader('Set-Cookie', [
             `tixora_session=${encodeURIComponent(token)}; ${cookieSecurity}; Max-Age=604800`,
-            `tixora_role=${encodeURIComponent(role)}; ${cookieSecurity}; Max-Age=604800`,
+            `tixora_role=${encodeURIComponent(verifiedRole)}; ${cookieSecurity}; Max-Age=604800`,
             `tixora_auth_status=authenticated; Path=/; Secure; SameSite=Strict; Max-Age=604800`
         ]);
 
@@ -72,7 +129,8 @@ module.exports = async (req, res) => {
             return res.status(200).json({
                 status: 'success',
                 authenticated: true,
-                role: role,
+                role: verifiedRole,
+                is_admin: verifiedRole === 'admin' || verifiedRole === 'manager',
                 cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
             });
         } else {
@@ -80,19 +138,24 @@ module.exports = async (req, res) => {
             return res.end(JSON.stringify({
                 status: 'success',
                 authenticated: true,
-                role: role,
+                role: verifiedRole,
+                is_admin: verifiedRole === 'admin' || verifiedRole === 'manager',
                 cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
             }));
         }
     }
 
     if (req.method === 'GET') {
-        const cookieHeader = req.headers.cookie || '';
-        const hasSession = cookieHeader.includes('tixora_session=');
+        const cookies = parseCookies(req.headers.cookie);
+        const hasSession = Boolean(cookies.tixora_session);
+        const role = cookies.tixora_role || (hasSession ? 'promoter' : 'anon');
+        const isAdmin = hasSession && (role === 'admin' || role === 'manager');
         
         const payload = {
             authenticated: hasSession,
             has_session_cookie: hasSession,
+            role: role,
+            is_admin: isAdmin,
             cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
         };
 
