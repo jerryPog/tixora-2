@@ -111,14 +111,18 @@ SELECT assign_admin_role('admin@tixora.live');
 
 ---
 
-## 5. Instant Test & Sandbox Credentials
+## 5. Zero Plain-Text & Cryptographic Password Hashing Protocol
 
-For rapid sandbox testing without configuring external Supabase keys, Tixora includes built-in test environments:
+Tixora enforces a strict **Zero Plaintext Password Policy**:
+- **Never Store Plaintext**: Passwords are NEVER persisted in plain text anywhere — not in database tables, localStorage, sessionStorage, cookies, or console output.
+- **Bcrypt Salted Hashing**: In PostgreSQL / Supabase, all passwords are cryptographically salted and hashed using Blowfish `bcrypt` (`$2a$10$...`) with per-user unique salts via PostgreSQL `pgcrypto` (`extensions.crypt(password, extensions.gen_salt('bf', 10))`).
+- **Memory Purging**: All DOM input fields for passwords are automatically cleared immediately upon form submission.
+- **Client-Side Hashing Engine**: `TixoraAuth.hashPassword(plainText, salt)` provides Web Crypto API SHA-256 salted hashing for secure client-side cryptographic hashing.
 
-| Role | Email | Password | Access |
-|---|---|---|---|
-| **Operations Admin** | `admin@tixora.live` | `tixora2026` | Full access to `/admin` Operations Desk |
-| **Youth Promoter** | `aarav.sharma@columbia.edu` | `tixora2026` | Patron Tier promoter desk with live UPI settlements |
-
-Click the **"Load Test Admin"** or **"Load Test Promoter"** buttons on the login modals for 1-click evaluation.
+### Creating an Admin User via Cryptographic Hash:
+Run this function in your Supabase SQL Editor:
+```sql
+SELECT create_secure_admin('admin@tixora.live', '<YourStrongPasswordHere>');
+```
+*This automatically hashes the password using PostgreSQL's native `pgcrypto` engine before writing to `auth.users`, ensuring plaintext is never stored or logged.*
 

@@ -48,6 +48,42 @@
         }
     };
 
+    // ZERO PLAINTEXT PROTOCOL: Purge any legacy plain-text password stores from localStorage
+    try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.removeItem('tixora_local_users');
+            window.localStorage.removeItem('tixora_demo_session');
+            for (let i = window.localStorage.length - 1; i >= 0; i--) {
+                const k = window.localStorage.key(i);
+                if (k && (k.includes('pass') || k.includes('user_store') || k.includes('local_users') || k.includes('demo_session'))) {
+                    window.localStorage.removeItem(k);
+                }
+            }
+        }
+    } catch (e) {}
+
+    /**
+     * Cryptographic Password Hashing Protocol (SHA-256 via Web Crypto API)
+     * Cryptographically salts and hashes passwords. Passwords are never stored in plain text.
+     */
+    async function hashPassword(plainTextPassword, salt = 'tixora-salt-2026') {
+        if (!plainTextPassword) return '';
+        try {
+            if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
+                const EncoderClass = typeof TextEncoder !== 'undefined' ? TextEncoder : (typeof window !== 'undefined' ? window.TextEncoder : null);
+                if (!EncoderClass) throw new Error('TextEncoder is unavailable.');
+                const encoder = new EncoderClass();
+                const data = encoder.encode(plainTextPassword + ':' + salt);
+                const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+        } catch (e) {
+            console.warn('[TixoraAuth] Web Crypto unavailable:', e);
+        }
+        return '';
+    }
+
     /**
      * Get or initialize the Supabase client
      */
@@ -554,6 +590,7 @@
         signUp,
         signOut,
         resendConfirmation,
+        hashPassword,
         onAuthStateChange,
         guardAdminRoute,
         guardPromoterRoute

@@ -3915,7 +3915,10 @@
         async function handlePromoterSignIn(e) {
             e.preventDefault();
             const email = document.getElementById('signin-email').value;
-            const password = document.getElementById('signin-password').value;
+            const passwordInput = document.getElementById('signin-password');
+            const password = passwordInput ? passwordInput.value : '';
+            // Zero Plaintext Protocol: Clear password immediately from DOM
+            if (passwordInput) passwordInput.value = '';
             const errBox = document.getElementById('promoter-auth-error');
             const errText = document.getElementById('promoter-auth-error-text');
             const btn = document.getElementById('btn-signin-submit');
@@ -3948,7 +3951,10 @@
             const fullName = document.getElementById('signup-fullname').value.trim();
             const phone = document.getElementById('signup-phone').value.trim();
             const email = document.getElementById('signup-email').value.trim();
-            const password = document.getElementById('signup-password').value;
+            const passwordInput = document.getElementById('signup-password');
+            const password = passwordInput ? passwordInput.value : '';
+            // Zero Plaintext Protocol: Clear password immediately from DOM
+            if (passwordInput) passwordInput.value = '';
             const city = document.getElementById('signup-city').value.trim();
             const upiId = document.getElementById('signup-upi').value.trim();
 
@@ -4005,15 +4011,6 @@
             showToast('Signed out of Promoter Portal.');
             closeModal('promoter-modal');
             await refreshPromoterUI();
-        }
-
-        function fillTestPromoterCredentials() {
-            switchPromoterAuthTab('signin');
-            const email = document.getElementById('signin-email');
-            const pass = document.getElementById('signin-password');
-            if (email) email.value = 'aarav.sharma@columbia.edu';
-            if (pass) pass.value = 'tixora2026';
-            showToast('Test promoter credentials loaded.');
         }
 
         function copyPromoterReferralLink() {

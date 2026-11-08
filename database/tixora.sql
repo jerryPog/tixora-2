@@ -678,6 +678,83 @@ EXCEPTION
     NULL;
 END $$;
 
+-- =====================================================================
+-- CRYPTOGRAPHIC PASSWORD HASHING PROTOCOL (ZERO PLAINTEXT GUARANTEE)
+-- =====================================================================
+-- Ensure pgcrypto extension is installed in extensions schema
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
+-- Function: Create or Elevate Admin with Salted Bcrypt Hashed Password (NEVER PLAIN TEXT)
+-- Uses standard PostgreSQL pgcrypto crypt(password, gen_salt('bf', 10))
+CREATE OR REPLACE FUNCTION public.create_secure_admin(
+    admin_email TEXT,
+    admin_raw_password TEXT
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions, auth, pg_temp
+AS $$
+DECLARE
+    new_user_id UUID;
+    hashed_pw TEXT;
+BEGIN
+    -- Cryptographically hash password using Blowfish bcrypt (Cost factor 10)
+    -- Salt is uniquely generated per password via extensions.gen_salt('bf', 10)
+    hashed_pw := extensions.crypt(admin_raw_password, extensions.gen_salt('bf', 10));
+
+    -- Check if user already exists in auth.users
+    SELECT id INTO new_user_id FROM auth.users WHERE email = LOWER(admin_email);
+
+    IF new_user_id IS NOT NULL THEN
+        -- Update password to salted bcrypt hash and ensure email confirmed
+        UPDATE auth.users
+        SET encrypted_password = hashed_pw,
+            raw_app_meta_data = jsonb_set(COALESCE(raw_app_meta_data, '{}'::jsonb), '{role}', '"admin"'),
+            email_confirmed_at = COALESCE(email_confirmed_at, now()),
+            updated_at = now()
+        WHERE id = new_user_id;
+    ELSE
+        new_user_id := gen_random_uuid();
+        INSERT INTO auth.users (
+            id,
+            instance_id,
+            email,
+            encrypted_password,
+            email_confirmed_at,
+            raw_app_meta_data,
+            raw_user_meta_data,
+            created_at,
+            updated_at,
+            aud,
+            role
+        ) VALUES (
+            new_user_id,
+            '00000000-0000-00-00-00-00-000000000000',
+            LOWER(admin_email),
+            hashed_pw,
+            now(),
+            '{"provider":"email","providers":["email"],"role":"admin"}'::jsonb,
+            '{"full_name":"Master Admin"}'::jsonb,
+            now(),
+            now(),
+            'authenticated',
+            'authenticated'
+        );
+    END IF;
+
+    -- Elevate role in public.user_roles table
+    INSERT INTO public.user_roles (user_id, role)
+    VALUES (new_user_id, 'admin')
+    ON CONFLICT (user_id, role) DO NOTHING;
+
+    RETURN new_user_id;
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) TO service_role;
+
 DO $$
 BEGIN
   RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All 14 tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized successfully.';

@@ -603,8 +603,12 @@
 
         async function handleDashboardSignIn(e) {
             e.preventDefault();
-            const email = document.getElementById('dash-signin-email').value.trim();
-            const password = document.getElementById('dash-signin-password').value;
+            const emailInput = document.getElementById('dash-signin-email');
+            const passwordInput = document.getElementById('dash-signin-password');
+            const email = (emailInput ? emailInput.value : '').trim();
+            const password = passwordInput ? passwordInput.value : '';
+            // Zero Plaintext Protocol: Clear password immediately from DOM
+            if (passwordInput) passwordInput.value = '';
             const errBox = document.getElementById('dashboard-auth-error');
             const errText = document.getElementById('dashboard-auth-error-text');
             const btn = document.getElementById('btn-dash-signin');
@@ -637,7 +641,10 @@
             const fullName = document.getElementById('dash-signup-fullname').value.trim();
             const phone = document.getElementById('dash-signup-phone').value.trim();
             const email = document.getElementById('dash-signup-email').value.trim();
-            const password = document.getElementById('dash-signup-password').value;
+            const passwordInput = document.getElementById('dash-signup-password');
+            const password = passwordInput ? passwordInput.value : '';
+            // Zero Plaintext Protocol: Clear password immediately from DOM
+            if (passwordInput) passwordInput.value = '';
             const city = document.getElementById('dash-signup-city').value.trim();
             const upiId = document.getElementById('dash-signup-upi').value.trim();
 

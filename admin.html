@@ -1533,8 +1533,12 @@
         // --------------------------------------------------------------------
         async function handleAdminSignIn(e) {
             e.preventDefault();
-            const email = document.getElementById('admin-login-email').value.trim();
-            const password = document.getElementById('admin-login-password').value;
+            const emailInput = document.getElementById('admin-login-email');
+            const passwordInput = document.getElementById('admin-login-password');
+            const email = (emailInput ? emailInput.value : '').trim();
+            const password = passwordInput ? passwordInput.value : '';
+            // Zero Plaintext Protocol: Clear password immediately from DOM
+            if (passwordInput) passwordInput.value = '';
             const errBox = document.getElementById('admin-auth-error');
             const errText = document.getElementById('admin-auth-error-text');
             const btn = document.getElementById('admin-login-btn');
