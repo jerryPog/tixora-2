@@ -56,15 +56,9 @@ const MIME = {
 };
 
 const server = http.createServer((req, res) => {
-  // 1. Enforce Canonical Host (301 Permanent Redirect from WWW to Apex)
-  const host = req.headers.host || '';
-  if (host.startsWith('www.')) {
-    const apexHost = host.slice(4);
-    res.writeHead(301, {
-      'Location': `https://${apexHost}${req.url}`,
-      'Connection': 'close'
-    });
-    res.end();
+  // 1. Force HTTPS & Canonical Apex Host (301 Permanent Redirect)
+  const { enforceHttps } = require('./lib/security-headers');
+  if (enforceHttps(req, res)) {
     return;
   }
 
@@ -148,6 +142,13 @@ const server = http.createServer((req, res) => {
   if (decodedPath === '/api/auth/rate-limit' || decodedPath === '/api/rate-limit') {
     const rateLimitHandler = require('./api/auth/rate-limit');
     rateLimitHandler(req, res);
+    return;
+  }
+
+  // 2c-2. Server-Side Form Validation API Endpoint
+  if (decodedPath === '/api/auth/validate' || decodedPath === '/api/validate') {
+    const { handleValidationRequest } = require('./lib/validator');
+    handleValidationRequest(req, res);
     return;
   }
 
@@ -282,12 +283,19 @@ const server = http.createServer((req, res) => {
     checkRel.endsWith('.yaml') ||
     (checkRel.endsWith('.json') && !checkRel.endsWith('manifest.json') && !checkRel.endsWith('.mcp.json'));
 
+  const { STANDARD_CSP, ADMIN_CSP, PERMISSIONS_POLICY } = require('./lib/security-headers');
+  const isAdminTarget = checkRel.includes('admin') || isAdminRoute;
   const baseHeaders = {
+    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
     'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': checkRel.includes('admin') ? 'DENY' : 'SAMEORIGIN',
+    'X-Frame-Options': isAdminTarget ? 'DENY' : 'SAMEORIGIN',
+    'X-XSS-Protection': '1; mode=block',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
+    'Permissions-Policy': PERMISSIONS_POLICY,
+    'Content-Security-Policy': isAdminTarget ? ADMIN_CSP : STANDARD_CSP,
+    'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    'Cross-Origin-Resource-Policy': 'cross-origin',
+    'X-Permitted-Cross-Domain-Policies': 'none'
   };
 
   if (isBlocked) {
@@ -342,9 +350,11 @@ const server = http.createServer((req, res) => {
       'Cache-Control': cacheControl
     };
 
-    if (checkRel.includes('admin')) {
+    if (isAdminTarget) {
       headers['X-Robots-Tag'] = 'noindex, nofollow';
       headers['X-Frame-Options'] = 'DENY';
+      headers['Content-Security-Policy'] = ADMIN_CSP;
+      headers['Cross-Origin-Resource-Policy'] = 'same-origin';
       headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0';
     }
 

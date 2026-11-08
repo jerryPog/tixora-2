@@ -6,6 +6,7 @@
 const { consumeResetToken, hashToken } = require('../../lib/token-store');
 const { validateResetPassword } = require('../../lib/validator');
 const { csrfGuard } = require('../../lib/csrf');
+const { applySecurityHeaders } = require('../../lib/security-headers');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -33,8 +34,7 @@ function parseBody(req) {
 }
 
 module.exports = async (req, res) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    applySecurityHeaders(res, { isApi: true });
 
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;

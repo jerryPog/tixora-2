@@ -7,6 +7,16 @@
 (function (window) {
     'use strict';
 
+    // 0. Force HTTPS upgrade in production browser environments
+    if (typeof window !== 'undefined' && window.location) {
+        try {
+            var _loc = window.location;
+            if (_loc.protocol === 'http:' && _loc.hostname !== 'localhost' && _loc.hostname !== '127.0.0.1') {
+                _loc.replace('https://' + _loc.host + _loc.pathname + _loc.search + _loc.hash);
+            }
+        } catch (e) {}
+    }
+
     // Official Supabase project credentials for Tixora Live
     const DEFAULT_URL = 'https://hgzcdzlfwweesdljeqdv.supabase.co';
     const DEFAULT_KEY = 'sb_publishable_CyGJeojb0by0XRENmjOlAg_bbjW_Wck';

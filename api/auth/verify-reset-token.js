@@ -4,6 +4,7 @@
  */
 
 const { verifyResetToken } = require('../../lib/token-store');
+const { applySecurityHeaders } = require('../../lib/security-headers');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -31,8 +32,7 @@ function parseBody(req) {
 }
 
 module.exports = async (req, res) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    applySecurityHeaders(res, { isApi: true });
 
     let token = '';
 
