@@ -86,6 +86,32 @@ const server = http.createServer((req, res) => {
   const cookies = parseCookies(req.headers.cookie);
   const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
 
+  // 2-CSRF. Cryptographic CSRF Token Provisioning Endpoint
+  if (decodedPath === '/api/auth/csrf' || decodedPath === '/api/csrf') {
+    const { handleCsrfEndpoint } = require('./lib/csrf');
+    handleCsrfEndpoint(req, res);
+    return;
+  }
+
+  // 2-CSRF-BARRIER. OWASP CSRF Defense Barrier for API Mutations
+  if (decodedPath.startsWith('/api/') && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+    const { validateCsrf } = require('./lib/csrf');
+    const csrfCheck = validateCsrf(req);
+    if (!csrfCheck.valid) {
+      res.writeHead(403, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff'
+      });
+      res.end(JSON.stringify({
+        status: 'forbidden',
+        code: csrfCheck.code,
+        error: 'CSRF_PROTECTION_BLOCKED',
+        message: csrfCheck.message
+      }));
+      return;
+    }
+  }
+
   // 2a. Secure Session Management API Endpoints
   if (decodedPath === '/api/auth/session' || decodedPath === '/api/session') {
     const sessionHandler = require('./api/auth/session');
@@ -322,10 +348,19 @@ const server = http.createServer((req, res) => {
       headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0';
     }
 
-    // Auto-provision secure HttpOnly SameSite=Strict session cookie for HTML pages
+    // Auto-provision secure HttpOnly SameSite=Strict session cookie & CSRF cookie for HTML pages
+    const setCookieHeaders = [];
     if (isHtml && !cookies.tixora_session_id) {
       const newSessionId = crypto.randomBytes(24).toString('hex');
-      headers['Set-Cookie'] = `tixora_session_id=${newSessionId}; ${cookieSecurity}; Max-Age=604800`;
+      setCookieHeaders.push(`tixora_session_id=${newSessionId}; ${cookieSecurity}; Max-Age=604800`);
+    }
+    if (isHtml && !cookies.tixora_csrf) {
+      const { generateCsrfToken, COOKIE_NAME } = require('./lib/csrf');
+      const csrfToken = generateCsrfToken();
+      setCookieHeaders.push(`${COOKIE_NAME}=${encodeURIComponent(csrfToken)}; Path=/; Secure; SameSite=Strict; Max-Age=86400`);
+    }
+    if (setCookieHeaders.length > 0) {
+      headers['Set-Cookie'] = setCookieHeaders;
     }
 
     res.writeHead(200, headers);

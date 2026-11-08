@@ -10,6 +10,7 @@ const sessionHandler = require('./session');
 const logoutHandler = require('./logout');
 const rateLimitHandler = require('./rate-limit');
 const { handleValidationRequest } = require('../../lib/validator');
+const { handleCsrfEndpoint, validateCsrf } = require('../../lib/csrf');
 
 module.exports = async (req, res) => {
     const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
@@ -29,6 +30,25 @@ module.exports = async (req, res) => {
     }
     if (pathOnly.includes('logout')) {
         return logoutHandler(req, res);
+    }
+    if (pathOnly.includes('csrf')) {
+        return handleCsrfEndpoint(req, res);
+    }
+
+    // OWASP CSRF Defense Barrier for State-Changing Requests
+    if (['POST', 'PUT', 'DELETE', 'PATCH'].includes((req.method || '').toUpperCase())) {
+        const csrfCheck = validateCsrf(req);
+        if (!csrfCheck.valid) {
+            const errPayload = {
+                status: 'forbidden',
+                code: csrfCheck.code,
+                error: 'CSRF_PROTECTION_BLOCKED',
+                message: csrfCheck.message
+            };
+            if (typeof res.status === 'function') return res.status(403).json(errPayload);
+            res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+            return res.end(JSON.stringify(errPayload));
+        }
     }
     if (pathOnly.includes('validate') || pathOnly.includes('validation')) {
         return handleValidationRequest(req, res);

@@ -84,16 +84,68 @@
         return '';
     }
 
+    let _cachedCsrfToken = null;
+
+    /**
+     * Get or fetch valid signed CSRF token
+     */
+    async function getCsrfToken() {
+        if (_cachedCsrfToken) return _cachedCsrfToken;
+
+        // 1. Try reading from document.cookie
+        if (typeof document !== 'undefined' && document.cookie) {
+            const match = document.cookie.match(/(?:^|;\s*)tixora_csrf=([^;]+)/);
+            if (match && match[1]) {
+                _cachedCsrfToken = decodeURIComponent(match[1]);
+                return _cachedCsrfToken;
+            }
+        }
+
+        // 2. Fetch from secure CSRF provisioning endpoint
+        try {
+            const res = await fetch('/api/auth/csrf');
+            const data = await res.json();
+            if (data && data.csrf_token) {
+                _cachedCsrfToken = data.csrf_token;
+                return _cachedCsrfToken;
+            }
+        } catch (e) {
+            // Non-blocking fallback
+        }
+        return '';
+    }
+
+    /**
+     * Secure Fetch with Automatic CSRF Token Injection & Origin Header
+     */
+    async function fetchWithCsrf(url, options = {}) {
+        const method = (options.method || 'GET').toUpperCase();
+        const headers = { ...(options.headers || {}) };
+
+        // Attach CSRF token on state-changing requests
+        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+            const token = await getCsrfToken();
+            if (token) {
+                headers['X-CSRF-Token'] = token;
+            }
+        }
+
+        return fetch(url, {
+            ...options,
+            headers,
+            credentials: options.credentials || 'same-origin'
+        });
+    }
+
     /**
      * Synchronize session token with server-side endpoint to issue HttpOnly, Secure, SameSite=Strict cookies
      */
     async function syncSessionCookie(accessToken, role) {
         try {
             if (typeof fetch === 'function') {
-                await fetch('/api/auth/session', {
+                await fetchWithCsrf('/api/auth/session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin',
                     body: JSON.stringify({
                         access_token: accessToken || '',
                         role: role || 'promoter'
@@ -111,9 +163,8 @@
     async function clearSessionCookie() {
         try {
             if (typeof fetch === 'function') {
-                await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    credentials: 'same-origin'
+                await fetchWithCsrf('/api/auth/logout', {
+                    method: 'POST'
                 });
             }
         } catch (e) {
@@ -462,7 +513,7 @@
 
         try {
             if (typeof fetch === 'function') {
-                await fetch('/api/auth/rate-limit', {
+                await fetchWithCsrf('/api/auth/rate-limit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action, identifier, success })
@@ -478,7 +529,7 @@
     async function validateFormOnServer(formType, data) {
         try {
             const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tixora.live';
-            const res = await fetch(`${origin}/api/auth/validate`, {
+            const res = await fetchWithCsrf(`${origin}/api/auth/validate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ formType, data })
@@ -694,7 +745,7 @@
 
         try {
             if (typeof fetch === 'function') {
-                const res = await fetch('/api/auth/forgot-password', {
+                const res = await fetchWithCsrf('/api/auth/forgot-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: cleanEmail, validity_minutes: 15 })
@@ -761,7 +812,7 @@
 
         try {
             if (typeof fetch === 'function') {
-                const res = await fetch('/api/auth/reset-password', {
+                const res = await fetchWithCsrf('/api/auth/reset-password', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token, new_password: newPassword })
@@ -1006,6 +1057,8 @@
         verifyReferralCode,
         queryParameterized,
         validateForm: validateFormOnServer,
+        getCsrfToken,
+        fetchWithCsrf,
         signIn,
         signUp,
         signOut,
