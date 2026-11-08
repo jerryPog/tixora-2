@@ -1060,8 +1060,8 @@
                         class="w-full ops-input px-3 py-2 text-white">
                 </div>
                 <div>
-                    <label class="block text-slate-400 mb-1">SUPABASE ANON / SERVICE ROLE KEY</label>
-                    <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." 
+                    <label class="block text-slate-400 mb-1">SUPABASE ANON / PUBLISHABLE KEY <span class="text-amber-400 font-sans font-normal text-[10px] ml-1">(Never enter a service_role key here)</span></label>
+                    <input type="password" id="cfg-supabase-key" placeholder="sb_publishable_... or anon key" 
                         class="w-full ops-input px-3 py-2 text-white font-mono">
                 </div>
             </div>
@@ -2798,6 +2798,10 @@
         function saveSupabaseConfig() {
             const url = document.getElementById('cfg-supabase-url').value.trim();
             const key = document.getElementById('cfg-supabase-key').value.trim();
+            if (key.includes('service_role') || key.startsWith('sb_secret_')) {
+                alert('SECURITY WARNING: Never paste a Supabase service_role or secret key into browser settings! Only use the anon/publishable key.');
+                return;
+            }
             if (url && key) {
                 TixoraAuth.setCredentials(url, key);
                 closeModal('supabase-modal');
@@ -2811,6 +2815,10 @@
         async function testSupabaseConnection() {
             const url = document.getElementById('cfg-supabase-url').value.trim();
             const key = document.getElementById('cfg-supabase-key').value.trim();
+            if (key.includes('service_role') || key.startsWith('sb_secret_')) {
+                alert('SECURITY WARNING: Never paste a Supabase service_role or secret key into browser settings! Only use the anon/publishable key.');
+                return;
+            }
             if (!url || !key) {
                 showToast('Enter URL and Key first.');
                 return;
