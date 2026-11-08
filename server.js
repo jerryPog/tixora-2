@@ -1,4 +1,4 @@
-const http = require('http');
+  const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
@@ -68,6 +68,8 @@ const server = http.createServer((req, res) => {
     resolvedPath = path.join(ROOT_DIR, 'index.html');
   } else if (relFromRoot === 'admin') {
     resolvedPath = path.join(ROOT_DIR, 'admin.html');
+  } else if (relFromRoot === 'dashboard' || relFromRoot === 'portal') {
+    resolvedPath = path.join(ROOT_DIR, 'dashboard.html');
   } else if (relFromRoot === 'tours') {
     resolvedPath = path.join(ROOT_DIR, 'tours.html');
   } else if (relFromRoot === 'promoter') {

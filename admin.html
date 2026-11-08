@@ -140,8 +140,8 @@
 </head>
 <body class="min-h-screen flex flex-col bg-[#0b0d14] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
 
-    <!-- Top Command Navigation Bar -->
-    <header class="sticky top-0 z-40 px-4 sm:px-6 h-14 flex items-center justify-between bg-[#0e1018] border-b border-[#1e2333]">
+    <!-- Top Command Navigation Bar (Protected) -->
+    <header id="admin-header" class="hidden sticky top-0 z-40 px-4 sm:px-6 h-14 flex items-center justify-between bg-[#0e1018] border-b border-[#1e2333]">
         <div class="flex items-center space-x-3 sm:space-x-4">
             <!-- Brand Mark -->
             <a href="/" class="flex items-center space-x-2.5 group">
@@ -1490,6 +1490,14 @@
         // MODAL HELPERS
         // --------------------------------------------------------------------
         function openModal(id) {
+            // Guard: Only allow opening operational modals if authenticated in workspace (or supabase-modal)
+            if (id !== 'supabase-modal') {
+                const workspace = document.getElementById('admin-workspace');
+                if (!workspace || workspace.classList.contains('hidden')) {
+                    showToast('Administrative authentication required.');
+                    return;
+                }
+            }
             const m = document.getElementById(id);
             if (m) {
                 m.classList.remove('hidden');
@@ -1542,14 +1550,20 @@
                 }
 
                 const res = await TixoraAuth.signIn(email, password);
-                let session = res ? res.session : null;
-
-                if (!session) {
-                    session = await TixoraAuth.getSession();
-                }
+                const session = res ? res.session : null;
 
                 if (!session || !session.user) {
                     throw new Error('Invalid email or password.');
+                }
+
+                const role = await TixoraAuth.getUserRole(session.user);
+                if (role !== 'admin' && role !== 'manager') {
+                    showGateState('forbidden');
+                    const forEmail = document.getElementById('forbidden-user-email');
+                    const forRole = document.getElementById('forbidden-user-role');
+                    if (forEmail) forEmail.textContent = session.user.email || 'user';
+                    if (forRole) forRole.textContent = (role || 'promoter').toUpperCase();
+                    return;
                 }
 
                 showToast('Authentication approved. Entering Operations Desk...');
@@ -1584,11 +1598,13 @@
             const gate = document.getElementById('admin-auth-gate');
             const forbidden = document.getElementById('admin-forbidden-gate');
             const workspace = document.getElementById('admin-workspace');
+            const header = document.getElementById('admin-header');
 
             if (barrier) barrier.classList.add('hidden');
             if (gate) gate.classList.add('hidden');
             if (forbidden) forbidden.classList.add('hidden');
             if (workspace) workspace.classList.add('hidden');
+            if (header) header.classList.add('hidden');
 
             if (state === 'loading') {
                 if (barrier) barrier.classList.remove('hidden');
@@ -1598,6 +1614,7 @@
                 if (forbidden) forbidden.classList.remove('hidden');
             } else if (state === 'workspace') {
                 if (workspace) workspace.classList.remove('hidden');
+                if (header) header.classList.remove('hidden');
             }
         }
 
@@ -1607,13 +1624,27 @@
                 return;
             }
 
+            const role = await TixoraAuth.getUserRole(session.user);
+            if (role !== 'admin' && role !== 'manager') {
+                showGateState('forbidden');
+                const forEmail = document.getElementById('forbidden-user-email');
+                const forRole = document.getElementById('forbidden-user-role');
+                if (forEmail) forEmail.textContent = session.user.email || 'user';
+                if (forRole) forRole.textContent = (role || 'promoter').toUpperCase();
+                return;
+            }
+
             const userEmail = session.user.email || '';
             const emailBadge = document.getElementById('admin-user-email');
             const roleBadge = document.getElementById('admin-user-role-badge');
             const avatar = document.getElementById('admin-user-avatar');
+            const sideName = document.getElementById('sidebar-user-name');
+            const sideRole = document.getElementById('sidebar-user-role');
 
             if (emailBadge) emailBadge.textContent = userEmail.split('@')[0] || 'Master Admin';
-            if (roleBadge) roleBadge.textContent = 'SUPER ADMIN';
+            if (roleBadge) roleBadge.textContent = (role === 'manager' ? 'MANAGER' : 'SUPER ADMIN');
+            if (sideName) sideName.textContent = userEmail.split('@')[0] || 'Master Admin';
+            if (sideRole) sideRole.textContent = 'Operations Clearance';
             if (avatar) {
                 const initials = (userEmail.slice(0, 2) || 'OP').toUpperCase();
                 avatar.innerHTML = `<span class="font-bold text-xs text-emerald-400">${initials}</span>`;

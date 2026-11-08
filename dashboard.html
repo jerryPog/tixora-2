@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth overflow-x-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Tixora Promoter Command Center | Real-time Settlements & Yield Ledger</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Production Console Warning Filter -->
+    <script>
+        (function () {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <!-- Supabase JS Client (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <!-- Tixora Supabase Config -->
+    <script src="supabase-config.js" defer></script>
+    <!-- Tixora Supabase Auth & RBAC Route Guard Protocol -->
+    <script src="auth.js" defer></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        crimson: {
+                            DEFAULT: '#dc2626',
+                            hover: '#ef4444',
+                            glow: 'rgba(220, 38, 38, 0.4)'
+                        },
+                        tx: {
+                            bg: '#0b0d14',
+                            surface: '#0d1019',
+                            surfaceHover: '#131622',
+                            border: '#1e2436',
+                            borderHover: '#2a3248',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            cyan: '#0284c7'
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+        body {
+            background-color: #0b0d14;
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+        .portal-card {
+            background-color: #0d1019;
+            border: 1px solid #1e2436;
+            border-radius: 1rem;
+            transition: border-color 150ms ease;
+        }
+        .portal-card:hover {
+            border-color: #2a3248;
+        }
+        .portal-input {
+            background-color: #131622;
+            border: 1px solid #1e2436;
+            color: #f8fafc;
+            border-radius: 0.75rem;
+            transition: all 150ms ease;
+        }
+        .portal-input:focus {
+            border-color: #dc2626;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+            background-color: #161a29;
+        }
+        .btn-primary {
+            background-color: #dc2626;
+            color: #ffffff;
+            font-weight: 600;
+            transition: all 150ms ease;
+        }
+        .btn-primary:hover {
+            background-color: #ef4444;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+        }
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+        .badge-crimson {
+            background-color: rgba(220, 38, 38, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+        .badge-emerald {
+            background-color: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .badge-amber {
+            background-color: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0d14; }
+        ::-webkit-scrollbar-thumb { background: #1e2436; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333b52; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#0b0d14] text-slate-100 antialiased selection:bg-crimson/20 selection:text-red-300">
+
+    <!-- ========================================================= -->
+    <!-- AUTHENTICATION STATE 1: LOADING BARRIER -->
+    <!-- ========================================================= -->
+    <div id="dashboard-loading-barrier" class="flex-1 flex flex-col items-center justify-center p-8 space-y-4 my-auto">
+        <div class="relative w-12 h-12 flex items-center justify-center">
+            <div class="absolute inset-0 rounded-full border-2 border-crimson/20 border-t-crimson animate-spin"></div>
+            <span class="font-bold text-white text-[10px] tracking-wider font-mono">TIX</span>
+        </div>
+        <div class="text-center space-y-1">
+            <div class="font-semibold text-white text-sm">Verifying Promoter Clearance</div>
+            <div class="text-xs font-mono text-slate-400">Authenticating session via Supabase RBAC Protocol</div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- AUTHENTICATION STATE 2: PROTECTED PROMOTER LOGIN GATE -->
+    <!-- ========================================================= -->
+    <div id="dashboard-auth-gate" class="hidden flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+        <div class="portal-card max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+            <div class="space-y-2 text-center">
+                <a href="/" class="inline-block mb-1">
+                    <img src="tixora-logo.png" alt="TIXORA" width="128" height="32" class="h-8 w-auto mx-auto object-contain">
+                </a>
+                <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider badge-crimson">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                    <span>Promoter Network Gateway</span>
+                </div>
+                <h2 class="text-2xl font-bold text-white tracking-tight">Promoter Command Center</h2>
+                <p class="text-xs text-slate-300 leading-relaxed max-w-md mx-auto">
+                    Sign in with your verified promoter credentials to track live tour ticket allocations, commission yields, and instant UPI settlements.
+                </p>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="dashboard-auth-error" class="hidden p-3.5 rounded-xl bg-crimson/15 border border-crimson/30 text-xs text-crimson flex items-start space-x-2">
+                <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                <span id="dashboard-auth-error-text">Authentication failed</span>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="grid grid-cols-2 p-1 rounded-xl bg-[#131622] border border-[#1e2436] text-xs">
+                <button type="button" id="tab-dashboard-signin" onclick="switchDashboardTab('signin')"
+                    class="py-2.5 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md">
+                    Sign In
+                </button>
+                <button type="button" id="tab-dashboard-signup" onclick="switchDashboardTab('signup')"
+                    class="py-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all">
+                    Apply / Register
+                </button>
+            </div>
+
+            <!-- FORM 1: SIGN IN -->
+            <form id="form-dashboard-signin" onsubmit="handleDashboardSignIn(event)" class="space-y-4">
+                <div>
+                    <label class="block text-slate-300 font-mono text-[11px] uppercase mb-1.5 font-semibold">Email Address</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+                        <input type="email" id="dash-signin-email" required placeholder="promoter@network.com" 
+                            class="w-full portal-input pl-10 pr-3.5 py-2.5 text-xs placeholder-slate-500 font-mono">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-mono text-[11px] uppercase mb-1.5 font-semibold">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+                        <input type="password" id="dash-signin-password" required placeholder="••••••••••••" 
+                            class="w-full portal-input pl-10 pr-3.5 py-2.5 text-xs placeholder-slate-500 font-mono">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-dash-signin" class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                    <span id="btn-dash-signin-text">Sign In to Promoter Desk</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signin-icon"></i>
+                </button>
+            </form>
+
+            <!-- FORM 2: REGISTER -->
+            <form id="form-dashboard-signup" onsubmit="handleDashboardSignUp(event)" class="hidden space-y-3 font-sans">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Full Name</label>
+                        <input type="text" id="dash-signup-fullname" required placeholder="Aarav Sharma"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">WhatsApp (+91)</label>
+                        <input type="tel" id="dash-signup-phone" required placeholder="+91 98200 11223"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white font-mono">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Email Address</label>
+                        <input type="email" id="dash-signup-email" required placeholder="aarav@college.edu"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Create Password</label>
+                        <input type="password" id="dash-signup-password" required placeholder="••••••••••••" minlength="6"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white font-mono">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Metro Circuit</label>
+                        <input type="text" id="dash-signup-city" required placeholder="Mumbai / Delhi NCR / Bengaluru"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-mono text-[10px] uppercase mb-1 font-semibold">Settlement UPI ID</label>
+                        <input type="text" id="dash-signup-upi" required placeholder="aarav@okhdfcbank"
+                            class="w-full portal-input px-3.5 py-2 text-xs text-white font-mono">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-dash-signup" class="btn-primary w-full py-3 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center space-x-2">
+                    <span id="btn-dash-signup-text">Submit Application & Register</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signup-icon"></i>
+                </button>
+            </form>
+
+            <!-- REGISTRATION SUCCESS NOTICE -->
+            <div id="dash-confirm-notice" class="hidden text-center space-y-4 pt-2">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
+                    <i data-lucide="mail-check" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="text-xl font-bold text-white">Application Received!</h4>
+                    <p class="text-xs text-slate-300">
+                        Verification link sent to <strong class="text-white font-mono" id="dash-confirm-email"></strong>.
+                    </p>
+                </div>
+                <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] text-[11px] text-slate-300 text-left font-sans leading-relaxed">
+                    Please check your email inbox (and spam folder) for the verification link sent by Tixora. Once verified, sign in to your Promoter Command Center.
+                </div>
+                <div class="space-y-2 pt-2">
+                    <button type="button" onclick="switchDashboardTab('signin')"
+                        class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5">
+                        <span>Proceed to Sign In</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button type="button" id="btn-dash-resend" onclick="handleDashboardResend()"
+                        class="w-full py-2 rounded-xl text-xs font-mono text-slate-400 hover:text-white transition-colors">
+                        Resend Verification Email
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="flex items-center justify-between pt-2 border-t border-[#1e2436] text-xs font-mono">
+                <a href="/" class="text-slate-400 hover:text-white transition-colors flex items-center space-x-1">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                    <span>Back to Fan Site</span>
+                </a>
+                <a href="/protocol" class="text-slate-400 hover:text-crimson transition-colors flex items-center space-x-1">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                    <span>Protocol Architecture</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- AUTHENTICATION STATE 3: PROMOTER COMMAND WORKSPACE -->
+    <!-- ========================================================= -->
+    <div id="dashboard-workspace" class="hidden flex-1 flex flex-col">
+        
+        <!-- Protected Top Command Header -->
+        <header class="sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between bg-[#0d1019]/95 backdrop-blur-md border-b border-[#1e2436]">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="flex items-center space-x-2.5" aria-label="Tixora Home">
+                    <img src="tixora-logo.png" alt="TIXORA" width="128" height="32" class="h-7 w-auto object-contain">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-crimson font-bold border-l border-[#1e2436] pl-2.5 hidden sm:inline">
+                        COMMAND CENTER
+                    </span>
+                </a>
+                <div class="hidden md:flex items-center space-x-2 px-2.5 py-1 rounded-md text-[11px] font-mono bg-[#131622] border border-[#1e2436]">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-slate-300">Live Turnstile Node Active</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <a href="/tours" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 border border-[#1e2436] transition-colors">
+                    <i data-lucide="ticket" class="w-3.5 h-3.5 text-crimson"></i>
+                    <span>Concert Allocations</span>
+                </a>
+
+                <div class="flex items-center space-x-2.5 pl-3 border-l border-[#1e2436]">
+                    <div id="dash-user-avatar" class="w-8 h-8 rounded-full bg-crimson/15 text-crimson border border-crimson/30 flex items-center justify-center font-bold text-xs">
+                        <span>PR</span>
+                    </div>
+                    <div class="hidden sm:flex flex-col text-left">
+                        <span id="dash-header-name" class="text-xs text-white font-medium leading-none">Promoter</span>
+                        <span id="dash-header-tier" class="text-[10px] font-mono text-crimson leading-none mt-1">TIER 01 • SCOUT</span>
+                    </div>
+                    <button onclick="handleDashboardSignOut()" class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-white/[0.05] transition-colors" title="Sign Out of Promoter Desk">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Viewport -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+
+            <!-- Card 1: Overview Banner -->
+            <div class="portal-card p-6 sm:p-7 relative overflow-hidden bg-gradient-to-r from-[#0d1019] via-[#121624] to-[#0d1019]">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <div class="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded text-[10px] font-mono font-bold badge-emerald">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>VERIFIED PROMOTER PROTOCOL CLEARANCE</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight" id="dash-hero-title">
+                            Welcome, Promoter
+                        </h1>
+                        <p class="text-xs text-slate-300 leading-relaxed font-mono" id="dash-hero-sub">
+                            Account: <span class="text-white" id="dash-account-email">promoter@tixora.live</span> • Circuit: <span class="text-white" id="dash-account-city">Mumbai</span>
+                        </p>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <div class="p-3 rounded-xl bg-[#131622] border border-[#1e2436] font-mono text-xs text-right">
+                            <span class="text-[10px] text-slate-400 uppercase block font-semibold">Active Settlement Node</span>
+                            <span class="text-emerald-400 font-bold" id="dash-account-upi">user@upi</span>
+                            <span class="block text-[10px] text-slate-400">&lt;60s direct UPI settlement</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Shareable Promoter Referral Link -->
+            <div class="portal-card p-6 sm:p-7 space-y-4">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <div class="text-[10px] font-mono text-crimson uppercase tracking-wider font-semibold">UNIQUE PROMOTER ALLOCATION LINK</div>
+                        <h2 class="text-lg font-bold text-white mt-0.5">Your Official Shareable Pass Link</h2>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                            Passes purchased through this verified protocol link automatically route commissions to your settlement ledger upon venue turnstile scan.
+                        </p>
+                    </div>
+                    <span id="dash-tier-badge" class="px-2.5 py-1 rounded text-xs font-mono font-bold badge-crimson">
+                        TIER 01 • SCOUT (8%)
+                    </span>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+                    <div class="relative flex-1">
+                        <input type="text" id="dash-referral-input" readonly value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
+                            class="w-full portal-input px-3.5 py-3 text-xs text-white font-mono focus:outline-none">
+                    </div>
+                    <button onclick="copyDashboardReferralLink()"
+                        class="btn-primary px-5 py-3 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center justify-center space-x-1.5">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span id="dash-copy-btn-text">Copy Link</span>
+                    </button>
+                    <a id="dash-whatsapp-btn" target="_blank" href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
+                        class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold whitespace-nowrap flex items-center justify-center space-x-1.5 transition-colors">
+                        <i data-lucide="share-2" class="w-4 h-4"></i>
+                        <span>Broadcast to WhatsApp</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 3: Live Performance Metrics KPI Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="portal-card p-5 space-y-1">
+                    <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold flex items-center justify-between">
+                        <span>Passes Cleared</span>
+                        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold font-mono text-white tabular-nums" id="dash-kpi-passes">0</div>
+                    <div class="text-[11px] text-slate-400">Live venue gate turnstile scans</div>
+                </div>
+
+                <div class="portal-card p-5 space-y-1">
+                    <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold flex items-center justify-between">
+                        <span>Allocation Gross Volume</span>
+                        <i data-lucide="trending-up" class="w-4 h-4 text-cyan-400"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold font-mono text-white tabular-nums" id="dash-kpi-volume">₹0.00</div>
+                    <div class="text-[11px] text-slate-400">Total tickets settled via bridge</div>
+                </div>
+
+                <div class="portal-card p-5 space-y-1">
+                    <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold flex items-center justify-between">
+                        <span>Lifetime Commission</span>
+                        <i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400 tabular-nums" id="dash-kpi-earnings">₹0.00</div>
+                    <div class="text-[11px] text-slate-400">Audited commission yield sum</div>
+                </div>
+
+                <div class="portal-card p-5 space-y-1">
+                    <div class="text-[10px] font-mono uppercase text-slate-400 font-semibold flex items-center justify-between">
+                        <span>Settlement Velocity</span>
+                        <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                    </div>
+                    <div class="text-2xl sm:text-3xl font-extrabold font-mono text-amber-400 tabular-nums">&lt;60s</div>
+                    <div class="text-[11px] text-slate-400">Automated NPCI UPI bridge</div>
+                </div>
+            </div>
+
+            <!-- Card 4: Live Commission Ledger -->
+            <div class="portal-card p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-white">Live Commission Ledger</h3>
+                        <p class="text-xs text-slate-400 font-mono">Real-time gate scan verification and payout status</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-md text-[10px] font-mono badge-emerald">Real-time Ledger</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs font-mono">
+                        <thead>
+                            <tr class="border-b border-[#1e2436] text-slate-400 text-[10px] uppercase">
+                                <th class="pb-2.5 font-semibold">Pass ID</th>
+                                <th class="pb-2.5 font-semibold">Tour Event</th>
+                                <th class="pb-2.5 font-semibold">Tier</th>
+                                <th class="pb-2.5 font-semibold">MRP</th>
+                                <th class="pb-2.5 font-semibold">Cut (%)</th>
+                                <th class="pb-2.5 font-semibold">Commission</th>
+                                <th class="pb-2.5 font-semibold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-ledger-body" class="divide-y divide-[#1e2436]/60 text-slate-300">
+                            <tr>
+                                <td colspan="7" class="py-8 text-center text-slate-500 font-sans text-xs">
+                                    No turnstile pass scans recorded yet. Share your pass link above to begin generating commissions!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Card 5: Tier Ladder Progression -->
+            <div class="portal-card p-6 sm:p-7 space-y-5">
+                <div>
+                    <span class="text-[10px] font-mono text-crimson uppercase tracking-wider font-semibold">VELOCITY PROGRESSION LADDER</span>
+                    <h3 class="text-lg font-bold text-white mt-0.5">Promoter Performance Ladder</h3>
+                    <p class="text-xs text-slate-400 mt-1">Higher volume unlocks elevated commission percentages and priority backstage access.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-[#131622] border border-crimson/40 space-y-2 relative">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold badge-crimson">TIER 01 • ACTIVE</span>
+                        <div class="text-base font-bold text-white">Scout Ambassador</div>
+                        <div class="text-2xl font-extrabold text-crimson font-mono">8.0% <span class="text-xs font-normal text-slate-400">Cut</span></div>
+                        <p class="text-[11px] text-slate-400">Baseline entry quota for campus influencers. 0-50 passes sold.</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-[#131622] border border-[#1e2436] space-y-2 opacity-80">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold badge-amber">TIER 02</span>
+                        <div class="text-base font-bold text-white">Capo Director</div>
+                        <div class="text-2xl font-extrabold text-amber-400 font-mono">11.0% <span class="text-xs font-normal text-slate-400">Cut</span></div>
+                        <p class="text-[11px] text-slate-400">Unlocked at 51+ passes sold. Includes backstage media pass & accelerated settlements.</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-[#131622] border border-[#1e2436] space-y-2 opacity-80">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold badge-emerald">TIER 03</span>
+                        <div class="text-base font-bold text-white">Patron Syndicate</div>
+                        <div class="text-2xl font-extrabold text-emerald-400 font-mono">16.0% <span class="text-xs font-normal text-slate-400">Cut</span></div>
+                        <p class="text-[11px] text-slate-400">Unlocked at 150+ passes sold. Maximum revenue share and dedicated venue host desk.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-auto border-t border-[#1e2436] bg-[#0d1019] py-5 px-4 sm:px-6">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-slate-400">
+                <div>
+                    &copy; 2026 Tixora Protocol Technologies Pvt. Ltd. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-5">
+                    <a href="/protocol" class="hover:text-white transition-colors">Protocol Architecture</a>
+                    <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="/terms" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Toast Notification Element -->
+    <div id="dashboard-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="portal-card px-4 py-3 shadow-2xl flex items-center space-x-2 text-xs font-mono border-crimson/40">
+            <i data-lucide="info" class="w-4 h-4 text-crimson"></i>
+            <span id="dashboard-toast-text" class="text-white">Notice</span>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- DASHBOARD CONTROLLER SCRIPT -->
+    <!-- ========================================================= -->
+    <script>
+        let _activePromoter = null;
+        let _activeUser = null;
+
+        function showToast(msg) {
+            const toast = document.getElementById('dashboard-toast');
+            const txt = document.getElementById('dashboard-toast-text');
+            if (txt) txt.textContent = msg;
+            if (toast) {
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
+            }
+        }
+
+        function switchDashboardTab(tab) {
+            const tabIn = document.getElementById('tab-dashboard-signin');
+            const tabUp = document.getElementById('tab-dashboard-signup');
+            const formIn = document.getElementById('form-dashboard-signin');
+            const formUp = document.getElementById('form-dashboard-signup');
+            const notice = document.getElementById('dash-confirm-notice');
+            const errBox = document.getElementById('dashboard-auth-error');
+
+            if (errBox) errBox.classList.add('hidden');
+            if (notice) notice.classList.add('hidden');
+
+            if (tab === 'signin') {
+                if (tabIn) tabIn.className = 'py-2.5 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md';
+                if (tabUp) tabUp.className = 'py-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all';
+                if (formIn) formIn.classList.remove('hidden');
+                if (formUp) formUp.classList.add('hidden');
+            } else {
+                if (tabUp) tabUp.className = 'py-2.5 rounded-lg font-semibold bg-crimson text-white transition-all shadow-md';
+                if (tabIn) tabIn.className = 'py-2.5 rounded-lg font-semibold text-slate-400 hover:text-white transition-all';
+                if (formUp) formUp.classList.remove('hidden');
+                if (formIn) formIn.classList.add('hidden');
+            }
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        function showDashboardState(state) {
+            const barrier = document.getElementById('dashboard-loading-barrier');
+            const gate = document.getElementById('dashboard-auth-gate');
+            const workspace = document.getElementById('dashboard-workspace');
+
+            if (barrier) barrier.classList.add('hidden');
+            if (gate) gate.classList.add('hidden');
+            if (workspace) workspace.classList.add('hidden');
+
+            if (state === 'loading') {
+                if (barrier) barrier.classList.remove('hidden');
+            } else if (state === 'login') {
+                if (gate) gate.classList.remove('hidden');
+            } else if (state === 'workspace') {
+                if (workspace) workspace.classList.remove('hidden');
+            }
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+        }
+
+        async function handleDashboardSignIn(e) {
+            e.preventDefault();
+            const email = document.getElementById('dash-signin-email').value.trim();
+            const password = document.getElementById('dash-signin-password').value;
+            const errBox = document.getElementById('dashboard-auth-error');
+            const errText = document.getElementById('dashboard-auth-error-text');
+            const btn = document.getElementById('btn-dash-signin');
+            const btnText = document.getElementById('btn-dash-signin-text');
+
+            if (errBox) errBox.classList.add('hidden');
+            if (btn) btn.disabled = true;
+            if (btnText) btnText.textContent = 'Verifying with Supabase...';
+
+            try {
+                if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
+                const res = await TixoraAuth.signIn(email, password);
+                showToast('Authentication approved. Welcome back!');
+                await renderPromoterWorkspace(res.user, res.promoter);
+            } catch (err) {
+                console.error('Sign In Error:', err);
+                if (errBox && errText) {
+                    errText.textContent = err.message || 'Invalid email or password.';
+                    errBox.classList.remove('hidden');
+                }
+                showToast(err.message || 'Sign in failed');
+            } finally {
+                if (btn) btn.disabled = false;
+                if (btnText) btnText.textContent = 'Sign In to Promoter Desk';
+            }
+        }
+
+        async function handleDashboardSignUp(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('dash-signup-fullname').value.trim();
+            const phone = document.getElementById('dash-signup-phone').value.trim();
+            const email = document.getElementById('dash-signup-email').value.trim();
+            const password = document.getElementById('dash-signup-password').value;
+            const city = document.getElementById('dash-signup-city').value.trim();
+            const upiId = document.getElementById('dash-signup-upi').value.trim();
+
+            const errBox = document.getElementById('dashboard-auth-error');
+            const errText = document.getElementById('dashboard-auth-error-text');
+            const btn = document.getElementById('btn-dash-signup');
+            const btnText = document.getElementById('btn-dash-signup-text');
+
+            if (errBox) errBox.classList.add('hidden');
+
+            const upiRegex = /^[\w.\-]{2,64}@[a-zA-Z]{2,64}$/;
+            if (!upiRegex.test(upiId)) {
+                if (errBox && errText) {
+                    errText.textContent = 'Please enter a valid UPI VPA handle (e.g. name@oksbi, mobile@paytm).';
+                    errBox.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (btn) btn.disabled = true;
+            if (btnText) btnText.textContent = 'Submitting Application...';
+
+            try {
+                if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
+                const res = await TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
+
+                if (res && res.emailConfirmationRequired) {
+                    const notice = document.getElementById('dash-confirm-notice');
+                    const emailTarget = document.getElementById('dash-confirm-email');
+                    const formSignup = document.getElementById('form-dashboard-signup');
+                    if (emailTarget) emailTarget.textContent = email;
+                    if (formSignup) formSignup.classList.add('hidden');
+                    if (notice) notice.classList.remove('hidden');
+                    showToast('Account registered! Please verify your email.');
+                } else if (res && res.user) {
+                    showToast('Promoter account activated!');
+                    await renderPromoterWorkspace(res.user, res.promoter);
+                }
+            } catch (err) {
+                console.error('Sign Up Error:', err);
+                if (errBox && errText) {
+                    errText.textContent = err.message || 'Registration failed. Please check your inputs.';
+                    errBox.classList.remove('hidden');
+                }
+                showToast(err.message || 'Registration failed');
+            } finally {
+                if (btn) btn.disabled = false;
+                if (btnText) btnText.textContent = 'Submit Application & Register';
+            }
+        }
+
+        async function handleDashboardResend() {
+            const email = document.getElementById('dash-signup-email').value.trim() || document.getElementById('dash-signin-email').value.trim();
+            if (!email) {
+                showToast('Please enter an email address to resend.');
+                return;
+            }
+            try {
+                await TixoraAuth.resendConfirmation(email);
+                showToast('Verification email resent to ' + email);
+            } catch (err) {
+                showToast(err.message || 'Error resending email');
+            }
+        }
+
+        async function handleDashboardSignOut() {
+            try {
+                if (window.TixoraAuth) {
+                    await TixoraAuth.signOut();
+                }
+            } catch (e) {
+                console.warn('Sign out notice:', e);
+            }
+            showDashboardState('login');
+            showToast('Signed out of Promoter Command Center.');
+        }
+
+        async function renderPromoterWorkspace(user, promoter) {
+            _activeUser = user;
+            _activePromoter = promoter || await TixoraAuth.getPromoterProfile(user);
+
+            const name = (_activePromoter && _activePromoter.full_name) || (user.user_metadata && user.user_metadata.full_name) || (user.email ? user.email.split('@')[0] : 'Promoter');
+            const city = (_activePromoter && _activePromoter.city) || (user.user_metadata && user.user_metadata.city) || 'Mumbai';
+            const email = user.email || '';
+            const upi = (_activePromoter && _activePromoter.upi_id) || (user.user_metadata && user.user_metadata.upi_id) || (user.email ? user.email.split('@')[0] + '@okhdfcbank' : 'user@upi');
+            const refCode = (_activePromoter && _activePromoter.referral_code) || (user.user_metadata && user.user_metadata.referral_code) || ('TIX-' + name.toUpperCase().slice(0, 8));
+            const passes = (_activePromoter && _activePromoter.total_passes_sold) || 0;
+            const earnings = (_activePromoter && _activePromoter.total_earnings) || 0;
+            const tierName = (_activePromoter && _activePromoter.tier_name) || 'Scout';
+            const commRate = (_activePromoter && _activePromoter.commission_rate) || 8.00;
+
+            const fullRefUrl = window.location.origin + '/?ref=' + refCode;
+
+            // Populate DOM
+            const heroTitle = document.getElementById('dash-hero-title');
+            const headerName = document.getElementById('dash-header-name');
+            const headerTier = document.getElementById('dash-header-tier');
+            const userAvatar = document.getElementById('dash-user-avatar');
+            const accountEmail = document.getElementById('dash-account-email');
+            const accountCity = document.getElementById('dash-account-city');
+            const accountUpi = document.getElementById('dash-account-upi');
+            const tierBadge = document.getElementById('dash-tier-badge');
+            const refInput = document.getElementById('dash-referral-input');
+            const waBtn = document.getElementById('dash-whatsapp-btn');
+            const kpiPasses = document.getElementById('dash-kpi-passes');
+            const kpiVolume = document.getElementById('dash-kpi-volume');
+            const kpiEarnings = document.getElementById('dash-kpi-earnings');
+
+            if (heroTitle) heroTitle.textContent = 'Welcome, ' + name;
+            if (headerName) headerName.textContent = name;
+            if (headerTier) headerTier.textContent = 'TIER • ' + tierName.toUpperCase() + ' (' + commRate.toFixed(1) + '%)';
+            if (userAvatar) userAvatar.innerHTML = '<span>' + (name.slice(0, 2).toUpperCase() || 'PR') + '</span>';
+            if (accountEmail) accountEmail.textContent = email;
+            if (accountCity) accountCity.textContent = city;
+            if (accountUpi) accountUpi.textContent = upi;
+            if (tierBadge) tierBadge.textContent = 'TIER • ' + tierName.toUpperCase() + ' (' + commRate.toFixed(1) + '%)';
+            if (refInput) refInput.value = fullRefUrl;
+            if (waBtn) {
+                const waText = encodeURIComponent('Get official guaranteed concert passes via Tixora! Secure direct allocations here: ' + fullRefUrl);
+                waBtn.href = 'https://wa.me/?text=' + waText;
+            }
+            if (kpiPasses) kpiPasses.textContent = passes.toLocaleString('en-IN');
+            if (kpiVolume) kpiVolume.textContent = '₹' + (passes * 3999).toLocaleString('en-IN');
+            if (kpiEarnings) kpiEarnings.textContent = '₹' + Number(earnings).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+            showDashboardState('workspace');
+        }
+
+        function copyDashboardReferralLink() {
+            const input = document.getElementById('dash-referral-input');
+            const btnText = document.getElementById('dash-copy-btn-text');
+            if (!input) return;
+
+            navigator.clipboard.writeText(input.value).then(() => {
+                if (btnText) btnText.textContent = 'Copied!';
+                showToast('Referral link copied to clipboard!');
+                setTimeout(() => { if (btnText) btnText.textContent = 'Copy Link'; }, 2000);
+            }).catch(() => {
+                input.select();
+                document.execCommand('copy');
+                if (btnText) btnText.textContent = 'Copied!';
+                showToast('Referral link copied!');
+                setTimeout(() => { if (btnText) btnText.textContent = 'Copy Link'; }, 2000);
+            });
+        }
+
+        // Initialize and Guard Dashboard Route
+        async function initDashboard() {
+            showDashboardState('loading');
+            try {
+                if (!window.TixoraAuth) {
+                    showDashboardState('login');
+                    return;
+                }
+
+                const res = await TixoraAuth.guardPromoterRoute({
+                    onAuthorized: async (user, promoter, role) => {
+                        await renderPromoterWorkspace(user, promoter);
+                    },
+                    onUnauthenticated: () => {
+                        showDashboardState('login');
+                    }
+                });
+
+                if (!res.authorized) {
+                    showDashboardState('login');
+                }
+            } catch (err) {
+                console.error('Dashboard init error:', err);
+                showDashboardState('login');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide && lucide.createIcons) lucide.createIcons();
+            // Allow Supabase SDK to initialize before evaluating session
+            setTimeout(initDashboard, 150);
+        });
+    </script>
+</body>
+</html>

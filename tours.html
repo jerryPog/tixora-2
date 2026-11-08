@@ -1297,6 +1297,12 @@
 
                 <!-- Action Buttons -->
                 <div class="space-y-2 pt-2">
+                    <a href="/dashboard"
+                        class="w-full py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-semibold flex items-center justify-center space-x-1.5 border border-[#1e2436] transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-crimson"></i>
+                        <span>Open Full Promoter Dashboard →</span>
+                    </a>
+
                     <a id="desk-whatsapp-btn" target="_blank"
                         href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
                         class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors">
@@ -1431,13 +1437,12 @@
                 </div>
                 <div
                     class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] text-[11px] text-slate-300 text-left font-sans leading-relaxed">
-                    If you haven't received the verification email yet, click below to enter directly via authorized
-                    partner clearance.
+                    Please check your email inbox (and spam folder) for the verification link sent by Tixora. Once verified, sign in to your Promoter Command Center.
                 </div>
                 <div class="space-y-2 pt-2">
-                    <button type="button" id="btn-instant-enter" onclick="enterWithLocalBypass()"
+                    <button type="button" onclick="switchPromoterAuthTab('signin')"
                         class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5">
-                        <span>Access Promoter Desk</span>
+                        <span>Proceed to Sign In</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </button>
                     <button type="button" id="btn-resend-confirm" onclick="handleResendConfirmation()"
