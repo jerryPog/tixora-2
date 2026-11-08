@@ -632,10 +632,27 @@
                     errText.textContent = err.message || 'Invalid email or password.';
                     errBox.classList.remove('hidden');
                 }
+                if (err.code === 'rate_limit' && btn) {
+                    btn.disabled = true;
+                    let countdown = err.retry_after || 900;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btnText.textContent = 'Sign In to Promoter Desk';
+                        } else {
+                            btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                        }
+                    }, 1000);
+                    btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                }
                 showToast(err.message || 'Sign in failed');
             } finally {
-                if (btn) btn.disabled = false;
-                if (btnText) btnText.textContent = 'Sign In to Promoter Desk';
+                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
+                    btn.disabled = false;
+                    if (btnText) btnText.textContent = 'Sign In to Promoter Desk';
+                }
             }
         }
 
@@ -692,10 +709,27 @@
                     errText.textContent = err.message || 'Registration failed. Please check your inputs.';
                     errBox.classList.remove('hidden');
                 }
+                if (err.code === 'rate_limit' && btn) {
+                    btn.disabled = true;
+                    let countdown = err.retry_after || 3600;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btnText.textContent = 'Submit Application & Register';
+                        } else {
+                            btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                        }
+                    }, 1000);
+                    btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                }
                 showToast(err.message || 'Registration failed');
             } finally {
-                if (btn) btn.disabled = false;
-                if (btnText) btnText.textContent = 'Submit Application & Register';
+                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
+                    btn.disabled = false;
+                    if (btnText) btnText.textContent = 'Submit Application & Register';
+                }
             }
         }
 

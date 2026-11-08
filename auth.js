@@ -381,15 +381,115 @@
     }
 
     /**
+     * CLIENT-SIDE & SERVER RATE LIMIT PROTOCOL (OWASP ASVS 4.0)
+     */
+    async function checkRateLimit(action, identifier) {
+        const localKey = `tx_rl_${action}_${(identifier || '').toLowerCase().trim()}`;
+        const now = Date.now();
+        const raw = _safeStorage.getItem(localKey);
+        if (raw) {
+            try {
+                const item = JSON.parse(raw);
+                if (item.lockedUntil && item.lockedUntil > now) {
+                    const remainingSec = Math.ceil((item.lockedUntil - now) / 1000);
+                    return {
+                        allowed: false,
+                        remaining: 0,
+                        retryAfterSeconds: remainingSec,
+                        message: action === 'login'
+                            ? `Too many sign in attempts. For account security, access is temporarily locked. Try again in ${Math.ceil(remainingSec / 60)} min.`
+                            : `Too many registration attempts. Please wait ${Math.ceil(remainingSec / 60)} min before trying again.`
+                    };
+                }
+            } catch (e) {}
+        }
+
+        try {
+            if (typeof fetch === 'function') {
+                const url = `/api/auth/rate-limit?action=${encodeURIComponent(action)}&identifier=${encodeURIComponent(identifier || '')}`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (!res.ok || data.status === 'rate_limited') {
+                    if (data.retry_after_seconds) {
+                        _safeStorage.setItem(localKey, JSON.stringify({
+                            lockedUntil: now + (data.retry_after_seconds * 1000)
+                        }));
+                    }
+                    return {
+                        allowed: false,
+                        remaining: 0,
+                        retryAfterSeconds: data.retry_after_seconds || 900,
+                        message: data.message || 'Too many attempts. Access is temporarily locked.'
+                    };
+                }
+                return {
+                    allowed: true,
+                    remaining: data.remaining,
+                    limit: data.limit
+                };
+            }
+        } catch (e) {}
+
+        return { allowed: true, remaining: 5, limit: 5 };
+    }
+
+    async function recordRateLimitAttempt(action, identifier, success) {
+        const localKey = `tx_rl_${action}_${(identifier || '').toLowerCase().trim()}`;
+        const now = Date.now();
+
+        if (success && action === 'login') {
+            _safeStorage.removeItem(localKey);
+        } else {
+            let item = { count: 1, resetAt: now + (15 * 60 * 1000), lockedUntil: null };
+            const raw = _safeStorage.getItem(localKey);
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.resetAt > now) {
+                        item.count = (parsed.count || 0) + 1;
+                        item.resetAt = parsed.resetAt;
+                    }
+                } catch (e) {}
+            }
+            const maxAttempts = action === 'signup' ? 3 : 5;
+            const lockoutMs = (action === 'signup' ? 60 : 15) * 60 * 1000;
+            if (item.count >= maxAttempts) {
+                item.lockedUntil = now + lockoutMs;
+                item.resetAt = item.lockedUntil;
+            }
+            _safeStorage.setItem(localKey, JSON.stringify(item));
+        }
+
+        try {
+            if (typeof fetch === 'function') {
+                await fetch('/api/auth/rate-limit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, identifier, success })
+                });
+            }
+        } catch (e) {}
+    }
+
+    /**
      * REAL SUPABASE AUTHENTICATION: Sign In with Email & Password
      */
     async function signIn(email, password) {
-        const cleanEmail = (email || '').trim();
+        const cleanEmail = (email || '').trim().toLowerCase();
         if (!cleanEmail) {
             throw new Error('Please enter your email address.');
         }
         if (!password) {
             throw new Error('Please enter your password.');
+        }
+
+        // Anti-Brute-Force Rate Limit Preflight
+        const rateCheck = await checkRateLimit('login', cleanEmail);
+        if (!rateCheck.allowed) {
+            const err = new Error(rateCheck.message);
+            err.code = 'rate_limit';
+            err.retry_after = rateCheck.retryAfterSeconds;
+            throw err;
         }
 
         const client = getClient();
@@ -403,6 +503,9 @@
         });
 
         if (error) {
+            // Record failed authentication attempt
+            await recordRateLimitAttempt('login', cleanEmail, false);
+
             const msg = (error.message || '').toLowerCase();
             if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
                 const err = new Error('Invalid email or password. Please verify your credentials or register a new account.');
@@ -427,6 +530,9 @@
             throw new Error('Authentication succeeded but no active session was returned.');
         }
 
+        // Wipe failed attempts on successful sign-in
+        await recordRateLimitAttempt('login', cleanEmail, true);
+
         _cachedSession = data.session;
         await refreshUserData(data.user);
         const role = await getUserRole(data.user);
@@ -443,10 +549,19 @@
      * REAL SUPABASE AUTHENTICATION: Sign Up as a Promoter or Attendee
      */
     async function signUp({ email, password, fullName, phone, city, upiId, role = 'promoter' }) {
-        const cleanEmail = (email || '').trim();
+        const cleanEmail = (email || '').trim().toLowerCase();
         if (!cleanEmail) throw new Error('Please enter a valid email address.');
         if (!password || password.length < 6) throw new Error('Password must be at least 6 characters long.');
         if (!fullName) throw new Error('Please enter your full name.');
+
+        // Anti-Bot Sign-Up Rate Limit Preflight
+        const rateCheck = await checkRateLimit('signup', cleanEmail);
+        if (!rateCheck.allowed) {
+            const err = new Error(rateCheck.message);
+            err.code = 'rate_limit';
+            err.retry_after = rateCheck.retryAfterSeconds;
+            throw err;
+        }
 
         const client = getClient();
         if (!client) throw new Error('Supabase client is not available.');
@@ -742,6 +857,8 @@
         signIn,
         signUp,
         signOut,
+        checkRateLimit,
+        recordRateLimitAttempt,
         syncSessionCookie,
         clearSessionCookie,
         resendConfirmation,

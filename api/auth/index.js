@@ -8,11 +8,15 @@ const verifyResetHandler = require('./verify-reset-token');
 const resetPasswordHandler = require('./reset-password');
 const sessionHandler = require('./session');
 const logoutHandler = require('./logout');
+const rateLimitHandler = require('./rate-limit');
 
 module.exports = async (req, res) => {
     const rawUrl = req.url || '';
     const pathOnly = rawUrl.split('?')[0].toLowerCase();
 
+    if (pathOnly.includes('rate-limit')) {
+        return rateLimitHandler(req, res);
+    }
     if (pathOnly.includes('forgot-password')) {
         return forgotPasswordHandler(req, res);
     }
@@ -32,3 +36,4 @@ module.exports = async (req, res) => {
     // Default: Check session
     return sessionHandler(req, res);
 };
+

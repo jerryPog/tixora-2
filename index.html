@@ -3942,8 +3942,26 @@
                     errText.textContent = err.message || 'Invalid email or password.';
                     errBox.classList.remove('hidden');
                 }
+                if (err.code === 'rate_limit' && btn) {
+                    btn.disabled = true;
+                    let countdown = err.retry_after || 900;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>Sign In to Promoter Desk</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                            if (window.lucide) lucide.createIcons();
+                        } else {
+                            btn.innerHTML = `<span>Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}</span>`;
+                        }
+                    }, 1000);
+                    btn.innerHTML = `<span>Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}</span>`;
+                }
             } finally {
-                btn.disabled = false;
+                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
+                    btn.disabled = false;
+                }
                 if (window.lucide) lucide.createIcons();
             }
         }
@@ -4002,8 +4020,26 @@
                 console.error('Promoter signup failed:', err);
                 errText.textContent = err.message || 'Registration failed. Please check your inputs.';
                 errBox.classList.remove('hidden');
+                if (err.code === 'rate_limit' && btn) {
+                    btn.disabled = true;
+                    let countdown = err.retry_after || 3600;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>Submit Application & Register</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
+                            if (window.lucide) lucide.createIcons();
+                        } else {
+                            btn.innerHTML = `<span>Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}</span>`;
+                        }
+                    }, 1000);
+                    btn.innerHTML = `<span>Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}</span>`;
+                }
             } finally {
-                btn.disabled = false;
+                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
+                    btn.disabled = false;
+                }
                 if (window.lucide) lucide.createIcons();
             }
         }

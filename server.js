@@ -99,6 +99,13 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2c. Anti-Automation Rate Limiting API Endpoint
+  if (decodedPath === '/api/auth/rate-limit' || decodedPath === '/api/rate-limit') {
+    const rateLimitHandler = require('./api/auth/rate-limit');
+    rateLimitHandler(req, res);
+    return;
+  }
+
   // 3. Prevent Path Traversal
   const normalizedRelPath = path.normalize(decodedPath).replace(/^(\.\.[\/\\])+/, '');
   const filePath = path.resolve(ROOT_DIR, '.' + path.sep + normalizedRelPath);

@@ -1581,10 +1581,27 @@
                     errText.textContent = err.message || 'Invalid administrator credentials.';
                     errBox.classList.remove('hidden');
                 }
+                if (err.code === 'rate_limit' && btn) {
+                    btn.disabled = true;
+                    let countdown = err.retry_after || 900;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            btn.disabled = false;
+                            btnText.textContent = 'Authenticate & Enter Desk';
+                        } else {
+                            btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                        }
+                    }, 1000);
+                    btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
+                }
                 showToast(err.message || 'Sign in failed');
             } finally {
-                if (btn) btn.disabled = false;
-                if (btnText) btnText.textContent = 'Authenticate & Enter Desk';
+                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
+                    btn.disabled = false;
+                    if (btnText) btnText.textContent = 'Authenticate & Enter Desk';
+                }
             }
         }
 

@@ -4,6 +4,7 @@
  */
 
 const { createResetToken } = require('./token-store');
+const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limiter');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -53,8 +54,27 @@ module.exports = async (req, res) => {
             return res.end(JSON.stringify(errPayload));
         }
 
-        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+        const ip = getClientIp(req);
         const userAgent = req.headers['user-agent'] || '';
+
+        // Rate limit password reset requests
+        const rateCheck = checkRateLimit(ip, email, 'forgot_password');
+        applyRateLimitHeaders(res, rateCheck);
+
+        if (!rateCheck.allowed) {
+            const errPayload = {
+                status: 'rate_limited',
+                code: 'too_many_attempts',
+                message: rateCheck.message,
+                retry_after_seconds: rateCheck.retryAfterSeconds,
+                reset_at: rateCheck.resetAt
+            };
+            if (typeof res.status === 'function') return res.status(429).json(errPayload);
+            res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8' });
+            return res.end(JSON.stringify(errPayload));
+        }
+
+        recordAttempt(ip, email, 'forgot_password', false);
 
         const tokenResult = await createResetToken(email, validityMinutes, {
             ipAddress: ip,

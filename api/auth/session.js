@@ -4,6 +4,7 @@
  */
 
 const crypto = require('crypto');
+const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limiter');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -35,8 +36,31 @@ module.exports = async (req, res) => {
 
     if (req.method === 'POST') {
         const body = await parseBody(req);
+        const clientIp = getClientIp(req);
+        const email = body.email || '';
+
+        // Enforce Login Rate Limiting
+        const rateCheck = checkRateLimit(clientIp, email, 'login');
+        applyRateLimitHeaders(res, rateCheck);
+
+        if (!rateCheck.allowed) {
+            const errPayload = {
+                status: 'rate_limited',
+                code: 'too_many_attempts',
+                message: rateCheck.message,
+                retry_after_seconds: rateCheck.retryAfterSeconds,
+                reset_at: rateCheck.resetAt
+            };
+            if (typeof res.status === 'function') return res.status(429).json(errPayload);
+            res.writeHead(429, { 'Content-Type': 'application/json; charset=utf-8' });
+            return res.end(JSON.stringify(errPayload));
+        }
+
         const token = body.access_token || crypto.randomBytes(32).toString('hex');
         const role = body.role || 'promoter';
+
+        // Successful authentication: Reset failed counter
+        recordAttempt(clientIp, email, 'login', true);
 
         res.setHeader('Set-Cookie', [
             `tixora_session=${encodeURIComponent(token)}; ${cookieSecurity}; Max-Age=604800`,

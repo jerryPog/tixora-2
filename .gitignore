@@ -10,3 +10,4 @@ Thumbs.db
 .env.*
 .reset_tokens.json
 .reset_consumed.json
+.rate_limits.json
