@@ -4,7 +4,7 @@
  */
 
 const crypto = require('crypto');
-const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limiter');
+const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 
 function parseBody(req) {
     return new Promise((resolve) => {

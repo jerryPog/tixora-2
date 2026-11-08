@@ -3,7 +3,7 @@
  * Validates token presence, single-use status, and non-expiration
  */
 
-const { verifyResetToken } = require('./token-store');
+const { verifyResetToken } = require('../../lib/token-store');
 
 function parseBody(req) {
     return new Promise((resolve) => {

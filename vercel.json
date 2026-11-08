@@ -3,7 +3,11 @@
   "rewrites": [
     { "source": "/api/auth/(.*)", "destination": "/api/auth/index.js" },
     { "source": "/api/rate-limit", "destination": "/api/auth/index.js" },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/api/session", "destination": "/api/auth/index.js" },
+    { "source": "/api/logout", "destination": "/api/auth/index.js" },
+    { "source": "/api/forgot-password", "destination": "/api/auth/index.js" },
+    { "source": "/api/verify-reset-token", "destination": "/api/auth/index.js" },
+    { "source": "/api/reset-password", "destination": "/api/auth/index.js" },
     { "source": "/database(.*)", "destination": "/404.html" },
     { "source": "/(.*)\\.sql", "destination": "/404.html" },
     { "source": "/(.*)\\.db", "destination": "/404.html" },

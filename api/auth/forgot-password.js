@@ -3,8 +3,8 @@
  * Generates single-use, 15-minute expiring cryptographic reset tokens
  */
 
-const { createResetToken } = require('./token-store');
-const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limiter');
+const { createResetToken } = require('../../lib/token-store');
+const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 
 function parseBody(req) {
     return new Promise((resolve) => {

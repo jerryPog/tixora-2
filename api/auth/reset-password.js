@@ -3,7 +3,7 @@
  * Consumes single-use reset token atomically, invalidating it forever
  */
 
-const { consumeResetToken, hashToken } = require('./token-store');
+const { consumeResetToken, hashToken } = require('../../lib/token-store');
 
 function parseBody(req) {
     return new Promise((resolve) => {
