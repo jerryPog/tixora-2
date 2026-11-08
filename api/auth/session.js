@@ -93,7 +93,7 @@ module.exports = async (req, res) => {
         const payload = {
             authenticated: hasSession,
             has_session_cookie: hasSession,
-            cookie_policy: 'HttpOnly; Secure; SameSite=Strict; v=2026.11.8.c41'
+            cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
         };
 
         if (typeof res.status === 'function') {
