@@ -11,7 +11,7 @@ const logoutHandler = require('./logout');
 const rateLimitHandler = require('./rate-limit');
 
 module.exports = async (req, res) => {
-    const rawUrl = req.url || '';
+    const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
     const pathOnly = rawUrl.split('?')[0].toLowerCase();
 
     if (pathOnly.includes('rate-limit')) {
