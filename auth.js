@@ -85,6 +85,43 @@
     }
 
     /**
+     * Synchronize session token with server-side endpoint to issue HttpOnly, Secure, SameSite=Strict cookies
+     */
+    async function syncSessionCookie(accessToken, role) {
+        try {
+            if (typeof fetch === 'function') {
+                await fetch('/api/auth/session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        access_token: accessToken || '',
+                        role: role || 'promoter'
+                    })
+                });
+            }
+        } catch (e) {
+            console.warn('[TixoraAuth] syncSessionCookie warning:', e);
+        }
+    }
+
+    /**
+     * Clear server-side HttpOnly, Secure, SameSite=Strict session cookies
+     */
+    async function clearSessionCookie() {
+        try {
+            if (typeof fetch === 'function') {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+            }
+        } catch (e) {
+            console.warn('[TixoraAuth] clearSessionCookie warning:', e);
+        }
+    }
+
+    /**
      * Get or initialize the Supabase client
      */
     function getClient() {
@@ -119,8 +156,11 @@
                 if (!session) {
                     _cachedUserRole = null;
                     _cachedPromoter = null;
+                    await clearSessionCookie();
                 } else {
                     await refreshUserData(session.user);
+                    const role = await getUserRole(session.user);
+                    await syncSessionCookie(session.access_token, role);
                 }
                 notifyListeners(event, session);
             });
@@ -392,6 +432,9 @@
         const role = await getUserRole(data.user);
         const promoter = await getPromoterProfile(data.user);
 
+        // Synchronize with server-side API to issue HttpOnly, Secure, SameSite=Strict cookies
+        await syncSessionCookie(data.session.access_token, role);
+
         notifyListeners('SIGNED_IN', data.session);
         return { user: data.user, session: data.session, role, promoter, error: null };
     }
@@ -460,6 +503,8 @@
         if (session) {
             _cachedSession = session;
             await refreshUserData(user);
+            const userRole = await getUserRole(user);
+            await syncSessionCookie(session.access_token, userRole);
             notifyListeners('SIGNED_IN', session);
         }
 
@@ -498,6 +543,9 @@
                 console.warn('[TixoraAuth] signOut warning:', err);
             }
         }
+
+        // Sever server-side HttpOnly session cookies
+        await clearSessionCookie();
 
         _cachedSession = null;
         _cachedUserRole = null;
@@ -589,6 +637,8 @@
         signIn,
         signUp,
         signOut,
+        syncSessionCookie,
+        clearSessionCookie,
         resendConfirmation,
         hashPassword,
         onAuthStateChange,

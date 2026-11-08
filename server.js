@@ -1,9 +1,23 @@
-  const http = require('http');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname);
+
+function parseCookies(cookieHeader) {
+  const cookies = {};
+  if (!cookieHeader) return cookies;
+  cookieHeader.split(';').forEach(c => {
+    const parts = c.split('=');
+    const name = parts[0].trim();
+    if (name) {
+      cookies[name] = decodeURIComponent(parts.slice(1).join('=').trim());
+    }
+  });
+  return cookies;
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -48,6 +62,23 @@ const server = http.createServer((req, res) => {
 
   // Strip null bytes and normalize slashes
   decodedPath = decodedPath.replace(/\0/g, '');
+
+  // Parse incoming cookies
+  const cookies = parseCookies(req.headers.cookie);
+  const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
+
+  // 2a. Secure Session Management API Endpoints
+  if (decodedPath === '/api/auth/session' || decodedPath === '/api/session') {
+    const sessionHandler = require('./api/auth/session');
+    sessionHandler(req, res);
+    return;
+  }
+
+  if (decodedPath === '/api/auth/logout' || decodedPath === '/api/logout') {
+    const logoutHandler = require('./api/auth/logout');
+    logoutHandler(req, res);
+    return;
+  }
 
   // 3. Prevent Path Traversal
   const normalizedRelPath = path.normalize(decodedPath).replace(/^(\.\.[\/\\])+/, '');
@@ -172,6 +203,12 @@ const server = http.createServer((req, res) => {
 
     if (checkRel.includes('admin')) {
       headers['X-Robots-Tag'] = 'noindex, nofollow';
+    }
+
+    // Auto-provision secure HttpOnly SameSite=Strict session cookie for HTML pages
+    if (isHtml && !cookies.tixora_session_id) {
+      const newSessionId = crypto.randomBytes(24).toString('hex');
+      headers['Set-Cookie'] = `tixora_session_id=${newSessionId}; ${cookieSecurity}; Max-Age=604800`;
     }
 
     res.writeHead(200, headers);
