@@ -278,6 +278,8 @@ const server = http.createServer((req, res) => {
     checkRel === 'database' ||
     checkRel.startsWith('.agents/') ||
     checkRel.startsWith('.') ||
+    checkRel.includes('.env') ||
+    checkRel.includes('.git') ||
     checkRel.endsWith('.sql') ||
     checkRel.endsWith('.db') ||
     checkRel.endsWith('.sqlite') ||
