@@ -5,6 +5,7 @@
 
 const { createResetToken } = require('../../lib/token-store');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
+const { validateForgotPassword } = require('../../lib/validator');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -44,15 +45,23 @@ module.exports = async (req, res) => {
 
     try {
         const body = await parseBody(req);
-        const email = (body.email || '').trim();
-        const validityMinutes = parseInt(body.validity_minutes, 10) || 15;
-
-        if (!email || !email.includes('@')) {
-            const errPayload = { error: 'invalid_email', message: 'Please provide a valid email address.' };
+        
+        // Server-Side Form Validation
+        const validation = validateForgotPassword(body);
+        if (!validation.isValid) {
+            const errPayload = {
+                status: 'validation_error',
+                error: 'invalid_form_input',
+                message: Object.values(validation.errors)[0],
+                errors: validation.errors
+            };
             if (typeof res.status === 'function') return res.status(400).json(errPayload);
             res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
             return res.end(JSON.stringify(errPayload));
         }
+
+        const email = validation.sanitized.email;
+        const validityMinutes = validation.sanitized.validityMinutes;
 
         const ip = getClientIp(req);
         const userAgent = req.headers['user-agent'] || '';

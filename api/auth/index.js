@@ -9,6 +9,7 @@ const resetPasswordHandler = require('./reset-password');
 const sessionHandler = require('./session');
 const logoutHandler = require('./logout');
 const rateLimitHandler = require('./rate-limit');
+const { handleValidationRequest } = require('../../lib/validator');
 
 module.exports = async (req, res) => {
     const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
@@ -28,6 +29,9 @@ module.exports = async (req, res) => {
     }
     if (pathOnly.includes('logout')) {
         return logoutHandler(req, res);
+    }
+    if (pathOnly.includes('validate') || pathOnly.includes('validation')) {
+        return handleValidationRequest(req, res);
     }
     if (pathOnly.includes('session')) {
         return sessionHandler(req, res);

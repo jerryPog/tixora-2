@@ -472,6 +472,25 @@
     }
 
     /**
+     * Server-Side Form Validation Client Preflight
+     * Dispatches payloads to /api/auth/validate to guarantee data integrity
+     */
+    async function validateFormOnServer(formType, data) {
+        try {
+            const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tixora.live';
+            const res = await fetch(`${origin}/api/auth/validate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ formType, data })
+            });
+            const json = await res.json();
+            return json;
+        } catch (e) {
+            return { valid: true };
+        }
+    }
+
+    /**
      * REAL SUPABASE AUTHENTICATION: Sign In with Email & Password
      */
     async function signIn(email, password) {
@@ -481,6 +500,16 @@
         }
         if (!password) {
             throw new Error('Please enter your password.');
+        }
+
+        // Server-Side Form Validation Preflight
+        const validation = await validateFormOnServer('signin', { email: cleanEmail, password });
+        if (validation && validation.valid === false && validation.errors) {
+            const firstErr = Object.values(validation.errors)[0];
+            const err = new Error(firstErr || 'Form validation failed.');
+            err.code = 'validation_error';
+            err.errors = validation.errors;
+            throw err;
         }
 
         // Anti-Brute-Force Rate Limit Preflight
@@ -550,9 +579,16 @@
      */
     async function signUp({ email, password, fullName, phone, city, upiId, role = 'promoter' }) {
         const cleanEmail = (email || '').trim().toLowerCase();
-        if (!cleanEmail) throw new Error('Please enter a valid email address.');
-        if (!password || password.length < 6) throw new Error('Password must be at least 6 characters long.');
-        if (!fullName) throw new Error('Please enter your full name.');
+        
+        // Server-Side Form Validation Preflight
+        const validation = await validateFormOnServer('signup', { email: cleanEmail, password, fullName, phone, city, upiId, role });
+        if (validation && validation.valid === false && validation.errors) {
+            const firstErr = Object.values(validation.errors)[0];
+            const err = new Error(firstErr || 'Form validation failed.');
+            err.code = 'validation_error';
+            err.errors = validation.errors;
+            throw err;
+        }
 
         // Anti-Bot Sign-Up Rate Limit Preflight
         const rateCheck = await checkRateLimit('signup', cleanEmail);
@@ -969,6 +1005,7 @@
         getMyPayouts,
         verifyReferralCode,
         queryParameterized,
+        validateForm: validateFormOnServer,
         signIn,
         signUp,
         signOut,

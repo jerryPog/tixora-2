@@ -2420,6 +2420,19 @@
             const btn = e.target.querySelector('button[type="submit"]');
             if (btn) btn.disabled = true;
 
+            // Server-Side Form Validation Preflight
+            if (window.TixoraAuth && window.TixoraAuth.validateForm) {
+                const v = await window.TixoraAuth.validateForm('tour', {
+                    title, venue, layout, dateStr, mrp, cut, partner, posterUrl, description: desc, tiers
+                });
+                if (v && v.valid === false && v.errors) {
+                    const firstMsg = Object.values(v.errors)[0];
+                    showToast(`Validation Error: ${firstMsg}`);
+                    if (btn) btn.disabled = false;
+                    return;
+                }
+            }
+
             const bannerUrl = (isFeatured ? 'FEATURED|' : '') + 'layout:' + layout;
 
             try {
@@ -2635,6 +2648,19 @@
 
             const btn = e.target.querySelector('button[type="submit"]');
             if (btn) btn.disabled = true;
+
+            // Server-Side Form Validation Preflight
+            if (window.TixoraAuth && window.TixoraAuth.validateForm) {
+                const v = await window.TixoraAuth.validateForm('tour', {
+                    title, venue, layout, dateStr, mrp, cut, partner, posterUrl, description: desc, tiers
+                });
+                if (v && v.valid === false && v.errors) {
+                    const firstMsg = Object.values(v.errors)[0];
+                    showToast(`Validation Error: ${firstMsg}`);
+                    if (btn) btn.disabled = false;
+                    return;
+                }
+            }
 
             try {
                 if (_adminClient) {

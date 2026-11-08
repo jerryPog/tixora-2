@@ -5,6 +5,7 @@
 
 const crypto = require('crypto');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
+const { validateForm } = require('../../lib/validator');
 
 function parseCookies(cookieHeader) {
     const list = {};
@@ -69,7 +70,23 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         const body = await parseBody(req);
         const clientIp = getClientIp(req);
-        const email = body.email || '';
+        const email = (body.email || '').trim().toLowerCase();
+
+        // Server-Side Form Input Validation
+        if (email) {
+            const validation = validateForm('session', { email, password: body.password || 'session-bearer-sync' });
+            if (!validation.isValid && validation.errors.email) {
+                const errPayload = {
+                    status: 'validation_error',
+                    code: 'invalid_form_input',
+                    message: 'Form validation failed on server.',
+                    errors: validation.errors
+                };
+                if (typeof res.status === 'function') return res.status(400).json(errPayload);
+                res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+                return res.end(JSON.stringify(errPayload));
+            }
+        }
 
         // Enforce Login Rate Limiting
         const rateCheck = checkRateLimit(clientIp, email, 'login');

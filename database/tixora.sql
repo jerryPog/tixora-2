@@ -74,6 +74,8 @@ CREATE TABLE promoters (
     kyc_status VARCHAR(30) DEFAULT 'verified' CHECK (kyc_status IN ('pending', 'verified', 'suspended')),
     total_passes_sold INT DEFAULT 0 CHECK (total_passes_sold >= 0),
     total_earnings NUMERIC(12, 2) DEFAULT 0.00 CHECK (total_earnings >= 0.00),
+    CONSTRAINT chk_promoter_name_len CHECK (length(trim(full_name)) >= 2),
+    CONSTRAINT chk_promoter_email_fmt CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -117,6 +119,7 @@ CREATE TABLE events (
     description TEXT,
     starting_price NUMERIC(10, 2) NOT NULL CHECK (starting_price >= 0.00),
     promoter_cut_pct NUMERIC(5, 2) DEFAULT 12.00 CHECK (promoter_cut_pct >= 0.00 AND promoter_cut_pct <= 100.00),
+    CONSTRAINT chk_event_title_len CHECK (length(trim(title)) >= 3),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -135,6 +138,7 @@ CREATE TABLE ticket_tiers (
     available_quota INT NOT NULL CHECK (available_quota >= 0),
     promoter_cut_pct NUMERIC(5, 2) DEFAULT 10.00 CHECK (promoter_cut_pct >= 0.00 AND promoter_cut_pct <= 100.00),
     is_active BOOLEAN DEFAULT TRUE,
+    CONSTRAINT chk_tier_name_len CHECK (length(trim(name)) >= 2),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_ticket_tiers_event ON ticket_tiers(event_id);
@@ -147,6 +151,8 @@ CREATE TABLE attendees (
     email VARCHAR(255) NOT NULL,
     bms_account_id VARCHAR(100),
     digilocker_verified BOOLEAN DEFAULT TRUE,
+    CONSTRAINT chk_attendee_name_len CHECK (length(trim(full_name)) >= 2),
+    CONSTRAINT chk_attendee_email_fmt CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 -- Note: mobile_number has an automatic UNIQUE B-Tree index

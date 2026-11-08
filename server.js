@@ -125,6 +125,13 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2c-2. Server-Side Form Validation API Endpoint
+  if (decodedPath === '/api/auth/validate' || decodedPath === '/api/validate') {
+    const { handleValidationRequest } = require('./lib/validator');
+    handleValidationRequest(req, res);
+    return;
+  }
+
   // 2d. Strictly Lock Admin Routes to Authorized Admins Only
   const isAdminRoute = 
     decodedPath === '/admin' || 

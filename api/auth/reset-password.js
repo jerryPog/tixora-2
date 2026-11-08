@@ -4,6 +4,7 @@
  */
 
 const { consumeResetToken, hashToken } = require('../../lib/token-store');
+const { validateResetPassword } = require('../../lib/validator');
 
 function parseBody(req) {
     return new Promise((resolve) => {
@@ -43,22 +44,23 @@ module.exports = async (req, res) => {
 
     try {
         const body = await parseBody(req);
-        const token = (body.token || '').trim();
-        const newPassword = body.new_password || '';
 
-        if (!token) {
-            const errPayload = { error: 'missing_token', message: 'Reset token is required.' };
+        // Server-Side Form Validation
+        const validation = validateResetPassword(body);
+        if (!validation.isValid) {
+            const errPayload = {
+                status: 'validation_error',
+                error: 'invalid_form_input',
+                message: Object.values(validation.errors)[0],
+                errors: validation.errors
+            };
             if (typeof res.status === 'function') return res.status(400).json(errPayload);
             res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
             return res.end(JSON.stringify(errPayload));
         }
 
-        if (!newPassword || newPassword.length < 6) {
-            const errPayload = { error: 'invalid_password', message: 'Password must be at least 6 characters long.' };
-            if (typeof res.status === 'function') return res.status(400).json(errPayload);
-            res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-            return res.end(JSON.stringify(errPayload));
-        }
+        const token = validation.sanitized.token;
+        const newPassword = validation.sanitized.newPassword;
 
         // Atomically consume token (Single-use & expiration strictly verified)
         const result = await consumeResetToken(token, newPassword);
