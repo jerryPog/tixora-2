@@ -90,3 +90,4 @@ module.exports = async (req, res) => {
     res.writeHead(405, { 'Content-Type': 'application/json; charset=utf-8' });
     return res.end(JSON.stringify(payload));
 };
+
