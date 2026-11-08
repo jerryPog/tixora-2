@@ -10,6 +10,7 @@
     { "source": "/api/reset-password", "destination": "/api/auth/index.js" },
     { "source": "/api/validate", "destination": "/api/auth/index.js" },
     { "source": "/api/csrf", "destination": "/api/auth/index.js" },
+    { "source": "/api/upload", "destination": "/api/auth/index.js" },
     { "source": "/(.*)\\.env(.*)", "destination": "/404.html" },
     { "source": "/database(.*)", "destination": "/404.html" },
     { "source": "/(.*)\\.sql", "destination": "/404.html" },

@@ -1157,9 +1157,26 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Poster Image URL</label>
-                    <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
-                        class="w-full ops-input px-3 py-2 text-white font-mono">
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase">Poster Image (URL or File Upload)</label>
+                        <span class="text-[10px] text-slate-500 font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
+                            class="flex-1 ops-input px-3 py-2 text-white font-mono text-xs">
+                        <label for="tour-poster-file" class="cursor-pointer px-3 py-2 rounded-lg bg-[#161926] hover:bg-[#1f2436] text-emerald-400 hover:text-emerald-300 border border-[#22283a] text-xs font-mono flex items-center space-x-1.5 transition-colors whitespace-nowrap">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                            <span id="tour-poster-upload-btn-text">Upload</span>
+                        </label>
+                        <input type="file" id="tour-poster-file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden" onchange="handlePosterUpload(this, 'tour-poster', 'tour-poster-preview', 'tour-poster-upload-btn-text')">
+                    </div>
+                    <div id="tour-poster-preview-container" class="mt-2 hidden flex items-center space-x-3 p-2 rounded-lg bg-[#131622] border border-[#1e2333]">
+                        <img id="tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded border border-[#22283a]">
+                        <div class="text-xs font-mono">
+                            <div class="text-white font-semibold truncate max-w-xs" id="tour-poster-filename"></div>
+                            <div class="text-slate-400 text-[10px]" id="tour-poster-filesize"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Feature Event Checkbox -->
@@ -1283,9 +1300,26 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Poster Image URL</label>
-                    <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
-                        class="w-full ops-input px-3 py-2 text-white font-mono">
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-slate-400 font-mono text-[10px] uppercase">Poster Image (URL or File Upload)</label>
+                        <span class="text-[10px] text-slate-500 font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
+                            class="flex-1 ops-input px-3 py-2 text-white font-mono text-xs">
+                        <label for="edit-tour-poster-file" class="cursor-pointer px-3 py-2 rounded-lg bg-[#161926] hover:bg-[#1f2436] text-emerald-400 hover:text-emerald-300 border border-[#22283a] text-xs font-mono flex items-center space-x-1.5 transition-colors whitespace-nowrap">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                            <span id="edit-tour-poster-upload-btn-text">Upload</span>
+                        </label>
+                        <input type="file" id="edit-tour-poster-file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden" onchange="handlePosterUpload(this, 'edit-tour-poster', 'edit-tour-poster-preview', 'edit-tour-poster-upload-btn-text')">
+                    </div>
+                    <div id="edit-tour-poster-preview-container" class="mt-2 hidden flex items-center space-x-3 p-2 rounded-lg bg-[#131622] border border-[#1e2333]">
+                        <img id="edit-tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded border border-[#22283a]">
+                        <div class="text-xs font-mono">
+                            <div class="text-white font-semibold truncate max-w-xs" id="edit-tour-poster-filename"></div>
+                            <div class="text-slate-400 text-[10px]" id="edit-tour-poster-filesize"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Feature Event Checkbox -->
@@ -2833,6 +2867,94 @@
                 }
             } catch (err) {
                 showToast(`Ping failed: ${err.message}`);
+            }
+        }
+
+        async function handlePosterUpload(inputElem, targetInputId, previewImgId, btnTextId) {
+            if (!inputElem || !inputElem.files || inputElem.files.length === 0) return;
+            const file = inputElem.files[0];
+            const MAX_ALLOWED_BYTES = 5 * 1024 * 1024; // 5 MB
+            const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+            const ALLOWED_EXTS = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+
+            // 1. Client-Side Size Validation
+            if (file.size > MAX_ALLOWED_BYTES) {
+                const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+                alert(`Upload Error: File size (${sizeMb} MB) exceeds maximum allowed limit of 5 MB.`);
+                inputElem.value = '';
+                return;
+            }
+
+            if (file.size <= 0) {
+                alert('Upload Error: File is empty (0 bytes).');
+                inputElem.value = '';
+                return;
+            }
+
+            // 2. Client-Side Type Validation
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            if (!ALLOWED_EXTS.includes(ext) || (file.type && !ALLOWED_MIME.includes(file.type))) {
+                alert(`Upload Error: File type "${file.type || ext}" is not supported. Allowed formats: JPEG, PNG, WebP, GIF.`);
+                inputElem.value = '';
+                return;
+            }
+
+            const btnText = document.getElementById(btnTextId);
+            if (btnText) btnText.textContent = 'Uploading...';
+
+            try {
+                // Read as Base64 for fast JSON upload with CSRF token
+                const base64Data = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('Failed to read file.'));
+                    reader.readAsDataURL(file);
+                });
+
+                // Get active CSRF token
+                const csrfToken = (window.TixoraAuth && TixoraAuth.getCsrfToken && TixoraAuth.getCsrfToken()) || '';
+
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken
+                    },
+                    body: JSON.stringify({
+                        file: base64Data,
+                        filename: file.name
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok || data.status !== 'success') {
+                    throw new Error(data.error || 'Server rejected upload.');
+                }
+
+                // Populate Target Poster Input
+                const targetInput = document.getElementById(targetInputId);
+                if (targetInput) targetInput.value = data.url;
+
+                // Update Preview Card
+                const previewImg = document.getElementById(previewImgId);
+                const containerId = previewImgId.replace('-preview', '-preview-container');
+                const container = document.getElementById(containerId);
+                const nameId = previewImgId.replace('-preview', '-filename');
+                const sizeId = previewImgId.replace('-preview', '-filesize');
+
+                if (previewImg) previewImg.src = data.url;
+                if (container) container.classList.remove('hidden');
+                const nameElem = document.getElementById(nameId);
+                const sizeElem = document.getElementById(sizeId);
+                if (nameElem) nameElem.textContent = data.originalName;
+                if (sizeElem) sizeElem.textContent = `${data.sizeFormatted} • Verified ${data.mimeType}`;
+
+                showToast(`Poster uploaded successfully (${data.sizeFormatted})`);
+            } catch (err) {
+                alert(`Upload Failed: ${err.message}`);
+            } finally {
+                if (btnText) btnText.textContent = 'Upload';
+                inputElem.value = '';
             }
         }
 

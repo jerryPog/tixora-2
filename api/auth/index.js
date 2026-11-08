@@ -13,6 +13,7 @@ const { handleValidationRequest } = require('../../lib/validator');
 const { handleCsrfEndpoint, validateCsrf } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
 const { handleCors } = require('../../lib/cors');
+const { handleUploadEndpoint } = require('../../lib/uploader');
 
 module.exports = async (req, res) => {
     applySecurityHeaders(res, { isApi: true });
@@ -20,6 +21,9 @@ module.exports = async (req, res) => {
     const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
     const pathOnly = rawUrl.split('?')[0].toLowerCase();
 
+    if (pathOnly.includes('upload')) {
+        return handleUploadEndpoint(req, res);
+    }
     if (pathOnly.includes('rate-limit') || pathOnly.includes('rate-limiter')) {
         return rateLimitHandler(req, res);
     }
@@ -53,9 +57,6 @@ module.exports = async (req, res) => {
             res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
             return res.end(JSON.stringify(errPayload));
         }
-    }
-    if (pathOnly.includes('validate') || pathOnly.includes('validation')) {
-        return handleValidationRequest(req, res);
     }
     if (pathOnly.includes('validate') || pathOnly.includes('validation')) {
         return handleValidationRequest(req, res);

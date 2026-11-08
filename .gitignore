@@ -11,3 +11,5 @@ Thumbs.db
 .reset_tokens.json
 .reset_consumed.json
 .rate_limits.json
+posters/uploads/*
+!posters/uploads/.gitkeep

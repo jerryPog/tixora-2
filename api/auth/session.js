@@ -9,6 +9,7 @@ const { validateForm } = require('../../lib/validator');
 const { csrfGuard } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');
 const { handleCors } = require('../../lib/cors');
+const { readBodyWithLimit, MAX_REQUEST_BODY_SIZE } = require('../../lib/uploader');
 
 function parseCookies(cookieHeader) {
     const list = {};
@@ -42,25 +43,21 @@ function extractJwtPayload(token) {
     return null;
 }
 
-function parseBody(req) {
-    return new Promise((resolve) => {
-        if (req.body !== undefined) {
-            let body = req.body;
-            if (typeof body === 'string') {
-                try { body = JSON.parse(body); } catch (e) {}
-            }
-            return resolve(body || {});
+async function parseBody(req) {
+    if (req.body !== undefined) {
+        let body = req.body;
+        if (typeof body === 'string') {
+            try { body = JSON.parse(body); } catch (e) {}
         }
-        let data = '';
-        req.on('data', chunk => data += chunk);
-        req.on('end', () => {
-            try {
-                resolve(data ? JSON.parse(data) : {});
-            } catch (e) {
-                resolve({});
-            }
-        });
-    });
+        return body || {};
+    }
+    const buf = await readBodyWithLimit(req, MAX_REQUEST_BODY_SIZE);
+    if (!buf || buf.length === 0) return {};
+    try {
+        return JSON.parse(buf.toString('utf8'));
+    } catch (e) {
+        return {};
+    }
 }
 
 module.exports = async (req, res) => {
@@ -76,7 +73,22 @@ module.exports = async (req, res) => {
     const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
 
     if (req.method === 'POST') {
-        const body = await parseBody(req);
+        let body;
+        try {
+            body = await parseBody(req);
+        } catch (err) {
+            if (err.code === 'PAYLOAD_TOO_LARGE') {
+                const payload = {
+                    status: 'error',
+                    code: 'PAYLOAD_TOO_LARGE',
+                    error: `Payload too large. Maximum allowed request size is ${MAX_REQUEST_BODY_SIZE / 1024} KB.`
+                };
+                if (typeof res.status === 'function') return res.status(413).json(payload);
+                res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
+                return res.end(JSON.stringify(payload));
+            }
+            body = {};
+        }
         const clientIp = getClientIp(req);
         const email = (body.email || '').trim().toLowerCase();
 

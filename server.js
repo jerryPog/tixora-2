@@ -86,6 +86,25 @@ const server = http.createServer((req, res) => {
   const cookies = parseCookies(req.headers.cookie);
   const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
 
+  // 2-DOS-BARRIER. Enforce Strict Payload Size Limits (HTTP 413)
+  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
+    const contentLength = parseInt(req.headers['content-length'] || '0', 10);
+    const isUploadPath = decodedPath === '/api/upload';
+    const maxAllowedBytes = isUploadPath ? (6 * 1024 * 1024) : (100 * 1024);
+    if (contentLength > maxAllowedBytes) {
+      res.writeHead(413, {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff'
+      });
+      res.end(JSON.stringify({
+        status: 'error',
+        code: 'PAYLOAD_TOO_LARGE',
+        error: `Payload Too Large: Content-Length (${contentLength} bytes) exceeds limit of ${maxAllowedBytes / 1024} KB.`
+      }));
+      return;
+    }
+  }
+
   // 2-CSRF. Cryptographic CSRF Token Provisioning Endpoint
   if (decodedPath === '/api/auth/csrf' || decodedPath === '/api/csrf') {
     const { handleCsrfEndpoint } = require('./lib/csrf');
@@ -158,10 +177,10 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 2c-2. Server-Side Form Validation API Endpoint
-  if (decodedPath === '/api/auth/validate' || decodedPath === '/api/validate') {
-    const { handleValidationRequest } = require('./lib/validator');
-    handleValidationRequest(req, res);
+  // 2c-3. Secure File Upload Endpoint (5MB Limit, Image Types Only)
+  if (decodedPath === '/api/upload') {
+    const { handleUploadEndpoint } = require('./lib/uploader');
+    handleUploadEndpoint(req, res);
     return;
   }
 
