@@ -21,6 +21,7 @@
     { "source": "/faq", "destination": "/faq.html" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
+    { "source": "/reset-password", "destination": "/reset-password.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/portal", "destination": "/dashboard.html" },

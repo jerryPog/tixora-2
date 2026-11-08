@@ -80,6 +80,25 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // 2b. Password Reset & Verification API Endpoints (Single-Use, 15-Minute Expiration)
+  if (decodedPath === '/api/auth/forgot-password' || decodedPath === '/api/forgot-password') {
+    const forgotHandler = require('./api/auth/forgot-password');
+    forgotHandler(req, res);
+    return;
+  }
+
+  if (decodedPath === '/api/auth/verify-reset-token' || decodedPath === '/api/verify-reset-token') {
+    const verifyHandler = require('./api/auth/verify-reset-token');
+    verifyHandler(req, res);
+    return;
+  }
+
+  if (decodedPath === '/api/auth/reset-password' || decodedPath === '/api/reset-password') {
+    const resetHandler = require('./api/auth/reset-password');
+    resetHandler(req, res);
+    return;
+  }
+
   // 3. Prevent Path Traversal
   const normalizedRelPath = path.normalize(decodedPath).replace(/^(\.\.[\/\\])+/, '');
   const filePath = path.resolve(ROOT_DIR, '.' + path.sep + normalizedRelPath);
@@ -115,6 +134,8 @@ const server = http.createServer((req, res) => {
     resolvedPath = path.join(ROOT_DIR, 'privacy.html');
   } else if (relFromRoot === 'terms') {
     resolvedPath = path.join(ROOT_DIR, 'terms.html');
+  } else if (relFromRoot === 'reset-password') {
+    resolvedPath = path.join(ROOT_DIR, 'reset-password.html');
   } else if (relFromRoot === 'sitemap') {
     resolvedPath = path.join(ROOT_DIR, 'sitemap.xml');
   } else if (relFromRoot === 'robots') {

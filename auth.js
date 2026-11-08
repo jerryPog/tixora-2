@@ -532,6 +532,111 @@
     }
 
     /**
+     * REQUEST EXPIRING SINGLE-USE PASSWORD RESET LINK
+     * Enforces 15-minute expiration and atomic single-use invalidation
+     */
+    async function requestPasswordReset(email) {
+        const cleanEmail = (email || '').trim().toLowerCase();
+        if (!cleanEmail || !cleanEmail.includes('@')) {
+            throw new Error('Please enter a valid email address.');
+        }
+
+        try {
+            if (typeof fetch === 'function') {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: cleanEmail, validity_minutes: 15 })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || 'Unable to generate password reset link.');
+                }
+
+                // If Supabase client is also active, trigger native email recovery
+                const client = getClient();
+                if (client) {
+                    try {
+                        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tixora.live';
+                        await client.auth.resetPasswordForEmail(cleanEmail, {
+                            redirectTo: `${origin}/reset-password`
+                        });
+                    } catch (e) {
+                        // Non-blocking warning
+                    }
+                }
+
+                return data;
+            }
+        } catch (err) {
+            console.error('[TixoraAuth] requestPasswordReset error:', err);
+            throw err;
+        }
+
+        throw new Error('Network client unavailable.');
+    }
+
+    /**
+     * VERIFY RESET TOKEN VALIDITY
+     * Checks if token exists, has expired (>15 mins), or has already been consumed
+     */
+    async function verifyResetToken(token) {
+        if (!token) {
+            return { valid: false, code: 'missing_token', message: 'No reset token provided.' };
+        }
+
+        try {
+            if (typeof fetch === 'function') {
+                const res = await fetch(`/api/auth/verify-reset-token?token=${encodeURIComponent(token)}`);
+                const data = await res.json();
+                return data;
+            }
+        } catch (e) {
+            console.warn('[TixoraAuth] verifyResetToken warning:', e);
+        }
+
+        return { valid: false, code: 'network_error', message: 'Unable to reach verification server.' };
+    }
+
+    /**
+     * CONSUME SINGLE-USE RESET TOKEN AND UPDATE PASSWORD
+     * Enforces atomic single-use invalidation
+     */
+    async function resetPasswordWithToken(token, newPassword) {
+        if (!token) throw new Error('Reset token is required.');
+        if (!newPassword || newPassword.length < 6) {
+            throw new Error('New password must be at least 6 characters long.');
+        }
+
+        try {
+            if (typeof fetch === 'function') {
+                const res = await fetch('/api/auth/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token, new_password: newPassword })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.message || 'Password reset failed. Link may have expired or already been used.');
+                }
+
+                // Invalidate any active session caches
+                _cachedSession = null;
+                _cachedUserRole = null;
+                _cachedPromoter = null;
+                await clearSessionCookie();
+
+                return data;
+            }
+        } catch (err) {
+            console.error('[TixoraAuth] resetPasswordWithToken error:', err);
+            throw err;
+        }
+
+        throw new Error('Network client unavailable.');
+    }
+
+    /**
      * REAL SUPABASE AUTHENTICATION: Sign Out
      */
     async function signOut() {
@@ -640,6 +745,9 @@
         syncSessionCookie,
         clearSessionCookie,
         resendConfirmation,
+        requestPasswordReset,
+        verifyResetToken,
+        resetPasswordWithToken,
         hashPassword,
         onAuthStateChange,
         guardAdminRoute,

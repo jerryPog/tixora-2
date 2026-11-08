@@ -755,7 +755,162 @@ $$;
 REVOKE EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) TO service_role;
 
+-- ============================================================================
+-- 15. PASSWORD RESET TOKENS (CRYPTOGRAPHIC, 15-MIN EXPIRING, SINGLE-USE)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS public.password_reset_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL,
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used_at TIMESTAMPTZ DEFAULT NULL,
+    is_used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    ip_address VARCHAR(45) DEFAULT NULL,
+    user_agent TEXT DEFAULT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_reset_token_hash ON public.password_reset_tokens(token_hash);
+CREATE INDEX IF NOT EXISTS idx_reset_token_email ON public.password_reset_tokens(email);
+CREATE INDEX IF NOT EXISTS idx_reset_token_expires ON public.password_reset_tokens(expires_at);
+
+ALTER TABLE public.password_reset_tokens ENABLE ROW LEVEL SECURITY;
+
+-- Deny public and anon direct reads/writes; only service_role has direct table access
+DROP POLICY IF EXISTS "Deny all public reads on reset tokens" ON public.password_reset_tokens;
+CREATE POLICY "Deny all public reads on reset tokens"
+    ON public.password_reset_tokens
+    FOR ALL
+    TO anon, authenticated
+    USING (false);
+
+-- Cryptographic Stored Procedure to Create Expiring Single-Use Reset Token (15 min validity)
+CREATE OR REPLACE FUNCTION public.create_password_reset_token(
+    p_email TEXT,
+    p_token_hash TEXT,
+    p_ip_address TEXT DEFAULT NULL,
+    p_user_agent TEXT DEFAULT NULL,
+    p_validity_minutes INT DEFAULT 15
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+    v_clean_email TEXT := LOWER(TRIM(p_email));
+    v_expires_at TIMESTAMPTZ;
+BEGIN
+    -- Invalidate any previous unconsumed reset tokens for this email
+    UPDATE public.password_reset_tokens
+    SET is_used = TRUE,
+        used_at = NOW()
+    WHERE email = v_clean_email AND is_used = FALSE;
+
+    v_expires_at := NOW() + (p_validity_minutes || ' minutes')::INTERVAL;
+
+    INSERT INTO public.password_reset_tokens (
+        email,
+        token_hash,
+        expires_at,
+        ip_address,
+        user_agent
+    ) VALUES (
+        v_clean_email,
+        p_token_hash,
+        v_expires_at,
+        p_ip_address,
+        p_user_agent
+    );
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'email', v_clean_email,
+        'expires_at', v_expires_at,
+        'validity_minutes', p_validity_minutes
+    );
+END;
+$$;
+
+-- Cryptographic Procedure to Consume Single-Use Reset Token and Update Password
+CREATE OR REPLACE FUNCTION public.consume_password_reset_token(
+    p_token_hash TEXT,
+    p_new_password TEXT
+)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+    v_token_record RECORD;
+    v_new_hashed_pw TEXT;
+    v_user_id UUID;
+BEGIN
+    -- 1. Find token record by hash with row-lock
+    SELECT * INTO v_token_record
+    FROM public.password_reset_tokens
+    WHERE token_hash = p_token_hash
+    FOR UPDATE;
+
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'code', 'invalid_token',
+            'message', 'Invalid password reset token.'
+        );
+    END IF;
+
+    -- 2. Check if already used (Single-use enforcement)
+    IF v_token_record.is_used OR v_token_record.used_at IS NOT NULL THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'code', 'already_used',
+            'message', 'This password reset link has already been used. Reset links can only be used once.'
+        );
+    END IF;
+
+    -- 3. Check expiration (Expiry enforcement)
+    IF NOW() > v_token_record.expires_at THEN
+        RETURN jsonb_build_object(
+            'success', false,
+            'code', 'expired',
+            'message', 'This password reset link has expired. Reset links are valid for 15 minutes.'
+        );
+    END IF;
+
+    -- 4. Mark token as consumed IMMEDIATELY (Atomic single-use guarantee)
+    UPDATE public.password_reset_tokens
+    SET is_used = TRUE,
+        used_at = NOW()
+    WHERE id = v_token_record.id;
+
+    -- 5. Hash new password with bcrypt
+    v_new_hashed_pw := extensions.crypt(p_new_password, extensions.gen_salt('bf', 10));
+
+    -- 6. Update user password in auth.users if user exists
+    SELECT id INTO v_user_id FROM auth.users WHERE email = v_token_record.email;
+    IF v_user_id IS NOT NULL THEN
+        UPDATE auth.users
+        SET encrypted_password = v_new_hashed_pw,
+            updated_at = NOW()
+        WHERE id = v_user_id;
+    END IF;
+
+    RETURN jsonb_build_object(
+        'success', true,
+        'email', v_token_record.email,
+        'message', 'Password reset successfully. You can now log in with your new password.'
+    );
+END;
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, TEXT, INT) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, TEXT, INT) TO service_role;
+GRANT EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) TO service_role;
+
 DO $$
 BEGIN
-  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All 14 tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized successfully.';
+  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All 15 tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized successfully.';
 END $$;
