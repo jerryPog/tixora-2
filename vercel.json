@@ -1,14 +1,6 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/auth/rate-limit", "destination": "/api/auth/rate-limit.js" },
-    { "source": "/api/rate-limit", "destination": "/api/auth/rate-limit.js" },
-    { "source": "/api/auth/session", "destination": "/api/auth/session.js" },
-    { "source": "/api/auth/logout", "destination": "/api/auth/logout.js" },
-    { "source": "/api/auth/forgot-password", "destination": "/api/auth/forgot-password.js" },
-    { "source": "/api/auth/verify-reset-token", "destination": "/api/auth/verify-reset-token.js" },
-    { "source": "/api/auth/reset-password", "destination": "/api/auth/reset-password.js" },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/database(.*)", "destination": "/404.html" },
     { "source": "/(.*)\\.sql", "destination": "/404.html" },
     { "source": "/(.*)\\.db", "destination": "/404.html" },
