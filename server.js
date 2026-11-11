@@ -144,39 +144,39 @@ const server = http.createServer((req, res) => {
 
   // 2a. Secure Session Management API Endpoints
   if (decodedPath === '/api/auth/session' || decodedPath === '/api/session') {
-    const sessionHandler = require('./api/auth/session');
+    const sessionHandler = require('./lib/auth/session');
     sessionHandler(req, res);
     return;
   }
 
   if (decodedPath === '/api/auth/logout' || decodedPath === '/api/logout') {
-    const logoutHandler = require('./api/auth/logout');
+    const logoutHandler = require('./lib/auth/logout');
     logoutHandler(req, res);
     return;
   }
 
   // 2b. Password Reset & Verification API Endpoints (Single-Use, 15-Minute Expiration)
   if (decodedPath === '/api/auth/forgot-password' || decodedPath === '/api/forgot-password') {
-    const forgotHandler = require('./api/auth/forgot-password');
+    const forgotHandler = require('./lib/auth/forgot-password');
     forgotHandler(req, res);
     return;
   }
 
   if (decodedPath === '/api/auth/verify-reset-token' || decodedPath === '/api/verify-reset-token') {
-    const verifyHandler = require('./api/auth/verify-reset-token');
+    const verifyHandler = require('./lib/auth/verify-reset-token');
     verifyHandler(req, res);
     return;
   }
 
   if (decodedPath === '/api/auth/reset-password' || decodedPath === '/api/reset-password') {
-    const resetHandler = require('./api/auth/reset-password');
+    const resetHandler = require('./lib/auth/reset-password');
     resetHandler(req, res);
     return;
   }
 
   // 2c. Anti-Automation Rate Limiting API Endpoint
   if (decodedPath === '/api/auth/rate-limit' || decodedPath === '/api/rate-limit') {
-    const rateLimitHandler = require('./api/auth/rate-limit');
+    const rateLimitHandler = require('./lib/auth/rate-limit');
     rateLimitHandler(req, res);
     return;
   }

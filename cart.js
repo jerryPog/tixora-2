@@ -332,13 +332,11 @@
         }
 
         try {
-            const csrfToken = (window.TixoraAuth && TixoraAuth.getCsrfToken) ? await TixoraAuth.getCsrfToken() : '';
-            const res = await fetch('/api/cart/checkout', {
+            const requestOptions = {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     customer: {
@@ -349,7 +347,21 @@
                     items: cart.items,
                     expiresAt: cart.expiresAt
                 })
-            });
+            };
+
+            let res;
+            if (window.TixoraAuth && typeof window.TixoraAuth.fetchWithCsrf === 'function') {
+                res = await window.TixoraAuth.fetchWithCsrf('/api/cart/checkout', requestOptions);
+            } else {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
+                    const csrfJson = await csrfRes.json();
+                    csrfToken = (csrfJson && csrfJson.csrf_token) || '';
+                } catch (e) {}
+                if (csrfToken) requestOptions.headers['X-CSRF-Token'] = csrfToken;
+                res = await fetch('/api/cart/checkout', requestOptions);
+            }
 
             const data = await res.json();
             if (!res.ok || data.status !== 'success') {

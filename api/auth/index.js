@@ -3,12 +3,12 @@
  * Consolidates all authentication, rate limiting, and password reset routes into a single shared execution context
  */
 
-const forgotPasswordHandler = require('./forgot-password');
-const verifyResetHandler = require('./verify-reset-token');
-const resetPasswordHandler = require('./reset-password');
-const sessionHandler = require('./session');
-const logoutHandler = require('./logout');
-const rateLimitHandler = require('./rate-limit');
+const forgotPasswordHandler = require('../../lib/auth/forgot-password');
+const verifyResetHandler = require('../../lib/auth/verify-reset-token');
+const resetPasswordHandler = require('../../lib/auth/reset-password');
+const sessionHandler = require('../../lib/auth/session');
+const logoutHandler = require('../../lib/auth/logout');
+const rateLimitHandler = require('../../lib/auth/rate-limit');
 const { handleValidationRequest } = require('../../lib/validator');
 const { handleCsrfEndpoint, validateCsrf } = require('../../lib/csrf');
 const { applySecurityHeaders } = require('../../lib/security-headers');

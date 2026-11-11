@@ -59,7 +59,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <!-- Tixora Supabase Config & Auth Engine -->
     <script src="supabase-config.js" defer></script>
-    <script src="auth.js" defer></script>
+    <script src="auth.js?v=4" defer></script>
 </head>
 <body class="ops-body ops-shell antialiased">
 
@@ -2843,20 +2843,20 @@
                     reader.readAsDataURL(file);
                 });
 
-                // Get active CSRF token
-                const csrfToken = (window.TixoraAuth && TixoraAuth.getCsrfToken && TixoraAuth.getCsrfToken()) || '';
-
-                const res = await fetch('/api/upload', {
+                const reqOpts = {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': csrfToken
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         file: base64Data,
                         filename: file.name
                     })
-                });
+                };
+                const res = (window.TixoraAuth && typeof window.TixoraAuth.fetchWithCsrf === 'function')
+                    ? await window.TixoraAuth.fetchWithCsrf('/api/upload', reqOpts)
+                    : await fetch('/api/upload', reqOpts);
 
                 const data = await res.json();
                 if (!res.ok || data.status !== 'success') {

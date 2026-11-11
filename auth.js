@@ -95,6 +95,29 @@
     }
 
     let _cachedCsrfToken = null;
+    let _csrfFetchPromise = null;
+
+    async function fetchFreshCsrfToken() {
+        _cachedCsrfToken = null;
+        if (!_csrfFetchPromise) {
+            _csrfFetchPromise = (async () => {
+                try {
+                    const res = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
+                    const data = await res.json();
+                    if (data && data.csrf_token) {
+                        _cachedCsrfToken = data.csrf_token;
+                        return _cachedCsrfToken;
+                    }
+                } catch (e) {
+                    // Non-blocking fallback
+                } finally {
+                    _csrfFetchPromise = null;
+                }
+                return '';
+            })();
+        }
+        return _csrfFetchPromise;
+    }
 
     /**
      * Get or fetch valid signed CSRF token
@@ -111,40 +134,56 @@
             }
         }
 
-        // 2. Fetch from secure CSRF provisioning endpoint
-        try {
-            const res = await fetch('/api/auth/csrf');
-            const data = await res.json();
-            if (data && data.csrf_token) {
-                _cachedCsrfToken = data.csrf_token;
-                return _cachedCsrfToken;
-            }
-        } catch (e) {
-            // Non-blocking fallback
-        }
-        return '';
+        // 2. Fetch from secure CSRF provisioning endpoint (coalesced)
+        return fetchFreshCsrfToken();
     }
 
     /**
-     * Secure Fetch with Automatic CSRF Token Injection & Origin Header
+     * Secure Fetch with Automatic CSRF Token Injection, Same-Origin Credentials,
+     * and single automatic retry if serverless instance key rotation invalidates a stale cookie.
      */
     async function fetchWithCsrf(url, options = {}) {
         const method = (options.method || 'GET').toUpperCase();
         const headers = { ...(options.headers || {}) };
+        const isMutation = ['POST', 'PUT', 'DELETE', 'PATCH'].includes(method);
 
         // Attach CSRF token on state-changing requests
-        if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+        if (isMutation) {
             const token = await getCsrfToken();
             if (token) {
                 headers['X-CSRF-Token'] = token;
             }
         }
 
-        return fetch(url, {
+        const res = await fetch(url, {
             ...options,
             headers,
             credentials: options.credentials || 'same-origin'
         });
+
+        if (isMutation && res && res.status === 403 && typeof res.clone === 'function') {
+            try {
+                const errPayload = await res.clone().json();
+                if (
+                    errPayload &&
+                    (errPayload.code === 'CSRF_TOKEN_INVALID' ||
+                        errPayload.code === 'CSRF_TOKEN_MISSING' ||
+                        errPayload.code === 'CSRF_TOKEN_MISMATCH')
+                ) {
+                    const freshToken = await fetchFreshCsrfToken();
+                    if (freshToken) {
+                        headers['X-CSRF-Token'] = freshToken;
+                        return fetch(url, {
+                            ...options,
+                            headers,
+                            credentials: options.credentials || 'same-origin'
+                        });
+                    }
+                }
+            } catch (e) {}
+        }
+
+        return res;
     }
 
     /**
@@ -217,7 +256,12 @@
                 if (!session) {
                     _cachedUserRole = null;
                     _cachedPromoter = null;
-                    await clearSessionCookie();
+                    const hasServerSessionHint =
+                        typeof document !== 'undefined' &&
+                        /\btixora_auth_status=/.test(document.cookie || '');
+                    if (event === 'SIGNED_OUT' || hasServerSessionHint) {
+                        await clearSessionCookie();
+                    }
                 } else {
                     await refreshUserData(session.user);
                     const role = await getUserRole(session.user);
