@@ -254,7 +254,7 @@ function parseBody(req) {
 }
 
 const handler = async (req, res) => {
-    applySecurityHeaders(res, { isApi: true });
+    applySecurityHeaders(res, { isApi: true, req });
     if (handleCors(req, res)) return;
 
     // CSRF Protection Barrier for State-Changing Requests

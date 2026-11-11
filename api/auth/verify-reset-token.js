@@ -33,7 +33,7 @@ function parseBody(req) {
 }
 
 module.exports = async (req, res) => {
-    applySecurityHeaders(res, { isApi: true });
+    applySecurityHeaders(res, { isApi: true, req });
     if (handleCors(req, res)) return;
 
     let token = '';

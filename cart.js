@@ -217,30 +217,30 @@
             grandTotal += lineTotal;
 
             return `
-                <div class="p-3 sm:p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] flex items-center justify-between gap-3 text-xs">
+                <div class="cart-item-row">
                     <div class="flex-1 min-w-0">
-                        <div class="font-bold text-white truncate text-xs sm:text-sm">${escapeHtml(item.title)}</div>
-                        <div class="text-[10px] font-mono text-slate-400 mt-0.5">
-                            <span class="text-crimson font-semibold">${escapeHtml(item.tier)}</span> • ₹${Number(item.price).toLocaleString('en-IN')} each
+                        <div class="font-bold text-[var(--ink)] truncate text-sm">${escapeHtml(item.title)}</div>
+                        <div class="text-xs text-[var(--muted)] mt-0.5 tabular-nums">
+                            <span class="text-[var(--crimson-ink)] font-semibold">${escapeHtml(item.tier)}</span> &middot; ₹${Number(item.price).toLocaleString('en-IN')} each
                         </div>
                     </div>
                     
-                    <div class="flex items-center space-x-2.5">
+                    <div class="flex items-center gap-2.5">
                         <!-- Quantity +/- -->
-                        <div class="flex items-center rounded-lg bg-[#0d1019] border border-[#1e2436] font-mono">
-                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', -1)" class="px-2 py-1 text-slate-400 hover:text-white transition-colors" aria-label="Decrease quantity">−</button>
-                            <span class="px-1.5 py-1 text-white font-semibold text-[11px]">${item.quantity || 1}</span>
-                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', 1)" class="px-2 py-1 text-slate-400 hover:text-white transition-colors" aria-label="Increase quantity">+</button>
+                        <div class="cart-qty-box tabular-nums">
+                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', -1)" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Decrease quantity">&minus;</button>
+                            <span class="px-2 py-1 text-[var(--ink)] font-bold text-xs">${item.quantity || 1}</span>
+                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', 1)" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Increase quantity">+</button>
                         </div>
 
                         <!-- Line Price -->
-                        <div class="text-right min-w-[65px] font-mono font-bold text-white text-xs">
+                        <div class="text-right min-w-[68px] font-bold text-[var(--ink)] text-xs tabular-nums">
                             ₹${Number(lineTotal).toLocaleString('en-IN')}
                         </div>
 
                         <!-- Remove Button -->
-                        <button type="button" onclick="TixoraCart.removeItem('${item.id}')" class="text-slate-500 hover:text-rose-400 transition-colors p-1" title="Remove pass">
-                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <button type="button" onclick="TixoraCart.removeItem('${item.id}')" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] transition-colors p-1.5" aria-label="Remove pass from cart">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -263,6 +263,9 @@
             renderCartUI();
             startCountdownTimer();
             modal.classList.remove('hidden');
+            if (typeof window.syncModalFocusInert === 'function') {
+                window.syncModalFocusInert(modal, true);
+            }
             if (window.lucide && lucide.createIcons) lucide.createIcons();
         }
     }
@@ -271,6 +274,9 @@
         const modal = document.getElementById('tixora-cart-modal');
         if (modal) {
             modal.classList.add('hidden');
+            if (typeof window.syncModalFocusInert === 'function') {
+                window.syncModalFocusInert(modal, false);
+            }
         }
     }
 
@@ -326,9 +332,10 @@
         }
 
         try {
-            const csrfToken = (window.TixoraAuth && TixoraAuth.getCsrfToken && TixoraAuth.getCsrfToken()) || '';
+            const csrfToken = (window.TixoraAuth && TixoraAuth.getCsrfToken) ? await TixoraAuth.getCsrfToken() : '';
             const res = await fetch('/api/cart/checkout', {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-Token': csrfToken
@@ -381,38 +388,38 @@
 
         body.innerHTML = `
             <div class="text-center py-4 space-y-4">
-                <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mx-auto flex items-center justify-center">
+                <div class="w-12 h-12 rounded-full bg-[var(--emerald-bg)] border border-[var(--emerald-border)] text-[var(--emerald-ink)] mx-auto flex items-center justify-center">
                     <i data-lucide="check" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-white">Passes Reserved Successfully!</h3>
-                    <p class="text-xs text-slate-400 mt-1">Order Ref: <span class="text-emerald-400 font-mono font-bold">${escapeHtml(order.orderId || 'TIX-CONFIRMED')}</span></p>
+                    <h3 class="text-lg font-bold text-[var(--ink)]">Passes Reserved Successfully</h3>
+                    <p class="text-xs text-[var(--muted)] mt-1 tabular-nums">Order Ref: <span class="text-[var(--crimson-ink)] font-bold">${escapeHtml(order.orderId || 'TIX-CONFIRMED')}</span></p>
                 </div>
 
-                <div class="p-3.5 rounded-xl bg-[#131622] border border-[#1e2436] text-left text-xs font-mono space-y-2">
-                    <div class="text-slate-400 flex justify-between">
-                        <span>Attendee:</span>
-                        <span class="text-white font-bold">${escapeHtml(order.customerName)}</span>
+                <div class="p-4 rounded-2xl bg-[var(--soft)] border border-[var(--line)] text-left text-xs space-y-2 tabular-nums">
+                    <div class="text-[var(--muted)] flex justify-between">
+                        <span>Attendee</span>
+                        <span class="text-[var(--ink)] font-bold">${escapeHtml(order.customerName)}</span>
                     </div>
-                    <div class="text-slate-400 flex justify-between">
-                        <span>WhatsApp Delivery:</span>
-                        <span class="text-white">${escapeHtml(order.customerPhone)}</span>
+                    <div class="text-[var(--muted)] flex justify-between">
+                        <span>WhatsApp Delivery</span>
+                        <span class="text-[var(--ink)] font-medium">${escapeHtml(order.customerPhone)}</span>
                     </div>
-                    <div class="text-slate-400 flex justify-between">
-                        <span>Confirmation Email:</span>
-                        <span class="text-white">${escapeHtml(order.customerEmail)}</span>
+                    <div class="text-[var(--muted)] flex justify-between">
+                        <span>Confirmation Email</span>
+                        <span class="text-[var(--ink)] font-medium">${escapeHtml(order.customerEmail)}</span>
                     </div>
-                    <div class="text-slate-400 flex justify-between border-t border-[#1e2436] pt-2">
-                        <span>Total Paid:</span>
-                        <span class="text-emerald-400 font-bold">₹${Number(order.totalAmount).toLocaleString('en-IN')}</span>
+                    <div class="text-[var(--muted)] flex justify-between border-t border-[var(--line)] pt-2">
+                        <span>Total Settled</span>
+                        <span class="text-[var(--emerald-ink)] font-bold">₹${Number(order.totalAmount).toLocaleString('en-IN')}</span>
                     </div>
                 </div>
 
-                <p class="text-[11px] text-slate-400 leading-relaxed">
+                <p class="text-xs text-[var(--muted)] leading-relaxed">
                     Dynamic QR turnstile passes have been dispatched to your WhatsApp number and email. BookMyShow verification active.
                 </p>
 
-                <button onclick="TixoraCart.resetModal()" class="btn-primary w-full py-2.5 rounded-xl text-xs font-semibold">
+                <button type="button" onclick="TixoraCart.resetModal()" class="btn-editorial-primary w-full">
                     Done
                 </button>
             </div>
@@ -438,8 +445,12 @@
     }
 
     function showToast(msg) {
+        if (typeof window.showToast === 'function') {
+            window.showToast(msg);
+            return;
+        }
         const t = document.createElement('div');
-        t.className = 'fixed bottom-5 right-5 z-50 bg-[#0d1019] border border-amber-500/40 text-amber-300 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-mono flex items-center space-x-2';
+        t.className = 'fixed bottom-5 right-5 z-50 bg-[#0d1019] border border-[#ff2e54] text-white px-4 py-2.5 rounded-full shadow-2xl text-xs flex items-center space-x-2';
         t.innerHTML = `<span>${escapeHtml(msg)}</span>`;
         document.body.appendChild(t);
         setTimeout(() => {
@@ -478,3 +489,4 @@
         resetModal
     };
 })();
+

@@ -55,15 +55,24 @@ const MIME = {
   '.woff2': 'font/woff2'
 };
 
+const {
+  enforceHttps,
+  isPlainLocalHttp,
+  STANDARD_CSP,
+  ADMIN_CSP,
+  LOCAL_STANDARD_CSP,
+  LOCAL_ADMIN_CSP,
+  PERMISSIONS_POLICY
+} = require('./lib/security-headers');
+const { handleCors } = require('./lib/cors');
+
 const server = http.createServer((req, res) => {
   // 1. Force HTTPS & Canonical Apex Host (301 Permanent Redirect)
-  const { enforceHttps } = require('./lib/security-headers');
   if (enforceHttps(req, res)) {
     return;
   }
 
   // 1b. Domain-Restricted CORS & Preflight OPTIONS Handler
-  const { handleCors } = require('./lib/cors');
   if (handleCors(req, res)) {
     return;
   }
@@ -82,9 +91,11 @@ const server = http.createServer((req, res) => {
   // Strip null bytes and normalize slashes
   decodedPath = decodedPath.replace(/\0/g, '');
 
-  // Parse incoming cookies
+  // Parse incoming cookies & transport flags
   const cookies = parseCookies(req.headers.cookie);
-  const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
+  const isLocalPlain = isPlainLocalHttp(req);
+  const secureAttr = isLocalPlain ? '' : ' Secure;';
+  const cookieSecurity = `Path=/; HttpOnly;${secureAttr} SameSite=Strict`;
 
   // 2-DOS-BARRIER. Enforce Strict Payload Size Limits (HTTP 413)
   if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
@@ -204,14 +215,17 @@ const server = http.createServer((req, res) => {
     // If user is authenticated with a non-admin role (e.g. promoter, attendee):
     // Strictly block access with HTTP 403 Forbidden!
     if (sessionToken && userRole && userRole !== 'admin' && userRole !== 'manager') {
-      res.writeHead(403, {
+      const forbiddenHeaders = {
         'Content-Type': 'text/html; charset=utf-8',
         'X-Content-Type-Options': 'nosniff',
         'X-Frame-Options': 'DENY',
         'X-Robots-Tag': 'noindex, nofollow',
-        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
-      });
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
+      };
+      if (!isLocalPlain) {
+        forbiddenHeaders['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload';
+      }
+      res.writeHead(403, forbiddenHeaders);
       res.end(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -317,20 +331,25 @@ const server = http.createServer((req, res) => {
     checkRel.endsWith('.yaml') ||
     (checkRel.endsWith('.json') && !checkRel.endsWith('manifest.json') && !checkRel.endsWith('.mcp.json'));
 
-  const { STANDARD_CSP, ADMIN_CSP, PERMISSIONS_POLICY } = require('./lib/security-headers');
   const isAdminTarget = checkRel.includes('admin') || isAdminRoute;
+  const activeCsp = isLocalPlain
+    ? (isAdminTarget ? LOCAL_ADMIN_CSP : LOCAL_STANDARD_CSP)
+    : (isAdminTarget ? ADMIN_CSP : STANDARD_CSP);
+
   const baseHeaders = {
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': isAdminTarget ? 'DENY' : 'SAMEORIGIN',
     'X-XSS-Protection': '1; mode=block',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': PERMISSIONS_POLICY,
-    'Content-Security-Policy': isAdminTarget ? ADMIN_CSP : STANDARD_CSP,
+    'Content-Security-Policy': activeCsp,
     'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
     'Cross-Origin-Resource-Policy': 'cross-origin',
     'X-Permitted-Cross-Domain-Policies': 'none'
   };
+  if (!isLocalPlain) {
+    baseHeaders['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload';
+  }
 
   if (isBlocked) {
     res.writeHead(404, {
@@ -369,13 +388,19 @@ const server = http.createServer((req, res) => {
     // 7. Serve File with Optimized Caching & Content-Type
     const ext = path.extname(resolvedPath).toLowerCase();
     const isHtml = ext === '.html';
+    const isAssetCode = ext === '.css' || ext === '.js';
     const isSitemap = ext === '.xml';
+    const reqHost = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().split(':')[0].toLowerCase();
+    const isLocalHost = reqHost === 'localhost' || reqHost === '127.0.0.1';
 
     let cacheControl = 'public, max-age=86400, stale-while-revalidate=604800';
-    if (isHtml) cacheControl = 'no-cache';
-    if (isSitemap) cacheControl = 'public, max-age=3600, stale-while-revalidate=86400';
-    if (['.webp', '.jpg', '.jpeg', '.png', '.svg', '.ico', '.woff2', '.gif'].includes(ext)) {
+    if (isHtml || isAssetCode) cacheControl = 'no-cache, must-revalidate';
+    if (!isLocalHost && isSitemap) cacheControl = 'public, max-age=3600, stale-while-revalidate=86400';
+    if (!isLocalHost && ['.webp', '.jpg', '.jpeg', '.png', '.svg', '.ico', '.woff2', '.gif'].includes(ext)) {
       cacheControl = 'public, max-age=31536000, immutable';
+    }
+    if (isLocalHost) {
+      cacheControl = 'no-store, no-cache, must-revalidate, max-age=0';
     }
 
     const headers = {
@@ -384,10 +409,15 @@ const server = http.createServer((req, res) => {
       'Cache-Control': cacheControl
     };
 
+    if (isLocalHost) {
+      headers['Pragma'] = 'no-cache';
+      headers['Expires'] = '0';
+    }
+
     if (isAdminTarget) {
       headers['X-Robots-Tag'] = 'noindex, nofollow';
       headers['X-Frame-Options'] = 'DENY';
-      headers['Content-Security-Policy'] = ADMIN_CSP;
+      headers['Content-Security-Policy'] = isLocalPlain ? LOCAL_ADMIN_CSP : ADMIN_CSP;
       headers['Cross-Origin-Resource-Policy'] = 'same-origin';
       headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0';
     }
@@ -401,7 +431,7 @@ const server = http.createServer((req, res) => {
     if (isHtml && !cookies.tixora_csrf) {
       const { generateCsrfToken, COOKIE_NAME } = require('./lib/csrf');
       const csrfToken = generateCsrfToken();
-      setCookieHeaders.push(`${COOKIE_NAME}=${encodeURIComponent(csrfToken)}; Path=/; Secure; SameSite=Strict; Max-Age=86400`);
+      setCookieHeaders.push(`${COOKIE_NAME}=${encodeURIComponent(csrfToken)}; Path=/;${secureAttr} SameSite=Strict; Max-Age=86400`);
     }
     if (setCookieHeaders.length > 0) {
       headers['Set-Cookie'] = setCookieHeaders;

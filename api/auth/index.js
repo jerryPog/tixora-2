@@ -16,7 +16,7 @@ const { handleCors } = require('../../lib/cors');
 const { handleUploadEndpoint } = require('../../lib/uploader');
 
 module.exports = async (req, res) => {
-    applySecurityHeaders(res, { isApi: true });
+    applySecurityHeaders(res, { isApi: true, req });
     if (handleCors(req, res)) return;
     const rawUrl = req.headers['x-matched-path'] || req.headers['x-forwarded-uri'] || req.url || '';
     const pathOnly = rawUrl.split('?')[0].toLowerCase();

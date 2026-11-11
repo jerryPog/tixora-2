@@ -4,28 +4,30 @@
  */
 
 const { csrfGuard } = require('../../lib/csrf');
-const { applySecurityHeaders } = require('../../lib/security-headers');
+const { applySecurityHeaders, isPlainLocalHttp } = require('../../lib/security-headers');
 const { handleCors } = require('../../lib/cors');
 
 module.exports = async (req, res) => {
-    applySecurityHeaders(res, { isApi: true });
+    applySecurityHeaders(res, { isApi: true, req });
     if (handleCors(req, res)) return;
 
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;
 
-    const clearOpts = 'Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    const isLocalPlain = isPlainLocalHttp(req);
+    const secureAttr = isLocalPlain ? '' : ' Secure;';
+    const clearOpts = `Path=/; HttpOnly;${secureAttr} SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 
     res.setHeader('Set-Cookie', [
         `tixora_session=; ${clearOpts}`,
         `tixora_role=; ${clearOpts}`,
-        `tixora_auth_status=; Path=/; Secure; SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
+        `tixora_auth_status=; Path=/;${secureAttr} SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
     ]);
 
     const payload = {
         status: 'logged_out',
         cookies_cleared: true,
-        cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
+        cookie_policy: isLocalPlain ? 'HttpOnly; SameSite=Strict' : 'HttpOnly; Secure; SameSite=Strict'
     };
 
     if (typeof res.status === 'function') {

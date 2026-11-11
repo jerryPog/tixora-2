@@ -1,61 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth overflow-x-hidden">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
-    <title>Tixora Operations Desk | Live Tour Inventory & Settlements</title>
+    <title>Tixora Operations Desk | Live Tour Inventory &amp; Settlements</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
-    <!-- DNS Prefetch for External CDNs -->
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="https://unpkg.com">
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
+    <meta name="theme-color" content="#050608">
 
-    <!-- Tailwind CSS -->
+    <!-- Production Console Warning Filter -->
+    <script>
+        (function () {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+
+    <!-- Tailwind CSS (Preflight disabled so editorial.css cascade controls base) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest" defer></script>
-    <!-- Supabase JS Client (v2) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <!-- Tixora Supabase Config -->
-    <script src="supabase-config.js" defer></script>
-    <!-- Tixora Supabase Auth & RBAC Route Guard Protocol -->
-    <script src="auth.js" defer></script>
-    
-    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <script>
         tailwind.config = {
-            darkMode: 'class',
+            corePlugins: { preflight: false },
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace']
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
                     },
                     colors: {
-                        tx: {
-                            bg: '#0b0d14',
-                            surface: '#121520',
-                            surfaceHover: '#171b29',
-                            surfaceRaised: '#161926',
-                            surfaceMuted: '#0e1018',
-                            border: '#1e2333',
-                            borderHover: '#2a3248',
-                            textPrimary: '#f8fafc',
-                            textSecondary: '#cbd5e1',
-                            textMuted: '#94a3b8',
-                            emerald: '#10b981',
-                            amber: '#f59e0b',
-                            cyan: '#0284c7',
-                            sky: '#38bdf8',
-                            rose: '#f43f5e',
-                            indigo: '#6366f1'
+                        ink: '#f8fafc',
+                        navy: '#ff2e54',
+                        gold: '#ff4d6d',
+                        soft: '#131622',
+                        crimson: {
+                            DEFAULT: '#ff2e54',
+                            hover: '#dc2626'
                         }
                     }
                 }
@@ -63,145 +47,79 @@
         };
     </script>
 
-    <style>
-        :root {
-            color-scheme: dark;
-        }
-        body {
-            background-color: #0b0d14;
-            color: #f8fafc;
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-        }
-        .ops-card {
-            background-color: #121520;
-            border: 1px solid #1e2333;
-            border-radius: 0.75rem;
-            transition: border-color 150ms ease;
-        }
-        .ops-card:hover {
-            border-color: #2a3248;
-        }
-        .ops-card-subtle {
-            background-color: #0e1018;
-            border: 1px solid #1a1f2e;
-            border-radius: 0.5rem;
-        }
-        .ops-input {
-            background-color: #161926;
-            border: 1px solid #22283a;
-            color: #f8fafc;
-            border-radius: 0.5rem;
-            transition: all 150ms ease;
-        }
-        .ops-input:focus {
-            border-color: #10b981;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
-            background-color: #181d2c;
-        }
-        .badge-emerald {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.25);
-        }
-        .badge-amber {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-            border: 1px solid rgba(245, 158, 11, 0.25);
-        }
-        .badge-cyan {
-            background-color: rgba(2, 132, 199, 0.1);
-            color: #38bdf8;
-            border: 1px solid rgba(2, 132, 199, 0.25);
-        }
-        .badge-rose {
-            background-color: rgba(244, 63, 94, 0.1);
-            color: #f43f5e;
-            border: 1px solid rgba(244, 63, 94, 0.25);
-        }
-        .badge-neutral {
-            background-color: rgba(148, 163, 184, 0.08);
-            color: #94a3b8;
-            border: 1px solid rgba(148, 163, 184, 0.18);
-        }
-        /* Refined industrial scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0d14; }
-        ::-webkit-scrollbar-thumb { background: #1e2333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #333b52; }
-    </style>
+    <!-- Fonts: Bricolage Grotesque & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editorial.css?v=3">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <!-- Supabase JS Client (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <!-- Tixora Supabase Config & Auth Engine -->
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js" defer></script>
 </head>
-<body class="min-h-screen flex flex-col bg-[#0b0d14] text-slate-100 antialiased selection:bg-emerald-500/20 selection:text-emerald-300">
+<body class="ops-body ops-shell antialiased">
 
     <!-- Top Command Navigation Bar (Protected) -->
-    <header id="admin-header" class="hidden sticky top-0 z-40 px-4 sm:px-6 h-14 flex items-center justify-between bg-[#0e1018] border-b border-[#1e2333]">
+    <header id="admin-header" class="hidden ops-topbar sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between">
         <div class="flex items-center space-x-3 sm:space-x-4">
-            <!-- Brand Mark -->
-            <a href="/" class="flex items-center space-x-2.5 group">
-                <span class="font-bold tracking-[0.16em] text-white text-base">TIXORA</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded-md badge-emerald uppercase tracking-wider font-semibold hidden sm:inline-block">
+            <a href="/" class="flex items-center space-x-2.5 group" aria-label="Tixora Homepage">
+                <picture>
+                    <source srcset="tixora-logo.webp" type="image/webp">
+                    <img src="tixora-logo.png" alt="TIXORA" width="112" height="28" class="h-7 w-auto object-contain">
+                </picture>
+                <span class="ops-badge-gold text-[10px] font-mono px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold hidden sm:inline-block">
                     OPERATIONS
                 </span>
             </a>
 
-            <!-- Subtle Divider -->
-            <div class="h-4 w-px bg-[#1e2333] hidden sm:block"></div>
+            <div class="h-4 w-px bg-white/20 hidden sm:block"></div>
 
-            <!-- Hamburger menu toggle -->
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white p-1.5 rounded-md hover:bg-white/[0.04] transition-colors" title="Toggle Navigation Menu">
+            <button type="button" onclick="toggleSidebar()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu">
                 <i data-lucide="menu" class="w-4 h-4"></i>
             </button>
-            
-            <!-- Global Command Search -->
+
             <div class="relative hidden md:block w-72">
-                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500"></i>
-                <input type="text" id="global-search-input" placeholder="Search tours, venues, promoters..." 
-                    class="w-full bg-[#161926] border border-[#22283a] rounded-lg pl-8 pr-12 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors" 
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#94a3b8]"></i>
+                <label for="global-search-input" class="visually-hidden">Global Operations Search</label>
+                <input type="text" id="global-search-input" placeholder="Search tours, venues, promoters..."
+                    class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-xs text-white placeholder-[#94a3b8] focus:outline-none focus:border-[#ff2e54] transition-colors"
                     oninput="handleGlobalSearch(this.value)">
-                <span class="absolute right-2 top-2 text-[10px] font-mono text-slate-500 bg-[#0e1018] px-1.5 py-0.5 rounded border border-[#22283a]">/</span>
+                <span class="absolute right-2.5 top-1.5 text-[10px] font-mono text-[#94a3b8] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
             </div>
 
-            <!-- Supabase Database Status Indicator -->
-            <button onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-2.5 py-1 rounded-md text-xs font-mono bg-[#161926] border border-[#22283a] hover:border-emerald-500/40 transition-colors">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="db-status-dot"></span>
-                <span class="text-slate-400 text-[11px]" id="db-status-text">PostgreSQL Connected</span>
+            <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 hover:border-[#ff2e54] transition-colors">
+                <span class="w-2 h-2 rounded-full bg-emerald-400" id="db-status-dot"></span>
+                <span class="text-[#94a3b8] text-[11px]" id="db-status-text">PostgreSQL Connected</span>
             </button>
         </div>
 
         <div class="flex items-center space-x-2 sm:space-x-3">
-            <!-- Primary Action: Allocate Tour -->
-            <button onclick="openModal('add-tour-modal')" class="bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg flex items-center space-x-1.5 transition-all shadow-sm">
+            <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-gold" style="min-block-size: 38px; padding-inline: 16px; padding-block: 6px; font-size: 12px;">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Allocate Tour</span>
             </button>
 
-            <!-- Refresh Live Telemetry -->
-            <button onclick="refreshAllData()" class="text-slate-400 hover:text-white p-1.5 rounded-md hover:bg-white/[0.04] transition-colors relative" title="Refresh Live Data">
+            <button type="button" onclick="refreshAllData()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Refresh Live Data" aria-label="Refresh Live Data">
                 <i data-lucide="refresh-cw" class="w-4 h-4" id="refresh-icon"></i>
             </button>
 
-            <!-- Database Config Trigger -->
-            <button onclick="openModal('supabase-modal')" class="text-slate-400 hover:text-white p-1.5 rounded-md hover:bg-white/[0.04] transition-colors" title="Database Configuration">
+            <button type="button" onclick="openModal('supabase-modal')" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Database Configuration" aria-label="Database Configuration">
                 <i data-lucide="database" class="w-4 h-4"></i>
             </button>
 
-            <!-- User Clearance Profile Badge -->
-            <div id="admin-user-badge-container" class="flex items-center space-x-2.5 pl-3 border-l border-[#1e2333] cursor-pointer" onclick="handleAdminSignOut()" title="Click to Sign Out">
-                <div id="admin-user-avatar" class="h-7 w-7 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs">
+            <div id="admin-user-badge-container" class="flex items-center space-x-2.5 pl-3 border-l border-white/20 cursor-pointer" onclick="handleAdminSignOut()" title="Click to Sign Out">
+                <div id="admin-user-avatar" class="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs" style="background: rgba(255,46,84,0.18); border: 1px solid #ff2e54; color: #ff4d6d;">
                     <span>OP</span>
                 </div>
                 <div class="hidden sm:flex flex-col text-left">
-                    <span id="admin-user-email" class="text-xs text-slate-200 font-medium leading-none">admin@tixora.live</span>
-                    <span id="admin-user-role-badge" class="text-[10px] font-mono text-emerald-400 leading-none mt-1">SUPER ADMIN</span>
+                    <span id="admin-user-email" class="text-xs text-white font-semibold leading-none">admin@tixora.live</span>
+                    <span id="admin-user-role-badge" class="text-[10px] font-mono leading-none mt-1" style="color: #ff4d6d;">SUPER ADMIN</span>
                 </div>
-                <i data-lucide="log-out" class="w-3.5 h-3.5 text-slate-500 hover:text-rose-400 ml-1 hidden sm:block"></i>
+                <i data-lucide="log-out" class="w-3.5 h-3.5 text-[#94a3b8] hover:text-white ml-1 hidden sm:block"></i>
             </div>
         </div>
     </header>
@@ -209,35 +127,42 @@
     <!-- ========================================================= -->
     <!-- AUTHENTICATION STATE 1: LOADING BARRIER -->
     <!-- ========================================================= -->
-    <div id="admin-loading-barrier" class="hidden flex-1 flex flex-col items-center justify-center p-8 space-y-4">
-        <div class="relative w-12 h-12 flex items-center justify-center">
-            <div class="absolute inset-0 rounded-full border-2 border-emerald-500/20 border-t-emerald-500 animate-spin"></div>
-            <span class="font-bold text-white text-[10px] tracking-wider font-mono">TIX</span>
-        </div>
-        <div class="text-center space-y-1">
-            <div class="font-semibold text-white text-sm">Verifying Operations Clearance</div>
-            <div class="text-xs font-mono text-slate-400">Authenticating session via Supabase RBAC Protocol</div>
+    <div id="admin-loading-barrier" class="hidden ops-auth-main flex-col gap-4">
+        <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
+            <div class="ops-spinner mx-auto" role="status" aria-label="Verifying operations clearance"></div>
+            <div class="space-y-1">
+                <div class="font-bold text-[var(--ink)] text-sm">Verifying Operations Clearance</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Authenticating session via Supabase RBAC Protocol</div>
+            </div>
         </div>
     </div>
 
     <!-- ========================================================= -->
     <!-- AUTHENTICATION STATE 2: PROTECTED ADMIN LOGIN GATE -->
     <!-- ========================================================= -->
-    <div id="admin-auth-gate" class="flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
-        <div class="ops-card max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
-            <div class="space-y-2 text-center">
-                <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider badge-emerald">
-                    <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                    <span>Administrative Access Gateway</span>
+    <div id="admin-auth-gate" class="ops-auth-main">
+        <div class="ops-card max-w-md w-full p-6 sm:p-8 space-y-6">
+            <div class="space-y-2.5 text-center">
+                <a href="/" class="ops-pill-brand mx-auto mb-1" aria-label="Tixora Homepage">
+                    <picture>
+                        <source srcset="tixora-logo.webp" type="image/webp">
+                        <img src="tixora-logo.png" alt="TIXORA" width="112" height="28" class="h-7 w-auto object-contain">
+                    </picture>
+                </a>
+                <div>
+                    <span class="ops-badge-gold inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider font-bold">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Administrative Access Gateway</span>
+                    </span>
                 </div>
-                <h2 class="text-2xl font-bold text-white tracking-tight">Tixora Operations Desk</h2>
-                <p class="text-xs text-slate-400 leading-relaxed">
+                <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Tixora Operations Desk</h1>
+                <p class="text-xs text-[var(--muted)] leading-relaxed">
                     Authentication required. Sign in with your administrator account to access live tour allocations, orders, and settlements.
                 </p>
             </div>
 
             <!-- Error Banner -->
-            <div id="admin-auth-error" class="hidden p-3 rounded-lg bg-rose-500/10 border border-rose-500/25 text-xs text-rose-400 flex items-start space-x-2">
+            <div id="admin-auth-error" class="hidden modal-error-banner" role="alert">
                 <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
                 <span id="admin-auth-error-text">Authentication failed</span>
             </div>
@@ -245,49 +170,41 @@
             <!-- Sign In Form -->
             <form onsubmit="handleAdminSignIn(event)" class="space-y-4">
                 <div>
-                    <label class="block text-slate-400 text-[11px] font-medium mb-1.5">Admin Email</label>
-                    <div class="relative">
-                        <i data-lucide="mail" class="w-4 h-4 absolute left-3 top-2.5 text-slate-500"></i>
-                        <input type="email" id="admin-login-email" required placeholder="admin@tixora.live" 
-                            class="w-full ops-input pl-9 pr-3 py-2 text-xs placeholder-slate-500">
-                    </div>
+                    <label for="admin-login-email" class="modal-field-label">Admin Email</label>
+                    <input type="email" id="admin-login-email" name="email" required autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="admin@tixora.live" class="modal-input font-mono">
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label class="block text-slate-400 text-[11px] font-medium">Master Password</label>
-                        <a href="/reset-password" class="text-[11px] font-mono text-emerald-400 hover:underline">Forgot password?</a>
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="admin-login-password" class="modal-field-label" style="margin:0;">Master Password</label>
+                        <a href="/reset-password" class="text-[11px] font-mono font-semibold" style="color: var(--crimson-ink); text-decoration: underline;">Forgot password?</a>
                     </div>
-                    <div class="relative">
-                        <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-2.5 text-slate-500"></i>
-                        <input type="password" id="admin-login-password" required placeholder="••••••••••••" 
-                            class="w-full ops-input pl-9 pr-3 py-2 text-xs placeholder-slate-500">
-                    </div>
+                    <input type="password" id="admin-login-password" name="password" required autocomplete="current-password" enterkeyhint="done" placeholder="••••••••••••" class="modal-input font-mono">
                 </div>
 
-                <button type="submit" id="admin-login-btn" class="w-full py-2.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white flex items-center justify-center space-x-2 transition-all">
-                    <span id="admin-login-btn-text">Authenticate & Enter Desk</span>
-                    <i data-lucide="arrow-right" class="w-3.5 h-3.5" id="admin-login-btn-icon"></i>
+                <button type="submit" id="admin-login-btn" class="btn-editorial-primary w-full">
+                    <span id="admin-login-btn-text">Authenticate &amp; Enter Desk</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4" id="admin-login-btn-icon"></i>
                 </button>
             </form>
 
             <!-- Verification Details -->
-            <div class="space-y-3 pt-3 border-t border-[#1e2333]">
-                <div class="p-3 rounded-lg ops-card-subtle text-[11px] font-mono text-slate-400 space-y-1">
-                    <div class="flex items-center justify-between text-slate-300 font-medium">
+            <div class="pt-2 border-t border-[var(--line)]">
+                <div class="ops-subcard p-3.5 text-[11px] font-mono text-[var(--muted)] space-y-1">
+                    <div class="flex items-center justify-between font-bold text-[var(--ink)]">
                         <span>Database RBAC Active</span>
-                        <span class="text-emerald-400">Strict Auth Enforced</span>
+                        <span style="color: var(--emerald-ink);">Strict Auth Enforced</span>
                     </div>
                     <div>Administrative access requires verified Supabase JWT credentials.</div>
                 </div>
             </div>
 
             <div class="flex items-center justify-between pt-1 text-xs font-mono">
-                <a href="/" class="text-slate-400 hover:text-white transition-colors flex items-center space-x-1">
+                <a href="/" class="inline-flex items-center space-x-1 font-semibold" style="color: var(--crimson-ink);">
                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                     <span>Back to Fan Site</span>
                 </a>
-                <button type="button" onclick="openModal('supabase-modal')" class="text-slate-400 hover:text-emerald-400 transition-colors flex items-center space-x-1">
+                <button type="button" onclick="openModal('supabase-modal')" class="inline-flex items-center space-x-1 font-semibold" style="color: var(--crimson-ink);">
                     <i data-lucide="settings" class="w-3.5 h-3.5"></i>
                     <span>Database Settings</span>
                 </button>
@@ -298,28 +215,28 @@
     <!-- ========================================================= -->
     <!-- AUTHENTICATION STATE 3: ACCESS FORBIDDEN (NON-ADMIN) -->
     <!-- ========================================================= -->
-    <div id="admin-forbidden-gate" class="hidden flex-1 flex items-center justify-center p-4 sm:p-6 my-auto">
+    <div id="admin-forbidden-gate" class="hidden ops-auth-main">
         <div class="ops-card max-w-md w-full p-6 sm:p-8 space-y-5 text-center">
-            <div class="h-12 w-12 rounded-full bg-rose-500/15 text-rose-400 flex items-center justify-center mx-auto">
+            <div class="ops-badge-crimson h-12 w-12 rounded-2xl flex items-center justify-center mx-auto">
                 <i data-lucide="shield-alert" class="w-6 h-6"></i>
             </div>
             <div class="space-y-1">
-                <h3 class="text-lg font-bold text-white">Access Restricted</h3>
-                <p class="text-xs text-slate-400">The Operations Desk requires Administrator clearance.</p>
+                <h1 class="text-xl font-bold text-[var(--ink)]">Access Restricted</h1>
+                <p class="text-xs text-[var(--muted)]">The Operations Desk requires Administrator clearance.</p>
             </div>
-            <div class="p-3 rounded-lg ops-card-subtle text-xs font-mono text-left space-y-1">
-                <div class="text-slate-400">Active Account:</div>
-                <div id="forbidden-user-email" class="text-white font-bold truncate">user@tixora.live</div>
-                <div class="text-slate-400 pt-1">Assigned Role:</div>
-                <div id="forbidden-user-role" class="text-amber-400 font-bold uppercase">promoter</div>
+            <div class="ops-subcard p-3.5 text-xs font-mono text-left space-y-1">
+                <div class="text-[var(--muted)]">Active Account:</div>
+                <div id="forbidden-user-email" class="text-[var(--ink)] font-bold truncate">user@tixora.live</div>
+                <div class="text-[var(--muted)] pt-1">Assigned Role:</div>
+                <div id="forbidden-user-role" class="font-bold uppercase" style="color: var(--gold-deep);">promoter</div>
             </div>
             <div class="space-y-2 pt-2">
-                <a href="/" class="w-full py-2.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center space-x-1.5 transition-colors">
-                    <i data-lucide="home" class="w-3.5 h-3.5"></i>
-                    <span>Go to Fan & Promoter Portal</span>
+                <a href="/" class="btn-editorial-primary w-full">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span>Go to Fan &amp; Promoter Portal</span>
                 </a>
-                <button onclick="handleAdminSignOut()" class="w-full py-2 rounded-lg text-xs text-slate-400 hover:text-white bg-[#161926] hover:bg-[#1e2333] transition-colors">
-                    Sign Out & Switch Account
+                <button type="button" onclick="handleAdminSignOut()" class="btn-editorial-outline-light w-full">
+                    Sign Out &amp; Switch Account
                 </button>
             </div>
         </div>
@@ -329,87 +246,87 @@
     <!-- MAIN WORKSPACE LAYOUT (PROTECTED - DESK COMMAND INTERFACE) -->
     <!-- ========================================================= -->
     <div id="admin-workspace" class="hidden flex-1 flex overflow-hidden">
-        
+
         <!-- Sidebar Navigation -->
-        <aside id="main-sidebar" class="w-60 bg-[#0e1018] border-r border-[#1e2333] flex flex-col justify-between p-3.5 flex-shrink-0 transition-all duration-300">
-            <div class="space-y-4">
+        <aside id="main-sidebar" class="ops-sidebar w-64 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-300">
+            <div class="space-y-5">
                 <!-- User Clearance Profile Card -->
-                <div class="p-2.5 rounded-lg ops-card-subtle flex items-center justify-between">
+                <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5 min-w-0">
                         <div class="relative flex-shrink-0">
-                            <div id="sidebar-user-avatar" class="w-8 h-8 rounded-full overflow-hidden bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
+                            <div id="sidebar-user-avatar" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold" style="background: rgba(255,46,84,0.18); border: 1px solid #ff2e54; color: #ff4d6d;">
                                 <span>OP</span>
                             </div>
-                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#0e1018]"></span>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#050608]"></span>
                         </div>
                         <div class="min-w-0">
                             <div id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Master Admin</div>
-                            <div id="sidebar-user-role" class="text-[10px] text-emerald-400 font-mono">Operations Clearance</div>
+                            <div id="sidebar-user-role" class="text-[10px] font-mono" style="color: #ff4d6d;">Operations Clearance</div>
                         </div>
                     </div>
-                    <button onclick="handleAdminSignOut()" class="text-slate-400 hover:text-rose-400 p-1 rounded transition-colors" title="Sign Out">
+                    <button type="button" onclick="handleAdminSignOut()" class="text-[#94a3b8] hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors" title="Sign Out" aria-label="Sign Out">
                         <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
 
                 <!-- Navigation Groups -->
                 <div class="space-y-1">
-                    <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider px-2.5 py-1">
+                    <div class="text-[10px] font-mono text-[#94a3b8] uppercase tracking-wider px-2.5 py-1">
                         Core Desk
                     </div>
 
-                    <nav class="space-y-0.5" id="sidebar-nav">
-                        <button onclick="switchTab('overview')" id="tab-btn-overview" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all bg-white/[0.06] text-white border-l-2 border-emerald-500">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-emerald-400"></i>
+                    <nav class="space-y-1" id="sidebar-nav" aria-label="Operations Modules">
+                        <button type="button" onclick="switchTab('overview')" id="tab-btn-overview"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ff2e54]">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-[#ff4d6d]"></i>
                             <span>Executive Overview</span>
                         </button>
 
-                        <button onclick="switchTab('tours')" id="tab-btn-tours" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="ticket" class="w-4 h-4 text-slate-400"></i>
+                        <button type="button" onclick="switchTab('tours')" id="tab-btn-tours"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="ticket" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Tour Allocations</span>
                         </button>
 
-                        <button onclick="switchTab('promoters')" id="tab-btn-promoters" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
+                        <button type="button" onclick="switchTab('promoters')" id="tab-btn-promoters"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="users" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Promoter Mesh</span>
                         </button>
 
-                        <button onclick="switchTab('orders')" id="tab-btn-orders" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="receipt" class="w-4 h-4 text-slate-400"></i>
+                        <button type="button" onclick="switchTab('orders')" id="tab-btn-orders"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="receipt" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Order Status</span>
                         </button>
                     </nav>
 
-                    <div class="text-[10px] font-mono text-slate-400 uppercase tracking-wider px-2.5 pt-3 pb-1">
-                        Settlement & Gate
+                    <div class="text-[10px] font-mono text-[#94a3b8] uppercase tracking-wider px-2.5 pt-4 pb-1">
+                        Settlement &amp; Gate
                     </div>
 
-                    <nav class="space-y-0.5">
-                        <button onclick="switchTab('payouts')" id="tab-btn-payouts" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="zap" class="w-4 h-4 text-slate-400"></i>
+                    <nav class="space-y-1" aria-label="Settlement and Security Modules">
+                        <button type="button" onclick="switchTab('payouts')" id="tab-btn-payouts"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="zap" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>UPI Settlements</span>
                         </button>
 
-                        <button onclick="switchTab('antiscalping')" id="tab-btn-antiscalping" 
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-slate-400"></i>
+                        <button type="button" onclick="switchTab('antiscalping')" id="tab-btn-antiscalping"
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Turnstile Gate</span>
                         </button>
 
-                        <button onclick="openModal('supabase-modal')" 
-                            class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="database" class="w-4 h-4 text-slate-400"></i>
+                        <button type="button" onclick="openModal('supabase-modal')"
+                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="database" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Supabase Engine</span>
                         </button>
 
-                        <a href="/" target="_blank" 
-                            class="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent">
-                            <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
+                        <a href="/" target="_blank" rel="noopener noreferrer"
+                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="external-link" class="w-4 h-4 text-[#94a3b8]"></i>
                             <span>Live Fan Site</span>
                         </a>
                     </nav>
@@ -417,31 +334,31 @@
             </div>
 
             <!-- Bottom System Telemetry Card -->
-            <div class="p-2.5 rounded-lg ops-card-subtle text-[11px] font-mono text-slate-400 space-y-1.5">
-                <div class="flex items-center justify-between text-slate-300 font-medium">
+            <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 text-[11px] font-mono text-[#94a3b8] space-y-1">
+                <div class="flex items-center justify-between text-white font-semibold">
                     <span class="flex items-center space-x-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                         <span>PostgreSQL Mesh</span>
                     </span>
-                    <span class="text-emerald-400 text-[10px]">ACTIVE</span>
+                    <span class="text-emerald-300 text-[10px]">ACTIVE</span>
                 </div>
-                <div class="text-[10px] text-slate-500">Supabase Managed Database</div>
+                <div class="text-[10px] text-[#94a3b8]">Supabase Managed Database</div>
             </div>
         </aside>
 
         <!-- Main Content Area -->
         <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 max-w-7xl mx-auto w-full">
-            
+
             <!-- Supabase Alert Banner if unconfigured -->
-            <div id="supabase-alert-banner" class="hidden p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-between gap-4">
+            <div id="supabase-alert-banner" class="hidden ops-subcard p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4" style="background-color: var(--amber-bg); border-color: var(--amber-border);">
                 <div class="flex items-center space-x-3">
-                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 flex-shrink-0"></i>
-                    <div class="text-xs">
-                        <span class="font-bold text-white">Running on Embedded Local Memory.</span>
-                        <span class="text-slate-400"> Connect your Supabase project URL & Key to sync with live PostgreSQL database.</span>
+                    <i data-lucide="alert-triangle" class="w-4 h-4 flex-shrink-0" style="color: var(--amber-ink);"></i>
+                    <div class="text-xs text-[var(--ink)]">
+                        <span class="font-bold">Running on Embedded Local Memory.</span>
+                        <span class="text-[var(--muted)]"> Connect your Supabase project URL &amp; Key to sync with live PostgreSQL database.</span>
                     </div>
                 </div>
-                <button onclick="openModal('supabase-modal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1 rounded-md text-xs font-mono whitespace-nowrap transition-colors">
+                <button type="button" onclick="openModal('supabase-modal')" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 38px; padding-inline: 16px; font-size: 12px;">
                     Connect Supabase
                 </button>
             </div>
@@ -451,129 +368,119 @@
             <!-- ========================================================= -->
             <section id="tab-overview" class="space-y-6">
 
-                <!-- ROW 1: 4 TOP KPI CARDS (Bespoke Operational Metric Cards) -->
+                <!-- ROW 1: 4 TOP KPI CARDS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Metric 1: Active Concert Allocations -->
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-medium text-slate-400">Active Concert Allocations</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-emerald">100% On-Sale</span>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-[var(--muted)]">Active Concert Allocations</span>
+                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0">100% On-Sale</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight" id="metric-tours-count">8 Tours</div>
-                            <div class="text-xs text-slate-400 flex items-center space-x-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <div class="text-2xl font-bold text-[var(--ink)] tracking-tight" id="metric-tours-count">8 Tours</div>
+                            <div class="text-xs text-[var(--muted)] flex items-center space-x-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--emerald-ink);"></span>
                                 <span>Across 7 National Metros</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Metric 2: Gross Merchandise Volume -->
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-medium text-slate-400">Gross Booking Volume</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-gmv-badge">Live DB Synced</span>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-[var(--muted)]">Gross Booking Volume</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-gmv-badge">Live DB Synced</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-gmv">₹0.00</div>
-                            <div class="text-xs text-slate-400" id="metric-gmv-sub">0 Confirmed Bookings</div>
+                            <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-gmv">₹0.00</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-gmv-sub">0 Confirmed Bookings</div>
                         </div>
                     </div>
 
-                    <!-- Metric 3: Pass Inventory Utilization -->
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-medium text-slate-400">Pass Inventory Utilization</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-passes-badge">0% Reserved</span>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-[var(--muted)]">Pass Inventory Utilization</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-passes-badge">0% Reserved</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-passes">0 passes</div>
-                            <div class="text-xs text-slate-400" id="metric-passes-sub">0.0% reserved • 8 Tours on sale</div>
+                            <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-passes">0 passes</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-passes-sub">0.0% reserved &bull; 8 Tours on sale</div>
                         </div>
                     </div>
 
-                    <!-- Metric 4: Promoter Commission Pool -->
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-medium text-slate-400">Instant UPI Settlement Pool</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-neutral" id="metric-commissions-badge">Rail Ready</span>
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-semibold text-[var(--muted)]">Instant UPI Settlement Pool</span>
+                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-commissions-badge">Rail Ready</span>
                         </div>
                         <div class="space-y-1">
-                            <div class="text-2xl font-bold text-white tracking-tight tabular-nums" id="metric-commissions">₹0.00</div>
-                            <div class="text-xs text-slate-400" id="metric-commissions-sub">0 UPI Disbursals Logged</div>
+                            <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-commissions">₹0.00</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-commissions-sub">0 UPI Disbursals Logged</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- ROW 2: SETTLEMENT ARCHITECTURE & LIVE TOUR ALLOCATIONS -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                    
+
                     <!-- Left: Settlement Rails Donut Card (4 cols) -->
                     <div class="lg:col-span-4 ops-card p-5 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-sm font-semibold text-white">Settlement Architecture</h3>
-                                <span class="text-[10px] font-mono badge-emerald px-2 py-0.5 rounded-md font-medium">NPCI UPI LIVE</span>
+                            <div class="flex items-center justify-between mb-1.5">
+                                <h2 class="text-sm font-bold text-[var(--ink)]">Settlement Architecture</h2>
+                                <span class="ops-badge-emerald text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">NPCI UPI LIVE</span>
                             </div>
-                            <p class="text-xs text-slate-400 mb-3">Live payment rail settlement distribution</p>
-                            
-                            <!-- Circular Donut Chart -->
+                            <p class="text-xs text-[var(--muted)] mb-3">Live payment rail settlement distribution</p>
+
                             <div class="relative w-36 h-36 mx-auto flex items-center justify-center my-4">
-                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="40" stroke="#1a1f2e" stroke-width="10" fill="none" />
-                                    <!-- Mint green segment (UPI) -->
-                                    <circle cx="50" cy="50" r="40" stroke="#10b981" stroke-width="10" fill="none" stroke-dasharray="140 251" stroke-dashoffset="0" />
-                                    <!-- Amber segment (District) -->
-                                    <circle cx="50" cy="50" r="40" stroke="#f59e0b" stroke-width="10" fill="none" stroke-dasharray="55 251" stroke-dashoffset="-140" />
-                                    <!-- Blue segment (BookMyShow) -->
-                                    <circle cx="50" cy="50" r="40" stroke="#0284c7" stroke-width="10" fill="none" stroke-dasharray="35 251" stroke-dashoffset="-195" />
+                                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
+                                    <circle cx="50" cy="50" r="40" stroke="#1e2436" stroke-width="10" fill="none" />
+                                    <circle cx="50" cy="50" r="40" stroke="#34d399" stroke-width="10" fill="none" stroke-dasharray="140 251" stroke-dashoffset="0" />
+                                    <circle cx="50" cy="50" r="40" stroke="#ff2e54" stroke-width="10" fill="none" stroke-dasharray="55 251" stroke-dashoffset="-140" />
+                                    <circle cx="50" cy="50" r="40" stroke="#fbbf24" stroke-width="10" fill="none" stroke-dasharray="35 251" stroke-dashoffset="-195" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                                    <span class="text-base font-bold text-white tabular-nums" id="chart-center-val">₹0.00</span>
-                                    <span class="text-[9px] font-mono text-slate-400 uppercase tracking-wider">Settled</span>
+                                    <span class="text-base font-bold text-[var(--ink)] tabular-nums" id="chart-center-val">₹0.00</span>
+                                    <span class="text-[9px] font-mono text-[var(--muted)] uppercase tracking-wider">Settled</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 2 Transfer Lines -->
-                        <div class="space-y-3 pt-3 border-t border-[#1e2333] text-xs">
+                        <div class="space-y-3 pt-3 border-t border-[var(--line)] text-xs">
                             <div class="flex items-center justify-between">
                                 <div class="min-w-0 pr-2">
-                                    <div class="font-medium text-white flex items-center space-x-1.5">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    <div class="font-semibold text-[var(--ink)] flex items-center space-x-1.5">
+                                        <span class="w-2 h-2 rounded-full" style="background-color: var(--emerald-ink);"></span>
                                         <span class="truncate">NPCI Instant UPI Rail (72%)</span>
                                     </div>
-                                    <div class="text-[10px] text-slate-400">Under-45-second gate verification settlement</div>
+                                    <div class="text-[11px] text-[var(--muted)]">Under-45-second gate verification settlement</div>
                                 </div>
-                                <span class="font-mono text-slate-400 tabular-nums font-semibold flex-shrink-0" id="chart-upi-val">₹0.00</span>
+                                <span class="font-mono text-[var(--ink)] tabular-nums font-bold flex-shrink-0" id="chart-upi-val">₹0.00</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="min-w-0 pr-2">
-                                    <div class="font-medium text-white flex items-center space-x-1.5">
-                                        <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                                    <div class="font-semibold text-[var(--ink)] flex items-center space-x-1.5">
+                                        <span class="w-2 h-2 rounded-full" style="background-color: var(--crimson);"></span>
                                         <span class="truncate">BookMyShow Mesh Ingestion (28%)</span>
                                     </div>
-                                    <div class="text-[10px] text-slate-400">Dynamic rotating barcode tokens provisioned</div>
+                                    <div class="text-[11px] text-[var(--muted)]">Dynamic rotating barcode tokens provisioned</div>
                                 </div>
-                                <span class="font-mono text-slate-400 tabular-nums font-semibold flex-shrink-0" id="chart-bms-val">₹0.00</span>
+                                <span class="font-mono text-[var(--ink)] tabular-nums font-bold flex-shrink-0" id="chart-bms-val">₹0.00</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Right: Tour Stage Allocations & Venue Layouts (8 cols) -->
                     <div class="lg:col-span-8 ops-card p-5">
-                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1e2333]">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-[var(--line)]">
                             <div>
-                                <h3 class="text-sm font-semibold text-white">Tour Stage Allocations & Venue Layouts</h3>
-                                <div class="text-xs text-slate-400">Live national inventory, venue layout tags, and quota velocity</div>
+                                <h2 class="text-sm font-bold text-[var(--ink)]">Tour Stage Allocations &amp; Venue Layouts</h2>
+                                <div class="text-xs text-[var(--muted)]">Live national inventory, venue layout tags, and quota velocity</div>
                             </div>
-                            <button onclick="switchTab('tours')" class="text-xs text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 font-medium transition-colors">
+                            <button type="button" onclick="switchTab('tours')" class="text-xs flex items-center space-x-1 font-bold" style="color: var(--crimson-ink);">
                                 <span>Manage All Tours</span>
                                 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                             </button>
                         </div>
 
-                        <!-- Tour Items list rendered dynamically -->
                         <div class="space-y-3 text-xs" id="overview-projects-list">
                             <!-- Populated dynamically by renderOverview() -->
                         </div>
@@ -582,64 +489,61 @@
 
                 <!-- ROW 3: PLATFORM VELOCITY & SECURITY TELEMETRY -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    <!-- Revenue Depth -->
                     <div class="ops-card p-5 space-y-2">
-                        <div class="flex items-center justify-between text-xs font-medium text-slate-400">
+                        <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
                             <span>Total Platform Volume</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-gmv-badge">Live DB</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-gmv-badge">Live DB</span>
                         </div>
-                        <div class="text-2xl font-bold text-white tabular-nums" id="telemetry-gmv">₹0.00</div>
-                        <div class="text-xs text-slate-400" id="telemetry-gmv-sub">0 Confirmed Orders</div>
+                        <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-gmv">₹0.00</div>
+                        <div class="text-xs text-[var(--muted)]" id="telemetry-gmv-sub">0 Confirmed Orders</div>
                     </div>
 
-                    <!-- Pass Velocity -->
                     <div class="ops-card p-5 space-y-2">
-                        <div class="flex items-center justify-between text-xs font-medium text-slate-400">
+                        <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
                             <span>Verified Pass Drops Sold</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-passes-badge">0% Sold</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-passes-badge">0% Sold</span>
                         </div>
-                        <div class="text-2xl font-bold text-white tabular-nums" id="telemetry-passes">0 passes</div>
-                        <div class="text-xs text-slate-400" id="telemetry-passes-sub">Across 8 confirmed tour stages</div>
+                        <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-passes">0 passes</div>
+                        <div class="text-xs text-[var(--muted)]" id="telemetry-passes-sub">Across 8 confirmed tour stages</div>
                     </div>
 
-                    <!-- Turnstile Throughput -->
                     <div class="ops-card p-5 space-y-2">
-                        <div class="flex items-center justify-between text-xs font-medium text-slate-400">
+                        <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
                             <span>Turnstile Gate Scans</span>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral" id="telemetry-scans-badge">Awaiting Ingress</span>
+                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-scans-badge">Awaiting Ingress</span>
                         </div>
-                        <div class="text-2xl font-bold text-white tabular-nums">12,480 scans</div>
-                        <div class="text-xs text-slate-400">Verified dynamic QR token ingress</div>
+                        <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-scans">12,480 scans</div>
+                        <div class="text-xs text-[var(--muted)]">Verified dynamic QR token ingress</div>
                     </div>
                 </div>
 
                 <!-- ROW 4: LIVE CONCERT PASS BOOKINGS TABLE -->
                 <div class="ops-card p-5">
-                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-[#1e2333]">
+                    <div class="flex items-center justify-between mb-4 pb-3 border-b border-[var(--line)]">
                         <div>
-                            <h3 class="text-sm font-semibold text-white">Live Concert Pass Bookings</h3>
-                            <div class="text-xs text-slate-400">Direct attendee wallet provisioning across BookMyShow & District</div>
+                            <h2 id="overview-bookings-heading" class="text-sm font-bold text-[var(--ink)]">Live Concert Pass Bookings</h2>
+                            <div class="text-xs text-[var(--muted)]">Direct attendee wallet provisioning across BookMyShow &amp; District</div>
                         </div>
-                        <button onclick="switchTab('orders')" class="text-xs text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 font-medium transition-colors">
+                        <button type="button" onclick="switchTab('orders')" class="text-xs flex items-center space-x-1 font-bold" style="color: var(--crimson-ink);">
                             <span>View All Orders</span>
                             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="text-slate-400 text-[11px] font-mono border-b border-[#1e2333] uppercase">
+                    <div tabindex="0" role="region" aria-labelledby="overview-bookings-heading" class="ops-table-wrap" style="border: 0;">
+                        <table class="ops-table text-xs">
+                            <thead>
                                 <tr>
-                                    <th class="py-2.5 px-3 w-8"><input type="checkbox" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0"></th>
-                                    <th class="py-2.5 px-3">Attendee Name</th>
-                                    <th class="py-2.5 px-3 font-mono">Order Number</th>
-                                    <th class="py-2.5 px-3 font-mono">Pass Amount</th>
-                                    <th class="py-2.5 px-3">Concert Tour</th>
-                                    <th class="py-2.5 px-3 font-mono">Payment Mode</th>
-                                    <th class="py-2.5 px-3 font-mono">Booking Date</th>
-                                    <th class="py-2.5 px-3">Wallet Status</th>
+                                    <th class="w-8"><input type="checkbox" aria-label="Select all recent bookings" class="rounded accent-[#ff2e54]"></th>
+                                    <th>Attendee Name</th>
+                                    <th class="font-mono">Order Number</th>
+                                    <th class="font-mono">Pass Amount</th>
+                                    <th>Concert Tour</th>
+                                    <th class="font-mono">Payment Mode</th>
+                                    <th class="font-mono">Booking Date</th>
+                                    <th>Wallet Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#1e2333]" id="overview-orders-table">
+                            <tbody id="overview-orders-table" class="text-[var(--ink)]">
                                 <!-- Populated dynamically by renderOverview() -->
                             </tbody>
                         </table>
@@ -648,64 +552,64 @@
 
                 <!-- ROW 5: 3 BOTTOM CARDS (Operations Dispatches, Active Featured Tour, Checklist) -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                    
+
                     <!-- Card 1: Operations Dispatches -->
                     <div class="ops-card p-5 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#1e2333]">
-                                <h3 class="text-sm font-semibold text-white">Operations Dispatches</h3>
-                                <span class="text-[10px] font-mono badge-emerald px-2 py-0.5 rounded-md">Mesh Connected</span>
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
+                                <h2 class="text-sm font-bold text-[var(--ink)]">Operations Dispatches</h2>
+                                <span class="ops-badge-emerald text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">Mesh Connected</span>
                             </div>
                             <div class="space-y-3.5 text-xs">
                                 <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 rounded-md bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <div class="ops-badge-emerald w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i data-lucide="check" class="w-3.5 h-3.5"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
-                                            <span class="font-medium text-white truncate">BMS Partner Engine</span>
-                                            <span class="text-[10px] font-mono text-slate-400">Just now</span>
+                                            <span class="font-semibold text-[var(--ink)] truncate">BMS Partner Engine</span>
+                                            <span class="text-[10px] font-mono text-[var(--muted)]">Just now</span>
                                         </div>
-                                        <p class="text-[11px] text-slate-400 truncate">Dynamic rotating barcode tokens provisioned.</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">Dynamic rotating barcode tokens provisioned.</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 rounded-md bg-sky-500/10 text-sky-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <div class="ops-badge-navy w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i data-lucide="scan" class="w-3.5 h-3.5"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
-                                            <span class="font-medium text-white truncate">Turnstile Gate 1</span>
-                                            <span class="text-[10px] font-mono text-slate-400">12m ago</span>
+                                            <span class="font-semibold text-[var(--ink)] truncate">Turnstile Gate 1</span>
+                                            <span class="text-[10px] font-mono text-[var(--muted)]">12m ago</span>
                                         </div>
-                                        <p class="text-[11px] text-slate-400 truncate">JLN Stadium turnstile scanner active.</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">JLN Stadium turnstile scanner active.</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 rounded-md bg-amber-500/10 text-amber-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <div class="ops-badge-gold w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i data-lucide="zap" class="w-3.5 h-3.5"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
-                                            <span class="font-medium text-white truncate">NPCI Settlement Rail</span>
-                                            <span class="text-[10px] font-mono text-slate-400">45m ago</span>
+                                            <span class="font-semibold text-[var(--ink)] truncate">NPCI Settlement Rail</span>
+                                            <span class="text-[10px] font-mono text-[var(--muted)]">45m ago</span>
                                         </div>
-                                        <p class="text-[11px] text-slate-400 truncate">Instant UPI settlement rail verified (&lt;45s).</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">Instant UPI settlement rail verified (&lt;45s).</p>
                                     </div>
                                 </div>
 
                                 <div class="flex items-start space-x-3">
-                                    <div class="w-7 h-7 rounded-md bg-rose-500/10 text-rose-400 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <div class="ops-badge-crimson w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
                                         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
-                                            <span class="font-medium text-white truncate">Anti-Scalping Protocol</span>
-                                            <span class="text-[10px] font-mono text-slate-400">2h ago</span>
+                                            <span class="font-semibold text-[var(--ink)] truncate">Anti-Scalping Protocol</span>
+                                            <span class="text-[10px] font-mono text-[var(--muted)]">2h ago</span>
                                         </div>
-                                        <p class="text-[11px] text-slate-400 truncate">Turnstile gate rejected 0 duplicate attempts.</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">Turnstile gate rejected 0 duplicate attempts.</p>
                                     </div>
                                 </div>
                             </div>
@@ -715,48 +619,46 @@
                     <!-- Card 2: Active Featured Tour Spotlight (Dynamic!) -->
                     <div class="ops-card p-5 flex flex-col justify-between" id="overview-featured-spotlight">
                         <div>
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#1e2333]">
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
                                 <div>
-                                    <h3 class="text-sm font-semibold text-white">Featured Hero Spotlight</h3>
-                                    <div class="text-[11px] text-amber-400 font-mono">Live on Fan Homepage Hero</div>
+                                    <h2 class="text-sm font-bold text-[var(--ink)]">Featured Hero Spotlight</h2>
+                                    <div class="text-[11px] font-mono font-semibold" style="color: var(--crimson-ink);">Live on Fan Homepage Hero</div>
                                 </div>
-                                <button onclick="switchTab('tours')" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors">
+                                <button type="button" onclick="switchTab('tours')" class="text-xs font-mono font-bold" style="color: var(--crimson-ink);">
                                     Switch Tour
                                 </button>
                             </div>
 
-                            <!-- Image Illustration / Headliner Poster -->
-                            <div class="rounded-lg overflow-hidden bg-[#161926] mb-3 aspect-[16/9] relative border border-[#22283a]">
+                            <div class="rounded-2xl overflow-hidden bg-[var(--bg-void)] mb-3 aspect-[16/9] relative border border-[var(--line)]">
                                 <img id="spotlight-poster" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Tour" width="480" height="270" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#0b0d14]/90 via-transparent to-transparent"></div>
-                                <span id="spotlight-layout-badge" class="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-cyan">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#050608]/85 via-transparent to-transparent"></div>
+                                <span id="spotlight-layout-badge" class="ops-badge-navy absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
                                     Arena Open-Air
                                 </span>
-                                <span class="absolute top-2 right-2 px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-amber">
+                                <span class="ops-badge-gold absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
                                     Featured Drop
                                 </span>
                             </div>
 
                             <div class="flex items-center justify-between text-xs">
                                 <div>
-                                    <div class="font-semibold text-white text-sm" id="spotlight-title">Anyma presents ÆDEN</div>
-                                    <div class="text-xs text-slate-400" id="spotlight-venue">Mahalaxmi Racecourse, Mumbai</div>
+                                    <div class="font-bold text-[var(--ink)] text-sm" id="spotlight-title">Anyma presents ÆDEN</div>
+                                    <div class="text-xs text-[var(--muted)]" id="spotlight-venue">Mahalaxmi Racecourse, Mumbai</div>
                                 </div>
                                 <div class="text-right font-mono">
-                                    <div class="text-white font-bold" id="spotlight-mrp">₹4,250</div>
-                                    <div class="text-[10px] text-emerald-400" id="spotlight-cut">16% Cut</div>
+                                    <div class="text-[var(--ink)] font-bold" id="spotlight-mrp">₹4,250</div>
+                                    <div class="text-[11px] font-bold" style="color: var(--emerald-ink);" id="spotlight-cut">16% Cut</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Quota Progress Bar -->
                         <div class="pt-3">
-                            <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 mb-1">
+                            <div class="flex justify-between items-center text-[10px] font-mono text-[var(--muted)] mb-1">
                                 <span>Allocation Quota Reserved</span>
-                                <span id="spotlight-quota-text" class="text-slate-300">5,200 / 7,000 passes</span>
+                                <span id="spotlight-quota-text" class="text-[var(--ink)] font-semibold">5,200 / 7,000 passes</span>
                             </div>
-                            <div class="w-full h-1.5 rounded-full bg-[#1a1f2e] overflow-hidden">
-                                <div id="spotlight-quota-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-300" style="width: 74%"></div>
+                            <div class="w-full h-2 rounded-full bg-[var(--soft)] border border-[var(--line)] overflow-hidden">
+                                <div id="spotlight-quota-bar" class="h-full rounded-full transition-all duration-300" style="width: 74%; background-color: var(--crimson);"></div>
                             </div>
                         </div>
                     </div>
@@ -764,74 +666,72 @@
                     <!-- Card 3: Interactive To Do List -->
                     <div class="ops-card p-5 flex flex-col justify-between">
                         <div>
-                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#1e2333]">
-                                <h3 class="text-sm font-semibold text-white">Operations Checklist</h3>
-                                <span class="text-[10px] font-mono text-slate-400" id="overview-activity-feed">Active</span>
+                            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
+                                <h2 class="text-sm font-bold text-[var(--ink)]">Operations Checklist</h2>
+                                <span class="text-[10px] font-mono text-[var(--muted)]" id="overview-activity-feed">Active</span>
                             </div>
-                            
-                            <!-- Input Bar -->
-                            <div class="flex space-x-1.5 mb-3">
-                                <input type="text" id="todo-input" placeholder="Enter operations task..." 
-                                    class="flex-1 ops-input px-3 py-1.5 text-xs placeholder-slate-500" 
+
+                            <div class="flex space-x-2 mb-3">
+                                <label for="todo-input" class="visually-hidden">Add operations task</label>
+                                <input type="text" id="todo-input" placeholder="Enter operations task..."
+                                    class="modal-input flex-1 text-xs" style="min-block-size: 38px; padding: 6px 12px;"
                                     onkeydown="if(event.key==='Enter') addTodo()">
-                                <button onclick="addTodo()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors">
+                                <button type="button" onclick="addTodo()" class="btn-editorial-primary" style="min-block-size: 38px; padding-inline: 14px; font-size: 12px;">
                                     Add
                                 </button>
                             </div>
 
-                            <!-- Task List -->
                             <div class="space-y-1.5 text-xs" id="todo-list">
-                                <div class="flex items-center justify-between p-1.5 rounded hover:bg-white/[0.02]">
+                                <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" checked onchange="toggleTodo(this)" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0">
-                                        <span class="text-slate-400 text-xs line-through text-emerald-400 truncate">Verify Anyma VIP Deck allocations</span>
+                                        <input type="checkbox" checked onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <span class="text-xs line-through truncate" style="color: var(--emerald-ink);">Verify Anyma VIP Deck allocations</span>
                                     </label>
-                                    <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                                    <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
-                                <div class="flex items-center justify-between p-1.5 rounded hover:bg-white/[0.02]">
+                                <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0">
-                                        <span class="text-slate-300 text-xs truncate">Check JLN Stadium gate scanner latency</span>
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <span class="text-[var(--ink)] text-xs truncate">Check JLN Stadium gate scanner latency</span>
                                     </label>
-                                    <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                                    <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
-                                <div class="flex items-center justify-between p-1.5 rounded hover:bg-white/[0.02]">
+                                <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0">
-                                        <span class="text-slate-300 text-xs truncate">Review Sunburn Goa promoter cuts</span>
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <span class="text-[var(--ink)] text-xs truncate">Review Sunburn Goa promoter cuts</span>
                                     </label>
-                                    <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                                    <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
-                                <div class="flex items-center justify-between p-1.5 rounded hover:bg-white/[0.02]">
+                                <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0">
-                                        <span class="text-slate-300 text-xs truncate">Audit NPCI instant UPI settlement pool</span>
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <span class="text-[var(--ink)] text-xs truncate">Audit NPCI instant UPI settlement pool</span>
                                     </label>
-                                    <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                                    <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Real-time activity footer -->
-                        <div class="pt-3 border-t border-[#1e2333] flex items-center justify-between text-[11px] text-slate-400">
+                        <div class="pt-3 border-t border-[var(--line)] flex items-center justify-between text-[11px] text-[var(--muted)]">
                             <span>Operations Checklist</span>
-                            <span class="text-emerald-400 font-mono">Synced</span>
+                            <span class="font-mono font-bold" style="color: var(--emerald-ink);">Synced</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ROW 6: METRO FAN TRAFFIC (Clean telemetry strip) -->
+                <!-- ROW 6: METRO FAN TRAFFIC -->
                 <div class="ops-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <div class="flex items-center space-x-2.5">
-                        <i data-lucide="globe" class="w-4 h-4 text-emerald-400"></i>
-                        <span class="font-semibold text-white">Metro Ingress Distribution</span>
-                        <span class="text-slate-400 text-[11px]">Real-time fan traffic velocity</span>
+                        <i data-lucide="globe" class="w-4 h-4" style="color: var(--crimson-ink);"></i>
+                        <span class="font-bold text-[var(--ink)]">Metro Ingress Distribution</span>
+                        <span class="text-[var(--muted)] text-[11px]">Real-time fan traffic velocity</span>
                     </div>
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-slate-400">
-                        <span>Mumbai: <b class="text-white">38.5%</b></span>
-                        <span>Delhi-NCR: <b class="text-white">32.1%</b></span>
-                        <span>Bengaluru: <b class="text-white">18.4%</b></span>
-                        <span>Goa & Others: <b class="text-white">11.0%</b></span>
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-[var(--muted)]">
+                        <span>Mumbai: <b class="text-[var(--ink)]">38.5%</b></span>
+                        <span>Delhi-NCR: <b class="text-[var(--ink)]">32.1%</b></span>
+                        <span>Bengaluru: <b class="text-[var(--ink)]">18.4%</b></span>
+                        <span>Goa &amp; Others: <b class="text-[var(--ink)]">11.0%</b></span>
                     </div>
                 </div>
 
@@ -843,10 +743,10 @@
             <section id="tab-tours" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white tracking-tight">Tour Allocations & Inventory</h2>
-                        <p class="text-xs text-slate-400">Configure headliner concerts, venue layouts, pricing tiers, partner engines, and promoter cuts.</p>
+                        <h2 id="tours-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Tour Allocations &amp; Inventory</h2>
+                        <p class="text-xs text-[var(--muted)]">Configure headliner concerts, venue layouts, pricing tiers, partner engines, and promoter cuts.</p>
                     </div>
-                    <button onclick="openModal('add-tour-modal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-colors">
+                    <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span>Allocate New Tour</span>
                     </button>
@@ -854,23 +754,23 @@
 
                 <!-- Tours Table -->
                 <div class="ops-card overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-[#0e1018] text-slate-400 font-mono border-b border-[#1e2333] uppercase text-[10px] tracking-wider">
+                    <div tabindex="0" role="region" aria-labelledby="tours-heading" class="ops-table-wrap" style="border: 0;">
+                        <table class="ops-table text-xs">
+                            <thead>
                                 <tr>
-                                    <th class="p-4">Tour / Headliner</th>
-                                    <th class="p-4">Venue & City</th>
-                                    <th class="p-4">Stage Layout</th>
-                                    <th class="p-4">Date</th>
-                                    <th class="p-4">Ticketing Engine</th>
-                                    <th class="p-4">Starting MRP</th>
-                                    <th class="p-4">Promoter Cut</th>
-                                    <th class="p-4">Hero Spotlight</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4 text-right">Actions</th>
+                                    <th>Tour / Headliner</th>
+                                    <th>Venue &amp; City</th>
+                                    <th>Stage Layout</th>
+                                    <th>Date</th>
+                                    <th>Ticketing Engine</th>
+                                    <th>Starting MRP</th>
+                                    <th>Promoter Cut</th>
+                                    <th>Hero Spotlight</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#1e2333]" id="tours-table-body">
+                            <tbody id="tours-table-body" class="text-[var(--ink)]">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -884,33 +784,34 @@
             <section id="tab-promoters" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white tracking-tight">Promoter Network & Performance</h2>
-                        <p class="text-xs text-slate-400">Promoter velocity tiers, verified WhatsApp contact routing, and instant UPI VPAs.</p>
+                        <h2 id="promoters-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Promoter Network &amp; Performance</h2>
+                        <p class="text-xs text-[var(--muted)]">Promoter velocity tiers, verified WhatsApp contact routing, and instant UPI VPAs.</p>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <input type="text" id="promoter-search-input" oninput="filterPromoters()" placeholder="Search promoter or code..." 
-                            class="ops-input rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 font-mono">
+                        <label for="promoter-search-input" class="visually-hidden">Search promoters or referral codes</label>
+                        <input type="text" id="promoter-search-input" oninput="filterPromoters()" placeholder="Search promoter or code..."
+                            class="modal-input font-mono text-xs" style="min-block-size: 38px; padding: 6px 12px; inline-size: 240px;">
                     </div>
                 </div>
 
                 <!-- Promoter Directory Table -->
                 <div class="ops-card overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-[#0e1018] text-slate-400 font-mono border-b border-[#1e2333] uppercase text-[10px] tracking-wider">
+                    <div tabindex="0" role="region" aria-labelledby="promoters-heading" class="ops-table-wrap" style="border: 0;">
+                        <table class="ops-table text-xs">
+                            <thead>
                                 <tr>
-                                    <th class="p-4">Promoter</th>
-                                    <th class="p-4">Referral Code</th>
-                                    <th class="p-4">City / Territory</th>
-                                    <th class="p-4">Velocity Tier</th>
-                                    <th class="p-4">Passes Sold</th>
-                                    <th class="p-4">Total Earnings</th>
-                                    <th class="p-4">Registered UPI ID</th>
-                                    <th class="p-4">KYC Status</th>
-                                    <th class="p-4 text-right">Actions</th>
+                                    <th>Promoter</th>
+                                    <th>Referral Code</th>
+                                    <th>City / Territory</th>
+                                    <th>Velocity Tier</th>
+                                    <th>Passes Sold</th>
+                                    <th>Total Earnings</th>
+                                    <th>Registered UPI ID</th>
+                                    <th>KYC Status</th>
+                                    <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#1e2333]" id="promoters-table-body">
+                            <tbody id="promoters-table-body" class="text-[var(--ink)]">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -924,28 +825,28 @@
             <section id="tab-orders" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white tracking-tight">Ticket Orders & BMS Wallet Provisioning</h2>
-                        <p class="text-xs text-slate-400">Pass reservations dispatched directly to attendee BookMyShow and District wallets.</p>
+                        <h2 id="orders-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Ticket Orders &amp; BMS Wallet Provisioning</h2>
+                        <p class="text-xs text-[var(--muted)]">Pass reservations dispatched directly to attendee BookMyShow and District wallets.</p>
                     </div>
                 </div>
 
                 <!-- Orders Table -->
                 <div class="ops-card overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-[#0e1018] text-slate-400 font-mono border-b border-[#1e2333] uppercase text-[10px] tracking-wider">
+                    <div tabindex="0" role="region" aria-labelledby="orders-heading" class="ops-table-wrap" style="border: 0;">
+                        <table class="ops-table text-xs">
+                            <thead>
                                 <tr>
-                                    <th class="p-4">Order Number</th>
-                                    <th class="p-4">Attendee</th>
-                                    <th class="p-4">Event</th>
-                                    <th class="p-4">Tier / Qty</th>
-                                    <th class="p-4">Total Amount</th>
-                                    <th class="p-4">Referred By</th>
-                                    <th class="p-4">Delivery Channel</th>
-                                    <th class="p-4">Status</th>
+                                    <th>Order Number</th>
+                                    <th>Attendee</th>
+                                    <th>Event</th>
+                                    <th>Tier / Qty</th>
+                                    <th>Total Amount</th>
+                                    <th>Referred By</th>
+                                    <th>Delivery Channel</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#1e2333]" id="orders-table-body">
+                            <tbody id="orders-table-body" class="text-[var(--ink)]">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -959,10 +860,10 @@
             <section id="tab-payouts" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white tracking-tight">Instant UPI Settlement Hub</h2>
-                        <p class="text-xs text-slate-400">Automated NPCI settlement rail auditing per verified gate scan.</p>
+                        <h2 id="payouts-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Instant UPI Settlement Hub</h2>
+                        <p class="text-xs text-[var(--muted)]">Automated NPCI settlement rail auditing per verified gate scan.</p>
                     </div>
-                    <button onclick="simulateNewPayout()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-colors">
+                    <button type="button" onclick="simulateNewPayout()" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
                         <i data-lucide="send" class="w-3.5 h-3.5"></i>
                         <span>Trigger Instant Payout</span>
                     </button>
@@ -970,21 +871,21 @@
 
                 <!-- Settlements Table -->
                 <div class="ops-card overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-[#0e1018] text-slate-400 font-mono border-b border-[#1e2333] uppercase text-[10px] tracking-wider">
+                    <div tabindex="0" role="region" aria-labelledby="payouts-heading" class="ops-table-wrap" style="border: 0;">
+                        <table class="ops-table text-xs">
+                            <thead>
                                 <tr>
-                                    <th class="p-4">Settlement ID</th>
-                                    <th class="p-4">Promoter</th>
-                                    <th class="p-4">Destination UPI ID</th>
-                                    <th class="p-4">Amount</th>
-                                    <th class="p-4">SLA Speed</th>
-                                    <th class="p-4">NPCI Bank RRN</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4 text-right">Settled At</th>
+                                    <th>Settlement ID</th>
+                                    <th>Promoter</th>
+                                    <th>Destination UPI ID</th>
+                                    <th>Amount</th>
+                                    <th>SLA Speed</th>
+                                    <th>NPCI Bank RRN</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Settled At</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#1e2333]" id="payouts-table-body">
+                            <tbody id="payouts-table-body" class="text-[var(--ink)]">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -998,11 +899,11 @@
             <section id="tab-antiscalping" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-white tracking-tight">Turnstile Gate Access & Scalper Prevention</h2>
-                        <p class="text-xs text-slate-400">Dynamic barcode rotation telemetry, screenshot duplicate rejection, and bot mitigation.</p>
+                        <h2 class="text-xl font-bold text-[var(--ink)] tracking-tight">Turnstile Gate Access &amp; Scalper Prevention</h2>
+                        <p class="text-xs text-[var(--muted)]">Dynamic barcode rotation telemetry, screenshot duplicate rejection, and bot mitigation.</p>
                     </div>
-                    <button onclick="simulateGateScan()" class="bg-[#161926] hover:bg-[#1f2436] text-white px-3.5 py-2 rounded-lg text-xs font-mono font-medium border border-[#22283a] flex items-center space-x-1.5 transition-colors">
-                        <i data-lucide="scan" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <button type="button" onclick="simulateGateScan()" class="btn-editorial-outline-light whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+                        <i data-lucide="scan" class="w-3.5 h-3.5" style="color: var(--emerald-ink);"></i>
                         <span>Simulate Turnstile Scan</span>
                     </button>
                 </div>
@@ -1010,9 +911,9 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <!-- Gate Scan Logs -->
                     <div class="ops-card p-5 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-[#1e2333]">
-                            <h3 class="font-semibold text-white text-sm">Venue Turnstile Scans</h3>
-                            <span class="text-xs font-mono badge-emerald px-2 py-0.5 rounded-md">Verified Dynamic QR</span>
+                        <div class="flex items-center justify-between pb-2.5 border-b border-[var(--line)]">
+                            <h3 class="font-bold text-[var(--ink)] text-sm">Venue Turnstile Scans</h3>
+                            <span class="ops-badge-emerald text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">Verified Dynamic QR</span>
                         </div>
                         <div class="space-y-2 text-xs font-mono" id="gate-scans-list">
                             <!-- Rendered dynamically -->
@@ -1021,9 +922,9 @@
 
                     <!-- Bot Rate Limit Incidents -->
                     <div class="ops-card p-5 space-y-3">
-                        <div class="flex items-center justify-between pb-2 border-b border-[#1e2333]">
-                            <h3 class="font-semibold text-white text-sm">Bot & Scalper Block Logs</h3>
-                            <span class="text-xs font-mono badge-rose px-2 py-0.5 rounded-md">Scraper Defense</span>
+                        <div class="flex items-center justify-between pb-2.5 border-b border-[var(--line)]">
+                            <h3 class="font-bold text-[var(--ink)] text-sm">Bot &amp; Scalper Block Logs</h3>
+                            <span class="ops-badge-crimson text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">Scraper Defense</span>
                         </div>
                         <div class="space-y-2 text-xs font-mono" id="bot-blocks-list">
                             <!-- Rendered dynamically -->
@@ -1038,50 +939,53 @@
     <!-- ========================================================= -->
     <!-- MODAL 1: SUPABASE CONFIGURATION -->
     <!-- ========================================================= -->
-    <div id="supabase-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="ops-card max-w-lg w-full p-6 sm:p-7 space-y-4 relative shadow-2xl">
-            <button onclick="closeModal('supabase-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors">
+    <div id="supabase-modal" class="modal-backdrop hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="supabase-modal-title">
+        <div class="modal-card space-y-4">
+            <button type="button" onclick="closeModal('supabase-modal')" class="modal-close-btn" aria-label="Close database settings modal">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-            <div class="space-y-1">
+            <div class="space-y-1 pr-8">
                 <div class="flex items-center space-x-2">
-                    <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
-                    <h3 class="text-lg font-bold text-white">Supabase Database Connection</h3>
+                    <i data-lucide="database" class="w-4 h-4" style="color: var(--emerald-ink);"></i>
+                    <h3 id="supabase-modal-title" class="text-lg font-bold text-[var(--ink)]">Supabase Database Connection</h3>
                 </div>
-                <p class="text-xs text-slate-400">
+                <p class="text-xs text-[var(--muted)]">
                     Connect Tixora directly to your Supabase PostgreSQL database for real-time inventory and order sync.
                 </p>
             </div>
 
-            <div class="space-y-3 text-xs font-mono">
+            <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-slate-400 mb-1">SUPABASE PROJECT URL</label>
-                    <input type="text" id="cfg-supabase-url" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co" 
-                        class="w-full ops-input px-3 py-2 text-white">
+                    <label for="cfg-supabase-url" class="modal-field-label">Supabase Project URL</label>
+                    <input type="text" id="cfg-supabase-url" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co"
+                        class="modal-input font-mono">
                 </div>
                 <div>
-                    <label class="block text-slate-400 mb-1">SUPABASE ANON / PUBLISHABLE KEY <span class="text-amber-400 font-sans font-normal text-[10px] ml-1">(Never enter a service_role key here)</span></label>
-                    <input type="password" id="cfg-supabase-key" placeholder="sb_publishable_... or anon key" 
-                        class="w-full ops-input px-3 py-2 text-white font-mono">
+                    <label for="cfg-supabase-key" class="modal-field-label">
+                        Supabase Anon / Publishable Key
+                        <span class="font-normal normal-case tracking-normal ml-1" style="color: var(--crimson-ink);">(Never enter a service_role key here)</span>
+                    </label>
+                    <input type="password" id="cfg-supabase-key" placeholder="sb_publishable_... or anon key"
+                        class="modal-input font-mono">
                 </div>
             </div>
 
-            <div class="p-3 rounded-lg ops-card-subtle space-y-1.5 text-xs text-slate-400">
-                <div class="font-semibold text-white font-mono flex items-center space-x-1.5">
-                    <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <div class="ops-subcard p-3.5 space-y-1.5 text-xs text-[var(--muted)]">
+                <div class="font-bold text-[var(--ink)] font-mono flex items-center space-x-1.5">
+                    <i data-lucide="info" class="w-3.5 h-3.5" style="color: var(--crimson-ink);"></i>
                     <span>Database Schema Setup</span>
                 </div>
                 <div>
-                    Execute <code class="text-emerald-400 font-mono font-bold">database/tixora.sql</code> in your Supabase SQL Editor to initialize all tables, RLS policies, and triggers.
+                    Execute <code class="font-mono font-bold" style="color: var(--crimson-ink);">database/tixora.sql</code> in your Supabase SQL Editor to initialize all tables, RLS policies, and triggers.
                 </div>
             </div>
 
             <div class="flex items-center justify-end space-x-2 pt-2">
-                <button onclick="testSupabaseConnection()" class="px-3.5 py-2 rounded-lg text-xs font-mono bg-[#161926] hover:bg-[#1f2436] text-white border border-[#22283a] transition-colors">
+                <button type="button" onclick="testSupabaseConnection()" class="btn-editorial-outline-light" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
                     Test Ping
                 </button>
-                <button onclick="saveSupabaseConfig()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
-                    Save & Sync Database
+                <button type="button" onclick="saveSupabaseConfig()" class="btn-editorial-primary" style="min-block-size: 40px; padding-inline: 18px; font-size: 12px;">
+                    Save &amp; Sync Database
                 </button>
             </div>
         </div>
@@ -1090,32 +994,32 @@
     <!-- ========================================================= -->
     <!-- MODAL 2: CREATE TOUR ALLOCATION -->
     <!-- ========================================================= -->
-    <div id="add-tour-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="ops-card max-w-xl w-full p-6 sm:p-7 space-y-4 relative max-h-[90vh] overflow-y-auto shadow-2xl">
-            <button onclick="closeModal('add-tour-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors">
+    <div id="add-tour-modal" class="modal-backdrop hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="add-tour-modal-title">
+        <div class="modal-card modal-card--wide space-y-4">
+            <button type="button" onclick="closeModal('add-tour-modal')" class="modal-close-btn" aria-label="Close create tour modal">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-            <div class="space-y-1">
-                <h3 class="text-lg font-bold text-white">Create Tour Allocation</h3>
-                <p class="text-xs text-slate-400">Launch an authorized concert quota on Tixora. Synchronizes immediately with the fan site.</p>
+            <div class="space-y-1 pr-8">
+                <h3 id="add-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Create Tour Allocation</h3>
+                <p class="text-xs text-[var(--muted)]">Launch an authorized concert quota on Tixora. Synchronizes immediately with the fan site.</p>
             </div>
 
             <form onsubmit="handleCreateTourSubmit(event)" class="space-y-4 text-xs">
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Title / Headliner Event</label>
-                    <input type="text" id="tour-title" required placeholder="e.g. Peggy Gou Live in Bengaluru" 
-                        class="w-full ops-input px-3 py-2 text-white">
+                    <label for="tour-title" class="modal-field-label">Tour Title / Headliner Event</label>
+                    <input type="text" id="tour-title" required placeholder="e.g. Peggy Gou Live in Bengaluru"
+                        class="modal-input">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">City & Venue</label>
-                        <input type="text" id="tour-venue" required placeholder="e.g. Manpho Convention, Bengaluru" 
-                            class="w-full ops-input px-3 py-2 text-white">
+                        <label for="tour-venue" class="modal-field-label">City &amp; Venue</label>
+                        <input type="text" id="tour-venue" required placeholder="e.g. Manpho Convention, Bengaluru"
+                            class="modal-input">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Venue Layout</label>
-                        <select id="tour-layout" class="w-full ops-input px-2.5 py-2 text-white font-mono">
+                        <label for="tour-layout" class="modal-field-label">Venue Layout</label>
+                        <select id="tour-layout" class="modal-input font-mono">
                             <option value="Arena Open-Air">Arena Open-Air (Mahalaxmi / BIEC)</option>
                             <option value="Stadium 360°">Stadium 360° (JLN / Dhyan Chand)</option>
                             <option value="Warehouse Floor">Warehouse Floor (Okhla)</option>
@@ -1129,13 +1033,13 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Date & Time</label>
-                        <input type="text" id="tour-date" required placeholder="e.g. 18 DEC 2026 • 6:00 PM" 
-                            class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="tour-date" class="modal-field-label">Tour Date &amp; Time</label>
+                        <input type="text" id="tour-date" required placeholder="e.g. 18 DEC 2026 • 6:00 PM"
+                            class="modal-input font-mono">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Ticketing Engine</label>
-                        <select id="tour-partner" class="w-full ops-input px-2.5 py-2 text-white font-mono">
+                        <label for="tour-partner" class="modal-field-label">Ticketing Engine</label>
+                        <select id="tour-partner" class="modal-input font-mono">
                             <option value="BookMyShow">BookMyShow</option>
                             <option value="District">District</option>
                             <option value="Direct">Direct Box Office</option>
@@ -1145,57 +1049,57 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Starting MRP (₹)</label>
-                        <input type="number" id="tour-mrp" required placeholder="3999" 
-                            class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="tour-mrp" class="modal-field-label">Starting MRP (₹)</label>
+                        <input type="number" id="tour-mrp" required placeholder="3999"
+                            class="modal-input font-mono">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Promoter Cut / Commission (%)</label>
-                        <input type="number" id="tour-cut" required placeholder="16" value="16" 
-                            class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="tour-cut" class="modal-field-label">Promoter Cut / Commission (%)</label>
+                        <input type="number" id="tour-cut" required placeholder="16" value="16"
+                            class="modal-input font-mono">
                     </div>
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between mb-1">
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-slate-500 font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <label for="tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
+                        <span class="text-[10px] text-[var(--muted)] font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
-                            class="flex-1 ops-input px-3 py-2 text-white font-mono text-xs">
-                        <label for="tour-poster-file" class="cursor-pointer px-3 py-2 rounded-lg bg-[#161926] hover:bg-[#1f2436] text-emerald-400 hover:text-emerald-300 border border-[#22283a] text-xs font-mono flex items-center space-x-1.5 transition-colors whitespace-nowrap">
+                        <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg"
+                            class="modal-input flex-1 font-mono text-xs">
+                        <label for="tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: 44px; padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="tour-poster-upload-btn-text">Upload</span>
                         </label>
                         <input type="file" id="tour-poster-file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden" onchange="handlePosterUpload(this, 'tour-poster', 'tour-poster-preview', 'tour-poster-upload-btn-text')">
                     </div>
-                    <div id="tour-poster-preview-container" class="mt-2 hidden flex items-center space-x-3 p-2 rounded-lg bg-[#131622] border border-[#1e2333]">
-                        <img id="tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded border border-[#22283a]">
-                        <div class="text-xs font-mono">
-                            <div class="text-white font-semibold truncate max-w-xs" id="tour-poster-filename"></div>
-                            <div class="text-slate-400 text-[10px]" id="tour-poster-filesize"></div>
+                    <div id="tour-poster-preview-container" class="ops-subcard mt-2 hidden flex items-center space-x-3 p-2.5">
+                        <img id="tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded-lg border border-[var(--line)]">
+                        <div class="text-xs font-mono min-w-0">
+                            <div class="text-[var(--ink)] font-semibold truncate max-w-xs" id="tour-poster-filename"></div>
+                            <div class="text-[var(--muted)] text-[10px]" id="tour-poster-filesize"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature Event Checkbox -->
-                <div class="p-3 rounded-lg ops-card-subtle border border-amber-500/25 flex items-center space-x-2.5">
-                    <input type="checkbox" id="tour-is-featured" class="rounded bg-[#161926] border-[#22283a] text-amber-500 focus:ring-0 w-4 h-4 cursor-pointer">
-                    <label for="tour-is-featured" class="text-xs font-semibold text-amber-400 cursor-pointer flex items-center space-x-1.5">
-                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i>
+                <div class="ops-subcard p-3.5 flex items-center space-x-2.5" style="background-color: var(--crimson-bg); border-color: var(--crimson-border);">
+                    <input type="checkbox" id="tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
+                    <label for="tour-is-featured" class="text-xs font-bold cursor-pointer flex items-center space-x-1.5" style="color: var(--crimson-ink);">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i>
                         <span>Feature this Event in Fan Hero Section (Homepage Spotlight)</span>
                     </label>
                 </div>
 
                 <!-- Tier Price List Builder -->
-                <div class="space-y-2 pt-2 border-t border-[#1e2333]">
+                <div class="space-y-2 pt-3 border-t border-[var(--line)]">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-slate-400 font-mono text-[10px] uppercase font-semibold block">Ticket Price List & Tier Quotas</span>
-                            <span class="text-[10px] text-slate-400">Define custom tiers, seating areas & promoter cuts</span>
+                            <span class="modal-field-label" style="margin:0;">Ticket Price List &amp; Tier Quotas</span>
+                            <span class="text-[11px] text-[var(--muted)]">Define custom tiers, seating areas &amp; promoter cuts</span>
                         </div>
-                        <button type="button" onclick="addTierRow('add-tiers-container')" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center space-x-1">
+                        <button type="button" onclick="addTierRow('add-tiers-container')" class="text-xs font-mono font-bold flex items-center space-x-1" style="color: var(--crimson-ink);">
                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                             <span>Add Tier</span>
                         </button>
@@ -1206,15 +1110,15 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Description</label>
-                    <textarea id="tour-desc" rows="2" placeholder="Official tour promoter allocation pass. Guaranteed authenticity via BookMyShow dynamic barcode engine." 
-                        class="w-full ops-input px-3 py-2 text-white resize-none"></textarea>
+                    <label for="tour-desc" class="modal-field-label">Event Description</label>
+                    <textarea id="tour-desc" rows="2" placeholder="Official tour promoter allocation pass. Guaranteed authenticity via BookMyShow dynamic barcode engine."
+                        class="modal-input resize-none" style="min-block-size: auto;"></textarea>
                 </div>
 
                 <div class="pt-2">
-                    <button type="submit" class="w-full py-2.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white transition-all flex items-center justify-center space-x-2">
+                    <button type="submit" class="btn-editorial-primary w-full">
                         <i data-lucide="check" class="w-4 h-4"></i>
-                        <span>Publish Tour Allocation to Database & Web</span>
+                        <span>Publish Tour Allocation to Database &amp; Web</span>
                     </button>
                 </div>
             </form>
@@ -1224,34 +1128,34 @@
     <!-- ========================================================= -->
     <!-- MODAL 3: EDIT TOUR ALLOCATION -->
     <!-- ========================================================= -->
-    <div id="edit-tour-modal" class="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
-        <div class="ops-card max-w-xl w-full p-6 sm:p-7 space-y-4 relative max-h-[90vh] overflow-y-auto shadow-2xl">
-            <button onclick="closeModal('edit-tour-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors">
+    <div id="edit-tour-modal" class="modal-backdrop hidden opacity-0 transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="edit-tour-modal-title">
+        <div class="modal-card modal-card--wide space-y-4">
+            <button type="button" onclick="closeModal('edit-tour-modal')" class="modal-close-btn" aria-label="Close edit tour modal">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-            <div class="space-y-1">
+            <div class="space-y-1 pr-8">
                 <div class="flex items-center space-x-2">
-                    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-amber font-medium">Edit Mode</span>
-                    <h3 class="text-lg font-bold text-white">Modify Event Details & Pricing</h3>
+                    <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">Edit Mode</span>
+                    <h3 id="edit-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Modify Event Details &amp; Pricing</h3>
                 </div>
-                <p class="text-xs text-slate-400">Edits sync live to Supabase and reflect instantly on the public fan website.</p>
+                <p class="text-xs text-[var(--muted)]">Edits sync live to Supabase and reflect instantly on the public fan website.</p>
             </div>
 
             <form onsubmit="handleEditTourSubmit(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="edit-tour-id">
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Title / Headliner Event</label>
-                    <input type="text" id="edit-tour-title" required class="w-full ops-input px-3 py-2 text-white">
+                    <label for="edit-tour-title" class="modal-field-label">Tour Title / Headliner Event</label>
+                    <input type="text" id="edit-tour-title" required class="modal-input">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">City & Venue</label>
-                        <input type="text" id="edit-tour-venue" required class="w-full ops-input px-3 py-2 text-white">
+                        <label for="edit-tour-venue" class="modal-field-label">City &amp; Venue</label>
+                        <input type="text" id="edit-tour-venue" required class="modal-input">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Venue Layout</label>
-                        <select id="edit-tour-layout" class="w-full ops-input px-2.5 py-2 text-white font-mono">
+                        <label for="edit-tour-layout" class="modal-field-label">Venue Layout</label>
+                        <select id="edit-tour-layout" class="modal-input font-mono">
                             <option value="Arena Open-Air">Arena Open-Air (Mahalaxmi / BIEC)</option>
                             <option value="Stadium 360°">Stadium 360° (JLN / Dhyan Chand)</option>
                             <option value="Warehouse Floor">Warehouse Floor (Okhla)</option>
@@ -1265,20 +1169,20 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Tour Date & Time</label>
-                        <input type="text" id="edit-tour-date" required class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="edit-tour-date" class="modal-field-label">Tour Date &amp; Time</label>
+                        <input type="text" id="edit-tour-date" required class="modal-input font-mono">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Ticketing Engine</label>
-                        <select id="edit-tour-partner" class="w-full ops-input px-2.5 py-2 text-white font-mono">
+                        <label for="edit-tour-partner" class="modal-field-label">Ticketing Engine</label>
+                        <select id="edit-tour-partner" class="modal-input font-mono">
                             <option value="BookMyShow">BookMyShow</option>
                             <option value="District">District</option>
                             <option value="Direct">Direct Box Office</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Status</label>
-                        <select id="edit-tour-status" class="w-full ops-input px-2.5 py-2 text-white font-mono">
+                        <label for="edit-tour-status" class="modal-field-label">Event Status</label>
+                        <select id="edit-tour-status" class="modal-input font-mono">
                             <option value="active">Active (Visible)</option>
                             <option value="draft">Draft (Hidden)</option>
                             <option value="sold_out">Sold Out</option>
@@ -1290,55 +1194,55 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Starting MRP (₹)</label>
-                        <input type="number" id="edit-tour-mrp" required class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="edit-tour-mrp" class="modal-field-label">Starting MRP (₹)</label>
+                        <input type="number" id="edit-tour-mrp" required class="modal-input font-mono">
                     </div>
                     <div>
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Promoter Cut / Commission (%)</label>
-                        <input type="number" id="edit-tour-cut" required class="w-full ops-input px-3 py-2 text-white font-mono">
+                        <label for="edit-tour-cut" class="modal-field-label">Promoter Cut / Commission (%)</label>
+                        <input type="number" id="edit-tour-cut" required class="modal-input font-mono">
                     </div>
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between mb-1">
-                        <label class="block text-slate-400 font-mono text-[10px] uppercase">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-slate-500 font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <label for="edit-tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
+                        <span class="text-[10px] text-[var(--muted)] font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg" 
-                            class="flex-1 ops-input px-3 py-2 text-white font-mono text-xs">
-                        <label for="edit-tour-poster-file" class="cursor-pointer px-3 py-2 rounded-lg bg-[#161926] hover:bg-[#1f2436] text-emerald-400 hover:text-emerald-300 border border-[#22283a] text-xs font-mono flex items-center space-x-1.5 transition-colors whitespace-nowrap">
+                        <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg"
+                            class="modal-input flex-1 font-mono text-xs">
+                        <label for="edit-tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: 44px; padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="edit-tour-poster-upload-btn-text">Upload</span>
                         </label>
                         <input type="file" id="edit-tour-poster-file" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden" onchange="handlePosterUpload(this, 'edit-tour-poster', 'edit-tour-poster-preview', 'edit-tour-poster-upload-btn-text')">
                     </div>
-                    <div id="edit-tour-poster-preview-container" class="mt-2 hidden flex items-center space-x-3 p-2 rounded-lg bg-[#131622] border border-[#1e2333]">
-                        <img id="edit-tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded border border-[#22283a]">
-                        <div class="text-xs font-mono">
-                            <div class="text-white font-semibold truncate max-w-xs" id="edit-tour-poster-filename"></div>
-                            <div class="text-slate-400 text-[10px]" id="edit-tour-poster-filesize"></div>
+                    <div id="edit-tour-poster-preview-container" class="ops-subcard mt-2 hidden flex items-center space-x-3 p-2.5">
+                        <img id="edit-tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded-lg border border-[var(--line)]">
+                        <div class="text-xs font-mono min-w-0">
+                            <div class="text-[var(--ink)] font-semibold truncate max-w-xs" id="edit-tour-poster-filename"></div>
+                            <div class="text-[var(--muted)] text-[10px]" id="edit-tour-poster-filesize"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Feature Event Checkbox -->
-                <div class="p-3 rounded-lg ops-card-subtle border border-amber-500/25 flex items-center space-x-2.5">
-                    <input type="checkbox" id="edit-tour-is-featured" class="rounded bg-[#161926] border-[#22283a] text-amber-500 focus:ring-0 w-4 h-4 cursor-pointer">
-                    <label for="edit-tour-is-featured" class="text-xs font-semibold text-amber-400 cursor-pointer flex items-center space-x-1.5">
-                        <i data-lucide="star" class="w-3.5 h-3.5 text-amber-400"></i>
+                <div class="ops-subcard p-3.5 flex items-center space-x-2.5" style="background-color: var(--crimson-bg); border-color: var(--crimson-border);">
+                    <input type="checkbox" id="edit-tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
+                    <label for="edit-tour-is-featured" class="text-xs font-bold cursor-pointer flex items-center space-x-1.5" style="color: var(--crimson-ink);">
+                        <i data-lucide="star" class="w-3.5 h-3.5"></i>
                         <span>Feature this Event in Fan Hero Section (Homepage Spotlight)</span>
                     </label>
                 </div>
 
                 <!-- Tier Price List Builder -->
-                <div class="space-y-2 pt-2 border-t border-[#1e2333]">
+                <div class="space-y-2 pt-3 border-t border-[var(--line)]">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="text-slate-400 font-mono text-[10px] uppercase font-semibold block">Ticket Price List & Tier Quotas</span>
-                            <span class="text-[10px] text-slate-400">Configure pricing tiers for this tour</span>
+                            <span class="modal-field-label" style="margin:0;">Ticket Price List &amp; Tier Quotas</span>
+                            <span class="text-[11px] text-[var(--muted)]">Configure pricing tiers for this tour</span>
                         </div>
-                        <button type="button" onclick="addTierRow('edit-tiers-container')" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center space-x-1">
+                        <button type="button" onclick="addTierRow('edit-tiers-container')" class="text-xs font-mono font-bold flex items-center space-x-1" style="color: var(--crimson-ink);">
                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                             <span>Add Tier</span>
                         </button>
@@ -1349,17 +1253,17 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-400 font-mono text-[10px] uppercase mb-1">Event Description</label>
-                    <textarea id="edit-tour-desc" rows="2" class="w-full ops-input px-3 py-2 text-white resize-none"></textarea>
+                    <label for="edit-tour-desc" class="modal-field-label">Event Description</label>
+                    <textarea id="edit-tour-desc" rows="2" class="modal-input resize-none" style="min-block-size: auto;"></textarea>
                 </div>
 
                 <div class="pt-2 flex items-center space-x-3">
-                    <button type="button" onclick="closeModal('edit-tour-modal')" class="w-1/3 py-2.5 rounded-lg text-xs font-mono bg-[#161926] hover:bg-[#1f2436] text-slate-300 hover:text-white border border-[#22283a] transition-colors">
+                    <button type="button" onclick="closeModal('edit-tour-modal')" class="btn-editorial-outline-light w-1/3">
                         Cancel
                     </button>
-                    <button type="submit" class="w-2/3 py-2.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white transition-all flex items-center justify-center space-x-2">
+                    <button type="submit" class="btn-editorial-primary w-2/3">
                         <i data-lucide="save" class="w-4 h-4"></i>
-                        <span>Save Changes & Sync to Web</span>
+                        <span>Save Changes &amp; Sync to Web</span>
                     </button>
                 </div>
             </form>
@@ -1367,9 +1271,11 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 px-4 py-2.5 rounded-lg ops-card border border-emerald-500/40 text-xs font-medium text-white shadow-2xl flex items-center space-x-2.5 translate-y-20 opacity-0 transition-all duration-300">
-        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-        <span id="toast-msg">Operation completed</span>
+    <div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" role="status" aria-live="polite">
+        <div class="toast-inner">
+            <i data-lucide="check-circle" class="w-4 h-4" style="color: var(--gold-on-dark);"></i>
+            <span id="toast-msg">Operation completed</span>
+        </div>
     </div>
 
     <!-- Application Script -->
@@ -1401,6 +1307,15 @@
             }
         }
 
+        function escHtml(v) {
+            return String(v ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         // --------------------------------------------------------------------
         // TO-DO LIST INTERACTIVE HELPERS
         // --------------------------------------------------------------------
@@ -1408,11 +1323,13 @@
             const span = checkbox.nextElementSibling;
             if (span) {
                 if (checkbox.checked) {
-                    span.classList.add('line-through', 'text-emerald-400');
-                    span.classList.remove('text-slate-300');
+                    span.classList.add('line-through');
+                    span.classList.remove('text-[var(--ink)]');
+                    span.style.color = 'var(--emerald-ink)';
                 } else {
-                    span.classList.remove('line-through', 'text-emerald-400');
-                    span.classList.add('text-slate-300');
+                    span.classList.remove('line-through');
+                    span.classList.add('text-[var(--ink)]');
+                    span.style.color = '';
                 }
             }
         }
@@ -1423,14 +1340,16 @@
             if (!input || !list || !input.value.trim()) return;
             const text = input.value.trim();
             const div = document.createElement('div');
-            div.className = 'flex items-center justify-between p-1.5 rounded hover:bg-white/[0.02]';
+            div.className = 'flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]';
             div.innerHTML = `
                 <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                    <input type="checkbox" onchange="toggleTodo(this)" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0">
-                    <span class="text-slate-300 text-xs truncate">${text}</span>
+                    <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                    <span class="text-[var(--ink)] text-xs truncate"></span>
                 </label>
-                <button onclick="this.parentElement.remove()" class="text-slate-500 hover:text-rose-400 p-1"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+                <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
             `;
+            const spanEl = div.querySelector('span');
+            if (spanEl) spanEl.textContent = text;
             list.appendChild(div);
             input.value = '';
             if (window.lucide) lucide.createIcons();
@@ -1444,23 +1363,29 @@
             const container = document.getElementById(containerId);
             if (!container) return;
             const row = document.createElement('div');
-            row.className = 'tier-row grid grid-cols-12 gap-2 items-center bg-[#0e1018] p-2 rounded-lg border border-[#1e2333] text-xs font-mono';
+            row.className = 'tier-row grid grid-cols-12 gap-2 items-center ops-subcard p-2 text-xs font-mono';
             row.innerHTML = `
                 <div class="col-span-5">
-                    <input type="text" placeholder="Tier Name (e.g. GA Standard)" value="${name}" class="tier-name w-full ops-input rounded px-2 py-1 text-xs text-white" required>
+                    <input type="text" placeholder="Tier Name (e.g. GA Standard)" class="tier-name modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
                 </div>
                 <div class="col-span-3">
-                    <input type="number" placeholder="MRP (₹)" value="${price}" class="tier-price w-full ops-input rounded px-2 py-1 text-xs text-white" required>
+                    <input type="number" placeholder="MRP (₹)" class="tier-price modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
                 </div>
                 <div class="col-span-3">
-                    <input type="number" placeholder="Quota" value="${quota}" class="tier-quota w-full ops-input rounded px-2 py-1 text-xs text-white" required>
+                    <input type="number" placeholder="Quota" class="tier-quota modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
                 </div>
                 <div class="col-span-1 text-right">
-                    <button type="button" onclick="this.closest('.tier-row').remove()" class="text-slate-500 hover:text-rose-400 p-1" title="Remove Tier">
+                    <button type="button" onclick="this.closest('.tier-row').remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove Tier" title="Remove Tier">
                         <i data-lucide="x" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
             `;
+            const nameInput = row.querySelector('.tier-name');
+            const priceInput = row.querySelector('.tier-price');
+            const quotaInput = row.querySelector('.tier-quota');
+            if (nameInput) nameInput.value = name;
+            if (priceInput) priceInput.value = price;
+            if (quotaInput) quotaInput.value = quota;
             container.appendChild(row);
             if (window.lucide) lucide.createIcons();
         }
@@ -1709,7 +1634,9 @@
             if (sideRole) sideRole.textContent = 'Operations Clearance';
             if (avatar) {
                 const initials = (userEmail.slice(0, 2) || 'OP').toUpperCase();
-                avatar.innerHTML = `<span class="font-bold text-xs text-emerald-400">${initials}</span>`;
+                avatar.innerHTML = `<span class="font-bold text-xs" style="color: #ff4d6d;">${escHtml(initials)}</span>`;
+                const sideAvatar = document.getElementById('sidebar-user-avatar');
+                if (sideAvatar) sideAvatar.innerHTML = `<span class="font-bold text-xs" style="color: #ff4d6d;">${escHtml(initials)}</span>`;
             }
 
             showGateState('workspace');
@@ -2023,46 +1950,46 @@
             const projectsList = document.getElementById('overview-projects-list');
             if (projectsList) {
                 if (tours && tours.length > 0) {
-                    projectsList.innerHTML = tours.slice(0, 6).map((t, idx) => {
+                    projectsList.innerHTML = tours.slice(0, 6).map((t) => {
                         const total = t.quotaTotal || 7000;
                         const avail = t.quotaAvailable !== undefined ? t.quotaAvailable : total;
                         const sold = Math.max(0, total - avail);
                         const pct = total > 0 ? Math.round((sold / total) * 100) : 0;
 
                         return `
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg ops-card-subtle gap-2 hover:border-[#2a3248] transition-colors">
+                            <div class="ops-subcard flex flex-col sm:flex-row sm:items-center justify-between p-3 gap-2 transition-colors">
                                 <div class="flex items-center space-x-3 min-w-0">
-                                    <div class="w-8 h-8 rounded-lg overflow-hidden bg-[#161926] border border-[#22283a] flex-shrink-0">
-                                        <img src="${t.poster_url || 'posters/anyma-aeden-poster-1.jpg'}" alt="${t.title}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                    <div class="w-8 h-8 rounded-lg overflow-hidden bg-[var(--bg-void)] border border-[var(--line)] flex-shrink-0">
+                                        <img src="${escHtml(t.poster_url || 'posters/anyma-aeden-poster-1.jpg')}" alt="${escHtml(t.title)}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="font-semibold text-white truncate text-xs flex items-center space-x-2">
-                                            <span>${t.title}</span>
-                                            ${t.isFeatured ? '<span class="badge-amber px-1.5 py-0.2 rounded text-[9px] font-mono font-medium">Hero Active</span>' : ''}
+                                        <div class="font-bold text-[var(--ink)] truncate text-xs flex items-center space-x-2">
+                                            <span>${escHtml(t.title)}</span>
+                                            ${t.isFeatured ? '<span class="ops-badge-gold px-2 py-0.5 rounded-full text-[9px] font-mono font-bold">Hero Active</span>' : ''}
                                         </div>
-                                        <div class="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                                            <span>${t.venue}, ${t.city}</span>
-                                            <span class="text-slate-600">•</span>
-                                            <span class="font-mono text-sky-400">${t.layout || 'Arena Open-Air'}</span>
-                                            <span class="text-slate-600">•</span>
-                                            <span class="font-mono text-emerald-400 font-semibold">${t.cut}% Cut</span>
+                                        <div class="text-[11px] text-[var(--muted)] flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                                            <span class="truncate">${escHtml(t.venue)}, ${escHtml(t.city)}</span>
+                                            <span>&bull;</span>
+                                            <span class="font-mono font-semibold whitespace-nowrap" style="color: var(--crimson-ink);">${escHtml(t.layout || 'Arena Open-Air')}</span>
+                                            <span>&bull;</span>
+                                            <span class="font-mono font-bold whitespace-nowrap" style="color: var(--emerald-ink);">${escHtml(t.cut)}% Cut</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w-full sm:w-44 text-right flex-shrink-0">
-                                    <div class="flex justify-between sm:justify-end items-center sm:space-x-2 text-[10px] font-mono text-slate-400 mb-1">
+                                    <div class="flex justify-between sm:justify-end items-center sm:space-x-2 text-[10px] font-mono text-[var(--muted)] mb-1">
                                         <span>${sold.toLocaleString()} / ${total.toLocaleString()} passes</span>
-                                        <span class="font-semibold text-white tabular-nums">${pct}%</span>
+                                        <span class="font-bold text-[var(--ink)] tabular-nums">${pct}%</span>
                                     </div>
-                                    <div class="w-full sm:w-44 h-1.5 rounded-full bg-[#1a1f2e] overflow-hidden ml-auto">
-                                        <div class="h-full bg-emerald-500 rounded-full" style="width: ${pct}%"></div>
+                                    <div class="w-full sm:w-44 h-1.5 rounded-full bg-[var(--bg-void)] border border-[var(--line)] overflow-hidden ml-auto">
+                                        <div class="h-full rounded-full" style="width: ${pct}%; background-color: var(--crimson);"></div>
                                     </div>
                                 </div>
                             </div>
                         `;
                     }).join('');
                 } else {
-                    projectsList.innerHTML = '<div class="p-6 text-center text-slate-400 font-mono text-xs">No active tour allocations. Click "Allocate Tour" to launch your first stage.</div>';
+                    projectsList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No active tour allocations. Click &ldquo;Allocate Tour&rdquo; to launch your first stage.</div>';
                 }
             }
 
@@ -2100,29 +2027,34 @@
             const ordersTable = document.getElementById('overview-orders-table');
             if (ordersTable) {
                 if (orders && orders.length > 0) {
-                    ordersTable.innerHTML = orders.slice(0, 5).map(o => `
-                        <tr class="hover:bg-white/[0.02] transition-colors">
-                            <td class="py-3 px-3"><input type="checkbox" class="rounded bg-[#161926] border-[#22283a] text-emerald-500 focus:ring-0"></td>
-                            <td class="py-3 px-3 flex items-center space-x-2">
-                                <div class="w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-[10px] font-bold">
-                                    ${o.attendee ? o.attendee.slice(0, 2).toUpperCase() : 'FN'}
+                    ordersTable.innerHTML = orders.slice(0, 5).map(o => {
+                        const ok = (o.status || 'Approved').toLowerCase() === 'approved' || (o.status || '').toLowerCase() === 'delivered';
+                        return `
+                        <tr class="hover:bg-[var(--soft)]/60 transition-colors">
+                            <td><input type="checkbox" aria-label="Select booking ${escHtml(o.orderNum)}" class="rounded accent-[#ff2e54]"></td>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <div class="ops-badge-emerald w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">
+                                        ${escHtml(o.attendee ? o.attendee.slice(0, 2).toUpperCase() : 'FN')}
+                                    </div>
+                                    <span class="text-[var(--ink)] font-semibold">${escHtml(o.attendee)}</span>
                                 </div>
-                                <span class="text-white font-medium">${o.attendee}</span>
                             </td>
-                            <td class="py-3 px-3 font-mono text-slate-400">${o.orderNum}</td>
-                            <td class="py-3 px-3 font-mono text-white font-semibold tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
-                            <td class="py-3 px-3 text-slate-300 truncate max-w-[160px]">${o.event}</td>
-                            <td class="py-3 px-3 text-slate-400 font-mono">${o.mode || 'UPI Instant'}</td>
-                            <td class="py-3 px-3 text-slate-400 font-mono">${o.date || '06 Nov 2026'}</td>
-                            <td class="py-3 px-3">
-                                <span class="${(o.status || 'Approved') === 'Approved' ? 'badge-emerald' : 'badge-amber'} px-2.5 py-0.5 rounded-md text-[10px] font-medium font-mono uppercase">
-                                    ${o.status || 'Approved'}
+                            <td class="font-mono text-[var(--muted)]">${escHtml(o.orderNum)}</td>
+                            <td class="font-mono text-[var(--ink)] font-bold tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
+                            <td class="text-[var(--ink)] truncate max-w-[160px]">${escHtml(o.event)}</td>
+                            <td class="text-[var(--muted)] font-mono">${escHtml(o.mode || 'UPI Instant')}</td>
+                            <td class="text-[var(--muted)] font-mono">${escHtml(o.date || '06 Nov 2026')}</td>
+                            <td>
+                                <span class="${ok ? 'ops-badge-emerald' : 'ops-badge-gold'} px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase">
+                                    ${escHtml(o.status || 'Approved')}
                                 </span>
                             </td>
                         </tr>
-                    `).join('');
+                    `;
+                    }).join('');
                 } else {
-                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here as they occur.</td></tr>';
+                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here as they occur.</td></tr>';
                 }
             }
         }
@@ -2131,23 +2063,23 @@
             const tbody = document.getElementById('tours-table-body');
             if (!tbody) return;
             if (!liveData.tours || liveData.tours.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-slate-400 font-mono text-xs">No tour allocations active. Click "+ Allocate Tour" above to launch your first stage.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No tour allocations active. Click &ldquo;Allocate Tour&rdquo; above to launch your first stage.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.tours.map(t => {
                 const poster = t.poster_url || 'posters/anyma-aeden-poster-1.jpg';
                 const isFeatured = t.isFeatured;
                 return `
-                    <tr class="hover:bg-white/[0.02] transition-colors">
-                        <td class="p-4">
+                    <tr class="hover:bg-[var(--soft)]/60 transition-colors">
+                        <td>
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-lg overflow-hidden bg-[#161926] border border-[#22283a] flex-shrink-0">
-                                    <img src="${poster}" alt="${t.title}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
+                                <div class="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-void)] border border-[var(--line)] flex-shrink-0">
+                                    <img src="${escHtml(poster)}" alt="${escHtml(t.title)}" width="160" height="100" loading="lazy" decoding="async" class="w-full h-full object-cover" onerror="this.src='posters/anyma-aeden-poster-1.jpg'">
                                 </div>
                                 <div>
-                                    <div class="font-semibold text-white text-xs">${t.title}</div>
+                                    <div class="font-bold text-[var(--ink)] text-xs">${escHtml(t.title)}</div>
                                     ${isFeatured ? `
-                                        <div class="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-medium badge-amber mt-1">
+                                        <div class="ops-badge-gold inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold mt-1">
                                             <i data-lucide="star" class="w-2.5 h-2.5"></i>
                                             <span>Featured in Hero</span>
                                         </div>
@@ -2155,47 +2087,47 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="p-4 text-slate-300">
-                            <div class="font-medium text-white">${t.venue}</div>
-                            <div class="text-[10px] text-slate-400">${t.city}</div>
+                        <td>
+                            <div class="font-semibold text-[var(--ink)]">${escHtml(t.venue)}</div>
+                            <div class="text-[11px] text-[var(--muted)]">${escHtml(t.city)}</div>
                         </td>
-                        <td class="p-4">
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-cyan">
-                                ${t.layout || 'Arena Open-Air'}
+                        <td>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold">
+                                ${escHtml(t.layout || 'Arena Open-Air')}
                             </span>
                         </td>
-                        <td class="p-4 font-mono text-slate-400 whitespace-nowrap">${t.date}</td>
-                        <td class="p-4 font-mono">
-                            <span class="px-2 py-0.5 rounded-md text-[10px] ${t.partner === 'BookMyShow' ? 'badge-rose' : 'badge-neutral'}">
-                                ${t.partner}
+                        <td class="font-mono text-[var(--muted)] whitespace-nowrap">${escHtml(t.date)}</td>
+                        <td class="font-mono">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${t.partner === 'BookMyShow' ? 'ops-badge-crimson' : 'ops-badge-navy'}">
+                                ${escHtml(t.partner)}
                             </span>
                         </td>
-                        <td class="p-4 font-mono font-semibold text-white whitespace-nowrap tabular-nums">₹${Number(t.mrp).toLocaleString('en-IN')}</td>
-                        <td class="p-4 font-mono text-emerald-400 font-semibold whitespace-nowrap tabular-nums">${t.cut}% CUT</td>
-                        <td class="p-4">
+                        <td class="font-mono font-bold text-[var(--ink)] whitespace-nowrap tabular-nums">₹${Number(t.mrp).toLocaleString('en-IN')}</td>
+                        <td class="font-mono font-bold whitespace-nowrap tabular-nums" style="color: var(--emerald-ink);">${escHtml(t.cut)}% CUT</td>
+                        <td>
                             ${isFeatured ? `
-                                <span class="px-2.5 py-1 rounded-md text-[10px] font-mono font-medium badge-amber flex items-center space-x-1 w-max">
+                                <span class="ops-badge-gold px-2.5 py-1 rounded-full text-[10px] font-mono font-bold inline-flex items-center space-x-1 w-max">
                                     <i data-lucide="check" class="w-3 h-3"></i>
                                     <span>Active Hero</span>
                                 </span>
                             ` : `
-                                <button onclick="setFeaturedTour(${t.id})" class="px-2.5 py-1 rounded-md text-[10px] font-mono font-medium bg-[#161926] hover:bg-amber-500/15 text-slate-300 hover:text-amber-400 border border-[#22283a] hover:border-amber-500/30 transition-all flex items-center space-x-1" title="Set as Featured Tour in Fan Hero Section">
-                                    <i data-lucide="star" class="w-3 h-3 text-amber-400"></i>
+                                <button type="button" onclick="setFeaturedTour(${Number(t.id)})" class="btn-editorial-outline-light" style="min-block-size: 28px; padding-inline: 10px; font-size: 10px;" title="Set as Featured Tour in Fan Hero Section">
+                                    <i data-lucide="star" class="w-3 h-3" style="color: var(--amber-ink);"></i>
                                     <span>Feature</span>
                                 </button>
                             `}
                         </td>
-                        <td class="p-4">
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald uppercase">
-                                ${t.status}
+                        <td>
+                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                                ${escHtml(t.status)}
                             </span>
                         </td>
-                        <td class="p-4 text-right whitespace-nowrap">
+                        <td class="text-right whitespace-nowrap">
                             <div class="flex items-center justify-end space-x-1">
-                                <button onclick="openEditTourModal(${t.id})" class="text-slate-400 hover:text-emerald-400 p-1.5 rounded transition-colors" title="Edit Tour Details & Pricing">
+                                <button type="button" onclick="openEditTourModal(${Number(t.id)})" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1.5 rounded-lg hover:bg-[var(--soft)] transition-colors" aria-label="Edit ${escHtml(t.title)}" title="Edit Tour Details & Pricing">
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </button>
-                                <button onclick="deleteTour(${t.id})" class="text-slate-400 hover:text-rose-400 p-1.5 rounded transition-colors" title="Remove Allocation">
+                                <button type="button" onclick="deleteTour(${Number(t.id)})" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1.5 rounded-lg hover:bg-[var(--crimson-bg)] transition-colors" aria-label="Remove ${escHtml(t.title)}" title="Remove Allocation">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>
                             </div>
@@ -2210,36 +2142,36 @@
             const tbody = document.getElementById('promoters-table-body');
             if (!tbody) return;
             if (!liveData.promoters || liveData.promoters.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-slate-400 font-mono text-xs">No promoters registered yet. When fans register on the website, they will appear here.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No promoters registered yet. When fans register on the website, they will appear here.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.promoters.map(p => `
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                    <td class="p-4 font-semibold text-white">
-                        <div class="text-xs font-semibold">${p.name}</div>
-                        <div class="text-[11px] font-mono text-slate-400 flex flex-wrap items-center gap-1.5 mt-0.5">
-                            ${p.phone ? `<span>${p.phone}</span>` : ''}
-                            ${p.phone && p.email ? `<span class="text-slate-600">•</span>` : ''}
-                            ${p.email ? `<span>${p.email}</span>` : ''}
+                <tr class="hover:bg-[var(--soft)]/60 transition-colors">
+                    <td class="font-semibold text-[var(--ink)]">
+                        <div class="text-xs font-bold">${escHtml(p.name)}</div>
+                        <div class="text-[11px] font-mono text-[var(--muted)] flex flex-wrap items-center gap-1.5 mt-0.5">
+                            ${p.phone ? `<span>${escHtml(p.phone)}</span>` : ''}
+                            ${p.phone && p.email ? `<span>&bull;</span>` : ''}
+                            ${p.email ? `<span>${escHtml(p.email)}</span>` : ''}
                         </div>
                     </td>
-                    <td class="p-4 font-mono text-slate-300">${p.code}</td>
-                    <td class="p-4 text-slate-400">${p.city}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-medium badge-emerald">
-                            ${p.tier} (${p.tierCut}%)
+                    <td class="font-mono font-semibold text-[var(--ink)]">${escHtml(p.code)}</td>
+                    <td class="text-[var(--muted)]">${escHtml(p.city)}</td>
+                    <td>
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                            ${escHtml(p.tier)} (${escHtml(p.tierCut)}%)
                         </span>
                     </td>
-                    <td class="p-4 font-mono font-semibold text-white tabular-nums">${p.passes}</td>
-                    <td class="p-4 font-mono text-emerald-400 font-semibold tabular-nums">₹${Number(p.earnings).toLocaleString()}</td>
-                    <td class="p-4 font-mono text-slate-400">${p.upi}</td>
-                    <td class="p-4">
-                        <button onclick="togglePromoterKyc(${p.id})" class="px-2 py-0.5 rounded-md text-[10px] font-mono uppercase ${p.kyc === 'verified' ? 'badge-emerald' : 'badge-amber'}">
-                            ${p.kyc}
+                    <td class="font-mono font-bold text-[var(--ink)] tabular-nums">${Number(p.passes || 0).toLocaleString('en-IN')}</td>
+                    <td class="font-mono font-bold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.earnings).toLocaleString('en-IN')}</td>
+                    <td class="font-mono text-[var(--muted)]">${escHtml(p.upi)}</td>
+                    <td>
+                        <button type="button" onclick="togglePromoterKyc(${Number(p.id)})" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase cursor-pointer ${p.kyc === 'verified' ? 'ops-badge-emerald' : 'ops-badge-gold'}">
+                            ${escHtml(p.kyc)}
                         </button>
                     </td>
-                    <td class="p-4 text-right">
-                        <button onclick="showToast('Promoter statement WhatsApp dispatched!')" class="text-slate-400 hover:text-white p-1" title="Dispatch Statement">
+                    <td class="text-right">
+                        <button type="button" onclick="showToast('Promoter statement WhatsApp dispatched!')" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1.5 rounded-lg hover:bg-[var(--soft)]" aria-label="Dispatch statement to ${escHtml(p.name)}" title="Dispatch Statement">
                             <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
                         </button>
                     </td>
@@ -2251,25 +2183,25 @@
             const tbody = document.getElementById('orders-table-body');
             if (!tbody) return;
             if (!liveData.orders || liveData.orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.orders.map(o => `
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                    <td class="p-4 font-mono text-slate-300 font-semibold">${o.orderNum}</td>
-                    <td class="p-4 font-medium text-white">${o.attendee}</td>
-                    <td class="p-4 text-slate-300 truncate max-w-[180px]">${o.event}</td>
-                    <td class="p-4 font-mono text-slate-400">${o.tier} (×${o.qty})</td>
-                    <td class="p-4 font-mono font-semibold text-white tabular-nums">₹${Number(o.total).toLocaleString()}</td>
-                    <td class="p-4 font-mono text-slate-400">${o.ref}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-neutral">
-                            ${o.channel}
+                <tr class="hover:bg-[var(--soft)]/60 transition-colors">
+                    <td class="font-mono text-[var(--ink)] font-semibold">${escHtml(o.orderNum)}</td>
+                    <td class="font-semibold text-[var(--ink)]">${escHtml(o.attendee)}</td>
+                    <td class="text-[var(--ink)] truncate max-w-[180px]">${escHtml(o.event)}</td>
+                    <td class="font-mono text-[var(--muted)]">${escHtml(o.tier)} (&times;${Number(o.qty || 1)})</td>
+                    <td class="font-mono font-bold text-[var(--ink)] tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
+                    <td class="font-mono text-[var(--muted)]">${escHtml(o.ref)}</td>
+                    <td>
+                        <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                            ${escHtml(o.channel)}
                         </span>
                     </td>
-                    <td class="p-4">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald uppercase">
-                            ${o.status}
+                    <td>
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                            ${escHtml(o.status)}
                         </span>
                     </td>
                 </tr>
@@ -2280,23 +2212,23 @@
             const tbody = document.getElementById('payouts-table-body');
             if (!tbody) return;
             if (!liveData.payouts || liveData.payouts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-slate-400 font-mono text-xs">No instant payouts triggered yet. Click "Trigger Instant Payout" above to test the NPCI settlement rail.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No instant payouts triggered yet. Click &ldquo;Trigger Instant Payout&rdquo; above to test the NPCI settlement rail.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.payouts.map(p => `
-                <tr class="hover:bg-white/[0.02] transition-colors">
-                    <td class="p-4 font-mono text-slate-400 font-semibold">PAY-${p.id}</td>
-                    <td class="p-4 font-medium text-white">${p.promoter}</td>
-                    <td class="p-4 font-mono text-slate-300">${p.upi}</td>
-                    <td class="p-4 font-mono font-semibold text-emerald-400 tabular-nums">₹${Number(p.amount).toLocaleString()}</td>
-                    <td class="p-4 font-mono text-slate-300 tabular-nums">&lt;${p.speed}s</td>
-                    <td class="p-4 font-mono text-slate-400">${p.rrn}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-0.5 rounded-md text-[10px] font-mono badge-emerald uppercase">
-                            ${p.status}
+                <tr class="hover:bg-[var(--soft)]/60 transition-colors">
+                    <td class="font-mono text-[var(--muted)] font-semibold">PAY-${escHtml(p.id)}</td>
+                    <td class="font-semibold text-[var(--ink)]">${escHtml(p.promoter)}</td>
+                    <td class="font-mono text-[var(--ink)]">${escHtml(p.upi)}</td>
+                    <td class="font-mono font-bold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.amount).toLocaleString('en-IN')}</td>
+                    <td class="font-mono text-[var(--ink)] tabular-nums">&lt;${Number(p.speed)}s</td>
+                    <td class="font-mono text-[var(--muted)]">${escHtml(p.rrn)}</td>
+                    <td>
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                            ${escHtml(p.status)}
                         </span>
                     </td>
-                    <td class="p-4 font-mono text-slate-400 text-right">${p.time}</td>
+                    <td class="font-mono text-[var(--muted)] text-right">${escHtml(p.time)}</td>
                 </tr>
             `).join('');
         }
@@ -2305,17 +2237,17 @@
             const scanList = document.getElementById('gate-scans-list');
             if (scanList) {
                 if (!liveData.gateScans || liveData.gateScans.length === 0) {
-                    scanList.innerHTML = '<div class="p-6 text-center text-slate-400 font-mono text-xs">No turnstile gate scans recorded yet. Live turnstile scans log here during concert entry.</div>';
+                    scanList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No turnstile gate scans recorded yet. Live turnstile scans log here during concert entry.</div>';
                 } else {
                     scanList.innerHTML = liveData.gateScans.map(s => `
-                        <div class="p-2.5 rounded-lg ops-card-subtle flex items-center justify-between">
-                            <div>
-                                <div class="text-white font-semibold">${s.pass} • ${s.gate}</div>
-                                <div class="text-slate-400 text-[11px]">${s.note}</div>
+                        <div class="ops-subcard p-3 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="text-[var(--ink)] font-bold truncate">${escHtml(s.pass)} &bull; ${escHtml(s.gate)}</div>
+                                <div class="text-[var(--muted)] text-[11px] truncate">${escHtml(s.note)}</div>
                             </div>
-                            <div class="text-right">
-                                <span class="px-2 py-0.5 rounded-md text-[10px] badge-emerald font-semibold">${s.status}</span>
-                                <div class="text-slate-500 text-[10px] mt-1 font-mono">${s.time}</div>
+                            <div class="text-right flex-shrink-0">
+                                <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-bold">${escHtml(s.status)}</span>
+                                <div class="text-[var(--muted)] text-[10px] mt-1 font-mono">${escHtml(s.time)}</div>
                             </div>
                         </div>
                     `).join('');
@@ -2325,15 +2257,15 @@
             const blockList = document.getElementById('bot-blocks-list');
             if (blockList) {
                 if (!liveData.botBlocks || liveData.botBlocks.length === 0) {
-                    blockList.innerHTML = '<div class="p-6 text-center text-slate-400 font-mono text-xs">Anti-scalping shield active. 0 malicious bot scrapers detected.</div>';
+                    blockList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">Anti-scalping shield active. 0 malicious bot scrapers detected.</div>';
                 } else {
                     blockList.innerHTML = liveData.botBlocks.map(b => `
-                        <div class="p-2.5 rounded-lg ops-card-subtle flex items-center justify-between">
-                            <div>
-                                <div class="text-rose-400 font-semibold">${b.type} — ${b.ip}</div>
-                                <div class="text-slate-400 text-[11px]">${b.details}</div>
+                        <div class="ops-subcard p-3 flex items-center justify-between gap-3">
+                            <div class="min-w-0">
+                                <div class="font-bold truncate" style="color: var(--crimson-ink);">${escHtml(b.type)} &mdash; ${escHtml(b.ip)}</div>
+                                <div class="text-[var(--muted)] text-[11px] truncate">${escHtml(b.details)}</div>
                             </div>
-                            <span class="px-2 py-0.5 rounded-md text-[10px] badge-rose font-bold font-mono">${b.action}</span>
+                            <span class="ops-badge-crimson px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono flex-shrink-0">${escHtml(b.action)}</span>
                         </div>
                     `).join('');
                 }
@@ -2351,14 +2283,14 @@
                 if (el && btn) {
                     if (t === tabId) {
                         el.classList.remove('hidden');
-                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all bg-white/[0.06] text-white border-l-2 border-emerald-500';
+                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ff2e54]';
                         const icon = btn.querySelector('svg, i');
-                        if (icon) icon.className = 'w-4 h-4 text-emerald-400';
+                        if (icon) icon.className = 'w-4 h-4 text-[#ff4d6d]';
                     } else {
                         el.classList.add('hidden');
-                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent';
+                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent';
                         const icon = btn.querySelector('svg, i');
-                        if (icon) icon.className = 'w-4 h-4 text-slate-400';
+                        if (icon) icon.className = 'w-4 h-4 text-[#94a3b8]';
                     }
                 }
             });

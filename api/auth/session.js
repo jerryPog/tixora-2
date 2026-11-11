@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const { getClientIp, checkRateLimit, recordAttempt, applyRateLimitHeaders } = require('./rate-limit');
 const { validateForm } = require('../../lib/validator');
 const { csrfGuard } = require('../../lib/csrf');
-const { applySecurityHeaders } = require('../../lib/security-headers');
+const { applySecurityHeaders, isPlainLocalHttp } = require('../../lib/security-headers');
 const { handleCors } = require('../../lib/cors');
 const { readBodyWithLimit, MAX_REQUEST_BODY_SIZE } = require('../../lib/uploader');
 
@@ -62,7 +62,7 @@ async function parseBody(req) {
 
 module.exports = async (req, res) => {
     // Security & Header hardening
-    applySecurityHeaders(res, { isApi: true });
+    applySecurityHeaders(res, { isApi: true, req });
 
     // Domain-Restricted CORS Preflight & Origin Filter
     if (handleCors(req, res)) return;
@@ -70,7 +70,9 @@ module.exports = async (req, res) => {
     // CSRF Protection Barrier for State-Changing Requests
     if (!csrfGuard(req, res)) return;
 
-    const cookieSecurity = 'Path=/; HttpOnly; Secure; SameSite=Strict';
+    const isLocalPlain = isPlainLocalHttp(req);
+    const secureAttr = isLocalPlain ? '' : ' Secure;';
+    const cookieSecurity = `Path=/; HttpOnly;${secureAttr} SameSite=Strict`;
 
     if (req.method === 'POST') {
         let body;
@@ -159,8 +161,10 @@ module.exports = async (req, res) => {
         res.setHeader('Set-Cookie', [
             `tixora_session=${encodeURIComponent(token)}; ${cookieSecurity}; Max-Age=604800`,
             `tixora_role=${encodeURIComponent(verifiedRole)}; ${cookieSecurity}; Max-Age=604800`,
-            `tixora_auth_status=authenticated; Path=/; Secure; SameSite=Strict; Max-Age=604800`
+            `tixora_auth_status=authenticated; Path=/;${secureAttr} SameSite=Strict; Max-Age=604800`
         ]);
+
+        const policyLabel = isLocalPlain ? 'HttpOnly; SameSite=Strict' : 'HttpOnly; Secure; SameSite=Strict';
 
         if (typeof res.status === 'function') {
             return res.status(200).json({
@@ -168,7 +172,7 @@ module.exports = async (req, res) => {
                 authenticated: true,
                 role: verifiedRole,
                 is_admin: verifiedRole === 'admin' || verifiedRole === 'manager',
-                cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
+                cookie_policy: policyLabel
             });
         } else {
             res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -177,7 +181,7 @@ module.exports = async (req, res) => {
                 authenticated: true,
                 role: verifiedRole,
                 is_admin: verifiedRole === 'admin' || verifiedRole === 'manager',
-                cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
+                cookie_policy: policyLabel
             }));
         }
     }
@@ -193,7 +197,7 @@ module.exports = async (req, res) => {
             has_session_cookie: hasSession,
             role: role,
             is_admin: isAdmin,
-            cookie_policy: 'HttpOnly; Secure; SameSite=Strict'
+            cookie_policy: isLocalPlain ? 'HttpOnly; SameSite=Strict' : 'HttpOnly; Secure; SameSite=Strict'
         };
 
         if (typeof res.status === 'function') {
