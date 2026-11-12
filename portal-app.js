@@ -1134,11 +1134,11 @@
     setText('dash-hero-title', 'Welcome, ' + name);
     setText('events-hero-title', 'Welcome, ' + name);
     setText('dash-header-name', name);
-    setText('dash-header-tier', tierName.toUpperCase() + ' • ' + commRate.toFixed(1) + '%');
+    setText('dash-header-tier', tierName.toUpperCase());
     setText('topbar-promoter-id', refCode);
     setText('mobile-promoter-id', refCode);
     setText('events-hero-id', refCode);
-    setText('events-hero-tier', tierName.toUpperCase() + ' • ' + commRate.toFixed(1) + '% CUT');
+    setText('events-hero-tier', tierName.toUpperCase() + ' TIER');
 
     document.querySelectorAll('[data-portal-id-chip]').forEach((el) => {
       el.textContent = refCode;
@@ -1153,9 +1153,9 @@
     setText('dash-account-email', email);
     setText('dash-account-city', city);
     setText('dash-account-upi', upi);
-    setText('dash-tier-badge', 'TIER • ' + tierName.toUpperCase() + ' (' + commRate.toFixed(1) + '%)');
+    setText('dash-tier-badge', 'TIER • ' + tierName.toUpperCase());
     setText('id-card-name', name);
-    setText('id-card-tier', tierName.toUpperCase() + ' TIER • ' + commRate.toFixed(1) + '% CUT');
+    setText('id-card-tier', tierName.toUpperCase() + ' TIER');
     setText('id-card-code', refCode);
     setText('id-card-phone', phone);
     setText('id-card-upi', upi);
