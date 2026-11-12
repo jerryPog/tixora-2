@@ -56,6 +56,10 @@ DROP TABLE IF EXISTS venues CASCADE;
 DROP TABLE IF EXISTS promoters CASCADE;
 DROP INDEX IF EXISTS idx_events_status CASCADE;
 DROP INDEX IF EXISTS idx_orders_status CASCADE;
+DROP INDEX IF EXISTS public.events_event_date_idx CASCADE;
+DROP INDEX IF EXISTS public.events_event_date_idx1 CASCADE;
+DROP INDEX IF EXISTS public.idx_events_event_date CASCADE;
+DROP INDEX IF EXISTS public.idx_reset_token_hash CASCADE;
 DROP TABLE IF EXISTS promoter_tiers CASCADE;
 
 -- ============================================================================
@@ -148,6 +152,7 @@ CREATE TABLE events (
 -- events.status is a low-cardinality column on a compact table (sequential scan is faster)
 CREATE INDEX idx_events_artist_id ON events(artist_id);
 CREATE INDEX idx_events_venue_id ON events(venue_id);
+CREATE INDEX idx_events_event_date ON events(event_date);
 -- Note: slug has an automatic UNIQUE B-Tree index
 
 -- 6. Ticket Tiers / Quotas
@@ -1018,6 +1023,7 @@ BEGIN
   PERFORM 1 FROM public.promoters WHERE tier_id = 1 LIMIT 1;
   PERFORM 1 FROM public.events WHERE artist_id = 1 LIMIT 1;
   PERFORM 1 FROM public.events WHERE venue_id = 1 LIMIT 1;
+  PERFORM 1 FROM public.events WHERE event_date IS NOT NULL ORDER BY event_date LIMIT 1;
   PERFORM 1 FROM public.ticket_tiers WHERE event_id = 1 LIMIT 1;
   PERFORM 1 FROM public.orders WHERE attendee_id = 1 LIMIT 1;
   PERFORM 1 FROM public.orders WHERE event_id = 1 LIMIT 1;
@@ -1154,7 +1160,8 @@ CREATE TABLE IF NOT EXISTS public.password_reset_tokens (
     user_agent TEXT DEFAULT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_reset_token_hash ON public.password_reset_tokens(token_hash);
+-- Note: token_hash already has an automatic UNIQUE B-Tree index (avoid duplicate index)
+DROP INDEX IF EXISTS public.idx_reset_token_hash;
 CREATE INDEX IF NOT EXISTS idx_reset_token_email ON public.password_reset_tokens(email);
 CREATE INDEX IF NOT EXISTS idx_reset_token_expires ON public.password_reset_tokens(expires_at);
 
@@ -1298,7 +1305,64 @@ GRANT EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) TO ser
 DO $$
 DECLARE
   v_remaining INT;
+  v_dup_rec RECORD;
+  v_dup_count INT := 0;
 BEGIN
+  -- 1. Drop any remaining duplicate identical non-constraint indexes in public schema (0009_duplicate_index)
+  FOR v_dup_rec IN
+    WITH idx_info AS (
+      SELECT
+        i.indexrelid,
+        ns.nspname || '.' || c.relname AS index_fqn,
+        i.indrelid,
+        i.indkey::text AS indkey_txt,
+        i.indclass::text AS indclass_txt,
+        i.indoption::text AS indoption_txt,
+        COALESCE(pg_get_expr(i.indexprs, i.indrelid), '') AS indexprs_txt,
+        COALESCE(pg_get_expr(i.indpred, i.indrelid), '') AS indpred_txt,
+        i.indisunique,
+        con.oid IS NOT NULL AS has_constraint,
+        ROW_NUMBER() OVER (
+          PARTITION BY i.indrelid, i.indkey::text, i.indclass::text, i.indoption::text,
+                       COALESCE(pg_get_expr(i.indexprs, i.indrelid), ''),
+                       COALESCE(pg_get_expr(i.indpred, i.indrelid), ''),
+                       i.indisunique
+          ORDER BY (con.oid IS NOT NULL) DESC, length(c.relname) ASC, c.relname ASC
+        ) AS rn
+      FROM pg_index i
+      JOIN pg_class c ON c.oid = i.indexrelid
+      JOIN pg_class t ON t.oid = i.indrelid
+      JOIN pg_namespace ns ON ns.oid = c.relnamespace
+      LEFT JOIN pg_constraint con ON con.conindid = i.indexrelid
+      WHERE ns.nspname = 'public'
+        AND t.relkind = 'r'
+    )
+    SELECT index_fqn
+    FROM idx_info
+    WHERE rn > 1 AND NOT has_constraint
+  LOOP
+    EXECUTE format('DROP INDEX IF EXISTS %s', v_dup_rec.index_fqn);
+  END LOOP;
+
+  SELECT COUNT(*) INTO v_dup_count
+  FROM (
+    SELECT i.indrelid
+    FROM pg_index i
+    JOIN pg_class c ON c.oid = i.indexrelid
+    JOIN pg_namespace ns ON ns.oid = c.relnamespace
+    WHERE ns.nspname = 'public'
+    GROUP BY i.indrelid, i.indkey::text, i.indclass::text, i.indoption::text,
+             COALESCE(pg_get_expr(i.indexprs, i.indrelid), ''),
+             COALESCE(pg_get_expr(i.indpred, i.indrelid), ''),
+             i.indisunique
+    HAVING COUNT(*) > 1
+  ) dup;
+
+  IF v_dup_count > 0 THEN
+    RAISE EXCEPTION 'Performance Advisor verification failed: % duplicate index group(s) still remain in public.', v_dup_count;
+  END IF;
+
+  -- 2. Verify zero public SECURITY DEFINER functions are executable by anon/authenticated (0028_anon_security_definer)
   SELECT COUNT(*) INTO v_remaining
   FROM pg_proc p
   JOIN pg_namespace n ON n.oid = p.pronamespace
@@ -1313,5 +1377,5 @@ BEGIN
     RAISE EXCEPTION 'Security Advisor verification failed: % SECURITY DEFINER function(s) in public are still executable by anon or authenticated.', v_remaining;
   END IF;
 
-  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized with 0 Security Advisor function warnings.';
+  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized with 0 Security & Duplicate-Index Advisor warnings.';
 END $$;
