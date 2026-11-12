@@ -373,11 +373,11 @@
 }
 
 /* ==========================================================================
-   FLOATING PILL NAVIGATION & MOBILE PANEL
+   HERO PINNED PILL NAVIGATION & MOBILE PANEL
    ========================================================================== */
 @layer components {
   .site-header {
-    position: fixed;
+    position: absolute;
     inset-block-start: max(12px, env(safe-area-inset-top, 0px));
     inset-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
     z-index: 72;

@@ -1,6 +1,28 @@
 (function (window, document) {
   'use strict';
 
+  function forcePortalTopOnLoad() {
+    if (window.history && 'scrollRestoration' in window.history) {
+      try {
+        window.history.scrollRestoration = 'manual';
+      } catch (e) {}
+    }
+    const scrollToTop = () => {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      } catch (e) {
+        window.scrollTo(0, 0);
+      }
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    };
+    scrollToTop();
+    window.addEventListener('beforeunload', scrollToTop);
+    window.addEventListener('pageshow', scrollToTop);
+    window.addEventListener('load', () => requestAnimationFrame(scrollToTop));
+  }
+  forcePortalTopOnLoad();
+
   const CANONICAL_PORTAL_EVENTS = [
     {
       id: 'anyma-genesys-mumbai-2026',

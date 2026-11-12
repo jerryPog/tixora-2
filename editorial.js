@@ -7,6 +7,40 @@
 (function (window, document) {
   'use strict';
 
+  function forceTopOnLoad() {
+    if (window.history && 'scrollRestoration' in window.history) {
+      try {
+        window.history.scrollRestoration = 'manual';
+      } catch (e) {}
+    }
+    let isReload = false;
+    try {
+      const navEntry = window.performance && window.performance.getEntriesByType && window.performance.getEntriesByType('navigation')[0];
+      isReload = Boolean(navEntry && navEntry.type === 'reload');
+    } catch (e) {}
+    if (isReload && window.location.hash) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {}
+    }
+    const scrollToTop = () => {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      } catch (e) {
+        window.scrollTo(0, 0);
+      }
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    };
+    if (isReload || !window.location.hash) {
+      scrollToTop();
+      window.addEventListener('pageshow', scrollToTop);
+      window.addEventListener('load', () => requestAnimationFrame(scrollToTop));
+    }
+    window.addEventListener('beforeunload', scrollToTop);
+  }
+  forceTopOnLoad();
+
   const prefersReducedMotion = () =>
     Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
