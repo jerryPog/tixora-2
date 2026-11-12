@@ -102,11 +102,17 @@
         if (!_csrfFetchPromise) {
             _csrfFetchPromise = (async () => {
                 try {
-                    const res = await fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' });
-                    const data = await res.json();
-                    if (data && data.csrf_token) {
-                        _cachedCsrfToken = data.csrf_token;
-                        return _cachedCsrfToken;
+                    const res = await withTimeout(
+                        fetch('/api/auth/csrf', { credentials: 'same-origin', cache: 'no-store' }),
+                        2500,
+                        null
+                    );
+                    if (res) {
+                        const data = await withTimeout(res.json(), 1500, null);
+                        if (data && data.csrf_token) {
+                            _cachedCsrfToken = data.csrf_token;
+                            return _cachedCsrfToken;
+                        }
                     }
                 } catch (e) {
                     // Non-blocking fallback
@@ -168,6 +174,7 @@
                     errPayload &&
                     (errPayload.code === 'CSRF_TOKEN_INVALID' ||
                         errPayload.code === 'CSRF_TOKEN_MISSING' ||
+                        errPayload.code === 'CSRF_COOKIE_MISSING' ||
                         errPayload.code === 'CSRF_TOKEN_MISMATCH')
                 ) {
                     const freshToken = await fetchFreshCsrfToken();
@@ -184,6 +191,16 @@
         }
 
         return res;
+    }
+
+    function withTimeout(promise, ms = 3000, fallbackValue = null) {
+        let timer;
+        return Promise.race([
+            Promise.resolve(promise).finally(() => clearTimeout(timer)),
+            new Promise((resolve) => {
+                timer = setTimeout(() => resolve(fallbackValue), ms);
+            })
+        ]);
     }
 
     /**
@@ -250,9 +267,10 @@
                 }
             });
 
-            // Listen for internal Supabase auth state transitions
-            _supabaseClient.auth.onAuthStateChange(async (event, session) => {
-                _cachedSession = session;
+            // Listen for internal Supabase auth state transitions synchronously
+            // IMPORTANT: Never await client.from() inside onAuthStateChange (Supabase v2 GoTrue WebLock deadlock)
+            _supabaseClient.auth.onAuthStateChange((event, session) => {
+                _cachedSession = session || null;
                 if (!session) {
                     _cachedUserRole = null;
                     _cachedPromoter = null;
@@ -260,14 +278,12 @@
                         typeof document !== 'undefined' &&
                         /\btixora_auth_status=/.test(document.cookie || '');
                     if (event === 'SIGNED_OUT' || hasServerSessionHint) {
-                        await clearSessionCookie();
+                        setTimeout(() => { clearSessionCookie(); }, 0);
                     }
-                } else {
-                    await refreshUserData(session.user);
-                    const role = await getUserRole(session.user);
-                    await syncSessionCookie(session.access_token, role);
+                } else if (event === 'TOKEN_REFRESHED' && session.access_token) {
+                    setTimeout(() => { syncSessionCookie(session.access_token); }, 0);
                 }
-                notifyListeners(event, session);
+                setTimeout(() => { notifyListeners(event, session); }, 0);
             });
 
             return _supabaseClient;
@@ -379,7 +395,11 @@
         if (!client) return null;
 
         try {
-            const { data, error } = await client.auth.getSession();
+            const { data, error } = await withTimeout(
+                client.auth.getSession(),
+                3500,
+                { data: { session: null }, error: null }
+            );
             if (!error && data && data.session) {
                 _cachedSession = data.session;
                 return data.session;
@@ -418,17 +438,19 @@
             return user.app_metadata.role;
         }
 
-        // 3. Query user_roles table with 1s timeout to prevent hanging UI
+        // 3. Query user_roles table with 800ms timeout to prevent hanging UI
         const client = getClient();
         if (client && user.id) {
             try {
-                const queryPromise = client
-                    .from('user_roles')
-                    .select('role')
-                    .eq('user_id', user.id)
-                    .maybeSingle();
-                const timeoutPromise = new Promise(res => setTimeout(() => res({ data: null }), 1000));
-                const { data } = await Promise.race([queryPromise, timeoutPromise]);
+                const { data } = await withTimeout(
+                    client
+                        .from('user_roles')
+                        .select('role')
+                        .eq('user_id', user.id)
+                        .maybeSingle(),
+                    800,
+                    { data: null }
+                );
 
                 if (data && data.role) {
                     _cachedUserRole = data.role;
@@ -453,20 +475,28 @@
         const client = getClient();
         if (client) {
             try {
-                let { data, error } = await client
-                    .from('promoters')
-                    .select('*, promoter_tiers(tier_name, commission_rate, perks_description)')
-                    .eq('user_id', user.id)
-                    .maybeSingle();
-
-                if (!data && user.email) {
-                    const res = await client
+                let { data, error } = await withTimeout(
+                    client
                         .from('promoters')
                         .select('*, promoter_tiers(tier_name, commission_rate, perks_description)')
-                        .is('user_id', null)
-                        .ilike('email', user.email)
-                        .maybeSingle();
-                    data = res.data;
+                        .eq('user_id', user.id)
+                        .maybeSingle(),
+                    1500,
+                    { data: null, error: { message: 'timeout' } }
+                );
+
+                if (!data && !error && user.email) {
+                    const res = await withTimeout(
+                        client
+                            .from('promoters')
+                            .select('*, promoter_tiers(tier_name, commission_rate, perks_description)')
+                            .is('user_id', null)
+                            .ilike('email', user.email)
+                            .maybeSingle(),
+                        1200,
+                        { data: null, error: null }
+                    );
+                    data = res ? res.data : null;
                 }
 
                 if (data && (!data.user_id || data.user_id === user.id)) {
@@ -531,8 +561,10 @@
         _cachedUserRole = null;
         _cachedPromoter = null;
         if (user) {
-            await getUserRole(user);
-            await getPromoterProfile(user);
+            await Promise.all([
+                getUserRole(user),
+                getPromoterProfile(user)
+            ]);
         }
     }
 
@@ -563,26 +595,30 @@
         try {
             if (typeof fetch === 'function') {
                 const url = `/api/auth/rate-limit?action=${encodeURIComponent(action)}&identifier=${encodeURIComponent(identifier || '')}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                if (!res.ok || data.status === 'rate_limited') {
-                    if (data.retry_after_seconds) {
-                        _safeStorage.setItem(localKey, JSON.stringify({
-                            lockedUntil: now + (data.retry_after_seconds * 1000)
-                        }));
+                const res = await withTimeout(fetch(url), 2500, null);
+                if (res) {
+                    const data = await withTimeout(res.json(), 1500, null);
+                    if (data && (!res.ok || data.status === 'rate_limited')) {
+                        if (data.retry_after_seconds) {
+                            _safeStorage.setItem(localKey, JSON.stringify({
+                                lockedUntil: now + (data.retry_after_seconds * 1000)
+                            }));
+                        }
+                        return {
+                            allowed: false,
+                            remaining: 0,
+                            retryAfterSeconds: data.retry_after_seconds || 900,
+                            message: data.message || 'Too many attempts. Account locked.'
+                        };
                     }
-                    return {
-                        allowed: false,
-                        remaining: 0,
-                        retryAfterSeconds: data.retry_after_seconds || 900,
-                        message: data.message || 'Too many attempts. Account locked.'
-                    };
+                    if (data) {
+                        return {
+                            allowed: true,
+                            remaining: data.remaining,
+                            limit: data.limit
+                        };
+                    }
                 }
-                return {
-                    allowed: true,
-                    remaining: data.remaining,
-                    limit: data.limit
-                };
             }
         } catch (e) {}
 
@@ -618,11 +654,15 @@
 
         try {
             if (typeof fetch === 'function') {
-                await fetchWithCsrf('/api/auth/rate-limit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action, identifier, success })
-                });
+                await withTimeout(
+                    fetchWithCsrf('/api/auth/rate-limit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action, identifier, success })
+                    }),
+                    2000,
+                    null
+                );
             }
         } catch (e) {}
     }
@@ -634,13 +674,18 @@
     async function validateFormOnServer(formType, data) {
         try {
             const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tixora.live';
-            const res = await fetchWithCsrf(`${origin}/api/auth/validate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ formType, data })
-            });
-            const json = await res.json();
-            return json;
+            const res = await withTimeout(
+                fetchWithCsrf(`${origin}/api/auth/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ formType, data })
+                }),
+                2500,
+                null
+            );
+            if (!res) return { valid: true };
+            const json = await withTimeout(res.json(), 1500, { valid: true });
+            return json || { valid: true };
         } catch (e) {
             return { valid: true };
         }
@@ -682,10 +727,14 @@
             throw new Error('Supabase client is not available. Please verify your connection.');
         }
 
-        const { data, error } = await client.auth.signInWithPassword({
-            email: cleanEmail,
-            password: password
-        });
+        const { data, error } = await withTimeout(
+            client.auth.signInWithPassword({
+                email: cleanEmail,
+                password: password
+            }),
+            15000,
+            { data: null, error: { message: 'Sign-in request timed out. Please try again.' } }
+        );
 
         if (error) {
             // Record failed authentication attempt
@@ -721,12 +770,16 @@
         } catch (e) {}
 
         _cachedSession = data.session;
-        await refreshUserData(data.user);
-        const role = await getUserRole(data.user);
-        const promoter = await getPromoterProfile(data.user);
+        _cachedUserRole = null;
+        _cachedPromoter = null;
 
-        // Synchronize with server-side API to issue HttpOnly, Secure, SameSite=Strict cookies
-        await syncSessionCookie(data.session.access_token, role);
+        const [role, promoter] = await Promise.all([
+            getUserRole(data.user),
+            getPromoterProfile(data.user)
+        ]);
+
+        // Synchronize with server-side API to issue HttpOnly, Secure, SameSite=Strict cookies (bounded so UI never stalls)
+        await withTimeout(syncSessionCookie(data.session.access_token, role), 1800);
 
         notifyListeners('SIGNED_IN', data.session);
         return { user: data.user, session: data.session, role, promoter, error: null };
@@ -764,21 +817,25 @@
         const cleanCity = (city || 'IND').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
         const refCode = `TIX-${cleanName}-${cleanCity}-${Math.floor(100 + Math.random() * 900)}`;
 
-        const { data: authData, error: authErr } = await client.auth.signUp({
-            email: cleanEmail,
-            password: password,
-            options: {
-                data: {
-                    full_name: fullName,
-                    phone: phone || '',
-                    whatsapp_number: phone || '',
-                    city: city || 'Mumbai',
-                    upi_id: upiId || `${cleanEmail.split('@')[0]}@upi`,
-                    role: role,
-                    referral_code: refCode
+        const { data: authData, error: authErr } = await withTimeout(
+            client.auth.signUp({
+                email: cleanEmail,
+                password: password,
+                options: {
+                    data: {
+                        full_name: fullName,
+                        phone: phone || '',
+                        whatsapp_number: phone || '',
+                        city: city || 'Mumbai',
+                        upi_id: upiId || `${cleanEmail.split('@')[0]}@upi`,
+                        role: role,
+                        referral_code: refCode
+                    }
                 }
-            }
-        });
+            }),
+            15000,
+            { data: null, error: { message: 'Registration request timed out. Please try again.' } }
+        );
 
         if (authErr) {
             throw new Error(authErr.message || 'Unable to register account. Please try again.');
@@ -788,32 +845,38 @@
         const session = authData ? authData.session : null;
         const emailConfirmationRequired = !session;
 
-        // Upsert into promoters table if authenticated or available
-        if (user && role === 'promoter') {
-            try {
-                await client.from('promoters').upsert([{
-                    user_id: user.id,
-                    full_name: fullName,
-                    email: cleanEmail,
-                    whatsapp_number: phone || '',
-                    city: city || 'Mumbai',
-                    upi_id: upiId || `${cleanEmail.split('@')[0]}@upi`,
-                    referral_code: refCode,
-                    tier_id: 1,
-                    kyc_status: 'verified',
-                    total_passes_sold: 0,
-                    total_earnings: 0.00
-                }], { onConflict: 'user_id' });
-            } catch (e) {
-                // Table trigger will manage DB upsert
-            }
-        }
-
-        if (session) {
+        // Upsert into promoters table in parallel with session cookie sync (strictly bounded)
+        if (session && user) {
             _cachedSession = session;
+            _cachedUserRole = null;
+            _cachedPromoter = null;
+            const userRole = (user.app_metadata && user.app_metadata.role) || (role === 'admin' ? 'promoter' : role) || 'promoter';
+
+            const tasks = [
+                withTimeout(syncSessionCookie(session.access_token, userRole), 1800)
+            ];
+            if (userRole === 'promoter') {
+                tasks.push(
+                    withTimeout(
+                        client.from('promoters').upsert([{
+                            user_id: user.id,
+                            full_name: fullName,
+                            email: cleanEmail,
+                            whatsapp_number: phone || '',
+                            city: city || 'Mumbai',
+                            upi_id: upiId || `${cleanEmail.split('@')[0]}@upi`,
+                            referral_code: refCode,
+                            tier_id: 1,
+                            kyc_status: 'verified',
+                            total_passes_sold: 0,
+                            total_earnings: 0.00
+                        }], { onConflict: 'user_id' }),
+                        1500
+                    ).catch(() => {})
+                );
+            }
+            await Promise.allSettled(tasks);
             await refreshUserData(user);
-            const userRole = await getUserRole(user);
-            await syncSessionCookie(session.access_token, userRole);
             notifyListeners('SIGNED_IN', session);
         }
 
@@ -950,16 +1013,34 @@
      */
     async function signOut() {
         const client = getClient();
+        const tasks = [
+            withTimeout(clearSessionCookie(), 1800, null)
+        ];
         if (client) {
-            try {
-                await client.auth.signOut();
-            } catch (err) {
-                console.warn('[TixoraAuth] signOut warning:', err);
-            }
+            tasks.push(
+                withTimeout(client.auth.signOut(), 2500, null).catch((err) => {
+                    console.warn('[TixoraAuth] signOut warning:', err);
+                })
+            );
         }
+        await Promise.allSettled(tasks);
 
-        // Sever server-side HttpOnly session cookies
-        await clearSessionCookie();
+        // Guarantee local Supabase auth token is cleared even if remote logout timed out or aborted
+        try {
+            if (client && client.auth) {
+                await withTimeout(client.auth.signOut({ scope: 'local' }), 500, null);
+            }
+        } catch (e) {}
+        try {
+            if (typeof window !== 'undefined' && window.localStorage) {
+                for (let i = window.localStorage.length - 1; i >= 0; i--) {
+                    const k = window.localStorage.key(i);
+                    if (k && /^sb-.*-auth-token/.test(k)) {
+                        window.localStorage.removeItem(k);
+                    }
+                }
+            }
+        } catch (e) {}
 
         _cachedSession = null;
         _cachedUserRole = null;

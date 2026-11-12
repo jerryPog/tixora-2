@@ -317,7 +317,6 @@
     const passwordInput = document.getElementById('dash-signin-password');
     const email = (emailInput ? emailInput.value : '').trim();
     const password = passwordInput ? passwordInput.value : '';
-    if (passwordInput) passwordInput.value = '';
     const errBox = document.getElementById('dashboard-auth-error');
     const errText = document.getElementById('dashboard-auth-error-text');
     const btn = document.getElementById('btn-dash-signin');
@@ -330,12 +329,13 @@
     try {
       if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
       const res = await TixoraAuth.signIn(email, password);
-      const role = await TixoraAuth.getUserRole(res.user);
+      if (passwordInput) passwordInput.value = '';
+      const role = res.role || (await TixoraAuth.getUserRole(res.user));
       const nextUrl = resolveSafeNextUrl();
 
       if (role !== 'admin' && role !== 'manager' && nextUrl !== '/dashboard') {
         showToast('Signed in! Opening your Events Portal...');
-        window.location.href = nextUrl;
+        window.location.replace(nextUrl);
         return;
       }
 
@@ -380,7 +380,6 @@
     const email = document.getElementById('dash-signup-email').value.trim();
     const passwordInput = document.getElementById('dash-signup-password');
     const password = passwordInput ? passwordInput.value : '';
-    if (passwordInput) passwordInput.value = '';
     const city = document.getElementById('dash-signup-city').value.trim();
     const upiId = document.getElementById('dash-signup-upi').value.trim();
 
@@ -414,6 +413,7 @@
         upiId,
         role: 'promoter'
       });
+      if (passwordInput) passwordInput.value = '';
 
       if (res && res.emailConfirmationRequired) {
         const notice = document.getElementById('dash-confirm-notice');
@@ -425,7 +425,7 @@
         showToast('Registered! Verify your email to continue.');
       } else if (res && res.user) {
         showToast('Promoter account activated! Opening Events Portal...');
-        window.location.href = resolveSafeNextUrl();
+        window.location.replace(resolveSafeNextUrl());
       }
     } catch (err) {
       console.error('Sign Up Error:', err);
@@ -503,11 +503,14 @@
       if (window.TixoraAuth) {
         const client = window.TixoraAuth.getClient();
         if (client) {
-          const { data: events, error } = await client
-            .from('events')
-            .select('*, venues(name, city), ticket_tiers(id, name, price, promoter_cut_pct)')
-            .eq('status', 'active')
-            .order('event_date', { ascending: true });
+          const { data: events, error } = await Promise.race([
+            client
+              .from('events')
+              .select('*, venues(name, city), ticket_tiers(id, name, price, promoter_cut_pct)')
+              .eq('status', 'active')
+              .order('event_date', { ascending: true }),
+            new Promise((resolve) => setTimeout(() => resolve({ data: null, error: null }), 2500))
+          ]);
           if (!error && Array.isArray(events) && events.length > 0) {
             const dbMapped = events.map((ev) => {
               const tiers =
@@ -984,17 +987,9 @@
     }
   }
 
-  async function hydratePortalLedgerAndHistory() {
+  function applyLedgerMetricsAndRender(dbOrders = []) {
     if (!_activeUser || !window.TixoraAuth) return;
     const userCut = Number((_activePromoter && _activePromoter.commission_rate) || 8);
-
-    let dbOrders = [];
-    try {
-      dbOrders = await TixoraAuth.getMyOrders();
-      _portalCommissions = await TixoraAuth.getMyCommissions();
-      _portalPayouts = await TixoraAuth.getMyPayouts();
-    } catch (e) {}
-
     const localBookings = TixoraAuth.getLocalBookings(_activeUser);
     const mappedOrders = (dbOrders || []).map((o) => {
       const amt = Number(o.total_amount || o.amount || 0);
@@ -1068,6 +1063,26 @@
     renderCommissionLedger();
   }
 
+  async function hydratePortalLedgerAndHistory() {
+    if (!_activeUser || !window.TixoraAuth) return;
+    let dbOrders = [];
+    try {
+      const [ordersRes, commsRes, payoutsRes] = await Promise.race([
+        Promise.all([
+          TixoraAuth.getMyOrders(),
+          TixoraAuth.getMyCommissions(),
+          TixoraAuth.getMyPayouts()
+        ]),
+        new Promise((resolve) => setTimeout(() => resolve([[], [], []]), 2500))
+      ]);
+      dbOrders = Array.isArray(ordersRes) ? ordersRes : [];
+      _portalCommissions = Array.isArray(commsRes) ? commsRes : [];
+      _portalPayouts = Array.isArray(payoutsRes) ? payoutsRes : [];
+    } catch (e) {}
+
+    applyLedgerMetricsAndRender(dbOrders);
+  }
+
   async function renderPromoterWorkspace(user, promoter, role = 'promoter') {
     _activeUser = user;
     _activeRole = role || 'promoter';
@@ -1139,8 +1154,10 @@
       card.style.borderWidth = isMatch ? '1.5px' : '';
     });
 
-    await Promise.all([loadPortalEvents(), hydratePortalLedgerAndHistory()]);
+    applyLedgerMetricsAndRender([]);
     showDashboardState('workspace');
+    // Hydrate live Supabase events and orders without blocking workspace display
+    Promise.all([loadPortalEvents(), hydratePortalLedgerAndHistory()]).catch(() => {});
   }
 
   function copyPromoterId() {
@@ -1155,6 +1172,21 @@
     }
   }
 
+  async function waitForAuthClient(maxWaitMs = 1800) {
+    const start = Date.now();
+    while (Date.now() - start < maxWaitMs) {
+      if (window.TixoraAuth && typeof window.TixoraAuth.getSession === 'function') {
+        const hasMockOrClient =
+          window.TixoraAuth.isConfigured() ||
+          String(window.TixoraAuth.getSession).indexOf('mock') !== -1 ||
+          typeof window.supabase !== 'undefined';
+        if (hasMockOrClient) return true;
+      }
+      await new Promise((r) => setTimeout(r, 60));
+    }
+    return Boolean(window.TixoraAuth);
+  }
+
   async function initPortalPage() {
     const pageName = resolveCurrentPage();
     resetPortalUserState();
@@ -1167,7 +1199,8 @@
     showDashboardState('loading');
 
     try {
-      if (!window.TixoraAuth) {
+      const authReady = await waitForAuthClient(1800);
+      if (!authReady || !window.TixoraAuth) {
         if (pageName === 'dashboard') {
           showDashboardState('login');
         } else {

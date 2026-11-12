@@ -1259,19 +1259,17 @@
     if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
   };
 
+  let _redirectingToPortal = false;
+
   async function maybeRedirectPromoterHome(session, isExplicitLogin = false) {
-    if (!session || !session.user || !window.TixoraAuth) return false;
+    if (!session || !session.user || !window.TixoraAuth || _redirectingToPortal) return false;
     const role = await window.TixoraAuth.getUserRole(session.user);
     if (role === 'admin' || role === 'manager') return false;
 
-    const path = (window.location.pathname || '/').toLowerCase();
-    const params = new URLSearchParams(window.location.search || '');
+    // Only redirect to /portal upon explicit user Sign In / Sign Up — never hijack passive homepage loads
     if (isExplicitLogin) {
-      window.location.href = '/portal';
-      return true;
-    }
-    if ((path === '/' || path === '/index.html') && !params.has('public')) {
-      window.location.replace('/portal');
+      _redirectingToPortal = true;
+      window.location.assign('/portal');
       return true;
     }
     return false;
@@ -1281,16 +1279,14 @@
     if (!window.TixoraAuth) return;
     window.TixoraAuth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session && session.user) {
-        const redirected = await maybeRedirectPromoterHome(session, false);
-        if (redirected) return;
+        const modalOpen = !document.getElementById('promoter-modal')?.classList.contains('hidden');
+        if (modalOpen) {
+          const redirected = await maybeRedirectPromoterHome(session, true);
+          if (redirected) return;
+        }
       }
       await window.refreshPromoterUI();
     });
-    const session = await window.TixoraAuth.getSession();
-    if (session && session.user) {
-      const redirected = await maybeRedirectPromoterHome(session, false);
-      if (redirected) return;
-    }
     await window.refreshPromoterUI();
   }
 
@@ -1359,7 +1355,6 @@
     const email = document.getElementById('signin-email')?.value || '';
     const passwordInput = document.getElementById('signin-password');
     const password = passwordInput ? passwordInput.value : '';
-    if (passwordInput) passwordInput.value = ''; // Zero Plaintext Protocol
 
     const errBox = document.getElementById('promoter-auth-error');
     const errText = document.getElementById('promoter-auth-error-text');
@@ -1370,6 +1365,7 @@
 
     try {
       const res = await window.TixoraAuth.signIn(email, password);
+      if (passwordInput) passwordInput.value = ''; // Zero Plaintext Protocol after confirmed success
       window.showToast(`Signed in as ${res.user.email}`);
       const redirected = await maybeRedirectPromoterHome({ user: res.user }, true);
       if (redirected) return;
@@ -1412,7 +1408,6 @@
     const email = (document.getElementById('signup-email')?.value || '').trim();
     const passwordInput = document.getElementById('signup-password');
     const password = passwordInput ? passwordInput.value : '';
-    if (passwordInput) passwordInput.value = ''; // Zero Plaintext Protocol
     const city = (document.getElementById('signup-city')?.value || '').trim();
     const upiId = (document.getElementById('signup-upi')?.value || '').trim();
 
@@ -1444,6 +1439,7 @@
     if (btn) btn.disabled = true;
     try {
       const res = await window.TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
+      if (passwordInput) passwordInput.value = ''; // Zero Plaintext Protocol after registration submission
       if (res && res.emailConfirmationRequired) {
         showRegistrationSuccessNotice(res.email || email);
         window.showToast('Verification link sent to your email.');
@@ -1543,11 +1539,14 @@
     if (!client) return;
 
     try {
-      const { data: events, error } = await client
-        .from('events')
-        .select('*, venues(name, city), ticket_tiers(id, name, price, total_quota, available_quota, promoter_cut_pct)')
-        .eq('status', 'active')
-        .order('event_date', { ascending: true });
+      const { data: events, error } = await Promise.race([
+        client
+          .from('events')
+          .select('*, venues(name, city), ticket_tiers(id, name, price, total_quota, available_quota, promoter_cut_pct)')
+          .eq('status', 'active')
+          .order('event_date', { ascending: true }),
+        new Promise((resolve) => setTimeout(() => resolve({ data: null, error: null }), 3000))
+      ]);
 
       if (!error && events && events.length > 0) {
         window._liveEvents = events;
