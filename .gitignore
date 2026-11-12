@@ -8,6 +8,7 @@ Thumbs.db
 *.zip
 .env
 .env.*
+!.env.example
 .reset_tokens.json
 .reset_consumed.json
 .rate_limits.json

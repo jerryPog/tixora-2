@@ -3,8 +3,19 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const PORT = process.env.PORT || 3000;
 const ROOT_DIR = path.resolve(__dirname);
+
+// Load local .env automatically in development if present (production injects env vars natively)
+try {
+  const localEnvPath = path.join(ROOT_DIR, '.env');
+  if (fs.existsSync(localEnvPath) && typeof process.loadEnvFile === 'function') {
+    process.loadEnvFile(localEnvPath);
+  }
+} catch (e) {
+  // Ignore when .env is unavailable or unreadable
+}
+
+const PORT = process.env.PORT || 3000;
 
 function parseCookies(cookieHeader) {
   const cookies = {};

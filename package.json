@@ -1,0 +1,17 @@
+{
+  "name": "tixora",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tixora live concert allocations and youth promoter protocol",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@supabase/server": "^1.9.2",
+    "@supabase/supabase-js": "^2.119.0"
+  }
+}

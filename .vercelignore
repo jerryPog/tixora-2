@@ -5,6 +5,8 @@ database/
 *.sqlite3
 *.zip
 *.md
+.env
+.env.*
 .agents/
 .mcp.json
 skills-lock.json
