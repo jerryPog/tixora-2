@@ -414,7 +414,7 @@
   }
 
   /* =========================================================================
-     7. LIVE CONCERT CAROUSEL (Prev / Next / Dots — Accessible, No Auto-Jump)
+     7. LIVE CONCERT CAROUSEL (Prev / Next / Dots - Accessible, No Auto-Jump)
      ========================================================================= */
   function initTourCarousel() {
     const track = document.getElementById('events-side-track');
@@ -486,56 +486,8 @@
   }
 
   /* =========================================================================
-     8. PROMOTER EARNINGS CALCULATORS (Home + Promoter Subpage)
+     8. PROMOTER EARNINGS CALCULATOR (Promoter Subpage)
      ========================================================================= */
-  function initHomeCalculator() {
-    const sliderPasses = document.getElementById('slider-passes');
-    const sliderPrice = document.getElementById('slider-price');
-    const passesVal = document.getElementById('slider-passes-val');
-    const priceVal = document.getElementById('slider-price-val');
-    const calcMonthlyRev = document.getElementById('calc-monthly-rev');
-    const calcGmv = document.getElementById('calc-gmv');
-    const calcRate = document.getElementById('calc-commission-rate');
-    const calcRunrate = document.getElementById('calc-annual-runrate');
-
-    if (!sliderPasses || !sliderPrice) return;
-
-    function updateHomeCalculator() {
-      const passes = parseInt(sliderPasses.value, 10) || 45;
-      const price = parseInt(sliderPrice.value, 10) || 3500;
-
-      if (passesVal) passesVal.textContent = `${passes} Passes`;
-      if (priceVal) priceVal.textContent = '₹' + price.toLocaleString('en-IN');
-
-      const gmv = passes * price;
-      let rate = 0.08;
-      let tierName = 'Scout';
-
-      if (passes >= 300) {
-        rate = 0.16;
-        tierName = 'Patron';
-      } else if (passes >= 101) {
-        rate = 0.135;
-        tierName = 'Syndicate';
-      } else if (passes >= 26) {
-        rate = 0.11;
-        tierName = 'Capo';
-      }
-
-      const monthlyCommission = Math.round(gmv * rate);
-      const annualRunrate = monthlyCommission * 12;
-
-      if (calcMonthlyRev) calcMonthlyRev.textContent = '₹' + monthlyCommission.toLocaleString('en-IN');
-      if (calcGmv) calcGmv.textContent = '₹' + gmv.toLocaleString('en-IN');
-      if (calcRate) calcRate.textContent = `${(rate * 100).toFixed(1)}% (${tierName})`;
-      if (calcRunrate) calcRunrate.textContent = '₹' + annualRunrate.toLocaleString('en-IN') + ' / yr';
-    }
-
-    sliderPasses.addEventListener('input', updateHomeCalculator);
-    sliderPrice.addEventListener('input', updateHomeCalculator);
-    updateHomeCalculator();
-  }
-
   function initSubpageCalculator() {
     const tSlider = document.getElementById('page-calc-tickets');
     const pSlider = document.getElementById('page-calc-price');
@@ -616,7 +568,7 @@
         tierSelect.innerHTML = ev.ticket_tiers
           .map(
             (t) =>
-              `<option value="${t.price}" data-tier="${escapeHtml(t.name)}">${escapeHtml(t.name)} — ₹${Number(t.price).toLocaleString('en-IN')}</option>`
+              `<option value="${t.price}" data-tier="${escapeHtml(t.name)}">${escapeHtml(t.name)} - ₹${Number(t.price).toLocaleString('en-IN')}</option>`
           )
           .join('');
         if (totalEl) totalEl.textContent = '₹' + Number(ev.ticket_tiers[0].price).toLocaleString('en-IN');
@@ -650,7 +602,7 @@
     if (tierSelect && tierWrapper && !tierWrapper.classList.contains('hidden') && tierSelect.options.length > 0) {
       const opt = tierSelect.options[tierSelect.selectedIndex];
       price = Number(tierSelect.value) || price;
-      tier = opt ? opt.getAttribute('data-tier') || opt.text.split('—')[0].trim() : tier;
+      tier = opt ? opt.getAttribute('data-tier') || opt.text.split(' - ')[0].trim() : tier;
     } else {
       const totalVal = (document.getElementById('buy-total-val')?.textContent || '').replace(/[^0-9]/g, '');
       price = Number(totalVal) || price;
@@ -768,7 +720,7 @@
       id: 'gnr',
       names: ['guns n roses', "guns n' roses", 'guns and roses', 'gnr', 'axl rose', 'slash', 'delhi'],
       artist: "Guns N' Roses",
-      tour: "Guns N' Roses Live in Delhi — 2026 Stadium Tour",
+      tour: "Guns N' Roses Live in Delhi - 2026 Stadium Tour",
       genre: 'Hard Rock / Classic Rock',
       date: 'Saturday, 05 December 2026',
       timings: 'Gates Open: 4:30 PM • Opening Act: 6:00 PM • GNR Live: 7:30 PM – 10:30 PM (Full 3-Hour Stadium Set)',
@@ -820,7 +772,7 @@
       id: 'chainsmokers',
       names: ['chainsmokers', 'the chainsmokers', 'drew taggart', 'alex pall', 'goa', 'vagator'],
       artist: 'The Chainsmokers',
-      tour: 'The Chainsmokers Arena India — Goa Year-End Showcase',
+      tour: 'The Chainsmokers Arena India - Goa Year-End Showcase',
       genre: 'EDM / Dance Pop / Festival',
       date: 'Wednesday, 30 December 2026',
       timings: 'Gates Open: 5:00 PM • Festival Openers: 6:30 PM • The Chainsmokers Headline Set: 9:00 PM – 11:00 PM IST',
@@ -846,7 +798,7 @@
       id: 'karanaujla',
       names: ['karan aujla', 'aujla', 'geetan di machine', 'chandigarh', 'dream tour'],
       artist: 'Karan Aujla',
-      tour: 'Karan Aujla — It Was All A Dream India Tour',
+      tour: 'Karan Aujla - It Was All A Dream India Tour',
       genre: 'Punjabi Hip-Hop / Pop',
       date: 'Sunday, 18 October 2026',
       timings: 'Gates Open: 4:30 PM • Opening Acts: 6:00 PM • Karan Aujla Live: 7:30 PM – 10:00 PM IST',
@@ -873,7 +825,7 @@
       id: 'boris',
       names: ['boris brejcha', 'boris', 'joker', 'high tech minimal', 'minimal'],
       artist: 'Boris Brejcha',
-      tour: 'Boris Brejcha In Concert — New Delhi Edition',
+      tour: 'Boris Brejcha In Concert - New Delhi Edition',
       genre: 'High-Tech Minimal Techno',
       date: 'Friday, 16 January 2026',
       timings: 'Doors Open: 6:00 PM • Supporting DJs: 7:00 PM • Boris Brejcha 3-Hour Headliner Set: 9:30 PM – 12:30 AM IST',
@@ -899,7 +851,7 @@
       id: 'martingarrix',
       names: ['martin garrix', 'garrix', 'stmpd', 'dy patil', 'animals'],
       artist: 'Martin Garrix',
-      tour: 'Martin Garrix India Arena Tour — Mumbai Special',
+      tour: 'Martin Garrix India Arena Tour - Mumbai Special',
       genre: 'EDM / Progressive House / Electro',
       date: 'Saturday, 20 February 2026',
       timings: 'Gates Open: 4:00 PM • STMPD RCRDS Showcase: 5:30 PM • Martin Garrix Headline Show: 8:00 PM – 10:15 PM IST',
@@ -925,7 +877,7 @@
       id: 'dualipa',
       names: ['dua lipa', 'dua', 'radical optimism', 'bkc', 'levitating'],
       artist: 'Dua Lipa',
-      tour: 'Dua Lipa — Radical Optimism World Tour India',
+      tour: 'Dua Lipa - Radical Optimism World Tour India',
       genre: 'Dance-Pop / Nu-Disco',
       date: 'Sunday, 15 March 2026',
       timings: 'Gates Open: 4:00 PM • Support Acts: 6:00 PM • Dua Lipa Live on Stage: 8:00 PM – 10:00 PM IST',
@@ -1050,7 +1002,7 @@
     if (ev) {
       if (/song|songs|track|tracks|hit|hits|music|setlist|album/i.test(clean)) {
         return {
-          title: `${ev.artist} — Top Songs & Hits`,
+          title: `${ev.artist} - Top Songs & Hits`,
           answer: `<ol class="space-y-1 text-xs text-[var(--ink)]">${ev.topSongs
             .map((s, idx) => `<li><strong>${idx + 1}.</strong> ${escapeHtml(s)}</li>`)
             .join('')}</ol><p class="text-[11px] text-[var(--muted)] mt-2">Live at ${escapeHtml(ev.venue.split(',')[0])} on ${escapeHtml(ev.date)}.</p>`,
@@ -1062,21 +1014,21 @@
       }
       if (/venue|where|location|city|stadium|racecourse|arena/i.test(clean)) {
         return {
-          title: `${ev.artist} — Venue & Location`,
+          title: `${ev.artist} - Venue & Location`,
           answer: `<div class="space-y-1 text-xs"><div><strong>Venue:</strong> ${escapeHtml(ev.venue)}</div><div><strong>Date:</strong> ${escapeHtml(ev.date)}</div><div><strong>Timings:</strong> ${escapeHtml(ev.timings)}</div></div>`,
           actions: [{ label: 'Top Songs', action: `askQuestion('${ev.artist} popular songs')` }]
         };
       }
       if (/time|timings|timing|schedule|when|gate|gates|door/i.test(clean)) {
         return {
-          title: `${ev.artist} — Timings & Schedule`,
+          title: `${ev.artist} - Timings & Schedule`,
           answer: `<div class="space-y-1 text-xs"><div><strong>Date:</strong> ${escapeHtml(ev.date)}</div><div><strong>Schedule:</strong> ${escapeHtml(ev.timings)}</div><div><strong>Venue:</strong> ${escapeHtml(ev.venue)}</div></div>`,
           actions: [{ label: 'Show Poster', action: `askQuestion('${ev.artist} poster')` }]
         };
       }
       if (/poster|posters|image|photo|banner|artwork/i.test(clean)) {
         return {
-          title: `${ev.artist} — Official Tour Visual`,
+          title: `${ev.artist} - Official Tour Visual`,
           answer: `<div class="space-y-2"><img src="${ev.poster}" alt="${escapeHtml(ev.posterAlt)}" width="240" height="160" loading="lazy" class="w-full h-auto rounded-xl object-cover border border-[var(--line)]"><div class="text-xs font-semibold text-[var(--ink)]">${escapeHtml(ev.tour)}</div><div class="text-[11px] text-[var(--muted)]">${escapeHtml(ev.date)} • ${escapeHtml(ev.venue.split(',')[0])}</div></div>`,
           actions: [{ label: 'Venue & Timings', action: `askQuestion('${ev.artist} venue and timings')` }]
         };
@@ -1196,6 +1148,7 @@
       if (authSlot) {
         authSlot.innerHTML = `
           ${role === 'admin' ? `<a href="/admin" class="nav-ops-link"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i><span>Ops Desk</span></a>` : ''}
+          <a href="/portal" class="nav-ops-link"><i data-lucide="calendar-days" class="w-3.5 h-3.5"></i><span>Portal</span></a>
           <button type="button" onclick="openModal('promoter-modal')" class="nav-promoter-pill">
             <span class="truncate max-w-[110px]">${escapeHtml(displayName)}</span>
             <span class="cart-count-pill">${escapeHtml(String(cutPct))}%</span>
@@ -1208,9 +1161,14 @@
 
       if (mobileFooter) {
         mobileFooter.innerHTML = `
-          <button type="button" onclick="toggleMobileMenu(false); openModal('promoter-modal')" class="btn-editorial-primary">
-            ${escapeHtml(displayName)} (${escapeHtml(String(cutPct))}%)
-          </button>
+          <a href="/portal" onclick="toggleMobileMenu(false)" class="btn-editorial-primary">
+            Events Home &bull; ${escapeHtml(displayName)} (${escapeHtml(String(cutPct))}%)
+          </a>
+          <div class="grid grid-cols-3 gap-2">
+            <a href="/dashboard" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Dashboard</a>
+            <a href="/portal/wallet" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Wallet</a>
+            <a href="/portal/bookings" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Bookings</a>
+          </div>
           ${role === 'admin' ? `<a href="/admin" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Ops Desk</a>` : ''}
           <button type="button" onclick="toggleMobileMenu(false); handlePromoterSignOut()" class="btn-editorial-outline-light">Sign Out</button>
         `;
@@ -1232,16 +1190,20 @@
 
         const refCode =
           (promoter && promoter.referral_code) || `TIX-${session.user.email.split('@')[0].toUpperCase()}`;
-        const referralUrl = `${window.location.origin}/?ref=${refCode}`;
 
         if (nameEl) nameEl.textContent = (promoter && promoter.full_name) || session.user.email;
-        if (subEl) subEl.textContent = session.user.email || '';
+        if (subEl) subEl.textContent = `${session.user.email || ''} • ID: ${refCode}`;
         if (tierEl)
           tierEl.textContent =
             promoter && promoter.tier_name
               ? `${promoter.tier_name} Tier (${promoter.commission_rate}% Cut)`
               : 'Active Promoter Tier';
-        if (refInput) refInput.value = referralUrl;
+        if (refInput && refInput.closest('.space-y-2')) {
+          refInput.closest('.space-y-2').classList.add('hidden');
+        }
+        if (waBtn) {
+          waBtn.classList.add('hidden');
+        }
         if (passesEl)
           passesEl.textContent =
             promoter && promoter.total_passes_sold ? promoter.total_passes_sold.toLocaleString() : '0';
@@ -1252,11 +1214,23 @@
               : '₹0.00';
         if (upiEl) upiEl.textContent = (promoter && promoter.upi_id) || 'Registered UPI ID Active';
         if (role === 'admin' && adminLink) adminLink.classList.remove('hidden');
-        if (waBtn) {
-          const waText = encodeURIComponent(
-            `Official concert pass allocations live on Tixora! Book verified BookMyShow tickets via my link: ${referralUrl}`
-          );
-          waBtn.href = `https://wa.me/?text=${waText}`;
+
+        const portalLink = deskView.querySelector('a[href="/dashboard"], a[href^="/portal"]');
+        if (portalLink) {
+          portalLink.href = '/portal';
+          portalLink.textContent = 'Open Events Portal →';
+        }
+        let quickMenu = document.getElementById('desk-portal-quick-menu');
+        if (!quickMenu && portalLink && portalLink.parentElement) {
+          quickMenu = document.createElement('div');
+          quickMenu.id = 'desk-portal-quick-menu';
+          quickMenu.className = 'grid grid-cols-3 gap-2';
+          quickMenu.innerHTML = `
+            <a href="/dashboard" class="btn-editorial-outline-light">Dashboard</a>
+            <a href="/portal/wallet" class="btn-editorial-outline-light">Wallet</a>
+            <a href="/portal/bookings" class="btn-editorial-outline-light">Bookings</a>
+          `;
+          portalLink.parentElement.insertBefore(quickMenu, portalLink.nextSibling);
         }
       }
     } else {
@@ -1285,11 +1259,38 @@
     if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
   };
 
+  async function maybeRedirectPromoterHome(session, isExplicitLogin = false) {
+    if (!session || !session.user || !window.TixoraAuth) return false;
+    const role = await window.TixoraAuth.getUserRole(session.user);
+    if (role === 'admin' || role === 'manager') return false;
+
+    const path = (window.location.pathname || '/').toLowerCase();
+    const params = new URLSearchParams(window.location.search || '');
+    if (isExplicitLogin) {
+      window.location.href = '/portal';
+      return true;
+    }
+    if ((path === '/' || path === '/index.html') && !params.has('public')) {
+      window.location.replace('/portal');
+      return true;
+    }
+    return false;
+  }
+
   async function initPromoterAuth() {
     if (!window.TixoraAuth) return;
-    window.TixoraAuth.onAuthStateChange(async () => {
+    window.TixoraAuth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session && session.user) {
+        const redirected = await maybeRedirectPromoterHome(session, false);
+        if (redirected) return;
+      }
       await window.refreshPromoterUI();
     });
+    const session = await window.TixoraAuth.getSession();
+    if (session && session.user) {
+      const redirected = await maybeRedirectPromoterHome(session, false);
+      if (redirected) return;
+    }
     await window.refreshPromoterUI();
   }
 
@@ -1370,6 +1371,8 @@
     try {
       const res = await window.TixoraAuth.signIn(email, password);
       window.showToast(`Signed in as ${res.user.email}`);
+      const redirected = await maybeRedirectPromoterHome({ user: res.user }, true);
+      if (redirected) return;
       await window.refreshPromoterUI();
     } catch (err) {
       if (err.code === 'email_not_confirmed') {
@@ -1445,7 +1448,11 @@
         showRegistrationSuccessNotice(res.email || email);
         window.showToast('Verification link sent to your email.');
       } else {
-        window.showToast('Account active. Your referral link is live.');
+        window.showToast('Account active. Opening your Promoter Portal...');
+        if (res && res.user) {
+          const redirected = await maybeRedirectPromoterHome({ user: res.user }, true);
+          if (redirected) return;
+        }
         await window.refreshPromoterUI();
       }
     } catch (err) {
@@ -1518,7 +1525,12 @@
     if (venueEl) venueEl.textContent = venueName;
     if (mrpEl) mrpEl.textContent = '₹' + basePrice.toLocaleString('en-IN');
     if (cutEl) cutEl.textContent = `Earn ₹${earnRs.toLocaleString('en-IN')} / pass`;
-    if (imgEl && featured.poster_url) imgEl.src = featured.poster_url;
+    if (imgEl && featured.poster_url) {
+      const urlStr = String(featured.poster_url).trim();
+      if (/^https:\/\/[^\s"'<>]+$/i.test(urlStr) || /^(posters|artists|ezgif-73126691f624a5ac-jpg)\/[a-zA-Z0-9._\-\/]+$/.test(urlStr)) {
+        imgEl.src = urlStr;
+      }
+    }
     if (btnEl && featured.title) {
       btnEl.onclick = () =>
         window.buyTicketModal(featured.title, basePrice, tiers[0]?.name || 'GA Standard');
@@ -1731,7 +1743,6 @@
     initGlobalDismissHandlers();
     initLightbox();
     initTourCarousel();
-    initHomeCalculator();
     initSubpageCalculator();
     initToursFilter();
     initFaqFilter();

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Events Home | Tixora Promoter Portal</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#111113">
+
+    <script>
+        (function () {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editorial.css?v=4">
+
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js?v=4" defer></script>
+    <script src="portal-app.js?v=1" defer></script>
+</head>
+
+<body class="ops-body antialiased" data-portal-page="events">
+
+    <!-- LOADING BARRIER -->
+    <div id="portal-loading-barrier" class="ops-auth-main flex-col gap-4">
+        <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
+            <div class="ops-spinner mx-auto" role="status" aria-label="Loading promoter events"></div>
+            <div class="space-y-1">
+                <div class="font-bold text-[var(--ink)] text-sm">Opening Events Portal</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Checking promoter clearance</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROMOTER EVENTS WEBSITE -->
+    <div id="portal-workspace" class="hidden min-h-screen flex flex-col">
+
+        <header class="site-header portal-site-header" id="navbar">
+            <div class="nav-pill">
+                <div class="nav-left">
+                    <a href="/portal" class="brand-mark" aria-label="Tixora Promoter Home">
+                        <picture>
+                            <source srcset="tixora-logo.webp" type="image/webp">
+                            <img src="tixora-logo.png" alt="Tixora" width="112" height="28">
+                        </picture>
+                    </a>
+                    <span class="nav-divider" aria-hidden="true"></span>
+                    <nav class="desktop-nav" aria-label="Promoter Menu">
+                        <a href="/portal" aria-current="page">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                    </nav>
+                </div>
+
+                <div class="nav-actions">
+                    <button type="button" onclick="copyPromoterId()" class="portal-id-chip portal-hide-mobile"
+                        aria-label="Copy Promoter ID">
+                        <span class="w-2 h-2 rounded-full bg-[#d4d4d8]" aria-hidden="true"></span>
+                        <span id="topbar-promoter-id" data-portal-id-chip>TIX-PROMO</span>
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+
+                    <a id="promo-admin-link" href="/admin" class="hidden nav-ops-link portal-hide-tablet">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Ops</span>
+                    </a>
+
+                    <a href="/?public=1" class="nav-ops-link portal-hide-tablet">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span>Public Site</span>
+                    </a>
+
+                    <button type="button" onclick="handlePortalSignOut()" class="nav-signout-btn portal-hide-mobile"
+                        aria-label="Sign Out">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                    <button type="button" onclick="togglePortalMobileMenu()" id="mobile-menu-btn" class="nav-menu-btn"
+                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                        <span>Menu</span>
+                        <i data-lucide="menu" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Promoter Navigation">
+                <div class="mobile-nav-links">
+                    <a href="/portal" aria-current="page"><span>Events Home</span><span class="cart-count-pill">8</span></a>
+                    <a href="/dashboard"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">8.0%</span></a>
+                    <a href="/portal/wallet"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/bookings"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
+                    <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
+                    <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                </div>
+                <div class="mobile-nav-footer">
+                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);" class="btn-editorial-outline-light">
+                        ID: <span id="mobile-promoter-id" class="font-mono text-[var(--crimson-ink)]">TIX-PROMO</span>
+                    </button>
+                    <button type="button" onclick="handlePortalSignOut()" class="btn-editorial-primary">
+                        Sign Out
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main id="main-content" class="flex-1">
+
+            <!-- EVENTS PORTAL HERO -->
+            <section class="cied-hero cied-hero--compact" aria-labelledby="events-hero-title">
+                <div class="hero-backdrop" aria-hidden="true">
+                    <picture>
+                        <source srcset="posters/anyma-aeden-poster-1.webp" type="image/webp">
+                        <img src="posters/anyma-aeden-poster-1.jpg" alt="" width="1600" height="900" fetchpriority="high">
+                    </picture>
+                    <div class="hero-scrim"></div>
+                </div>
+
+                <div class="editorial-container hero-inner">
+                    <div class="hero-layout">
+                        <div class="hero-copy">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="eyebrow eyebrow--dark">Promoter Events Home</span>
+                                <button type="button" onclick="copyPromoterId()"
+                                    class="modal-badge-navy font-mono cursor-pointer">
+                                    ID: <span id="events-hero-id">TIX-PROMO</span>
+                                </button>
+                                <span id="events-hero-tier" class="modal-badge-emerald font-mono">SCOUT &bull; 8.0% CUT</span>
+                            </div>
+
+                            <h1 id="events-hero-title" class="hero-h1 hero-h1--subpage">
+                                Welcome, Promoter
+                            </h1>
+
+                            <p class="hero-desc">
+                                Browse official 2026 concert tours and reserve verified client passes directly under your Promoter ID with sub-60s UPI settlement.
+                            </p>
+
+                            <div class="hero-actions">
+                                <a href="#portal-events-roster" class="btn-editorial-gold">
+                                    <span>Browse 8 Live Events</span>
+                                    <i data-lucide="arrow-down" class="w-4 h-4"></i>
+                                </a>
+                                <a href="/dashboard" class="btn-editorial-outline-dark">
+                                    Dashboard
+                                </a>
+                            </div>
+                        </div>
+
+                        <aside class="hero-pass-card" aria-label="Featured Promoter Allocation">
+                            <div class="hero-pass-head">
+                                <div>
+                                    <span class="hero-pass-sub">Spotlight Allocation</span>
+                                    <div id="events-featured-title" class="hero-pass-title">Anyma Presents Genesys Live</div>
+                                </div>
+                                <span class="hero-pass-badge">High Yield</span>
+                            </div>
+                            <div class="hero-pass-media">
+                                <img id="events-featured-img" src="posters/anyma-aeden-poster-1.webp"
+                                    alt="Anyma Presents Genesys Live" width="640" height="360">
+                                <div class="hero-pass-caption">
+                                    <span id="events-featured-venue" class="hero-pass-venue">Mahalaxmi Racecourse, Mumbai</span>
+                                    <span id="events-featured-cut" class="hero-pass-cut">Earn ₹490 / pass (14%)</span>
+                                </div>
+                            </div>
+                            <div class="hero-pass-meta">
+                                <div class="hero-pass-row">
+                                    <span>Starting Face Value</span>
+                                    <span id="events-featured-mrp" class="hero-pass-val tabular-nums">₹3,499</span>
+                                </div>
+                                <button type="button" id="events-featured-btn" onclick="openPortalBookModal('anyma-genesys-mumbai-2026')"
+                                    class="btn-editorial-primary w-full">
+                                    <i data-lucide="ticket" class="w-4 h-4"></i>
+                                    <span>Reserve Client Pass</span>
+                                </button>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LIVE EVENTS CATALOG -->
+            <section id="portal-events-roster" class="surface-light section-band" aria-labelledby="events-list-heading">
+                <div class="editorial-container space-y-6">
+
+                    <div class="flex flex-wrap items-end justify-between gap-4">
+                        <div class="space-y-1">
+                            <span class="eyebrow">Active Concert Inventory</span>
+                            <h2 id="events-list-heading" class="section-h2">Live 2026 India Events</h2>
+                        </div>
+                        <p id="promo-events-count" class="text-xs font-mono text-[var(--muted)] tabular-nums">
+                            Showing 8 of 8 Events
+                        </p>
+                    </div>
+
+                    <search aria-label="Filter promoter events" class="filter-bar">
+                        <div class="flex flex-wrap items-center justify-between gap-3 w-full">
+                            <div class="search-input-wrap">
+                                <i data-lucide="search" class="w-4 h-4 search-input-icon" aria-hidden="true"></i>
+                                <label for="promo-events-search" class="visually-hidden">Search events by artist, city, or venue</label>
+                                <input id="promo-events-search" type="search" oninput="filterPortalEvents()"
+                                    autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search"
+                                    placeholder="Search artist, venue, or city..." class="search-input-field">
+                            </div>
+                            <button type="button" onclick="resetPortalEventFilters()" class="btn-editorial-outline-light btn-compact">
+                                Reset Filters
+                            </button>
+                        </div>
+
+                        <div class="city-chip-group w-full" role="group" aria-label="Filter events by city">
+                            <button type="button" class="city-filter-btn is-active" data-portal-city="all"
+                                aria-pressed="true" onclick="setPortalCityFilter('all')">All (8)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="mumbai"
+                                aria-pressed="false" onclick="setPortalCityFilter('mumbai')">Mumbai (3)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="new delhi"
+                                aria-pressed="false" onclick="setPortalCityFilter('new delhi')">New Delhi (2)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="bengaluru"
+                                aria-pressed="false" onclick="setPortalCityFilter('bengaluru')">Bengaluru (1)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="goa"
+                                aria-pressed="false" onclick="setPortalCityFilter('goa')">Goa (1)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="chandigarh"
+                                aria-pressed="false" onclick="setPortalCityFilter('chandigarh')">Chandigarh (1)</button>
+                        </div>
+                    </search>
+
+                    <div id="promo-events-grid" class="editorial-grid-3"></div>
+
+                    <div id="promo-events-empty" class="hidden ops-card p-8 text-center space-y-3">
+                        <div class="text-sm font-bold text-white">No events match your current filter.</div>
+                        <button type="button" onclick="resetPortalEventFilters()" class="btn-editorial-primary btn-compact mx-auto">
+                            Show All 8 Events
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer" role="contentinfo">
+            <div class="editorial-container">
+                <div class="footer-bottom">
+                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                        <a href="/?public=1">Public Site</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- BOOK / RESERVE PASS MODAL -->
+    <div id="portal-book-modal" class="modal-backdrop hidden opacity-0" role="dialog" aria-modal="true"
+        aria-labelledby="portal-book-title">
+        <div class="modal-card space-y-4">
+            <button type="button" onclick="closePortalModal('portal-book-modal')" class="modal-close-btn" aria-label="Close booking dialog">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="modal-dark-banner">
+                <div>
+                    <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Direct Promoter Reservation</div>
+                    <h2 id="portal-book-title" class="text-lg font-bold text-white">Event Allocation</h2>
+                    <p id="portal-book-meta" class="text-xs text-[var(--muted)]">Venue &bull; Date</p>
+                </div>
+            </div>
+
+            <form id="portal-book-form" onsubmit="handlePortalBookingSubmit(event)" class="space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="book-tier-select" class="modal-field-label">Pass Tier</label>
+                        <select id="book-tier-select" onchange="updatePortalBookingSummary()" class="modal-input"></select>
+                    </div>
+                    <div>
+                        <label for="book-qty-select" class="modal-field-label">Quantity</label>
+                        <select id="book-qty-select" onchange="updatePortalBookingSummary()" class="modal-input">
+                            <option value="1">1 Pass</option>
+                            <option value="2">2 Passes</option>
+                            <option value="3">3 Passes</option>
+                            <option value="4">4 Passes</option>
+                            <option value="5">5 Passes</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="book-cust-name" class="modal-field-label">Attendee Full Name</label>
+                    <input id="book-cust-name" type="text" required placeholder="Attendee Name" class="modal-input">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="book-cust-phone" class="modal-field-label">WhatsApp Number</label>
+                        <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223" class="modal-input">
+                    </div>
+                    <div>
+                        <label for="book-cust-email" class="modal-field-label">Ticket Delivery Email</label>
+                        <input id="book-cust-email" type="email" required placeholder="guest@example.com" class="modal-input">
+                    </div>
+                </div>
+
+                <div class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1.5 text-xs font-mono">
+                    <div class="flex justify-between">
+                        <span class="text-[var(--muted)]">Promoter Attribution</span>
+                        <span id="book-promo-id" class="font-bold text-white">TIX-PROMO</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[var(--muted)]">Pass Total (MRP)</span>
+                        <span id="book-total-mrp" class="font-bold text-white tabular-nums">₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-[var(--muted)]">Estimated Promoter Cut</span>
+                        <span id="book-est-cut" class="font-bold text-[var(--emerald-ink)] tabular-nums">+₹0</span>
+                    </div>
+                </div>
+
+                <button id="btn-portal-book-submit" type="submit" class="btn-editorial-primary w-full">
+                    <i data-lucide="check-circle" class="w-4 h-4"></i>
+                    <span id="btn-portal-book-text">Confirm &amp; Issue Pass</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#ef4444]"></i>
+        <span id="toast-message">Updated</span>
+    </div>
+
+</body>
+
+</html>
+

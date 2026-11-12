@@ -62,7 +62,7 @@ CREATE TABLE promoter_tiers (
 -- 2. Promoters (Campus Ambassadors & Sub-Promoters)
 CREATE TABLE promoters (
     id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_id UUID UNIQUE REFERENCES auth.users(id) ON DELETE SET NULL,
     full_name VARCHAR(150) NOT NULL,
     whatsapp_number VARCHAR(15) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -79,9 +79,8 @@ CREATE TABLE promoters (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-CREATE INDEX idx_promoters_user ON promoters(user_id);
 CREATE INDEX idx_promoters_tier_id ON promoters(tier_id);
--- Note: referral_code and whatsapp_number have automatic UNIQUE B-Tree indexes
+-- Note: user_id, referral_code, email, and whatsapp_number have automatic UNIQUE B-Tree indexes
 
 -- 3. Venues
 CREATE TABLE venues (
@@ -396,6 +395,46 @@ AS $$
 $$;
 
 
+-- Function 5: Protect Privileged Promoter Columns Against Self-Modification
+CREATE OR REPLACE FUNCTION public.trg_fn_protect_promoter_privileged_cols()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+    -- Allow backend/service_role triggers and authenticated admins
+    IF COALESCE(current_setting('role', true), '') = 'service_role'
+       OR COALESCE(auth.role(), '') = 'service_role'
+       OR public.is_admin() THEN
+        RETURN NEW;
+    END IF;
+
+    -- Non-admin users can only bind their own user_id once (when previously NULL) and cannot alter privileged fields
+    IF NEW.id IS DISTINCT FROM OLD.id
+       OR (OLD.user_id IS NOT NULL AND NEW.user_id IS DISTINCT FROM OLD.user_id)
+       OR (OLD.user_id IS NULL AND NEW.user_id IS NOT NULL AND NEW.user_id IS DISTINCT FROM auth.uid())
+       OR LOWER(NEW.email) IS DISTINCT FROM LOWER(OLD.email)
+       OR NEW.tier_id IS DISTINCT FROM OLD.tier_id
+       OR NEW.referral_code IS DISTINCT FROM OLD.referral_code
+       OR NEW.kyc_status IS DISTINCT FROM OLD.kyc_status
+       OR NEW.total_passes_sold IS DISTINCT FROM OLD.total_passes_sold
+       OR NEW.total_earnings IS DISTINCT FROM OLD.total_earnings THEN
+        RAISE EXCEPTION 'Access Denied: Privileged promoter fields cannot be modified directly.';
+    END IF;
+
+    NEW.updated_at := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_protect_promoter_privileged_cols ON promoters;
+CREATE TRIGGER trg_protect_promoter_privileged_cols
+BEFORE UPDATE ON promoters
+FOR EACH ROW
+EXECUTE FUNCTION public.trg_fn_protect_promoter_privileged_cols();
+
+
 -- ============================================================================
 -- 4. ROW LEVEL SECURITY (RLS) & ZERO-COLLISION GRANULAR POLICIES
 -- ============================================================================
@@ -458,64 +497,84 @@ CREATE POLICY "Admin insert ticket_tiers" ON ticket_tiers FOR INSERT TO authenti
 CREATE POLICY "Admin update ticket_tiers" ON ticket_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.7: Promoters (Strict Data Privacy: Promoters read own profile only, Admin Read All)
+-- 4.7: Promoters (Strict Multi-Tenant Data Privacy & Anti-Escalation)
 CREATE POLICY "Promoters read own profile only" ON promoters FOR SELECT TO authenticated
   USING (
-    user_id = (SELECT auth.uid()) 
-    OR email = (SELECT auth.jwt() ->> 'email')
+    user_id = (SELECT auth.uid())
+    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
     OR (SELECT public.is_admin())
   );
-CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO anon, authenticated
+CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO authenticated
   WITH CHECK (
     (SELECT public.is_admin())
     OR (
-      full_name IS NOT NULL AND length(trim(full_name)) > 0
-      AND email IS NOT NULL AND length(trim(email)) > 3
+      user_id = (SELECT auth.uid())
+      AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+      AND tier_id = 1
+      AND COALESCE(total_passes_sold, 0) = 0
+      AND COALESCE(total_earnings, 0) = 0
+      AND full_name IS NOT NULL AND length(trim(full_name)) >= 2
       AND whatsapp_number IS NOT NULL AND length(trim(whatsapp_number)) > 5
       AND referral_code IS NOT NULL AND length(trim(referral_code)) > 0
       AND city IS NOT NULL AND length(trim(city)) > 0
     )
   );
 CREATE POLICY "Update promoters" ON promoters FOR UPDATE TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email') OR (SELECT public.is_admin()))
-  WITH CHECK (user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email') OR (SELECT public.is_admin()));
+  USING (
+    user_id = (SELECT auth.uid())
+    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    OR (SELECT public.is_admin())
+  )
+  WITH CHECK (
+    user_id = (SELECT auth.uid())
+    OR (SELECT public.is_admin())
+  );
 CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
 -- 4.8: Attendees (Strict Data Privacy: Attendees read own record only, Admin Read All)
 CREATE POLICY "Users read own attendee profile only" ON attendees FOR SELECT TO authenticated
   USING (
-    email = (SELECT auth.jwt() ->> 'email')
+    LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
     OR (SELECT public.is_admin())
   );
 CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
   WITH CHECK (
     (SELECT public.is_admin())
     OR (
-      full_name IS NOT NULL AND length(trim(full_name)) > 0
+      full_name IS NOT NULL AND length(trim(full_name)) >= 2
       AND email IS NOT NULL AND length(trim(email)) > 3
-      AND mobile_number IS NOT NULL AND length(trim(mobile_number)) > 5
+      AND mobile_number IS NOT NULL AND length(trim(mobile_number)) >= 10
     )
   );
 CREATE POLICY "Admin update attendees" ON attendees FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
 CREATE POLICY "Admin delete attendees" ON attendees FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
 
--- 4.9: Orders (Strict Data Privacy: Users only read referred or purchased orders)
+-- 4.9: Orders (Strict Data Privacy & Anti-Price-Tampering)
 CREATE POLICY "Read own orders only" ON orders FOR SELECT TO authenticated
   USING (
-    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email'))
-    OR attendee_id IN (SELECT id FROM attendees WHERE email = (SELECT auth.jwt() ->> 'email'))
+    promoter_id IN (
+      SELECT id FROM promoters
+      WHERE user_id = (SELECT auth.uid())
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    )
+    OR attendee_id IN (
+      SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+    )
     OR (SELECT public.is_admin())
   );
-CREATE POLICY "Create orders" ON orders FOR INSERT TO anon, authenticated
+CREATE POLICY "Create orders" ON orders FOR INSERT TO authenticated
   WITH CHECK (
     (SELECT public.is_admin())
     OR (
       order_number IS NOT NULL AND length(trim(order_number)) > 0
-      AND quantity > 0
-      AND total_amount >= 0
+      AND quantity BETWEEN 1 AND 10
+      AND payment_status = 'pending'
       AND event_id IS NOT NULL
       AND ticket_tier_id IS NOT NULL
       AND attendee_id IS NOT NULL
+      AND unit_price = (SELECT tt.price FROM ticket_tiers tt WHERE tt.id = ticket_tier_id AND tt.event_id = event_id AND tt.is_active = TRUE)
+      AND total_amount = unit_price * quantity
+      AND (promoter_id IS NULL OR promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())))
     )
   );
 CREATE POLICY "Admin update orders" ON orders FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
@@ -525,10 +584,16 @@ CREATE POLICY "Admin delete orders" ON orders FOR DELETE TO authenticated USING 
 CREATE POLICY "Read own passes only" ON issued_passes FOR SELECT TO authenticated
   USING (
     order_id IN (
-      SELECT id FROM orders WHERE 
-        promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email'))
-        OR attendee_id IN (SELECT id FROM attendees WHERE email = (SELECT auth.jwt() ->> 'email'))
-    ) 
+      SELECT id FROM orders WHERE
+        promoter_id IN (
+          SELECT id FROM promoters
+          WHERE user_id = (SELECT auth.uid())
+             OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+        )
+        OR attendee_id IN (
+          SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+        )
+    )
     OR (SELECT public.is_admin())
   );
 CREATE POLICY "Admin insert issued_passes" ON issued_passes FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
@@ -538,7 +603,11 @@ CREATE POLICY "Admin delete issued_passes" ON issued_passes FOR DELETE TO authen
 -- 4.11: Promoter Commissions (Strict Data Privacy: Promoters read own commissions only)
 CREATE POLICY "Promoters read own commissions only" ON promoter_commissions FOR SELECT TO authenticated
   USING (
-    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email')) 
+    promoter_id IN (
+      SELECT id FROM promoters
+      WHERE user_id = (SELECT auth.uid())
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    )
     OR (SELECT public.is_admin())
   );
 CREATE POLICY "Admin insert promoter_commissions" ON promoter_commissions FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
@@ -548,7 +617,11 @@ CREATE POLICY "Admin delete promoter_commissions" ON promoter_commissions FOR DE
 -- 4.12: UPI Payout Logs (Strict Data Privacy: Promoters read own payouts only)
 CREATE POLICY "Promoters read own upi payouts only" ON upi_payout_logs FOR SELECT TO authenticated
   USING (
-    promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid()) OR email = (SELECT auth.jwt() ->> 'email')) 
+    promoter_id IN (
+      SELECT id FROM promoters
+      WHERE user_id = (SELECT auth.uid())
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    )
     OR (SELECT public.is_admin())
   );
 CREATE POLICY "Admin insert upi_payout_logs" ON upi_payout_logs FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
@@ -631,10 +704,13 @@ DECLARE
 BEGIN
     -- Strict Multi-Tenant Authorization Check
     IF NOT v_is_admin THEN
-        IF p_user_id IS NOT NULL AND p_user_id <> v_calling_user_id THEN
+        IF v_calling_user_id IS NULL THEN
+            RAISE EXCEPTION 'Authentication required.';
+        END IF;
+        IF p_user_id IS NOT NULL AND p_user_id IS DISTINCT FROM v_calling_user_id THEN
             RAISE EXCEPTION 'Access Denied: You may only query your own promoter profile.';
         END IF;
-        IF p_email IS NOT NULL AND LOWER(TRIM(p_email)) <> v_calling_email THEN
+        IF p_email IS NOT NULL AND LOWER(TRIM(p_email)) IS DISTINCT FROM v_calling_email THEN
             RAISE EXCEPTION 'Access Denied: You may only query your own promoter profile.';
         END IF;
     END IF;
@@ -658,7 +734,11 @@ BEGIN
     FROM public.promoters p
     LEFT JOIN public.promoter_tiers pt ON p.tier_id = pt.tier_id
     WHERE (p_user_id IS NOT NULL AND p.user_id = p_user_id)
-       OR (p_email IS NOT NULL AND LOWER(TRIM(p.email)) = LOWER(TRIM(p_email)))
+       OR (
+            p_email IS NOT NULL
+            AND LOWER(TRIM(p.email)) = LOWER(TRIM(p_email))
+            AND (v_is_admin OR p.user_id IS NULL OR p.user_id = v_calling_user_id)
+       )
     LIMIT 1;
 END;
 $$;
@@ -691,12 +771,13 @@ SET search_path = public
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
+    v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
     v_is_admin BOOLEAN := public.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF p_promoter_id IS NULL OR NOT EXISTS (
             SELECT 1 FROM public.promoters 
-            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR (user_id IS NULL AND LOWER(email) = v_calling_email))
         ) THEN
             RAISE EXCEPTION 'Access Denied: You may only query orders assigned to your promoter ID.';
         END IF;
@@ -737,11 +818,11 @@ CREATE OR REPLACE FUNCTION public.get_commissions_parameterized(
 RETURNS TABLE (
     id INT,
     order_id INT,
-    gross_order_amount NUMERIC(10,2),
+    ticket_price NUMERIC(10,2),
     pass_quantity INT,
-    effective_commission_pct NUMERIC(5,2),
-    commission_earned NUMERIC(10,2),
-    payout_status VARCHAR(20),
+    commission_rate NUMERIC(5,2),
+    commission_amount NUMERIC(10,2),
+    payout_status VARCHAR(30),
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
@@ -750,12 +831,13 @@ SET search_path = public
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
+    v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
     v_is_admin BOOLEAN := public.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF NOT EXISTS (
             SELECT 1 FROM public.promoters 
-            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR (user_id IS NULL AND LOWER(email) = v_calling_email))
         ) THEN
             RAISE EXCEPTION 'Access Denied: You may only query commissions for your own promoter profile.';
         END IF;
@@ -765,10 +847,10 @@ BEGIN
     SELECT 
         pc.id,
         pc.order_id,
-        pc.gross_order_amount,
+        pc.ticket_price,
         pc.pass_quantity,
-        pc.effective_commission_pct,
-        pc.commission_earned,
+        pc.commission_rate,
+        pc.commission_amount,
         pc.payout_status,
         pc.created_at
     FROM public.promoter_commissions pc
@@ -792,9 +874,8 @@ RETURNS TABLE (
     commission_id INT,
     upi_id VARCHAR(100),
     amount NUMERIC(10,2),
-    status VARCHAR(20),
-    bank_reference_number VARCHAR(100),
-    processed_at TIMESTAMPTZ,
+    status VARCHAR(30),
+    bank_rrn VARCHAR(50),
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
@@ -803,12 +884,13 @@ SET search_path = public
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
+    v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
     v_is_admin BOOLEAN := public.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF NOT EXISTS (
             SELECT 1 FROM public.promoters 
-            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR email = LOWER(TRIM(auth.jwt() ->> 'email')))
+            WHERE id = p_promoter_id AND (user_id = v_calling_user_id OR (user_id IS NULL AND LOWER(email) = v_calling_email))
         ) THEN
             RAISE EXCEPTION 'Access Denied: You may only query payouts for your own promoter profile.';
         END IF;
@@ -821,8 +903,7 @@ BEGIN
         upl.upi_id,
         upl.amount,
         upl.status,
-        upl.bank_reference_number,
-        upl.processed_at,
+        upl.bank_rrn,
         upl.created_at
     FROM public.upi_payout_logs upl
     WHERE upl.promoter_id = p_promoter_id

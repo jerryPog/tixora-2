@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Promoter Wallet &amp; UPI Payouts | Tixora Promoter Portal</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#111113">
+
+    <script>
+        (function () {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editorial.css?v=4">
+
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js?v=4" defer></script>
+    <script src="portal-app.js?v=1" defer></script>
+</head>
+
+<body class="ops-body antialiased" data-portal-page="wallet">
+
+    <div id="portal-loading-barrier" class="ops-auth-main flex-col gap-4">
+        <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
+            <div class="ops-spinner mx-auto" role="status" aria-label="Loading promoter wallet"></div>
+            <div class="space-y-1">
+                <div class="font-bold text-[var(--ink)] text-sm">Opening Wallet</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Verifying NPCI settlement ledger</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="portal-workspace" class="hidden min-h-screen flex flex-col">
+
+        <header class="site-header portal-site-header" id="navbar">
+            <div class="nav-pill">
+                <div class="nav-left">
+                    <a href="/portal" class="brand-mark" aria-label="Tixora Promoter Events Home">
+                        <picture>
+                            <source srcset="tixora-logo.webp" type="image/webp">
+                            <img src="tixora-logo.png" alt="Tixora" width="112" height="28">
+                        </picture>
+                    </a>
+                    <span class="nav-divider" aria-hidden="true"></span>
+                    <nav class="desktop-nav" aria-label="Promoter Menu">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet" aria-current="page">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                    </nav>
+                </div>
+
+                <div class="nav-actions">
+                    <button type="button" onclick="copyPromoterId()" class="portal-id-chip portal-hide-mobile"
+                        aria-label="Copy Promoter ID">
+                        <span class="w-2 h-2 rounded-full bg-[#d4d4d8]" aria-hidden="true"></span>
+                        <span id="topbar-promoter-id" data-portal-id-chip>TIX-PROMO</span>
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+
+                    <a id="promo-admin-link" href="/admin" class="hidden nav-ops-link portal-hide-tablet">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Ops</span>
+                    </a>
+
+                    <a href="/?public=1" class="nav-ops-link portal-hide-tablet">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span>Public Site</span>
+                    </a>
+
+                    <button type="button" onclick="handlePortalSignOut()" class="nav-signout-btn portal-hide-mobile"
+                        aria-label="Sign Out">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                    <button type="button" onclick="togglePortalMobileMenu()" id="mobile-menu-btn" class="nav-menu-btn"
+                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                        <span>Menu</span>
+                        <i data-lucide="menu" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Promoter Navigation">
+                <div class="mobile-nav-links">
+                    <a href="/portal"><span>Events Home</span><span class="cart-count-pill">8</span></a>
+                    <a href="/dashboard"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">8.0%</span></a>
+                    <a href="/portal/wallet" aria-current="page"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/bookings"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
+                    <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
+                    <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                </div>
+                <div class="mobile-nav-footer">
+                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);" class="btn-editorial-outline-light">
+                        ID: <span id="mobile-promoter-id" class="font-mono text-[var(--crimson-ink)]">TIX-PROMO</span>
+                    </button>
+                    <button type="button" onclick="handlePortalSignOut()" class="btn-editorial-primary">
+                        Sign Out
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main id="main-content" class="flex-1">
+
+            <!-- WALLET HERO -->
+            <section class="cied-hero cied-hero--compact" aria-labelledby="wallet-hero-heading">
+                <div class="hero-backdrop" aria-hidden="true">
+                    <div class="hero-scrim"></div>
+                </div>
+
+                <div class="editorial-container hero-inner">
+                    <div class="flex flex-wrap items-end justify-between gap-4">
+                        <div class="space-y-3">
+                            <span class="modal-badge-emerald font-mono">NPCI DIRECT &bull; &lt;60S SETTLEMENT</span>
+                            <h1 id="wallet-hero-heading" class="hero-h1 hero-h1--subpage">Wallet &amp; UPI Payouts</h1>
+                            <p class="hero-desc">
+                                Track cleared promoter earnings, update your instant settlement UPI VPA, and audit past NPCI transfers.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2.5">
+                            <a href="/portal" class="btn-editorial-gold">
+                                <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                                <span>Back to Events</span>
+                            </a>
+                            <a href="/dashboard" class="btn-editorial-outline-dark">
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BALANCES, UPI FORM, PAYOUT LEDGER -->
+            <section class="surface-light section-band">
+                <div class="editorial-container space-y-6">
+
+                    <div class="editorial-grid-3 tabular-nums">
+                        <div class="ops-card p-6 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Earned</span>
+                            <div id="wallet-earned-val" class="text-3xl font-bold text-white">₹0.00</div>
+                            <span class="text-xs font-mono text-[var(--emerald-ink)]">Net verified commission</span>
+                        </div>
+                        <div class="ops-card p-6 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Settled via UPI</span>
+                            <div id="wallet-settled-val" class="text-3xl font-bold text-[var(--emerald-ink)]">₹0.00</div>
+                            <span class="text-xs font-mono text-[var(--muted)]">Transferred to bank VPA</span>
+                        </div>
+                        <div class="ops-card p-6 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Pending Gate Clearance</span>
+                            <div id="wallet-pending-val" class="text-3xl font-bold text-[var(--amber-ink)]">₹0.00</div>
+                            <span class="text-xs font-mono text-[var(--muted)]">Releases &lt;60s on entry scan</span>
+                        </div>
+                    </div>
+
+                    <!-- SETTLEMENT UPI CARD -->
+                    <div class="ops-card p-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                        <div class="space-y-2">
+                            <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--crimson-ink)] font-bold">
+                                Linked Payout Handle
+                            </span>
+                            <h2 class="text-xl font-bold text-white">Active NPCI Settlement VPA</h2>
+                            <div class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[var(--bg-elevated)] border border-[var(--line)]">
+                                <span class="w-2 h-2 rounded-full bg-[#d4d4d8]" aria-hidden="true"></span>
+                                <span id="dash-account-upi" class="font-mono font-bold text-sm text-white">promoter@upi</span>
+                            </div>
+                            <p class="text-xs text-[var(--muted)]">
+                                Commissions auto-settle directly to this handle within 60 seconds of turnstile entry scan.
+                            </p>
+                        </div>
+
+                        <form id="wallet-upi-form" onsubmit="handleUpdateUpi(event)" class="space-y-3">
+                            <label for="wallet-upi-input" class="modal-field-label">Update Settlement UPI VPA</label>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input id="wallet-upi-input" type="text" required placeholder="yourname@okhdfcbank"
+                                    autocorrect="off" autocapitalize="none" spellcheck="false"
+                                    class="modal-input font-mono flex-1">
+                                <button id="btn-save-upi" type="submit" class="btn-editorial-primary btn-compact flex-shrink-0">
+                                    <i data-lucide="check" class="w-4 h-4"></i>
+                                    <span id="btn-save-upi-text">Save UPI ID</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- PAYOUT HISTORY TABLE -->
+                    <div class="ops-card overflow-hidden">
+                        <div class="p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h2 class="text-base font-bold text-white">UPI Payout History</h2>
+                                <p class="text-xs text-[var(--muted)]">Dispatched bank transfers &amp; NPCI UTR references.</p>
+                            </div>
+                        </div>
+
+                        <div class="ops-table-wrap overflow-x-auto">
+                            <table class="ops-table w-full text-left font-mono text-xs">
+                                <thead>
+                                    <tr>
+                                        <th>Payout Ref</th>
+                                        <th>Target UPI VPA</th>
+                                        <th>Amount</th>
+                                        <th>UTR Number</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wallet-payouts-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer" role="contentinfo">
+            <div class="editorial-container">
+                <div class="footer-bottom">
+                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                        <a href="/?public=1">Public Site</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#ef4444]"></i>
+        <span id="toast-message">Updated</span>
+    </div>
+
+</body>
+
+</html>
+

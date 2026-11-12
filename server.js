@@ -209,12 +209,14 @@ const server = http.createServer((req, res) => {
     decodedPath.startsWith('/admin/');
 
   if (isAdminRoute) {
-    const sessionToken = cookies.tixora_session;
-    const userRole = (cookies.tixora_role || '').toLowerCase();
+    const { verifySessionCookies } = require('./lib/auth/session');
+    const verifiedSession = verifySessionCookies(req);
+    const hasSessionOrRoleCookie = Boolean(cookies.tixora_session || cookies.tixora_role || cookies.tixora_session_sig);
 
-    // If user is authenticated with a non-admin role (e.g. promoter, attendee):
-    // Strictly block access with HTTP 403 Forbidden!
-    if (sessionToken && userRole && userRole !== 'admin' && userRole !== 'manager') {
+    // Strictly block access with HTTP 403 Forbidden if user holds a non-admin session OR tampered cookies!
+    if ((verifiedSession.valid && !verifiedSession.isAdmin) || (hasSessionOrRoleCookie && !verifiedSession.valid)) {
+      const displayRole = verifiedSession.valid ? verifiedSession.role : 'invalid_session';
+      const clearOpts = `Path=/; HttpOnly;${secureAttr} SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       const forbiddenHeaders = {
         'Content-Type': 'text/html; charset=utf-8',
         'X-Content-Type-Options': 'nosniff',
@@ -222,6 +224,14 @@ const server = http.createServer((req, res) => {
         'X-Robots-Tag': 'noindex, nofollow',
         'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0'
       };
+      if (hasSessionOrRoleCookie && !verifiedSession.valid) {
+        forbiddenHeaders['Set-Cookie'] = [
+          `tixora_session=; ${clearOpts}`,
+          `tixora_role=; ${clearOpts}`,
+          `tixora_session_sig=; ${clearOpts}`,
+          `tixora_auth_status=; Path=/;${secureAttr} SameSite=Strict; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
+        ];
+      }
       if (!isLocalPlain) {
         forbiddenHeaders['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload';
       }
@@ -235,15 +245,15 @@ const server = http.createServer((req, res) => {
     <title>403 Forbidden | Tixora Operations Desk</title>
     <style>
         * { box-sizing: border-box; }
-        body { background: #050608; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; min-height: 100dvh; display: flex; align-items: center; justify-content: center; margin: 0; padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); }
-        .card { background: #0d1019; border: 1px solid #1e2436; border-radius: 1.5rem; max-width: 460px; width: 100%; padding: 1.75rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.72); text-align: center; }
-        .shield { width: 48px; height: 48px; margin: 0 auto 0.75rem; border-radius: 9999px; background: rgba(255,46,84,0.14); border: 1px solid rgba(255,46,84,0.36); color: #ff4d6d; display: flex; align-items: center; justify-content: center; }
-        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-family: ui-monospace, monospace; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255,46,84,0.14); color: #ff4d6d; border: 1px solid rgba(255,46,84,0.36); }
-        .meta { margin-top: 1rem; padding: 0.85rem; border-radius: 0.75rem; background: #131622; border: 1px solid #1e2436; font-family: ui-monospace, monospace; font-size: 0.75rem; text-align: left; }
+        body { background: #111113; color: #f4f4f5; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; min-height: 100dvh; display: flex; align-items: center; justify-content: center; margin: 0; padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); }
+        .card { background: #1d1d21; border: 1px solid #323238; border-radius: 1.5rem; max-width: 460px; width: 100%; padding: 1.75rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.72); text-align: center; }
+        .shield { width: 48px; height: 48px; margin: 0 auto 0.75rem; border-radius: 9999px; background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.36); color: #f87171; display: flex; align-items: center; justify-content: center; }
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-family: ui-monospace, monospace; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(239,68,68,0.14); color: #f87171; border: 1px solid rgba(239,68,68,0.36); }
+        .meta { margin-top: 1rem; padding: 0.85rem; border-radius: 0.75rem; background: #26262b; border: 1px solid #323238; font-family: ui-monospace, monospace; font-size: 0.75rem; text-align: left; }
         .btn-primary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 0.75rem 1rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #dc2626; color: #ffffff; text-decoration: none; transition: background 0.15s; margin-top: 1.25rem; }
-        .btn-primary:hover { background: #ff2e54; }
-        .btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 0.65rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #131622; color: #cbd5e1; text-decoration: none; margin-top: 0.5rem; border: 1px solid #333c56; }
-        .btn-secondary:hover { color: #ffffff; border-color: #ff2e54; }
+        .btn-primary:hover { background: #ef4444; }
+        .btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 0.65rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #26262b; color: #d4d4d8; text-decoration: none; margin-top: 0.5rem; border: 1px solid #4a4a54; }
+        .btn-secondary:hover { color: #ffffff; border-color: #ef4444; }
     </style>
 </head>
 <body>
@@ -253,18 +263,17 @@ const server = http.createServer((req, res) => {
         </div>
         <div class="badge">Access Restricted</div>
         <h1 style="font-size: clamp(1.35rem, 1rem + 1.5vw, 1.75rem); font-weight: 700; margin: 0.75rem 0 0.4rem; letter-spacing: -0.025em;">403 Forbidden</h1>
-        <p style="font-size: 0.875rem; color: #94a3b8; margin: 0;">
-            The Operations Desk (<code style="color: #ff4d6d;">/admin</code>) requires Administrator clearance.
+        <p style="font-size: 0.875rem; color: #a1a1aa; margin: 0;">
+            The Operations Desk (<code style="color: #f87171;">/admin</code>) requires Administrator clearance.
         </p>
         <div class="meta">
-            <div style="color: #94a3b8;">Active Role</div>
-            <div style="color: #fbbf24; font-weight: 700; text-transform: uppercase;">${escapeHtml(userRole)}</div>
-            <div style="color: #94a3b8; margin-top: 0.4rem;">Required Clearance</div>
-            <div style="color: #34d399; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
+            <div style="color: #a1a1aa;">Active Role</div>
+            <div style="color: #f87171; font-weight: 700; text-transform: uppercase;">${escapeHtml(displayRole)}</div>
+            <div style="color: #a1a1aa; margin-top: 0.4rem;">Required Clearance</div>
+            <div style="color: #d4d4d8; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
         </div>
         <a href="/dashboard" class="btn-primary">Return to Promoter Dashboard</a>
         <a href="/" class="btn-secondary">Back to Tixora Home</a>
-        <a href="/api/auth/logout" class="btn-secondary" style="color: #ff4d6d;">Sign Out &amp; Switch Account</a>
     </div>
 </body>
 </html>`);
@@ -291,8 +300,18 @@ const server = http.createServer((req, res) => {
     resolvedPath = path.join(ROOT_DIR, 'index.html');
   } else if (relFromRoot === 'admin') {
     resolvedPath = path.join(ROOT_DIR, 'admin.html');
-  } else if (relFromRoot === 'dashboard' || relFromRoot === 'portal') {
+  } else if (relFromRoot === 'dashboard' || relFromRoot === 'portal/dashboard') {
     resolvedPath = path.join(ROOT_DIR, 'dashboard.html');
+  } else if (relFromRoot === 'portal' || relFromRoot === 'portal/events') {
+    resolvedPath = path.join(ROOT_DIR, 'portal.html');
+  } else if (relFromRoot === 'portal/wallet') {
+    resolvedPath = path.join(ROOT_DIR, 'portal-wallet.html');
+  } else if (relFromRoot === 'portal/bookings') {
+    resolvedPath = path.join(ROOT_DIR, 'portal-bookings.html');
+  } else if (relFromRoot === 'portal/id' || relFromRoot === 'portal-id.html') {
+    res.writeHead(302, { Location: '/dashboard' });
+    res.end();
+    return;
   } else if (relFromRoot === 'tours') {
     resolvedPath = path.join(ROOT_DIR, 'tours.html');
   } else if (relFromRoot === 'promoter') {
@@ -317,13 +336,23 @@ const server = http.createServer((req, res) => {
     resolvedPath = resolvedPath + '.html';
   }
 
-  // 5. Block Access to Sensitive Files & Folders
+  // 5. Block Access to Sensitive Files, Backend Code & Folders
   const checkRel = path.relative(ROOT_DIR, resolvedPath).replace(/\\/g, '/').toLowerCase();
   const isBlocked =
+    checkRel === 'server.js' ||
+    checkRel === 'lib' ||
+    checkRel.startsWith('lib/') ||
+    checkRel === 'api' ||
+    checkRel.startsWith('api/') ||
+    checkRel === 'scripts' ||
+    checkRel.startsWith('scripts/') ||
+    checkRel === 'node_modules' ||
+    checkRel.startsWith('node_modules/') ||
     checkRel.startsWith('database/') ||
     checkRel === 'database' ||
     checkRel.startsWith('.agents/') ||
     checkRel.startsWith('.') ||
+    checkRel.includes('/.') ||
     checkRel.includes('.env') ||
     checkRel.includes('.git') ||
     checkRel.endsWith('.sql') ||
@@ -335,7 +364,8 @@ const server = http.createServer((req, res) => {
     checkRel.endsWith('.env') ||
     checkRel.endsWith('.yml') ||
     checkRel.endsWith('.yaml') ||
-    (checkRel.endsWith('.json') && !checkRel.endsWith('manifest.json') && !checkRel.endsWith('.mcp.json'));
+    checkRel.endsWith('.config.js') ||
+    (checkRel.endsWith('.json') && checkRel !== 'manifest.json');
 
   const isAdminTarget = checkRel.includes('admin') || isAdminRoute;
   const activeCsp = isLocalPlain
@@ -363,7 +393,7 @@ const server = http.createServer((req, res) => {
       'Content-Type': 'text/plain; charset=utf-8',
       'X-Robots-Tag': 'noindex, nofollow'
     });
-    res.end('404 Not Found — Protected Resource');
+    res.end('404 Not Found - Protected Resource');
     return;
   }
 
@@ -385,7 +415,7 @@ const server = http.createServer((req, res) => {
             'Content-Type': 'text/plain; charset=utf-8',
             'X-Robots-Tag': 'noindex, follow'
           });
-          res.end('404 Page Not Found — Tixora Protocol');
+          res.end('404 Page Not Found - Tixora Protocol');
         }
       });
       return;

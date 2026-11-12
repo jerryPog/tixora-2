@@ -312,13 +312,44 @@
 
     /**
      * Save dynamic Supabase credentials (e.g. from Admin Settings modal)
+     * Rejects non-HTTPS URLs (except localhost) and blocks private/service_role keys.
      */
     function setCredentials(url, key) {
-        if (url) _safeStorage.setItem('tixora_supabase_url', url.trim());
-        if (key) _safeStorage.setItem('tixora_supabase_key', key.trim());
+        const cleanUrl = String(url || '').trim();
+        const cleanKey = String(key || '').trim();
+        if (cleanUrl) {
+            let parsed;
+            try {
+                parsed = new URL(cleanUrl);
+            } catch (e) {
+                throw new Error('Invalid Supabase project URL.');
+            }
+            const isLocal = parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1';
+            if (!isLocal && parsed.protocol !== 'https:') {
+                throw new Error('Supabase URL must use HTTPS.');
+            }
+        }
+        if (cleanKey) {
+            if (cleanKey.startsWith('sb_secret_')) {
+                throw new Error('Security Error: Supabase secret keys cannot be stored in browser clients.');
+            }
+            if (cleanKey.split('.').length === 3) {
+                try {
+                    const b64 = cleanKey.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                    const payload = JSON.parse(atob(b64));
+                    if (payload && payload.role === 'service_role') {
+                        throw new Error('Security Error: service_role JWT keys are prohibited in browser clients.');
+                    }
+                } catch (jwtErr) {
+                    if (jwtErr.message && jwtErr.message.includes('Security Error')) throw jwtErr;
+                }
+            }
+        }
+        if (cleanUrl) _safeStorage.setItem('tixora_supabase_url', cleanUrl);
+        if (cleanKey) _safeStorage.setItem('tixora_supabase_key', cleanKey);
         if (window.TIXORA_CONFIG) {
-            window.TIXORA_CONFIG.supabaseUrl = url;
-            window.TIXORA_CONFIG.supabaseKey = key;
+            window.TIXORA_CONFIG.supabaseUrl = cleanUrl || window.TIXORA_CONFIG.supabaseUrl;
+            window.TIXORA_CONFIG.supabaseKey = cleanKey || window.TIXORA_CONFIG.supabaseKey;
         }
         _supabaseClient = null;
         return getClient();
@@ -432,14 +463,27 @@
                     const res = await client
                         .from('promoters')
                         .select('*, promoter_tiers(tier_name, commission_rate, perks_description)')
-                        .eq('email', user.email)
+                        .is('user_id', null)
+                        .ilike('email', user.email)
                         .maybeSingle();
                     data = res.data;
                 }
 
-                if (data) {
-                    _cachedPromoter = data;
-                    return data;
+                if (data && (!data.user_id || data.user_id === user.id)) {
+                    const tierInfo = data.promoter_tiers || {};
+                    const meta = user.user_metadata || {};
+                    let savedUpi = '';
+                    try {
+                        savedUpi = _safeStorage.getItem(`tx_upi_${user.id}`) || '';
+                    } catch (e) {}
+                    _cachedPromoter = Object.assign({}, data, {
+                        _dbRow: true,
+                        tier_name: data.tier_name || tierInfo.tier_name || 'Scout',
+                        commission_rate: Number(data.commission_rate || tierInfo.commission_rate || 8.00),
+                        phone: data.phone || data.whatsapp || meta.phone || '',
+                        upi_id: savedUpi || data.upi_id || meta.upi_id || (user.email ? user.email.split('@')[0] + '@okhdfcbank' : 'user@upi')
+                    });
+                    return _cachedPromoter;
                 }
             } catch (err) {
                 console.warn('[TixoraAuth] Error querying promoters table:', err);
@@ -450,23 +494,30 @@
         const meta = user.user_metadata || {};
         const fullName = meta.full_name || (user.email ? user.email.split('@')[0] : 'Promoter Partner');
         const city = meta.city || 'Mumbai';
-        const cleanName = fullName.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8);
-        const cleanCity = city.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+        const cleanName = fullName.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8) || 'PROMO';
+        const cleanCity = city.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3) || 'IND';
         const refCode = meta.referral_code || `TIX-${cleanName}-${cleanCity}`;
+        let savedUpi = '';
+        try {
+            savedUpi = user.id ? (_safeStorage.getItem(`tx_upi_${user.id}`) || '') : '';
+        } catch (e) {}
 
         const dynamicProfile = {
-            id: user.id || 1,
+            id: null,
+            _dbRow: false,
             user_id: user.id,
             full_name: fullName,
             email: user.email,
+            phone: meta.phone || '',
             city: city,
             referral_code: refCode,
             tier_name: 'Scout',
             commission_rate: 8.00,
             total_passes_sold: 0,
             total_earnings: 0.00,
-            upi_id: meta.upi_id || (user.email ? user.email.split('@')[0] + '@okhdfcbank' : 'user@upi'),
-            kyc_status: 'verified'
+            upi_id: savedUpi || meta.upi_id || (user.email ? user.email.split('@')[0] + '@okhdfcbank' : 'user@upi'),
+            kyc_status: 'verified',
+            created_at: user.created_at || new Date().toISOString()
         };
 
         _cachedPromoter = dynamicProfile;
@@ -664,8 +715,10 @@
             throw new Error('Authentication succeeded but no active session was returned.');
         }
 
-        // Wipe failed attempts on successful sign-in
-        await recordRateLimitAttempt('login', cleanEmail, true);
+        // Wipe local rate-limit counter on successful sign-in (server counter resets on verified session sync below)
+        try {
+            _safeStorage.removeItem(`tx_rl_login_${cleanEmail}`);
+        } catch (e) {}
 
         _cachedSession = data.session;
         await refreshUserData(data.user);
@@ -994,12 +1047,16 @@
         const client = getClient();
         if (!client) return [];
         const promoter = await getPromoterProfile(user);
-        if (!promoter || !promoter.id) return [];
+        const numericId = promoter ? Number(promoter.id) : 0;
+        const ownerOk = promoter && (!promoter.user_id || promoter.user_id === user.id);
+        if (!promoter || !promoter._dbRow || !Number.isInteger(numericId) || numericId <= 0 || !ownerOk) {
+            return [];
+        }
         try {
             const { data } = await client
                 .from('orders')
                 .select('*, ticket_tiers(name, price), events(title, event_date)')
-                .eq('promoter_id', promoter.id)
+                .eq('promoter_id', numericId)
                 .order('created_at', { ascending: false });
             return data || [];
         } catch (e) {
@@ -1017,12 +1074,16 @@
         const client = getClient();
         if (!client) return [];
         const promoter = await getPromoterProfile(user);
-        if (!promoter || !promoter.id) return [];
+        const numericId = promoter ? Number(promoter.id) : 0;
+        const ownerOk = promoter && (!promoter.user_id || promoter.user_id === user.id);
+        if (!promoter || !promoter._dbRow || !Number.isInteger(numericId) || numericId <= 0 || !ownerOk) {
+            return [];
+        }
         try {
             const { data } = await client
                 .from('promoter_commissions')
                 .select('*')
-                .eq('promoter_id', promoter.id)
+                .eq('promoter_id', numericId)
                 .order('created_at', { ascending: false });
             return data || [];
         } catch (e) {
@@ -1040,12 +1101,16 @@
         const client = getClient();
         if (!client) return [];
         const promoter = await getPromoterProfile(user);
-        if (!promoter || !promoter.id) return [];
+        const numericId = promoter ? Number(promoter.id) : 0;
+        const ownerOk = promoter && (!promoter.user_id || promoter.user_id === user.id);
+        if (!promoter || !promoter._dbRow || !Number.isInteger(numericId) || numericId <= 0 || !ownerOk) {
+            return [];
+        }
         try {
             const { data } = await client
                 .from('upi_payout_logs')
                 .select('*')
-                .eq('promoter_id', promoter.id)
+                .eq('promoter_id', numericId)
                 .order('created_at', { ascending: false });
             return data || [];
         } catch (e) {
@@ -1095,7 +1160,98 @@
         }
     }
 
-    // Export TixoraAuth API to global window
+    /**
+     * Update authenticated promoter's Settlement UPI VPA
+     */
+    async function updateMyUpi(newUpiId, userHint) {
+        const cleanUpi = String(newUpiId || '').trim().toLowerCase();
+        const upiRegex = /^[\w.\-]{2,64}@[a-zA-Z0-9.\-]{2,64}$/;
+        if (!upiRegex.test(cleanUpi)) {
+            throw new Error('Enter a valid UPI ID (e.g. name@oksbi, mobile@paytm).');
+        }
+
+        const user = (await getUser()) || userHint;
+        if (!user) {
+            throw new Error('Sign in required to update UPI ID.');
+        }
+
+        const client = getClient();
+        if (client) {
+            const dbSync = Promise.allSettled([
+                client.from('promoters').update({ upi_id: cleanUpi }).eq('user_id', user.id),
+                client.auth.updateUser({ data: { upi_id: cleanUpi } })
+            ]);
+            const timeout = new Promise((resolve) => setTimeout(resolve, 1200));
+            try {
+                await Promise.race([dbSync, timeout]);
+            } catch (e) {}
+        }
+
+        try {
+            if (user.id) _safeStorage.setItem(`tx_upi_${user.id}`, cleanUpi);
+        } catch (e) {}
+
+        const promoter = await getPromoterProfile(user);
+        if (promoter) {
+            promoter.upi_id = cleanUpi;
+            _cachedPromoter = promoter;
+        }
+        if (user.user_metadata) {
+            user.user_metadata.upi_id = cleanUpi;
+        }
+
+        return { success: true, upi_id: cleanUpi, promoter: _cachedPromoter };
+    }
+
+    /**
+     * Local booking ledger helpers for instant UI feedback & offline fallback
+     */
+    function getLocalBookings(userOrId) {
+        const keyId = typeof userOrId === 'string'
+            ? userOrId
+            : (userOrId && (userOrId.id || userOrId.email)) || 'guest';
+        const storageKey = `tx_bookings_${keyId}`;
+        try {
+            const raw = _safeStorage.getItem(storageKey);
+            const list = raw ? JSON.parse(raw) : [];
+            return Array.isArray(list) ? list : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function recordLocalBooking(userOrId, booking) {
+        if (!booking) return [];
+        const keyId = typeof userOrId === 'string'
+            ? userOrId
+            : (userOrId && (userOrId.id || userOrId.email)) || 'guest';
+        const storageKey = `tx_bookings_${keyId}`;
+        const existing = getLocalBookings(keyId);
+        const entry = Object.assign({
+            order_ref: booking.order_ref || ('TIX-' + Math.floor(100000 + Math.random() * 900000)),
+            event_title: booking.event_title || 'Live Tour Pass',
+            tier_name: booking.tier_name || 'GA Standard',
+            quantity: Number(booking.quantity || 1),
+            total_amount: Number(booking.total_amount || 0),
+            commission_amount: Number(booking.commission_amount || 0),
+            commission_rate: Number(booking.commission_rate || 8),
+            attendee_name: booking.attendee_name || 'Guest',
+            attendee_phone: booking.attendee_phone || '',
+            attendee_email: booking.attendee_email || '',
+            status: booking.status || 'confirmed',
+            channel: booking.channel || 'Portal Direct',
+            created_at: booking.created_at || new Date().toISOString()
+        }, booking);
+        const deduped = [entry, ...existing.filter((b) => b.order_ref !== entry.order_ref)].slice(0, 100);
+        try {
+            _safeStorage.setItem(storageKey, JSON.stringify(deduped));
+        } catch (e) {}
+        return deduped;
+    }
+
+    /**
+     * Export TixoraAuth API to global window
+     */
     window.TixoraAuth = {
         getClient,
         isConfigured,
@@ -1105,6 +1261,9 @@
         getUser,
         getUserRole,
         getPromoterProfile,
+        updateMyUpi,
+        getLocalBookings,
+        recordLocalBooking,
         getMyOrders,
         getMyCommissions,
         getMyPayouts,

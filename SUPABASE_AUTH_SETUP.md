@@ -114,7 +114,7 @@ SELECT assign_admin_role('admin@tixora.live');
 ## 5. Zero Plain-Text & Cryptographic Password Hashing Protocol
 
 Tixora enforces a strict **Zero Plaintext Password Policy**:
-- **Never Store Plaintext**: Passwords are NEVER persisted in plain text anywhere — not in database tables, localStorage, sessionStorage, cookies, or console output.
+- **Never Store Plaintext**: Passwords are NEVER persisted in plain text anywhere - not in database tables, localStorage, sessionStorage, cookies, or console output.
 - **Bcrypt Salted Hashing**: In PostgreSQL / Supabase, all passwords are cryptographically salted and hashed using Blowfish `bcrypt` (`$2a$10$...`) with per-user unique salts via PostgreSQL `pgcrypto` (`extensions.crypt(password, extensions.gen_salt('bf', 10))`).
 - **Memory Purging**: All DOM input fields for passwords are automatically cleared immediately upon form submission.
 - **Client-Side Hashing Engine**: `TixoraAuth.hashPassword(plainText, salt)` provides Web Crypto API SHA-256 salted hashing for secure client-side cryptographic hashing.

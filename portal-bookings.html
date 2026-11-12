@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Booking History | Tixora Promoter Portal</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#111113">
+
+    <script>
+        (function () {
+            const originalWarn = console.warn;
+            console.warn = function (...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) return;
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editorial.css?v=4">
+
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-config.js" defer></script>
+    <script src="auth.js?v=4" defer></script>
+    <script src="portal-app.js?v=1" defer></script>
+</head>
+
+<body class="ops-body antialiased" data-portal-page="bookings">
+
+    <div id="portal-loading-barrier" class="ops-auth-main flex-col gap-4">
+        <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
+            <div class="ops-spinner mx-auto" role="status" aria-label="Loading booking history"></div>
+            <div class="space-y-1">
+                <div class="font-bold text-[var(--ink)] text-sm">Opening Booking History</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Syncing pass allocations</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="portal-workspace" class="hidden min-h-screen flex flex-col">
+
+        <header class="site-header portal-site-header" id="navbar">
+            <div class="nav-pill">
+                <div class="nav-left">
+                    <a href="/portal" class="brand-mark" aria-label="Tixora Promoter Events Home">
+                        <picture>
+                            <source srcset="tixora-logo.webp" type="image/webp">
+                            <img src="tixora-logo.png" alt="Tixora" width="112" height="28">
+                        </picture>
+                    </a>
+                    <span class="nav-divider" aria-hidden="true"></span>
+                    <nav class="desktop-nav" aria-label="Promoter Menu">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings" aria-current="page">Booking History</a>
+                    </nav>
+                </div>
+
+                <div class="nav-actions">
+                    <button type="button" onclick="copyPromoterId()" class="portal-id-chip portal-hide-mobile"
+                        aria-label="Copy Promoter ID">
+                        <span class="w-2 h-2 rounded-full bg-[#d4d4d8]" aria-hidden="true"></span>
+                        <span id="topbar-promoter-id" data-portal-id-chip>TIX-PROMO</span>
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+
+                    <a id="promo-admin-link" href="/admin" class="hidden nav-ops-link portal-hide-tablet">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Ops</span>
+                    </a>
+
+                    <a href="/?public=1" class="nav-ops-link portal-hide-tablet">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span>Public Site</span>
+                    </a>
+
+                    <button type="button" onclick="handlePortalSignOut()" class="nav-signout-btn portal-hide-mobile"
+                        aria-label="Sign Out">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                    <button type="button" onclick="togglePortalMobileMenu()" id="mobile-menu-btn" class="nav-menu-btn"
+                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                        <span>Menu</span>
+                        <i data-lucide="menu" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Promoter Navigation">
+                <div class="mobile-nav-links">
+                    <a href="/portal"><span>Events Home</span><span class="cart-count-pill">8</span></a>
+                    <a href="/dashboard"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">8.0%</span></a>
+                    <a href="/portal/wallet"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/bookings" aria-current="page"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
+                    <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
+                    <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                </div>
+                <div class="mobile-nav-footer">
+                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);" class="btn-editorial-outline-light">
+                        ID: <span id="mobile-promoter-id" class="font-mono text-[var(--crimson-ink)]">TIX-PROMO</span>
+                    </button>
+                    <button type="button" onclick="handlePortalSignOut()" class="btn-editorial-primary">
+                        Sign Out
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main id="main-content" class="flex-1">
+
+            <!-- BOOKINGS HERO -->
+            <section class="cied-hero cied-hero--compact" aria-labelledby="bookings-hero-heading">
+                <div class="hero-backdrop" aria-hidden="true">
+                    <div class="hero-scrim"></div>
+                </div>
+
+                <div class="editorial-container hero-inner">
+                    <div class="flex flex-wrap items-end justify-between gap-4">
+                        <div class="space-y-3">
+                            <span class="modal-badge-navy font-mono">VERIFIED ALLOCATIONS &amp; RECEIPTS</span>
+                            <h1 id="bookings-hero-heading" class="hero-h1 hero-h1--subpage">Booking History</h1>
+                            <p class="hero-desc">
+                                All passes reserved directly in your promoter portal or attributed via your referral links.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2.5">
+                            <a href="/portal" class="btn-editorial-gold">
+                                <i data-lucide="ticket" class="w-4 h-4"></i>
+                                <span>Book More Passes</span>
+                            </a>
+                            <a href="/portal/wallet" class="btn-editorial-outline-dark">
+                                Wallet &amp; Payouts
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUMMARY & TABLE -->
+            <section class="surface-light section-band">
+                <div class="editorial-container space-y-6">
+
+                    <div class="editorial-grid-3 tabular-nums">
+                        <div class="ops-card p-5 space-y-1">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Orders</span>
+                            <div id="bookings-count-val" class="text-2xl font-bold text-white">0</div>
+                        </div>
+                        <div class="ops-card p-5 space-y-1">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Passes Reserved</span>
+                            <div id="bookings-passes-val" class="text-2xl font-bold text-white">0</div>
+                        </div>
+                        <div class="ops-card p-5 space-y-1">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Attributed Value</span>
+                            <div id="bookings-gross-val" class="text-2xl font-bold text-[var(--emerald-ink)]">₹0</div>
+                        </div>
+                    </div>
+
+                    <div class="filter-bar">
+                        <div class="flex flex-wrap items-center justify-between gap-3 w-full">
+                            <div class="search-input-wrap">
+                                <i data-lucide="search" class="w-4 h-4 search-input-icon" aria-hidden="true"></i>
+                                <label for="bookings-search" class="visually-hidden">Search booking history</label>
+                                <input id="bookings-search" type="search" oninput="renderBookingsTable()"
+                                    autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search"
+                                    placeholder="Search order ref, attendee, or event..." class="search-input-field">
+                            </div>
+                        </div>
+
+                        <div class="city-chip-group w-full" role="group" aria-label="Filter bookings by status">
+                            <button type="button" class="city-filter-btn is-active" data-booking-status="all"
+                                aria-pressed="true" onclick="setBookingStatusFilter('all')">All</button>
+                            <button type="button" class="city-filter-btn" data-booking-status="confirm"
+                                aria-pressed="false" onclick="setBookingStatusFilter('confirm')">Confirmed</button>
+                            <button type="button" class="city-filter-btn" data-booking-status="scan"
+                                aria-pressed="false" onclick="setBookingStatusFilter('scan')">Scanned</button>
+                            <button type="button" class="city-filter-btn" data-booking-status="pend"
+                                aria-pressed="false" onclick="setBookingStatusFilter('pend')">Pending</button>
+                        </div>
+                    </div>
+
+                    <div class="ops-card overflow-hidden">
+                        <div class="ops-table-wrap overflow-x-auto">
+                            <table class="ops-table w-full text-left font-mono text-xs">
+                                <thead>
+                                    <tr>
+                                        <th>Order Ref</th>
+                                        <th>Event &amp; Tier</th>
+                                        <th>Qty</th>
+                                        <th>Attendee</th>
+                                        <th>MRP</th>
+                                        <th>Commission</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Receipt</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bookings-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer" role="contentinfo">
+            <div class="editorial-container">
+                <div class="footer-bottom">
+                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                        <a href="/?public=1">Public Site</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- PASS RECEIPT MODAL -->
+    <div id="portal-receipt-modal" class="modal-backdrop hidden opacity-0" role="dialog" aria-modal="true"
+        aria-labelledby="receipt-modal-title">
+        <div class="modal-card space-y-4">
+            <button type="button" onclick="closePortalModal('portal-receipt-modal')" class="modal-close-btn" aria-label="Close pass receipt">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="modal-dark-banner flex items-center justify-between gap-2">
+                <div>
+                    <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Digital Pass Receipt</div>
+                    <h2 id="receipt-modal-title" class="text-lg font-bold text-white">Verified Allocation</h2>
+                </div>
+                <span id="receipt-status" class="ops-badge-emerald px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase">CONFIRMED</span>
+            </div>
+
+            <div class="ops-subcard p-4 space-y-2.5 text-xs font-mono">
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Order Ref</span>
+                    <span id="receipt-order-ref" class="font-bold text-white">TIX-000000</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Event</span>
+                    <span id="receipt-event" class="font-bold text-white text-right">Live Concert</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Tier &amp; Qty</span>
+                    <span id="receipt-tier" class="text-white">GA &times; 1</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Attendee</span>
+                    <span id="receipt-attendee" class="text-white">Guest</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Channel</span>
+                    <span id="receipt-channel" class="text-white">Promoter Portal</span>
+                </div>
+                <div class="flex justify-between gap-2 pt-2 border-t border-[var(--line)]">
+                    <span class="text-[var(--muted)]">Face Value (MRP)</span>
+                    <span id="receipt-amount" class="font-bold text-white tabular-nums">₹0</span>
+                </div>
+                <div class="flex justify-between gap-2">
+                    <span class="text-[var(--muted)]">Your Commission</span>
+                    <span id="receipt-commission" class="font-bold text-[var(--emerald-ink)] tabular-nums">+₹0</span>
+                </div>
+            </div>
+
+            <button type="button" onclick="closePortalModal('portal-receipt-modal')" class="btn-editorial-primary w-full">
+                Close Receipt
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#ef4444]"></i>
+        <span id="toast-message">Updated</span>
+    </div>
+
+</body>
+
+</html>
+

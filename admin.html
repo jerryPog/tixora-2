@@ -7,8 +7,9 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Operations Desk | Tixora Live Protocol</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
-    <meta name="theme-color" content="#050608">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#111113">
 
     <!-- Production Console Warning Filter -->
     <script>
@@ -34,12 +35,12 @@
                         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
                     },
                     colors: {
-                        ink: '#f8fafc',
-                        navy: '#ff2e54',
-                        gold: '#ff4d6d',
-                        soft: '#131622',
+                        ink: '#f4f4f5',
+                        navy: '#ef4444',
+                        gold: '#f87171',
+                        soft: '#26262b',
                         crimson: {
-                            DEFAULT: '#ff2e54',
+                            DEFAULT: '#ef4444',
                             hover: '#dc2626'
                         }
                     }
@@ -79,22 +80,22 @@
 
             <div class="h-4 w-px bg-white/20 hidden sm:block"></div>
 
-            <button type="button" id="sidebar-toggle-btn" onclick="toggleSidebar()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="main-sidebar">
+            <button type="button" id="sidebar-toggle-btn" onclick="toggleSidebar()" class="text-[#a1a1aa] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="main-sidebar">
                 <i data-lucide="menu" class="w-4 h-4"></i>
             </button>
 
             <div class="relative hidden md:block w-72">
-                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-3 text-[#94a3b8]"></i>
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-3 text-[#a1a1aa]"></i>
                 <label for="global-search-input" class="visually-hidden">Global Operations Search</label>
                 <input type="search" id="global-search-input" enterkeyhint="search" placeholder="Search tours, venues, promoters..."
-                    class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-base text-white placeholder-[#94a3b8] focus:outline-none focus:border-[#ff2e54] transition-colors"
+                    class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-base text-white placeholder-[#a1a1aa] focus:outline-none focus:border-[#ef4444] transition-colors"
                     oninput="handleGlobalSearch(this.value)">
-                <span class="absolute right-2.5 top-2.5 text-[10px] font-mono text-[#94a3b8] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
+                <span class="absolute right-2.5 top-2.5 text-[10px] font-mono text-[#a1a1aa] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
             </div>
 
-            <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 hover:border-[#ff2e54] transition-colors">
-                <span class="w-2 h-2 rounded-full bg-emerald-400" id="db-status-dot"></span>
-                <span class="text-[#94a3b8] text-[11px]" id="db-status-text">PostgreSQL Connected</span>
+            <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 hover:border-[#ef4444] transition-colors">
+                <span class="w-2 h-2 rounded-full bg-zinc-300" id="db-status-dot"></span>
+                <span class="text-[#a1a1aa] text-[11px]" id="db-status-text">PostgreSQL Connected</span>
             </button>
         </div>
 
@@ -105,23 +106,23 @@
                 <span class="sm:hidden">New Tour</span>
             </button>
 
-            <button type="button" onclick="refreshAllData()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Refresh Live Data" aria-label="Refresh Live Data">
+            <button type="button" onclick="refreshAllData()" class="text-[#a1a1aa] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Refresh Live Data" aria-label="Refresh Live Data">
                 <i data-lucide="refresh-cw" class="w-4 h-4" id="refresh-icon"></i>
             </button>
 
-            <button type="button" onclick="openModal('supabase-modal')" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Database Configuration" aria-label="Database Configuration">
+            <button type="button" onclick="openModal('supabase-modal')" class="text-[#a1a1aa] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Database Configuration" aria-label="Database Configuration">
                 <i data-lucide="database" class="w-4 h-4"></i>
             </button>
 
             <button type="button" id="admin-user-badge-container" class="flex items-center space-x-2.5 pl-3 bg-transparent border-0 border-l border-white/20 text-left cursor-pointer" onclick="handleAdminSignOut()" title="Sign Out" aria-label="Sign Out">
-                <div id="admin-user-avatar" class="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs" style="background: rgba(255,46,84,0.18); border: 1px solid #ff2e54; color: #ff4d6d;">
+                <div id="admin-user-avatar" class="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs" style="background: rgba(239,68,68,0.18); border: 1px solid #ef4444; color: #f87171;">
                     <span>OP</span>
                 </div>
                 <div class="hidden sm:flex flex-col text-left">
                     <span id="admin-user-email" class="text-xs text-white font-semibold leading-none">admin@tixora.live</span>
-                    <span id="admin-user-role-badge" class="text-[10px] font-mono leading-none mt-1" style="color: #ff4d6d;">SUPER ADMIN</span>
+                    <span id="admin-user-role-badge" class="text-[10px] font-mono leading-none mt-1" style="color: #f87171;">SUPER ADMIN</span>
                 </div>
-                <i data-lucide="log-out" class="w-3.5 h-3.5 text-[#94a3b8] hover:text-white ml-1 hidden sm:block"></i>
+                <i data-lucide="log-out" class="w-3.5 h-3.5 text-[#a1a1aa] hover:text-white ml-1 hidden sm:block"></i>
             </button>
         </div>
     </header>
@@ -256,7 +257,7 @@
             <div class="space-y-5">
                 <div class="flex items-center justify-between lg:hidden pb-2 border-b border-white/10">
                     <span class="text-xs font-mono font-bold uppercase tracking-wider text-white">Operations Nav</span>
-                    <button type="button" onclick="toggleSidebar(false)" class="text-[#94a3b8] hover:text-white p-2 rounded-lg inline-flex items-center justify-center" aria-label="Close Navigation Menu">
+                    <button type="button" onclick="toggleSidebar(false)" class="text-[#a1a1aa] hover:text-white p-2 rounded-lg inline-flex items-center justify-center" aria-label="Close Navigation Menu">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -265,79 +266,79 @@
                 <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5 min-w-0">
                         <div class="relative flex-shrink-0">
-                            <div id="sidebar-user-avatar" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold" style="background: rgba(255,46,84,0.18); border: 1px solid #ff2e54; color: #ff4d6d;">
+                            <div id="sidebar-user-avatar" class="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold" style="background: rgba(239,68,68,0.18); border: 1px solid #ef4444; color: #f87171;">
                                 <span>OP</span>
                             </div>
-                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-2 ring-[#050608]"></span>
+                            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-zinc-300 ring-2 ring-[#111113]"></span>
                         </div>
                         <div class="min-w-0">
                             <div id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Master Admin</div>
-                            <div id="sidebar-user-role" class="text-[10px] font-mono" style="color: #ff4d6d;">Operations Clearance</div>
+                            <div id="sidebar-user-role" class="text-[10px] font-mono" style="color: #f87171;">Operations Clearance</div>
                         </div>
                     </div>
-                    <button type="button" onclick="handleAdminSignOut()" class="text-[#94a3b8] hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors" title="Sign Out" aria-label="Sign Out">
+                    <button type="button" onclick="handleAdminSignOut()" class="text-[#a1a1aa] hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors" title="Sign Out" aria-label="Sign Out">
                         <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
                     </button>
                 </div>
 
                 <!-- Navigation Groups -->
                 <div class="space-y-1">
-                    <div class="text-[10px] font-mono text-[#94a3b8] uppercase tracking-wider px-2.5 py-1">
+                    <div class="text-[10px] font-mono text-[#a1a1aa] uppercase tracking-wider px-2.5 py-1">
                         Core Desk
                     </div>
 
                     <nav class="space-y-1" id="sidebar-nav" aria-label="Operations Modules">
                         <button type="button" onclick="switchTab('overview')" id="tab-btn-overview"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ff2e54]">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-[#ff4d6d]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ef4444]">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-[#f87171]"></i>
                             <span>Executive Overview</span>
                         </button>
 
                         <button type="button" onclick="switchTab('tours')" id="tab-btn-tours"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="ticket" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="ticket" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Tour Allocations</span>
                         </button>
 
                         <button type="button" onclick="switchTab('promoters')" id="tab-btn-promoters"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="users" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="users" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Promoter Mesh</span>
                         </button>
 
                         <button type="button" onclick="switchTab('orders')" id="tab-btn-orders"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="receipt" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="receipt" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Order Status</span>
                         </button>
                     </nav>
 
-                    <div class="text-[10px] font-mono text-[#94a3b8] uppercase tracking-wider px-2.5 pt-4 pb-1">
+                    <div class="text-[10px] font-mono text-[#a1a1aa] uppercase tracking-wider px-2.5 pt-4 pb-1">
                         Settlement &amp; Gate
                     </div>
 
                     <nav class="space-y-1" aria-label="Settlement and Security Modules">
                         <button type="button" onclick="switchTab('payouts')" id="tab-btn-payouts"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="zap" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="zap" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>UPI Settlements</span>
                         </button>
 
                         <button type="button" onclick="switchTab('antiscalping')" id="tab-btn-antiscalping"
-                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Turnstile Gate</span>
                         </button>
 
                         <button type="button" onclick="openModal('supabase-modal')"
-                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="database" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="database" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Supabase Engine</span>
                         </button>
 
                         <a href="/" target="_blank" rel="noopener noreferrer"
-                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
-                            <i data-lucide="external-link" class="w-4 h-4 text-[#94a3b8]"></i>
+                            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
+                            <i data-lucide="external-link" class="w-4 h-4 text-[#a1a1aa]"></i>
                             <span>Live Fan Site</span>
                         </a>
                     </nav>
@@ -345,15 +346,15 @@
             </div>
 
             <!-- Bottom System Telemetry Card -->
-            <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 text-[11px] font-mono text-[#94a3b8] space-y-1">
+            <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 text-[11px] font-mono text-[#a1a1aa] space-y-1">
                 <div class="flex items-center justify-between text-white font-semibold">
                     <span class="flex items-center space-x-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>
                         <span>PostgreSQL Mesh</span>
                     </span>
-                    <span class="text-emerald-300 text-[10px]">ACTIVE</span>
+                    <span class="text-zinc-200 text-[10px]">ACTIVE</span>
                 </div>
-                <div class="text-[10px] text-[#94a3b8]">Supabase Managed Database</div>
+                <div class="text-[10px] text-[#a1a1aa]">Supabase Managed Database</div>
             </div>
         </aside>
 
@@ -443,10 +444,10 @@
 
                             <div class="relative w-36 h-36 mx-auto flex items-center justify-center my-4">
                                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100" aria-hidden="true">
-                                    <circle cx="50" cy="50" r="40" stroke="#1e2436" stroke-width="10" fill="none" />
-                                    <circle cx="50" cy="50" r="40" stroke="#34d399" stroke-width="10" fill="none" stroke-dasharray="140 251" stroke-dashoffset="0" />
-                                    <circle cx="50" cy="50" r="40" stroke="#ff2e54" stroke-width="10" fill="none" stroke-dasharray="55 251" stroke-dashoffset="-140" />
-                                    <circle cx="50" cy="50" r="40" stroke="#fbbf24" stroke-width="10" fill="none" stroke-dasharray="35 251" stroke-dashoffset="-195" />
+                                    <circle cx="50" cy="50" r="40" stroke="#323238" stroke-width="10" fill="none" />
+                                    <circle cx="50" cy="50" r="40" stroke="#d4d4d8" stroke-width="10" fill="none" stroke-dasharray="140 251" stroke-dashoffset="0" />
+                                    <circle cx="50" cy="50" r="40" stroke="#ef4444" stroke-width="10" fill="none" stroke-dasharray="55 251" stroke-dashoffset="-140" />
+                                    <circle cx="50" cy="50" r="40" stroke="#f87171" stroke-width="10" fill="none" stroke-dasharray="35 251" stroke-dashoffset="-195" />
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
                                     <span class="text-base font-bold text-[var(--ink)] tabular-nums" id="chart-center-val">₹0.00</span>
@@ -544,7 +545,7 @@
                         <table class="ops-table text-xs">
                             <thead>
                                 <tr>
-                                    <th class="w-8"><input type="checkbox" aria-label="Select all recent bookings" class="rounded accent-[#ff2e54]"></th>
+                                    <th class="w-8"><input type="checkbox" aria-label="Select all recent bookings" class="rounded accent-[#ef4444]"></th>
                                     <th>Attendee Name</th>
                                     <th class="font-mono">Order Number</th>
                                     <th class="font-mono">Pass Amount</th>
@@ -642,7 +643,7 @@
 
                             <div class="rounded-2xl overflow-hidden bg-[var(--bg-void)] mb-3 aspect-[16/9] relative border border-[var(--line)]">
                                 <img id="spotlight-poster" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Tour" width="480" height="270" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#050608]/85 via-transparent to-transparent"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#111113]/85 via-transparent to-transparent"></div>
                                 <span id="spotlight-layout-badge" class="ops-badge-navy absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
                                     Arena Open-Air
                                 </span>
@@ -695,28 +696,28 @@
                             <div class="space-y-1.5 text-xs" id="todo-list">
                                 <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" checked onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <input type="checkbox" checked onchange="toggleTodo(this)" class="rounded accent-[#ef4444]">
                                         <span class="text-xs line-through truncate" style="color: var(--emerald-ink);">Verify Anyma VIP Deck allocations</span>
                                     </label>
                                     <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
                                 <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ef4444]">
                                         <span class="text-[var(--ink)] text-xs truncate">Check JLN Stadium gate scanner latency</span>
                                     </label>
                                     <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
                                 <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ef4444]">
                                         <span class="text-[var(--ink)] text-xs truncate">Review Sunburn Goa promoter cuts</span>
                                     </label>
                                     <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
                                 </div>
                                 <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]">
                                     <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                                        <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ef4444]">
                                         <span class="text-[var(--ink)] text-xs truncate">Audit NPCI instant UPI settlement pool</span>
                                     </label>
                                     <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
@@ -1096,7 +1097,7 @@
 
                 <!-- Feature Event Checkbox -->
                 <label for="tour-is-featured" class="ops-subcard p-3.5 flex items-center space-x-2.5 cursor-pointer" style="min-block-size: max(44px, var(--target-size)); background-color: var(--crimson-bg); border-color: var(--crimson-border);">
-                    <input type="checkbox" id="tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
+                    <input type="checkbox" id="tour-is-featured" class="rounded accent-[#ef4444] w-4 h-4 cursor-pointer">
                     <span class="text-xs font-bold flex items-center space-x-1.5" style="color: var(--crimson-ink);">
                         <i data-lucide="star" class="w-3.5 h-3.5"></i>
                         <span>Feature in Homepage Spotlight</span>
@@ -1239,7 +1240,7 @@
 
                 <!-- Feature Event Checkbox -->
                 <label for="edit-tour-is-featured" class="ops-subcard p-3.5 flex items-center space-x-2.5 cursor-pointer" style="min-block-size: max(44px, var(--target-size)); background-color: var(--crimson-bg); border-color: var(--crimson-border);">
-                    <input type="checkbox" id="edit-tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
+                    <input type="checkbox" id="edit-tour-is-featured" class="rounded accent-[#ef4444] w-4 h-4 cursor-pointer">
                     <span class="text-xs font-bold flex items-center space-x-1.5" style="color: var(--crimson-ink);">
                         <i data-lucide="star" class="w-3.5 h-3.5"></i>
                         <span>Feature in Homepage Spotlight</span>
@@ -1415,7 +1416,7 @@
             div.className = 'flex items-center justify-between p-2 rounded-xl hover:bg-[var(--soft)]';
             div.innerHTML = `
                 <label class="flex items-center space-x-2 cursor-pointer flex-1 min-w-0">
-                    <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ff2e54]">
+                    <input type="checkbox" onchange="toggleTodo(this)" class="rounded accent-[#ef4444]">
                     <span class="text-[var(--ink)] text-xs truncate"></span>
                 </label>
                 <button type="button" onclick="this.parentElement.remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove task"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
@@ -1676,6 +1677,7 @@
             } catch (e) {
                 console.warn('Sign out notice:', e);
             }
+            liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
             showGateState('login');
             showToast('Signed out.');
         }
@@ -1713,6 +1715,7 @@
 
             const role = await TixoraAuth.getUserRole(session.user);
             if (role !== 'admin' && role !== 'manager') {
+                liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
                 showGateState('forbidden');
                 const forEmail = document.getElementById('forbidden-user-email');
                 const forRole = document.getElementById('forbidden-user-role');
@@ -1736,9 +1739,9 @@
             if (sideRole) sideRole.textContent = 'Operations Clearance';
             if (avatar) {
                 const initials = (userEmail.slice(0, 2) || 'OP').toUpperCase();
-                avatar.innerHTML = `<span class="font-bold text-xs" style="color: #ff4d6d;">${escHtml(initials)}</span>`;
+                avatar.innerHTML = `<span class="font-bold text-xs" style="color: #f87171;">${escHtml(initials)}</span>`;
                 const sideAvatar = document.getElementById('sidebar-user-avatar');
-                if (sideAvatar) sideAvatar.innerHTML = `<span class="font-bold text-xs" style="color: #ff4d6d;">${escHtml(initials)}</span>`;
+                if (sideAvatar) sideAvatar.innerHTML = `<span class="font-bold text-xs" style="color: #f87171;">${escHtml(initials)}</span>`;
             }
 
             showGateState('workspace');
@@ -1762,7 +1765,7 @@
 
                 if (_adminClient) {
                     if (dot) {
-                        dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+                        dot.className = 'w-2 h-2 rounded-full bg-zinc-300';
                     }
                     if (txt) txt.textContent = 'PostgreSQL Connected';
                     if (banner) banner.classList.add('hidden');
@@ -1774,7 +1777,7 @@
                         showGateState('login');
                     }
                 } else {
-                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                    if (dot) dot.className = 'w-2 h-2 rounded-full bg-red-400';
                     if (txt) txt.textContent = 'Supabase Unconfigured';
                     if (banner) banner.classList.remove('hidden');
                     showGateState('login');
@@ -2133,7 +2136,7 @@
                         const ok = (o.status || 'Approved').toLowerCase() === 'approved' || (o.status || '').toLowerCase() === 'delivered';
                         return `
                         <tr class="hover:bg-[var(--soft)]/60 transition-colors">
-                            <td><input type="checkbox" aria-label="Select booking ${escHtml(o.orderNum)}" class="rounded accent-[#ff2e54]"></td>
+                            <td><input type="checkbox" aria-label="Select booking ${escHtml(o.orderNum)}" class="rounded accent-[#ef4444]"></td>
                             <td>
                                 <div class="flex items-center space-x-2">
                                     <div class="ops-badge-emerald w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">
@@ -2364,7 +2367,7 @@
                     blockList.innerHTML = liveData.botBlocks.map(b => `
                         <div class="ops-subcard p-3 flex items-center justify-between gap-3">
                             <div class="min-w-0">
-                                <div class="font-bold truncate" style="color: var(--crimson-ink);">${escHtml(b.type)} &mdash; ${escHtml(b.ip)}</div>
+                                <div class="font-bold truncate" style="color: var(--crimson-ink);">${escHtml(b.type)} - ${escHtml(b.ip)}</div>
                                 <div class="text-[var(--muted)] text-[11px] truncate">${escHtml(b.details)}</div>
                             </div>
                             <span class="ops-badge-crimson px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono flex-shrink-0">${escHtml(b.action)}</span>
@@ -2385,14 +2388,14 @@
                 if (el && btn) {
                     if (t === tabId) {
                         el.classList.remove('hidden');
-                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ff2e54]';
+                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-white/10 text-white border-l-2 border-[#ef4444]';
                         const icon = btn.querySelector('svg, i');
-                        if (icon) icon.className = 'w-4 h-4 text-[#ff4d6d]';
+                        if (icon) icon.className = 'w-4 h-4 text-[#f87171]';
                     } else {
                         el.classList.add('hidden');
-                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#94a3b8] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent';
+                        btn.className = 'tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent';
                         const icon = btn.querySelector('svg, i');
-                        if (icon) icon.className = 'w-4 h-4 text-[#94a3b8]';
+                        if (icon) icon.className = 'w-4 h-4 text-[#a1a1aa]';
                     }
                 }
             });
@@ -2948,12 +2951,20 @@
                     reader.readAsDataURL(file);
                 });
 
+                const session = (window.TixoraAuth && typeof window.TixoraAuth.getSession === 'function')
+                    ? await window.TixoraAuth.getSession()
+                    : null;
+                const reqHeaders = {
+                    'Content-Type': 'application/json'
+                };
+                if (session && session.access_token) {
+                    reqHeaders['Authorization'] = `Bearer ${session.access_token}`;
+                }
+
                 const reqOpts = {
                     method: 'POST',
                     credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: reqHeaders,
                     body: JSON.stringify({
                         file: base64Data,
                         filename: file.name

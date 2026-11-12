@@ -1,6 +1,6 @@
 # ==============================================================================
 # Tixora Official Live Concert Passes & Youth Promoter Protocol
-# Production robots.txt — https://tixora.live
+# Production robots.txt - https://tixora.live
 # ==============================================================================
 
 User-agent: *

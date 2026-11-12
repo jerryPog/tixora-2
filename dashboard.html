@@ -3,15 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
+    <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="text-scale" content="scale">
     <meta name="robots" content="noindex, nofollow">
-    <title>Promoter Portal | Tixora Live Protocol</title>
+    <title>Promoter Dashboard | Tixora Promoter Portal</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
-    <meta name="theme-color" content="#050608">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta name="theme-color" content="#111113">
 
-    <!-- Production Console Warning Filter -->
     <script>
         (function () {
             const originalWarn = console.warn;
@@ -22,7 +23,6 @@
         })();
     </script>
 
-    <!-- Tailwind CSS (Preflight disabled so editorial.css cascade controls base) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,43 +33,28 @@
                         sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                         display: ['"Bricolage Grotesque"', 'sans-serif'],
                         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
-                    },
-                    colors: {
-                        ink: '#f8fafc',
-                        navy: '#ff2e54',
-                        gold: '#ff4d6d',
-                        soft: '#131622',
-                        crimson: {
-                            DEFAULT: '#ff2e54',
-                            hover: '#dc2626'
-                        }
                     }
                 }
             }
         };
     </script>
 
-    <!-- Fonts: Bricolage Grotesque & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="editorial.css?v=4">
 
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
-    <!-- Supabase JS Client (v2) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-    <!-- Tixora Supabase Config & Auth Engine -->
     <script src="supabase-config.js" defer></script>
     <script src="auth.js?v=4" defer></script>
+    <script src="portal-app.js?v=1" defer></script>
 </head>
 
-<body class="ops-body ops-shell antialiased">
+<body class="ops-body ops-shell antialiased" data-portal-page="dashboard">
 
     <!-- ========================================================= -->
-    <!-- AUTHENTICATION STATE 1: LOADING BARRIER -->
+    <!-- STATE 1: LOADING BARRIER -->
     <!-- ========================================================= -->
     <div id="dashboard-loading-barrier" class="ops-auth-main flex-col gap-4">
         <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
@@ -82,12 +67,12 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- AUTHENTICATION STATE 2: PROTECTED PROMOTER LOGIN GATE -->
+    <!-- STATE 2: PROTECTED PROMOTER SIGN-IN / REGISTER GATE -->
     <!-- ========================================================= -->
     <div id="dashboard-auth-gate" class="hidden ops-auth-main">
         <div class="ops-card max-w-lg w-full p-6 sm:p-8 space-y-6">
             <div class="space-y-2.5 text-center">
-                <a href="/" class="ops-pill-brand mx-auto mb-1" aria-label="Tixora Homepage">
+                <a href="/?public=1" class="ops-pill-brand mx-auto mb-1" aria-label="Tixora Homepage">
                     <picture>
                         <source srcset="tixora-logo.webp" type="image/webp">
                         <img src="tixora-logo.png" alt="TIXORA" width="112" height="28" class="h-7 w-auto object-contain">
@@ -99,31 +84,27 @@
                         <span>Promoter Network Gateway</span>
                     </span>
                 </div>
-                <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Promoter Command Center</h1>
+                <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Promoter Portal Sign In</h1>
                 <p class="text-xs text-[var(--muted)] leading-relaxed max-w-md mx-auto">
-                    Sign in to track pass allocations, commission tiers, and UPI payouts.
+                    Sign in to open live events, your Promoter ID &amp; Dashboard, wallet settlements, and booking history.
                 </p>
             </div>
 
-            <!-- Error Banner -->
             <div id="dashboard-auth-error" class="hidden modal-error-banner" role="alert">
                 <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
                 <span id="dashboard-auth-error-text">Authentication failed</span>
             </div>
 
-            <!-- Auth Tabs -->
             <div class="auth-tab-strip">
-                <button type="button" id="tab-dashboard-signin" onclick="switchDashboardTab('signin')"
-                    class="auth-tab-btn is-active">
+                <button type="button" id="tab-dashboard-signin" onclick="switchDashboardTab('signin')" class="auth-tab-btn is-active">
                     Sign In
                 </button>
-                <button type="button" id="tab-dashboard-signup" onclick="switchDashboardTab('signup')"
-                    class="auth-tab-btn">
+                <button type="button" id="tab-dashboard-signup" onclick="switchDashboardTab('signup')" class="auth-tab-btn">
                     Apply / Register
                 </button>
             </div>
 
-            <!-- FORM 1: SIGN IN -->
+            <!-- SIGN IN -->
             <form id="form-dashboard-signin" onsubmit="handleDashboardSignIn(event)" class="space-y-4">
                 <div>
                     <label for="dash-signin-email" class="modal-field-label">Email Address</label>
@@ -142,17 +123,16 @@
                     </div>
                     <input type="password" id="dash-signin-password" name="password" required
                         autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false"
-                        enterkeyhint="done" placeholder="••••••••••••"
-                        class="modal-input font-mono">
+                        enterkeyhint="done" placeholder="••••••••••••" class="modal-input font-mono">
                 </div>
 
                 <button type="submit" id="btn-dash-signin" class="btn-editorial-primary w-full">
                     <span id="btn-dash-signin-text">Sign In</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signin-icon"></i>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
 
-            <!-- FORM 2: REGISTER -->
+            <!-- REGISTER -->
             <form id="form-dashboard-signup" onsubmit="handleDashboardSignUp(event)" class="hidden space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
@@ -163,8 +143,7 @@
                     <div>
                         <label for="dash-signup-phone" class="modal-field-label">WhatsApp (+91)</label>
                         <input type="tel" id="dash-signup-phone" name="phone" required autocomplete="tel"
-                            inputmode="tel" enterkeyhint="next" placeholder="+91 98200 11223"
-                            class="modal-input font-mono">
+                            inputmode="tel" enterkeyhint="next" placeholder="+91 98200 11223" class="modal-input font-mono">
                     </div>
                 </div>
 
@@ -179,8 +158,7 @@
                         <label for="dash-signup-password" class="modal-field-label">Create Password</label>
                         <input type="password" id="dash-signup-password" name="password" required
                             autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false"
-                            minlength="6" enterkeyhint="next" placeholder="••••••••••••"
-                            class="modal-input font-mono">
+                            minlength="6" enterkeyhint="next" placeholder="••••••••••••" class="modal-input font-mono">
                     </div>
                 </div>
 
@@ -200,11 +178,10 @@
 
                 <button type="submit" id="btn-dash-signup" class="btn-editorial-gold w-full">
                     <span id="btn-dash-signup-text">Apply &amp; Register</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signup-icon"></i>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </form>
 
-            <!-- REGISTRATION SUCCESS NOTICE -->
             <div id="dash-confirm-notice" class="hidden text-center space-y-4 pt-2">
                 <div class="ops-badge-emerald w-12 h-12 rounded-2xl flex items-center justify-center mx-auto">
                     <i data-lucide="mail-check" class="w-6 h-6"></i>
@@ -212,28 +189,22 @@
                 <div class="space-y-1">
                     <h2 class="text-xl font-bold text-[var(--ink)]">Application Received</h2>
                     <p class="text-xs text-[var(--muted)]">
-                        Verification link sent to
-                        <strong class="text-[var(--ink)] font-mono" id="dash-confirm-email"></strong>.
+                        Verification link sent to <strong class="text-[var(--ink)] font-mono" id="dash-confirm-email"></strong>.
                     </p>
-                </div>
-                <div class="ops-subcard p-3.5 text-xs text-[var(--muted)] text-left leading-relaxed">
-                    Verify your email (check spam if needed), then sign in below.
                 </div>
                 <div class="space-y-2 pt-2">
                     <button type="button" onclick="switchDashboardTab('signin')" class="btn-editorial-primary w-full">
                         <span>Proceed to Sign In</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
-                    <button type="button" id="btn-dash-resend" onclick="handleDashboardResend()"
-                        class="btn-editorial-outline-light w-full">
+                    <button type="button" id="btn-dash-resend" onclick="handleDashboardResend()" class="btn-editorial-outline-light w-full">
                         Resend Verification Email
                     </button>
                 </div>
             </div>
 
-            <!-- Footer Links -->
             <div class="flex items-center justify-between pt-3 border-t border-[var(--line)] text-xs font-mono">
-                <a href="/" class="inline-flex items-center gap-1.5 font-semibold" style="color: var(--crimson-ink);">
+                <a href="/?public=1" class="inline-flex items-center gap-1.5 font-semibold" style="color: var(--crimson-ink);">
                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                     <span>Back to Fan Site</span>
                 </a>
@@ -246,623 +217,274 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- AUTHENTICATION STATE 3: PROMOTER COMMAND WORKSPACE -->
+    <!-- STATE 3: PROMOTER DASHBOARD WEBSITE PAGE -->
     <!-- ========================================================= -->
-    <div id="dashboard-workspace" class="hidden flex-1 flex flex-col">
+    <div id="dashboard-workspace" class="hidden min-h-screen flex flex-col">
 
-        <!-- Protected Top Command Header -->
-        <header class="ops-topbar sticky top-0 z-40 px-4 sm:px-6 min-h-16 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div class="flex items-center gap-4">
-                <a href="/" class="flex items-center gap-2.5" aria-label="Tixora Home">
-                    <picture>
-                        <source srcset="tixora-logo.webp" type="image/webp">
-                        <img src="tixora-logo.png" alt="TIXORA" width="112" height="28" class="h-7 w-auto object-contain">
-                    </picture>
-                    <span class="text-[11px] font-mono uppercase tracking-wider font-bold pl-2.5 hidden sm:inline"
-                        style="color: var(--gold-on-dark); border-inline-start: 1px solid rgba(255,255,255,0.2);">
-                        COMMAND CENTER
-                    </span>
-                </a>
-                <div class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono"
-                    style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: var(--on-dark-muted);">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>Turnstile Node Live</span>
+        <header class="site-header ops-topbar portal-site-header" id="navbar">
+            <div class="nav-pill">
+                <div class="nav-left">
+                    <a href="/portal" class="brand-mark" aria-label="Tixora Promoter Events Home">
+                        <picture>
+                            <source srcset="tixora-logo.webp" type="image/webp">
+                            <img src="tixora-logo.png" alt="Tixora" width="112" height="28">
+                        </picture>
+                    </a>
+                    <span class="nav-divider" aria-hidden="true"></span>
+                    <nav class="desktop-nav" aria-label="Promoter Menu">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard" aria-current="page">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                    </nav>
                 </div>
-            </div>
 
-            <div class="flex items-center gap-3">
-                <a href="/tours" class="hidden sm:inline-flex btn-editorial-outline-dark btn-compact">
-                    <i data-lucide="ticket" class="w-3.5 h-3.5" style="color: var(--gold-on-dark);"></i>
-                    <span>Live Tours</span>
-                </a>
+                <div class="nav-actions">
+                    <button type="button" onclick="copyPromoterId()" class="portal-id-chip portal-hide-mobile"
+                        aria-label="Copy Promoter ID">
+                        <span class="w-2 h-2 rounded-full bg-[#d4d4d8]" aria-hidden="true"></span>
+                        <span id="topbar-promoter-id" data-portal-id-chip>TIX-PROMO</span>
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
 
-                <div class="flex items-center gap-2.5 pl-3"
-                    style="border-inline-start: 1px solid rgba(255,255,255,0.2);">
-                    <div id="dash-user-avatar"
-                        class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs"
-                        style="background: rgba(255,46,84,0.16); border: 1px solid var(--crimson); color: var(--crimson-ink);">
-                        <span>PR</span>
-                    </div>
-                    <div class="hidden sm:flex flex-col text-left">
-                        <span id="dash-header-name" class="text-xs text-white font-semibold leading-none">Promoter</span>
-                        <span id="dash-header-tier" class="text-[10px] font-mono leading-none mt-1"
-                            style="color: var(--gold-on-dark);">TIER &bull; SCOUT (8.0%)</span>
-                    </div>
-                    <button type="button" onclick="handleDashboardSignOut()"
-                        class="p-2 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center justify-center"
-                        style="color: var(--on-dark-muted);"
-                        title="Sign Out" aria-label="Sign Out">
+                    <a id="promo-admin-link" href="/admin" class="hidden nav-ops-link portal-hide-tablet">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Ops</span>
+                    </a>
+
+                    <a href="/?public=1" class="nav-ops-link portal-hide-tablet">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span>Public Site</span>
+                    </a>
+
+                    <button type="button" onclick="handlePortalSignOut()" class="nav-signout-btn portal-hide-mobile"
+                        aria-label="Sign Out">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
+
+                    <button type="button" onclick="togglePortalMobileMenu()" id="mobile-menu-btn" class="nav-menu-btn"
+                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                        <span>Menu</span>
+                        <i data-lucide="menu" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </div>
+
+            <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Promoter Navigation">
+                <div class="mobile-nav-links">
+                    <a href="/portal"><span>Events Home</span><span class="cart-count-pill">8</span></a>
+                    <a href="/dashboard" aria-current="page"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">8.0%</span></a>
+                    <a href="/portal/wallet"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/bookings"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
+                    <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
+                    <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
+                </div>
+                <div class="mobile-nav-footer">
+                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);" class="btn-editorial-outline-light">
+                        ID: <span id="mobile-promoter-id" class="font-mono text-[var(--crimson-ink)]">TIX-PROMO</span>
+                    </button>
+                    <button type="button" onclick="handlePortalSignOut()" class="btn-editorial-primary">
+                        Sign Out
+                    </button>
+                </div>
+            </nav>
         </header>
 
-        <!-- Main Dashboard Viewport -->
-        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        <main id="main-content" class="flex-1">
 
-            <!-- Card 1: Overview Banner (Editorial Deep Navy Hero Strip) -->
-            <div class="ops-card--navy p-6 sm:p-7">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="space-y-2">
-                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold"
-                            style="background: rgba(16,185,129,0.16); border: 1px solid rgba(110,231,183,0.4); color: var(--emerald-tint);">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            <span>VERIFIED PROMOTER PROTOCOL CLEARANCE</span>
-                        </span>
-                        <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight" id="dash-hero-title">
-                            Welcome, Promoter
-                        </h1>
-                        <p class="text-xs leading-relaxed font-mono" style="color: var(--on-dark-muted);"
-                            id="dash-hero-sub">
-                            Account: <span class="text-white font-semibold" id="dash-account-email">promoter@tixora.live</span>
-                            &bull; Circuit: <span class="text-white font-semibold" id="dash-account-city">Mumbai</span>
-                        </p>
-                    </div>
+            <!-- DASHBOARD HERO -->
+            <section class="cied-hero cied-hero--compact" aria-labelledby="dash-hero-title">
+                <div class="hero-backdrop" aria-hidden="true">
+                    <div class="hero-scrim"></div>
+                </div>
 
-                    <div class="flex items-center">
-                        <div class="p-3.5 rounded-2xl font-mono text-xs text-right"
-                            style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);">
-                            <span class="text-[10px] uppercase block font-semibold"
-                                style="color: var(--on-dark-muted);">Active Settlement Node</span>
-                            <span class="font-bold text-sm" style="color: var(--gold-on-dark);"
-                                id="dash-account-upi">user@upi</span>
-                            <span class="block text-[10px] mt-0.5" style="color: var(--on-dark-muted);">&lt;60s direct UPI
-                                settlement</span>
+                <div class="editorial-container hero-inner">
+                    <div class="flex flex-wrap items-end justify-between gap-4">
+                        <div class="space-y-3">
+                            <span id="dash-tier-badge" class="modal-badge-navy font-mono">TIER &bull; SCOUT (8.0%)</span>
+                            <h1 id="dash-hero-title" class="hero-h1 hero-h1--subpage">Welcome, Promoter</h1>
+                            <p class="hero-desc">
+                                Live pass sales, instant commission yield, and verified NPCI settlement ledger.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2.5">
+                            <a href="/portal" class="btn-editorial-gold">
+                                <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                                <span>Browse Live Events</span>
+                            </a>
+                            <a href="/portal/wallet" class="btn-editorial-outline-dark">
+                                Open Wallet
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Card 2: Shareable Promoter Referral Link -->
-            <div class="ops-card p-6 sm:p-7 space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                    <div class="space-y-1">
-                        <span class="eyebrow">Shareable Pass Link</span>
-                        <h2 class="text-lg font-bold text-[var(--ink)]">Promoter Referral URL</h2>
-                        <p class="text-xs text-[var(--muted)] leading-relaxed max-w-2xl">
-                            Passes booked through this link credit to your ledger on gate scan.
-                        </p>
-                    </div>
-                    <span id="dash-tier-badge"
-                        class="ops-badge-gold px-3 py-1.5 rounded-full text-xs font-mono font-bold self-start">
-                        TIER &bull; SCOUT (8.0%)
-                    </span>
-                </div>
+            <!-- PROMOTER ID CREDENTIAL, SUMMARY, LEDGER & TIERS -->
+            <section class="surface-light section-band">
+                <div class="editorial-container space-y-6">
 
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
-                    <div class="flex-1">
-                        <label for="dash-referral-input" class="visually-hidden">Official Shareable Pass Link</label>
-                        <input type="text" id="dash-referral-input" readonly autocorrect="off" autocapitalize="none"
-                            spellcheck="false" value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
-                            class="modal-input font-mono tabular-nums">
-                    </div>
-                    <button type="button" onclick="copyDashboardReferralLink()"
-                        class="btn-editorial-primary whitespace-nowrap">
-                        <i data-lucide="copy" class="w-4 h-4"></i>
-                        <span id="dash-copy-btn-text">Copy Link</span>
-                    </button>
-                    <a id="dash-whatsapp-btn" target="_blank" rel="noopener noreferrer"
-                        href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
-                        class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap transition-colors"
-                        style="min-block-size: max(46px, var(--target-size)); background-color: #0f764a; color: var(--white);">
-                        <i data-lucide="share-2" class="w-4 h-4"></i>
-                        <span>Share on WhatsApp</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Card 3: Live Performance Metrics KPI Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="ops-card p-5 space-y-1.5">
-                    <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Passes Cleared</span>
-                        <i data-lucide="check-circle-2" class="w-4 h-4" style="color: var(--emerald-ink);"></i>
-                    </div>
-                    <div class="text-2xl sm:text-3xl font-bold font-mono text-[var(--ink)] tabular-nums"
-                        id="dash-kpi-passes">0</div>
-                    <div class="text-xs text-[var(--muted)]">Venue gate scans</div>
-                </div>
-
-                <div class="ops-card p-5 space-y-1.5">
-                    <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Gross Volume</span>
-                        <i data-lucide="trending-up" class="w-4 h-4" style="color: var(--crimson-ink);"></i>
-                    </div>
-                    <div class="text-2xl sm:text-3xl font-bold font-mono text-[var(--ink)] tabular-nums"
-                        id="dash-kpi-volume">₹0.00</div>
-                    <div class="text-xs text-[var(--muted)]">Total passes settled</div>
-                </div>
-
-                <div class="ops-card p-5 space-y-1.5">
-                    <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Total Earnings</span>
-                        <i data-lucide="wallet" class="w-4 h-4" style="color: var(--emerald-ink);"></i>
-                    </div>
-                    <div class="text-2xl sm:text-3xl font-bold font-mono tabular-nums" style="color: var(--emerald-ink);"
-                        id="dash-kpi-earnings">₹0.00</div>
-                    <div class="text-xs text-[var(--muted)]">Commission earned</div>
-                </div>
-
-                <div class="ops-card p-5 space-y-1.5">
-                    <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Payout Speed</span>
-                        <i data-lucide="zap" class="w-4 h-4" style="color: var(--gold-deep);"></i>
-                    </div>
-                    <div class="text-2xl sm:text-3xl font-bold font-mono tabular-nums" style="color: var(--gold-deep);">
-                        &lt;60s</div>
-                    <div class="text-xs text-[var(--muted)]">Direct NPCI UPI 2.0</div>
-                </div>
-            </div>
-
-            <!-- Card 4: Live Commission Ledger -->
-            <div class="ops-card p-6 space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                        <h2 id="dash-ledger-heading" class="text-base font-bold text-[var(--ink)]">
-                            Commission Ledger
-                        </h2>
-                        <p class="text-xs text-[var(--muted)] font-mono">
-                            Gate scan checks and UPI payouts
-                        </p>
-                    </div>
-                    <span class="ops-badge-emerald px-3 py-1 rounded-full text-[11px] font-mono font-bold self-start sm:self-auto">
-                        Live Ledger
-                    </span>
-                </div>
-
-                <div tabindex="0" role="region" aria-labelledby="dash-ledger-heading" class="ops-table-wrap">
-                    <table class="ops-table text-xs font-mono">
-                        <thead>
-                            <tr>
-                                <th>Pass ID</th>
-                                <th>Tour Event</th>
-                                <th>Tier</th>
-                                <th>MRP</th>
-                                <th>Cut (%)</th>
-                                <th>Commission</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dash-ledger-body" class="text-[var(--ink)]">
-                            <tr>
-                                <td colspan="7" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
-                                    No gate scans yet. Share your link to start earning.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Card 5: Tier Ladder Progression -->
-            <div class="ops-card p-6 sm:p-7 space-y-5">
-                <div class="space-y-1">
-                    <span class="eyebrow">Commission Tiers</span>
-                    <h2 class="text-lg font-bold text-[var(--ink)]">Promoter Performance Ladder</h2>
-                    <p class="text-xs text-[var(--muted)]">
-                        Higher volume unlocks higher commission cuts and priority perks.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="ops-subcard p-5 space-y-2"
-                        style="background-color: var(--bg-card); border-color: var(--crimson); border-width: 1.5px;">
-                        <span class="ops-badge-navy inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
-                            TIER 01 &bull; ACTIVE
-                        </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Scout</div>
-                        <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--crimson-ink);">
-                            8.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
+                    <!-- PROMOTER ID & PARTNER CREDENTIAL CARD -->
+                    <div id="promoter-id" class="promoter-id-card p-6 sm:p-8 space-y-5">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <img src="tixora-logo.png" alt="Tixora" width="96" height="24" class="h-6 w-auto object-contain">
+                                <span class="ops-badge-emerald px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase">KYC &bull; Active Partner</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span id="id-card-tier" class="text-xs font-mono font-bold text-[var(--crimson-ink)] uppercase">SCOUT TIER &bull; 8.0% CUT</span>
+                                <span class="text-[11px] font-mono text-[var(--muted)]">Member Since <span id="id-card-joined">2026</span></span>
+                            </div>
                         </div>
-                        <p class="text-xs text-[var(--muted)]">
-                            1&ndash;25 passes &bull; Entry tier.
-                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                            <div class="md:col-span-5 space-y-1">
+                                <div class="text-[11px] font-mono uppercase tracking-wider text-[var(--muted)]">Authorized Promoter</div>
+                                <div id="id-card-name" class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Promoter</div>
+                            </div>
+
+                            <div class="md:col-span-7 p-4 rounded-2xl bg-[var(--bg-void)]/80 border border-[var(--line)] flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <div class="text-[10px] font-mono uppercase tracking-wider text-[var(--muted)]">Your Promoter ID</div>
+                                    <div id="id-card-code" class="text-xl sm:text-2xl font-mono font-bold text-[var(--crimson-ink)] tracking-wider">TIX-PROMO</div>
+                                </div>
+                                <button type="button" onclick="copyPromoterId()" class="btn-editorial-primary btn-compact">
+                                    <i data-lucide="copy" class="w-4 h-4"></i>
+                                    <span>Copy Promoter ID</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
+                            <div class="ops-subcard p-3">
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">Email</span>
+                                <span id="dash-account-email" class="text-white font-semibold truncate block">email@tixora.live</span>
+                            </div>
+                            <div class="ops-subcard p-3">
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">WhatsApp</span>
+                                <span id="id-card-phone" class="text-white font-semibold block">+91 Verified</span>
+                            </div>
+                            <div class="ops-subcard p-3">
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">Circuit City</span>
+                                <span id="dash-account-city" class="text-white font-semibold block">Mumbai</span>
+                            </div>
+                            <div class="ops-subcard p-3">
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">Settlement UPI</span>
+                                <span id="id-card-upi" class="text-[var(--emerald-ink)] font-semibold truncate block">user@upi</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="ops-subcard p-5 space-y-2">
-                        <span class="ops-badge-gold inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
-                            TIER 02
-                        </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Capo</div>
-                        <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--gold-deep);">
-                            11.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
+                    <!-- PERFORMANCE SUMMARY ROW -->
+                    <div class="editorial-grid-4 tabular-nums">
+                        <div class="ops-card p-5 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Passes Sold</span>
+                            <div class="text-2xl font-bold text-white" id="dash-kpi-passes">0</div>
+                            <span class="text-[11px] font-mono text-[var(--emerald-ink)]">Turnstile Verified</span>
                         </div>
-                        <p class="text-xs text-[var(--muted)]">
-                            26&ndash;100 passes &bull; Priority UPI payouts.
-                        </p>
+                        <div class="ops-card p-5 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Gross Pass Volume</span>
+                            <div class="text-2xl font-bold text-white" id="dash-kpi-volume">₹0.00</div>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Total MRP attributed</span>
+                        </div>
+                        <div class="ops-card p-5 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Lifetime Earnings</span>
+                            <div class="text-2xl font-bold text-[var(--emerald-ink)]" id="dash-kpi-earnings">₹0.00</div>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Settled + pending UPI</span>
+                        </div>
+                        <div class="ops-card p-5 space-y-1.5">
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Payout Speed</span>
+                            <div class="text-2xl font-bold text-[var(--crimson-ink)]">&lt;60s</div>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">NPCI instant transfer</span>
+                        </div>
                     </div>
 
-                    <div class="ops-subcard p-5 space-y-2">
-                        <span class="ops-badge-navy inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
-                            TIER 03
-                        </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Syndicate</div>
-                        <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--crimson-ink);">
-                            13.5% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
+                    <!-- COMMISSION LEDGER TABLE -->
+                    <div class="ops-card overflow-hidden">
+                        <div class="p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h2 class="text-base font-bold text-white">Commission Ledger</h2>
+                                <p class="text-xs text-[var(--muted)]">Attributed pass allocations &amp; live cut status.</p>
+                            </div>
+                            <a href="/portal/bookings" class="btn-editorial-outline-light btn-compact">
+                                Full Booking History &rarr;
+                            </a>
                         </div>
-                        <p class="text-xs text-[var(--muted)]">
-                            101&ndash;300 passes &bull; Regional lead access.
-                        </p>
+
+                        <div class="ops-table-wrap overflow-x-auto">
+                            <table class="ops-table w-full text-left font-mono text-xs">
+                                <thead>
+                                    <tr>
+                                        <th>Order Ref</th>
+                                        <th>Event</th>
+                                        <th>Tier</th>
+                                        <th>Face Value</th>
+                                        <th>Rate</th>
+                                        <th>Commission</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-ledger-body"></tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div class="ops-subcard p-5 space-y-2">
-                        <span class="ops-badge-emerald inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
-                            TIER 04
-                        </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Patron</div>
-                        <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--emerald-ink);">
-                            16.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
+                    <!-- PERFORMANCE TIER LADDER -->
+                    <div class="ops-card p-6 space-y-4">
+                        <div>
+                            <h2 class="text-base font-bold text-white">Commission Tier Ladder</h2>
+                            <p class="text-xs text-[var(--muted)]">Your yield upgrades automatically as pass volume crosses milestones.</p>
                         </div>
-                        <p class="text-xs text-[var(--muted)]">
-                            300+ passes &bull; Max cut &amp; host desk.
-                        </p>
+
+                        <div id="dash-tier-grid" class="editorial-grid-4">
+                            <div data-tier="Scout" class="ops-subcard p-4 space-y-1.5">
+                                <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 01 &bull; Scout</div>
+                                <div class="text-2xl font-bold text-white tabular-nums">8.0% Cut</div>
+                                <div class="text-xs text-[var(--muted)]">0 – 25 Passes</div>
+                            </div>
+                            <div data-tier="Capo" class="ops-subcard p-4 space-y-1.5">
+                                <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 02 &bull; Capo</div>
+                                <div class="text-2xl font-bold text-white tabular-nums">11.0% Cut</div>
+                                <div class="text-xs text-[var(--muted)]">26 – 75 Passes</div>
+                            </div>
+                            <div data-tier="Syndicate" class="ops-subcard p-4 space-y-1.5">
+                                <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 03 &bull; Syndicate</div>
+                                <div class="text-2xl font-bold text-white tabular-nums">13.5% Cut</div>
+                                <div class="text-xs text-[var(--muted)]">76 – 200 Passes</div>
+                            </div>
+                            <div data-tier="Patron" class="ops-subcard p-4 space-y-1.5">
+                                <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 04 &bull; Patron</div>
+                                <div class="text-2xl font-bold text-white tabular-nums">16.0% Cut</div>
+                                <div class="text-xs text-[var(--muted)]">200+ Passes</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
+            </section>
         </main>
 
-        <!-- Footer -->
-        <footer class="mt-auto border-t border-[var(--line)] bg-[var(--bg-base)] py-5 px-4 sm:px-6">
-            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-[var(--muted)]">
-                <div>
-                    &copy; 2026 Tixora Protocol Technologies Pvt. Ltd. All rights reserved.
-                </div>
-                <div class="flex items-center gap-5">
-                    <a href="/protocol" class="hover:text-[var(--ink)] transition-colors">Protocol Architecture</a>
-                    <a href="/privacy" class="hover:text-[var(--ink)] transition-colors">Privacy Policy</a>
-                    <a href="/terms" class="hover:text-[var(--ink)] transition-colors">Terms of Service</a>
+        <footer class="site-footer" role="contentinfo">
+            <div class="editorial-container">
+                <div class="footer-bottom">
+                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/portal">Events</a>
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/bookings">Booking History</a>
+                        <a href="/?public=1">Public Site</a>
+                    </div>
                 </div>
             </div>
         </footer>
-
     </div>
 
-    <!-- Toast Notification Element -->
-    <div id="dashboard-toast" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 flex justify-center sm:justify-end transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
-        role="status" aria-live="polite">
-        <div class="toast-inner">
-            <i data-lucide="info" class="w-4 h-4 text-[var(--crimson-ink)]"></i>
-            <span id="dashboard-toast-text">Notice</span>
-        </div>
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-[#ef4444]"></i>
+        <span id="toast-message">Updated</span>
     </div>
 
-    <!-- ========================================================= -->
-    <!-- DASHBOARD CONTROLLER SCRIPT -->
-    <!-- ========================================================= -->
-    <script>
-        let _activePromoter = null;
-        let _activeUser = null;
-
-        function showToast(msg) {
-            const toast = document.getElementById('dashboard-toast');
-            const txt = document.getElementById('dashboard-toast-text');
-            if (txt) txt.textContent = msg;
-            if (toast) {
-                toast.classList.remove('translate-y-20', 'opacity-0');
-                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
-            }
-        }
-
-        function switchDashboardTab(tab) {
-            const tabIn = document.getElementById('tab-dashboard-signin');
-            const tabUp = document.getElementById('tab-dashboard-signup');
-            const formIn = document.getElementById('form-dashboard-signin');
-            const formUp = document.getElementById('form-dashboard-signup');
-            const notice = document.getElementById('dash-confirm-notice');
-            const errBox = document.getElementById('dashboard-auth-error');
-
-            if (errBox) errBox.classList.add('hidden');
-            if (notice) notice.classList.add('hidden');
-
-            if (tab === 'signin') {
-                if (tabIn) tabIn.classList.add('is-active');
-                if (tabUp) tabUp.classList.remove('is-active');
-                if (formIn) formIn.classList.remove('hidden');
-                if (formUp) formUp.classList.add('hidden');
-            } else {
-                if (tabUp) tabUp.classList.add('is-active');
-                if (tabIn) tabIn.classList.remove('is-active');
-                if (formUp) formUp.classList.remove('hidden');
-                if (formIn) formIn.classList.add('hidden');
-            }
-            if (window.lucide && lucide.createIcons) lucide.createIcons();
-        }
-
-        function showDashboardState(state) {
-            const barrier = document.getElementById('dashboard-loading-barrier');
-            const gate = document.getElementById('dashboard-auth-gate');
-            const workspace = document.getElementById('dashboard-workspace');
-
-            if (barrier) barrier.classList.add('hidden');
-            if (gate) gate.classList.add('hidden');
-            if (workspace) workspace.classList.add('hidden');
-
-            if (state === 'loading') {
-                if (barrier) barrier.classList.remove('hidden');
-            } else if (state === 'login') {
-                if (gate) gate.classList.remove('hidden');
-            } else if (state === 'workspace') {
-                if (workspace) workspace.classList.remove('hidden');
-            }
-            if (window.lucide && lucide.createIcons) lucide.createIcons();
-        }
-
-        async function handleDashboardSignIn(e) {
-            e.preventDefault();
-            const emailInput = document.getElementById('dash-signin-email');
-            const passwordInput = document.getElementById('dash-signin-password');
-            const email = (emailInput ? emailInput.value : '').trim();
-            const password = passwordInput ? passwordInput.value : '';
-            // Zero Plaintext Protocol: Clear password immediately from DOM
-            if (passwordInput) passwordInput.value = '';
-            const errBox = document.getElementById('dashboard-auth-error');
-            const errText = document.getElementById('dashboard-auth-error-text');
-            const btn = document.getElementById('btn-dash-signin');
-            const btnText = document.getElementById('btn-dash-signin-text');
-
-            if (errBox) errBox.classList.add('hidden');
-            if (btn) btn.disabled = true;
-            if (btnText) btnText.textContent = 'Signing in...';
-
-            try {
-                if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
-                const res = await TixoraAuth.signIn(email, password);
-                showToast('Signed in. Welcome back!');
-                await renderPromoterWorkspace(res.user, res.promoter);
-            } catch (err) {
-                console.error('Sign In Error:', err);
-                if (errBox && errText) {
-                    errText.textContent = err.message || 'Invalid email or password.';
-                    errBox.classList.remove('hidden');
-                }
-                if (err.code === 'rate_limit' && btn) {
-                    btn.disabled = true;
-                    let countdown = err.retry_after || 900;
-                    const timer = setInterval(() => {
-                        countdown--;
-                        if (countdown <= 0) {
-                            clearInterval(timer);
-                            btn.disabled = false;
-                            btnText.textContent = 'Sign In';
-                        } else {
-                            btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
-                        }
-                    }, 1000);
-                    btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
-                }
-                showToast(err.message || 'Sign in failed');
-            } finally {
-                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
-                    btn.disabled = false;
-                    if (btnText) btnText.textContent = 'Sign In';
-                }
-            }
-        }
-
-        async function handleDashboardSignUp(e) {
-            e.preventDefault();
-            const fullName = document.getElementById('dash-signup-fullname').value.trim();
-            const phone = document.getElementById('dash-signup-phone').value.trim();
-            const email = document.getElementById('dash-signup-email').value.trim();
-            const passwordInput = document.getElementById('dash-signup-password');
-            const password = passwordInput ? passwordInput.value : '';
-            // Zero Plaintext Protocol: Clear password immediately from DOM
-            if (passwordInput) passwordInput.value = '';
-            const city = document.getElementById('dash-signup-city').value.trim();
-            const upiId = document.getElementById('dash-signup-upi').value.trim();
-
-            const errBox = document.getElementById('dashboard-auth-error');
-            const errText = document.getElementById('dashboard-auth-error-text');
-            const btn = document.getElementById('btn-dash-signup');
-            const btnText = document.getElementById('btn-dash-signup-text');
-
-            if (errBox) errBox.classList.add('hidden');
-
-            const upiRegex = /^[\w.\-]{2,64}@[a-zA-Z]{2,64}$/;
-            if (!upiRegex.test(upiId)) {
-                if (errBox && errText) {
-                    errText.textContent = 'Enter a valid UPI ID (e.g. name@oksbi, mobile@paytm).';
-                    errBox.classList.remove('hidden');
-                }
-                return;
-            }
-
-            if (btn) btn.disabled = true;
-            if (btnText) btnText.textContent = 'Submitting...';
-
-            try {
-                if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
-                const res = await TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
-
-                if (res && res.emailConfirmationRequired) {
-                    const notice = document.getElementById('dash-confirm-notice');
-                    const emailTarget = document.getElementById('dash-confirm-email');
-                    const formSignup = document.getElementById('form-dashboard-signup');
-                    if (emailTarget) emailTarget.textContent = email;
-                    if (formSignup) formSignup.classList.add('hidden');
-                    if (notice) notice.classList.remove('hidden');
-                    showToast('Registered! Verify your email to continue.');
-                } else if (res && res.user) {
-                    showToast('Promoter account activated.');
-                    await renderPromoterWorkspace(res.user, res.promoter);
-                }
-            } catch (err) {
-                console.error('Sign Up Error:', err);
-                if (errBox && errText) {
-                    errText.textContent = err.message || 'Registration failed. Check your details.';
-                    errBox.classList.remove('hidden');
-                }
-                if (err.code === 'rate_limit' && btn) {
-                    btn.disabled = true;
-                    let countdown = err.retry_after || 3600;
-                    const timer = setInterval(() => {
-                        countdown--;
-                        if (countdown <= 0) {
-                            clearInterval(timer);
-                            btn.disabled = false;
-                            btnText.textContent = 'Apply & Register';
-                        } else {
-                            btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
-                        }
-                    }, 1000);
-                    btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
-                }
-                showToast(err.message || 'Registration failed');
-            } finally {
-                if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
-                    btn.disabled = false;
-                    if (btnText) btnText.textContent = 'Apply & Register';
-                }
-            }
-        }
-
-        async function handleDashboardResend() {
-            const email = document.getElementById('dash-signup-email').value.trim() || document.getElementById('dash-signin-email').value.trim();
-            if (!email) {
-                showToast('Enter an email address to resend.');
-                return;
-            }
-            try {
-                await TixoraAuth.resendConfirmation(email);
-                showToast('Verification email sent to ' + email);
-            } catch (err) {
-                showToast(err.message || 'Could not resend email');
-            }
-        }
-
-        async function handleDashboardSignOut() {
-            try {
-                if (window.TixoraAuth) {
-                    await TixoraAuth.signOut();
-                }
-            } catch (e) {
-                console.warn('Sign out notice:', e);
-            }
-            showDashboardState('login');
-            showToast('Signed out.');
-        }
-
-        async function renderPromoterWorkspace(user, promoter) {
-            _activeUser = user;
-            _activePromoter = promoter || await TixoraAuth.getPromoterProfile(user);
-
-            const name = (_activePromoter && _activePromoter.full_name) || (user.user_metadata && user.user_metadata.full_name) || (user.email ? user.email.split('@')[0] : 'Promoter');
-            const city = (_activePromoter && _activePromoter.city) || (user.user_metadata && user.user_metadata.city) || 'Mumbai';
-            const email = user.email || '';
-            const upi = (_activePromoter && _activePromoter.upi_id) || (user.user_metadata && user.user_metadata.upi_id) || (user.email ? user.email.split('@')[0] + '@okhdfcbank' : 'user@upi');
-            const refCode = (_activePromoter && _activePromoter.referral_code) || (user.user_metadata && user.user_metadata.referral_code) || ('TIX-' + name.toUpperCase().slice(0, 8));
-            const passes = (_activePromoter && _activePromoter.total_passes_sold) || 0;
-            const earnings = (_activePromoter && _activePromoter.total_earnings) || 0;
-            const tierName = (_activePromoter && _activePromoter.tier_name) || 'Scout';
-            const commRate = Number((_activePromoter && _activePromoter.commission_rate) || 8.00);
-
-            const fullRefUrl = window.location.origin + '/?ref=' + refCode;
-
-            const heroTitle = document.getElementById('dash-hero-title');
-            const headerName = document.getElementById('dash-header-name');
-            const headerTier = document.getElementById('dash-header-tier');
-            const userAvatar = document.getElementById('dash-user-avatar');
-            const accountEmail = document.getElementById('dash-account-email');
-            const accountCity = document.getElementById('dash-account-city');
-            const accountUpi = document.getElementById('dash-account-upi');
-            const tierBadge = document.getElementById('dash-tier-badge');
-            const refInput = document.getElementById('dash-referral-input');
-            const waBtn = document.getElementById('dash-whatsapp-btn');
-            const kpiPasses = document.getElementById('dash-kpi-passes');
-            const kpiVolume = document.getElementById('dash-kpi-volume');
-            const kpiEarnings = document.getElementById('dash-kpi-earnings');
-
-            if (heroTitle) heroTitle.textContent = 'Welcome, ' + name;
-            if (headerName) headerName.textContent = name;
-            if (headerTier) headerTier.textContent = 'TIER • ' + tierName.toUpperCase() + ' (' + commRate.toFixed(1) + '%)';
-            if (userAvatar) userAvatar.innerHTML = '<span>' + (name.slice(0, 2).toUpperCase() || 'PR') + '</span>';
-            if (accountEmail) accountEmail.textContent = email;
-            if (accountCity) accountCity.textContent = city;
-            if (accountUpi) accountUpi.textContent = upi;
-            if (tierBadge) tierBadge.textContent = 'TIER • ' + tierName.toUpperCase() + ' (' + commRate.toFixed(1) + '%)';
-            if (refInput) refInput.value = fullRefUrl;
-            if (waBtn) {
-                const waText = encodeURIComponent('Get official guaranteed concert passes via Tixora! Secure direct allocations here: ' + fullRefUrl);
-                waBtn.href = 'https://wa.me/?text=' + waText;
-            }
-            if (kpiPasses) kpiPasses.textContent = passes.toLocaleString('en-IN');
-            if (kpiVolume) kpiVolume.textContent = '₹' + (passes * 3999).toLocaleString('en-IN');
-            if (kpiEarnings) kpiEarnings.textContent = '₹' + Number(earnings).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-
-            showDashboardState('workspace');
-        }
-
-        function copyDashboardReferralLink() {
-            const input = document.getElementById('dash-referral-input');
-            const btnText = document.getElementById('dash-copy-btn-text');
-            if (!input) return;
-
-            navigator.clipboard.writeText(input.value).then(() => {
-                if (btnText) btnText.textContent = 'Copied!';
-                showToast('Referral link copied to clipboard!');
-                setTimeout(() => { if (btnText) btnText.textContent = 'Copy Link'; }, 2000);
-            }).catch(() => {
-                input.select();
-                document.execCommand('copy');
-                if (btnText) btnText.textContent = 'Copied!';
-                showToast('Referral link copied!');
-                setTimeout(() => { if (btnText) btnText.textContent = 'Copy Link'; }, 2000);
-            });
-        }
-
-        async function initDashboard() {
-            showDashboardState('loading');
-            try {
-                if (!window.TixoraAuth) {
-                    showDashboardState('login');
-                    return;
-                }
-
-                const res = await TixoraAuth.guardPromoterRoute({
-                    onAuthorized: async (user, promoter, role) => {
-                        await renderPromoterWorkspace(user, promoter);
-                    },
-                    onUnauthenticated: () => {
-                        showDashboardState('login');
-                    }
-                });
-
-                if (!res.authorized) {
-                    showDashboardState('login');
-                }
-            } catch (err) {
-                console.error('Dashboard init error:', err);
-                showDashboardState('login');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.lucide && lucide.createIcons) lucide.createIcons();
-            setTimeout(initDashboard, 150);
-        });
-    </script>
 </body>
 
 </html>

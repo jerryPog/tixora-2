@@ -228,9 +228,9 @@
                     <div class="cart-item-actions flex items-center flex-wrap gap-2.5">
                         <!-- Quantity +/- -->
                         <div class="cart-qty-box tabular-nums">
-                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', -1)" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Decrease quantity">&minus;</button>
-                            <span class="px-2 py-1 text-[var(--ink)] font-bold text-xs">${item.quantity || 1}</span>
-                            <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', 1)" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Increase quantity">+</button>
+                            <button type="button" data-cart-qty-id="${escapeHtml(item.id)}" data-cart-delta="-1" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Decrease quantity">&minus;</button>
+                            <span class="px-2 py-1 text-[var(--ink)] font-bold text-xs">${Number(item.quantity || 1)}</span>
+                            <button type="button" data-cart-qty-id="${escapeHtml(item.id)}" data-cart-delta="1" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Increase quantity">+</button>
                         </div>
 
                         <!-- Line Price -->
@@ -239,7 +239,7 @@
                         </div>
 
                         <!-- Remove Button -->
-                        <button type="button" onclick="TixoraCart.removeItem('${item.id}')" class="cart-remove-btn text-[var(--muted)] hover:text-[var(--crimson-ink)] transition-colors" aria-label="Remove pass from cart">
+                        <button type="button" data-cart-remove-id="${escapeHtml(item.id)}" class="cart-remove-btn text-[var(--muted)] hover:text-[var(--crimson-ink)] transition-colors" aria-label="Remove pass from cart">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -375,14 +375,44 @@
             }
 
             // Show Confirmation View
-            renderOrderSuccess(data.order || {
+            const finalOrder = data.order || {
                 orderId: 'TIX-' + Math.floor(100000 + Math.random() * 900000),
                 customerName: customerName,
                 customerPhone: customerPhone,
                 customerEmail: customerEmail,
                 items: cart.items,
                 totalAmount: cart.items.reduce((s, i) => s + (i.price * i.quantity), 0)
-            });
+            };
+
+            try {
+                if (window.TixoraAuth && typeof window.TixoraAuth.getUser === 'function' && typeof window.TixoraAuth.recordLocalBooking === 'function') {
+                    const user = await window.TixoraAuth.getUser();
+                    if (user) {
+                        const promoter = await window.TixoraAuth.getPromoterProfile(user);
+                        const rate = Number((promoter && promoter.commission_rate) || 8);
+                        const qty = cart.items.reduce((s, i) => s + Number(i.quantity || 1), 0);
+                        const firstTitle = cart.items.map((i) => i.title).join(', ');
+                        const firstTier = cart.items.length === 1 ? (cart.items[0].tier || 'GA Standard') : `${cart.items.length} Tiers`;
+                        window.TixoraAuth.recordLocalBooking(user, {
+                            order_ref: finalOrder.orderId,
+                            event_title: firstTitle,
+                            tier_name: firstTier,
+                            quantity: qty,
+                            total_amount: finalOrder.totalAmount,
+                            commission_rate: rate,
+                            commission_amount: Math.round((finalOrder.totalAmount * rate) / 100),
+                            attendee_name: customerName,
+                            attendee_phone: customerPhone,
+                            attendee_email: customerEmail,
+                            status: 'confirmed',
+                            channel: 'Pass Cart',
+                            created_at: finalOrder.createdAt || new Date().toISOString()
+                        });
+                    }
+                }
+            } catch (recErr) {}
+
+            renderOrderSuccess(finalOrder);
 
             // Clear Cart upon successful reservation
             saveCart({ items: [], expiresAt: null, customer: {} });
@@ -468,7 +498,7 @@
             return;
         }
         const t = document.createElement('div');
-        t.className = 'fixed bottom-5 right-5 left-5 sm:left-auto z-50 max-w-[calc(100vw-40px)] bg-[#0d1019] border border-[#ff2e54] text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs flex items-center space-x-2';
+        t.className = 'fixed bottom-5 right-5 left-5 sm:left-auto z-50 max-w-[calc(100vw-40px)] bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs flex items-center space-x-2';
         t.innerHTML = `<span>${escapeHtml(msg)}</span>`;
         document.body.appendChild(t);
         setTimeout(() => {
@@ -485,6 +515,17 @@
         if (cart.items.length > 0) {
             startCountdownTimer();
         }
+        document.addEventListener('click', (e) => {
+            const qtyBtn = e.target && e.target.closest ? e.target.closest('[data-cart-qty-id]') : null;
+            if (qtyBtn) {
+                updateQuantity(qtyBtn.getAttribute('data-cart-qty-id'), Number(qtyBtn.getAttribute('data-cart-delta') || 0));
+                return;
+            }
+            const removeBtn = e.target && e.target.closest ? e.target.closest('[data-cart-remove-id]') : null;
+            if (removeBtn) {
+                removeItem(removeBtn.getAttribute('data-cart-remove-id'));
+            }
+        });
     }
 
     if (document.readyState === 'loading') {

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <meta name="text-scale" content="scale">
-    <title>Tixora — Official Live Concert Passes &amp; Youth Promoter Protocol</title>
+    <title>Tixora | Official Live Concert Passes &amp; Youth Promoter Protocol</title>
     <meta name="description"
         content="Discover official live concert passes and primary tour allocations for Anyma, Guns N' Roses, Fred again.., The Chainsmokers, and more. Direct venue allocations and instant UPI promoter payouts.">
     <link rel="canonical" href="https://tixoralive.vercel.app/">
@@ -14,9 +14,9 @@
 
     <!-- Favicon & Brand Icons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <meta name="theme-color" content="#050608">
+    <meta name="theme-color" content="#111113">
 
     <!-- Preload Critical LCP Hero Image -->
     <link rel="preload" as="image" href="posters/anyma-aeden-poster-1.webp" type="image/webp" fetchpriority="high">
@@ -25,7 +25,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tixoralive.vercel.app/">
     <meta property="og:site_name" content="Tixora">
-    <meta property="og:title" content="Tixora — Official Live Concert Passes &amp; Youth Promoter Protocol">
+    <meta property="og:title" content="Tixora | Official Live Concert Passes &amp; Youth Promoter Protocol">
     <meta property="og:description"
         content="Discover official live concert passes and primary tour allocations for Anyma, Guns N' Roses, Fred again.., The Chainsmokers, and more. Direct venue allocations and instant UPI promoter payouts.">
     <meta property="og:image" content="https://tixoralive.vercel.app/og-image.jpg">
@@ -38,7 +38,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@tixoralive">
     <meta name="twitter:creator" content="@tixoralive">
-    <meta name="twitter:title" content="Tixora — Official Live Concert Passes &amp; Youth Promoter Protocol">
+    <meta name="twitter:title" content="Tixora | Official Live Concert Passes &amp; Youth Promoter Protocol">
     <meta name="twitter:description"
         content="Discover official live concert passes and primary tour allocations for Anyma, Guns N' Roses, Fred again.., The Chainsmokers, and more. Direct venue allocations and instant UPI promoter payouts.">
     <meta name="twitter:image" content="https://tixoralive.vercel.app/og-image.jpg">
@@ -59,7 +59,7 @@
         "@id": "https://tixoralive.vercel.app/#logo",
         "url": "https://tixoralive.vercel.app/tixora-logo.png",
         "contentUrl": "https://tixoralive.vercel.app/tixora-logo.png",
-        "caption": "Tixora — Official Live Concert Allocations & Youth Promoter Protocol",
+        "caption": "Tixora | Official Live Concert Allocations & Youth Promoter Protocol",
         "width": 512,
         "height": 512
       },
@@ -86,7 +86,7 @@
       "@type": "WebPage",
       "@id": "https://tixoralive.vercel.app/#webpage",
       "url": "https://tixoralive.vercel.app/",
-      "name": "Tixora — Official Live Concert Passes & Youth Promoter Protocol",
+      "name": "Tixora | Official Live Concert Passes & Youth Promoter Protocol",
       "isPartOf": {
         "@id": "https://tixoralive.vercel.app/#website"
       },
@@ -518,7 +518,7 @@
                     <nav class="desktop-nav" aria-label="Primary">
                         <a href="/tours">Live Tours</a>
                         <a href="#mesh-protocol">Protocol</a>
-                        <a href="#promoter-calculator">Tracks</a>
+                        <a href="#tiers-ladder">Tiers</a>
                         <a href="#ecosystem">Ecosystem</a>
                         <a href="/faq">FAQ</a>
                     </nav>
@@ -552,7 +552,6 @@
                     <a href="/" aria-current="page">Home</a>
                     <a href="/tours">Live Tours (8)</a>
                     <a href="#mesh-protocol">How It Works</a>
-                    <a href="#promoter-calculator">Calculator</a>
                     <a href="/promoter">Promoter Hub</a>
                     <a href="/protocol">QR Protocol</a>
                     <a href="/about">About &amp; Founders</a>
@@ -1239,98 +1238,16 @@
                 </div>
             </section>
 
-            <!-- 6. TWO STRATEGIC DARK PANELS: LIVE EARNINGS CALCULATOR + TIER STRIP (Soft Surface) -->
-            <section id="promoter-calculator" class="surface-soft section-band band-divider-top">
-                <div class="editorial-container" id="velocity-matrix">
-                    <div class="reveal">
-                        <span class="eyebrow">Promoter Yield Engine</span>
-                        <h2 class="section-h2" style="margin-block-start: 14px;">
-                            Calculate your monthly payout.
-                        </h2>
-                    </div>
-
-                    <div class="tracks-grid">
-                        <!-- Panel A: Interactive Quota Inputs -->
-                        <div class="track-panel reveal">
-                            <div class="space-y-4">
-                                <span class="eyebrow eyebrow--dark">Track 01 &bull; Volume Simulator</span>
-                                <h3 class="track-panel-h3">Youth Quota Simulator</h3>
-                                <p style="color: var(--on-dark-muted); font-size: 0.9375rem;">
-                                    Adjust volume and MRP to preview payouts from 8% to 16%.
-                                </p>
-                            </div>
-
-                            <div class="space-y-5">
-                                <div class="slider-block">
-                                    <div class="slider-head">
-                                        <label for="slider-passes">Monthly Passes Cleared</label>
-                                        <span id="slider-passes-val" class="slider-badge tabular-nums">45 Passes</span>
-                                    </div>
-                                    <input type="range" id="slider-passes" class="editorial-range" min="5" max="300"
-                                        step="5" value="45">
-                                    <div class="slider-scale tabular-nums">
-                                        <span>1–25 Scout</span>
-                                        <span>101+ Syndicate</span>
-                                        <span>300+ Patron</span>
-                                    </div>
-                                </div>
-
-                                <div class="slider-block">
-                                    <div class="slider-head">
-                                        <label for="slider-price">Average Ticket MRP</label>
-                                        <span id="slider-price-val" class="slider-badge tabular-nums">₹3,500</span>
-                                    </div>
-                                    <input type="range" id="slider-price" class="editorial-range" min="1500" max="15000"
-                                        step="500" value="3500">
-                                    <div class="slider-scale tabular-nums">
-                                        <span>₹1,500 GA</span>
-                                        <span>₹6,500 Gold</span>
-                                        <span>₹15,000 VIP</span>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- 6. 4-TIER HAIRLINE PROGRESSION STRIP (Soft Surface) -->
+            <section id="tiers-ladder" class="surface-soft section-band band-divider-top">
+                <div class="editorial-container">
+                    <div>
+                        <div class="reveal">
+                            <span class="eyebrow">Promoter Yield Tiers</span>
+                            <h2 class="section-h2" style="margin-block-start: 14px;">
+                                Commission Progression Tiers
+                            </h2>
                         </div>
-
-                        <!-- Panel B: Live Computed Payout Ledger -->
-                        <div class="track-panel track-panel--navy reveal" id="calc-output-box">
-                            <div class="space-y-4">
-                                <span class="eyebrow eyebrow--dark">Track 02 &bull; Automated UPI Ledger</span>
-                                <div style="font-size: 0.8125rem; color: var(--on-dark-muted);">Estimated Monthly Payout
-                                </div>
-                                <div id="calc-monthly-rev" class="track-stat-giant tabular-nums">₹17,325</div>
-                            </div>
-
-                            <div class="track-ledger tabular-nums">
-                                <div class="track-ledger-row">
-                                    <span>Total Box Office GMV</span>
-                                    <span id="calc-gmv" class="track-ledger-val">₹1,57,500</span>
-                                </div>
-                                <div class="track-ledger-row">
-                                    <span>Unlocked Tier Rate</span>
-                                    <span id="calc-commission-rate" class="track-ledger-val track-ledger-val--gold">11.0%
-                                        (Capo)</span>
-                                </div>
-                                <div class="track-ledger-row">
-                                    <span>Annualized Run Rate</span>
-                                    <span id="calc-annual-runrate" class="track-ledger-val">₹2,07,900 / yr</span>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-wrap gap-3">
-                                <button type="button" onclick="openModal('promoter-modal')"
-                                    class="btn-editorial-gold w-full">
-                                    <span>Start Earning Now</span>
-                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4-Tier Hairline Progression Strip -->
-                    <div id="tiers-ladder" style="margin-block-start: clamp(44px, 6vw, 72px);">
-                        <h3 class="audience-title" style="font-size: clamp(1.5rem, 2.5vw, 2rem);">
-                            Commission Progression Tiers
-                        </h3>
                         <div class="tiers-grid tabular-nums">
                             <div class="tier-card reveal">
                                 <div class="space-y-2">
@@ -1644,7 +1561,7 @@
                                 <span class="faq-toggle-icon" aria-hidden="true"></span>
                             </summary>
                             <div class="faq-answer">
-                                No. Joining requires zero deposits or fees—you get your tracked link immediately after KYC.
+                                No. Joining requires zero deposits or fees, and verified promoters receive portal access immediately after KYC.
                             </div>
                         </details>
 
@@ -1715,14 +1632,14 @@
                             <a href="/tours" style="color: var(--white);">All (8)</a>
                         </h3>
                         <ul class="footer-links">
-                            <li><a href="/tours#anyma-genesys-mumbai-2026">Anyma &mdash; Mumbai</a></li>
-                            <li><a href="/tours#gnr-live-delhi-2026">Guns N' Roses &mdash; Delhi</a></li>
-                            <li><a href="/tours#fred-again-usb-bengaluru-2026">Fred again.. &mdash; Bengaluru</a></li>
-                            <li><a href="/tours#chainsmokers-arena-goa-2026">The Chainsmokers &mdash; Goa</a></li>
-                            <li><a href="/tours#karan-aujla-chandigarh-2026">Karan Aujla &mdash; Chandigarh</a></li>
-                            <li><a href="/tours#boris-brejcha-delhi-2026">Boris Brejcha &mdash; Delhi</a></li>
-                            <li><a href="/tours#martin-garrix-mumbai-2026">Martin Garrix &mdash; Mumbai</a></li>
-                            <li><a href="/tours#dua-lipa-mumbai-2026">Dua Lipa &mdash; Mumbai</a></li>
+                            <li><a href="/tours#anyma-genesys-mumbai-2026">Anyma - Mumbai</a></li>
+                            <li><a href="/tours#gnr-live-delhi-2026">Guns N' Roses - Delhi</a></li>
+                            <li><a href="/tours#fred-again-usb-bengaluru-2026">Fred again.. - Bengaluru</a></li>
+                            <li><a href="/tours#chainsmokers-arena-goa-2026">The Chainsmokers - Goa</a></li>
+                            <li><a href="/tours#karan-aujla-chandigarh-2026">Karan Aujla - Chandigarh</a></li>
+                            <li><a href="/tours#boris-brejcha-delhi-2026">Boris Brejcha - Delhi</a></li>
+                            <li><a href="/tours#martin-garrix-mumbai-2026">Martin Garrix - Mumbai</a></li>
+                            <li><a href="/tours#dua-lipa-mumbai-2026">Dua Lipa - Mumbai</a></li>
                         </ul>
                     </div>
 
