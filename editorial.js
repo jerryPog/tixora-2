@@ -1143,15 +1143,13 @@
         (promoter && promoter.full_name) ||
         (session.user.user_metadata && session.user.user_metadata.full_name) ||
         session.user.email.split('@')[0];
-      const cutPct = (promoter && promoter.commission_rate) || 8;
 
       if (authSlot) {
         authSlot.innerHTML = `
           ${role === 'admin' ? `<a href="/admin" class="nav-ops-link"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i><span>Ops Desk</span></a>` : ''}
           <a href="/portal" class="nav-ops-link"><i data-lucide="calendar-days" class="w-3.5 h-3.5"></i><span>Portal</span></a>
           <button type="button" onclick="openModal('promoter-modal')" class="nav-promoter-pill">
-            <span class="truncate max-w-[110px]">${escapeHtml(displayName)}</span>
-            <span class="cart-count-pill">${escapeHtml(String(cutPct))}%</span>
+            <span class="truncate max-w-[140px]">${escapeHtml(displayName)}</span>
           </button>
           <button type="button" onclick="handlePromoterSignOut()" class="nav-signout-btn" aria-label="Sign Out of Promoter Desk">
             <i data-lucide="log-out" class="w-4 h-4"></i>
@@ -1162,7 +1160,7 @@
       if (mobileFooter) {
         mobileFooter.innerHTML = `
           <a href="/portal" onclick="toggleMobileMenu(false)" class="btn-editorial-primary">
-            Events Home &bull; ${escapeHtml(displayName)} (${escapeHtml(String(cutPct))}%)
+            Events Home &bull; ${escapeHtml(displayName)}
           </a>
           <div class="grid grid-cols-3 gap-2">
             <a href="/dashboard" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Dashboard</a>
