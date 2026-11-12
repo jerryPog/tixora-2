@@ -1296,6 +1296,22 @@ GRANT EXECUTE ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, T
 GRANT EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) TO service_role;
 
 DO $$
+DECLARE
+  v_remaining INT;
 BEGIN
-  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All 15 tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized successfully.';
+  SELECT COUNT(*) INTO v_remaining
+  FROM pg_proc p
+  JOIN pg_namespace n ON n.oid = p.pronamespace
+  WHERE n.nspname = 'public'
+    AND p.prosecdef = TRUE
+    AND (
+      has_function_privilege('anon', p.oid, 'EXECUTE')
+      OR has_function_privilege('authenticated', p.oid, 'EXECUTE')
+    );
+
+  IF v_remaining > 0 THEN
+    RAISE EXCEPTION 'Security Advisor verification failed: % SECURITY DEFINER function(s) in public are still executable by anon or authenticated.', v_remaining;
+  END IF;
+
+  RAISE NOTICE '🚀 TIXORA DATABASE FULLY DEPLOYED: All tables, covering foreign key indexes, hardened RLS policies, live tours, and index statistics initialized with 0 Security Advisor function warnings.';
 END $$;
