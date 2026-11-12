@@ -230,35 +230,41 @@ const server = http.createServer((req, res) => {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale" />
     <title>403 Forbidden | Tixora Operations Desk</title>
     <style>
-        body { background: #0b0d14; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 1.5rem; }
-        .card { background: #0e1018; border: 1px solid #1e2333; border-radius: 1rem; max-width: 480px; width: 100%; padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; }
-        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.625rem; border-radius: 0.375rem; font-size: 0.6875rem; font-family: monospace; text-transform: uppercase; background: rgba(244,63,94,0.15); color: #fb7185; border: 1px solid rgba(244,63,94,0.3); }
-        .btn-primary { display: block; width: 100%; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.8125rem; font-weight: 600; background: #059669; color: white; text-decoration: none; transition: background 0.15s; margin-top: 1.25rem; box-sizing: border-box; }
-        .btn-primary:hover { background: #10b981; }
-        .btn-secondary { display: block; width: 100%; padding: 0.625rem 1rem; border-radius: 0.5rem; font-size: 0.75rem; background: #161926; color: #94a3b8; text-decoration: none; margin-top: 0.5rem; border: 1px solid #22283a; box-sizing: border-box; }
-        .btn-secondary:hover { color: white; background: #1e2333; }
+        * { box-sizing: border-box; }
+        body { background: #050608; color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; min-height: 100dvh; display: flex; align-items: center; justify-content: center; margin: 0; padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px)); }
+        .card { background: #0d1019; border: 1px solid #1e2436; border-radius: 1.5rem; max-width: 460px; width: 100%; padding: 1.75rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.72); text-align: center; }
+        .shield { width: 48px; height: 48px; margin: 0 auto 0.75rem; border-radius: 9999px; background: rgba(255,46,84,0.14); border: 1px solid rgba(255,46,84,0.36); color: #ff4d6d; display: flex; align-items: center; justify-content: center; }
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-family: ui-monospace, monospace; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255,46,84,0.14); color: #ff4d6d; border: 1px solid rgba(255,46,84,0.36); }
+        .meta { margin-top: 1rem; padding: 0.85rem; border-radius: 0.75rem; background: #131622; border: 1px solid #1e2436; font-family: ui-monospace, monospace; font-size: 0.75rem; text-align: left; }
+        .btn-primary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 0.75rem 1rem; border-radius: 9999px; font-size: 0.8125rem; font-weight: 700; background: #dc2626; color: #ffffff; text-decoration: none; transition: background 0.15s; margin-top: 1.25rem; }
+        .btn-primary:hover { background: #ff2e54; }
+        .btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 44px; padding: 0.65rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #131622; color: #cbd5e1; text-decoration: none; margin-top: 0.5rem; border: 1px solid #333c56; }
+        .btn-secondary:hover { color: #ffffff; border-color: #ff2e54; }
     </style>
 </head>
 <body>
     <div class="card">
-        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🛡️</div>
-        <div class="badge">Security Clearance Restricted</div>
-        <h1 style="font-size: 1.5rem; font-weight: 700; margin: 0.75rem 0 0.5rem; letter-spacing: -0.025em;">403 Forbidden</h1>
-        <p style="font-size: 0.8125rem; color: #94a3b8; line-height: 1.5; margin: 0;">
-            The Tixora Operations Desk (<code style="color: #34d399; font-family: monospace;">/admin</code>) is locked to verified Administrator clearance.
-        </p>
-        <div style="margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem; background: rgba(255,255,255,0.02); border: 1px solid #1e2333; font-family: monospace; font-size: 0.75rem; text-align: left;">
-            <div style="color: #64748b;">Active Session Role:</div>
-            <div style="color: #f59e0b; font-weight: 700; text-transform: uppercase;">${escapeHtml(userRole)}</div>
-            <div style="color: #64748b; margin-top: 0.25rem;">Required Clearance:</div>
-            <div style="color: #10b981; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
+        <div class="shield" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m14.5 9.5-5 5"/><path d="m9.5 9.5 5 5"/></svg>
         </div>
-        <a href="/dashboard" class="btn-primary">Return to Promoter Command Center</a>
-        <a href="/" class="btn-secondary">Go to Live Concert Tours</a>
-        <a href="/api/auth/logout" class="btn-secondary" style="color: #f43f5e;">Sign Out & Switch to Admin Account</a>
+        <div class="badge">Access Restricted</div>
+        <h1 style="font-size: clamp(1.35rem, 1rem + 1.5vw, 1.75rem); font-weight: 700; margin: 0.75rem 0 0.4rem; letter-spacing: -0.025em;">403 Forbidden</h1>
+        <p style="font-size: 0.875rem; color: #94a3b8; margin: 0;">
+            The Operations Desk (<code style="color: #ff4d6d;">/admin</code>) requires Administrator clearance.
+        </p>
+        <div class="meta">
+            <div style="color: #94a3b8;">Active Role</div>
+            <div style="color: #fbbf24; font-weight: 700; text-transform: uppercase;">${escapeHtml(userRole)}</div>
+            <div style="color: #94a3b8; margin-top: 0.4rem;">Required Clearance</div>
+            <div style="color: #34d399; font-weight: 700;">ADMINISTRATOR / MANAGER</div>
+        </div>
+        <a href="/dashboard" class="btn-primary">Return to Promoter Dashboard</a>
+        <a href="/" class="btn-secondary">Back to Tixora Home</a>
+        <a href="/api/auth/logout" class="btn-secondary" style="color: #ff4d6d;">Sign Out &amp; Switch Account</a>
     </div>
 </body>
 </html>`);

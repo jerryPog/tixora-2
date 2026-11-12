@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
     <title>Terms of Service &amp; Promoter Agreement | Tixora Live Protocol</title>
     <meta name="description"
         content="Contractual Terms of Service and Youth Ambassador Agreement for Tixora Live Protocol. Live tour ticket allocations, UPI settlement rules, anti-scalp turnstile terms, and refund policy.">
@@ -42,7 +43,7 @@
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="editorial.css?v=3">
+    <link rel="stylesheet" href="editorial.css?v=4">
 
     <!-- Schema.org Comprehensive Structured Data -->
     <script type="application/ld+json">
@@ -67,7 +68,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="supabase-config.js" defer></script>
     <script src="auth.js?v=4" defer></script>
-    <script src="editorial.js?v=3" defer></script>
+    <script src="editorial.js?v=4" defer></script>
     <script src="cart.js?v=4" defer></script>
 </head>
 
@@ -121,14 +122,14 @@
 
             <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Navigation">
                 <div class="mobile-nav-links">
-                    <a href="/">Home Overview</a>
-                    <a href="/tours">Live Concert Tours (8)</a>
-                    <a href="/promoter">Promoter Hub &amp; Tiers</a>
-                    <a href="/protocol">Dynamic QR Mesh Protocol</a>
-                    <a href="/about">Founders &amp; Partners</a>
-                    <a href="/faq">Protocol FAQ</a>
+                    <a href="/">Home</a>
+                    <a href="/tours">Live Tours (8)</a>
+                    <a href="/promoter">Promoter Hub</a>
+                    <a href="/protocol">QR Protocol</a>
+                    <a href="/about">About &amp; Founders</a>
+                    <a href="/faq">FAQ</a>
                 </div>
-                <div class="mobile-nav-footer">
+                <div id="mobile-nav-footer" class="mobile-nav-footer">
                     <button type="button" onclick="toggleMobileMenu(false); openModal('promoter-modal');"
                         class="btn-editorial-primary w-full">
                         Promoter Portal
@@ -172,148 +173,105 @@
                     <div class="legal-prose">
 
                         <section class="legal-block" style="border-block-start: 0; padding-block-start: 0;">
-                            <h2>01. Agreement to Terms &amp; Eligibility</h2>
+                            <h2>01. Agreement &amp; Eligibility</h2>
                             <p>
-                                These Terms of Service constitute a legally binding agreement between you and
-                                <strong class="text-[var(--ink)]">Tixora Protocol Technologies Private Limited</strong>.
-                                By accessing our platform, participating in promoter campaigns, or reserving live
-                                concert
-                                allocations, you confirm that you are at least 18 years of age (or have explicit
-                                parental/guardian authorization) and possess legal capacity under the Indian Contract
-                                Act,
-                                1872.
+                                These Terms govern your use of <strong class="text-[var(--ink)]">Tixora Protocol Technologies Private Limited</strong>.
+                                By reserving passes or joining promoter campaigns, you confirm you are at least 18 (or
+                                have guardian consent) with capacity to contract under India&rsquo;s Contract Act, 1872.
                             </p>
                         </section>
 
                         <section class="legal-block">
-                            <h2>02. Primary Live Concert Allocations</h2>
+                            <h2>02. Primary Concert Allocations</h2>
                             <p>
-                                Tixora operates as an authorized campus promoter network and primary ticket distribution
-                                engine. All concert allocations advertised on Tixora are
-                                <strong class="text-[var(--ink)]">100% genuine primary quotas</strong> sourced through
-                                official relationships with event producers and ticketing partners (including BookMyShow
-                                and District). Delivered passes populate directly in the attendee&rsquo;s verified
-                                mobile
-                                ticket wallet.
+                                All passes on Tixora are <strong class="text-[var(--ink)]">100% genuine primary quotas</strong>
+                                sourced via authorized event producers and ticketing partners (BookMyShow and District),
+                                delivered directly to your verified digital ticket wallet.
                             </p>
                         </section>
 
                         <section class="legal-block">
-                            <h2>03. Dynamic QR Mesh &amp; Anti-Scalping Policy</h2>
+                            <h2>03. Dynamic QR &amp; Anti-Scalping Policy</h2>
                             <div class="space-y-4">
                                 <div>
-                                    <strong class="text-[var(--ink)] block mb-1">Rotating Cryptographic
-                                        Signatures</strong>
+                                    <strong class="text-[var(--ink)] block mb-1">Rotating QR Signatures</strong>
                                     <p>
-                                        Passes issued through the Tixora mesh protocol utilize rotating digital
-                                        signatures
-                                        refreshed every few seconds. Static screenshots, forward attempts, and screen
-                                        recordings fail gate turnstiles.
+                                        Tixora passes refresh cryptographic QR tokens every few seconds. Screenshots,
+                                        forwards, and screen recordings fail venue turnstiles.
                                     </p>
                                 </div>
                                 <div class="legal-callout-danger">
-                                    <strong class="block mb-1" style="color: var(--crimson-ink);">Strict Prohibition on
-                                        Unauthorized Secondary Resale</strong>
+                                    <strong class="block mb-1" style="color: var(--crimson-ink);">No Unauthorized Secondary Resale</strong>
                                     <p style="color: var(--ink);">
-                                        Re-listing passes on unauthorized secondary reselling platforms or ticket
-                                        scalping
-                                        at inflated markups is strictly prohibited and constitutes an immediate
-                                        violation.
-                                        Any pass detected in breach will be cancelled at the turnstiles with zero
-                                        refund.
+                                        Listing passes on resale sites or scalping above face value triggers immediate
+                                        cancellation at the gate with zero refund.
                                     </p>
                                 </div>
                             </div>
                         </section>
 
                         <section class="legal-block">
-                            <h2>04. Promoter Commissions &amp; NPCI UPI Settlement</h2>
+                            <h2>04. Promoter Commissions &amp; UPI Settlement</h2>
                             <ul class="legal-list">
-                                <li><strong class="text-[var(--ink)]">Zero Joining Fees:</strong> Becoming a Tixora
-                                    ambassador requires zero upfront deposits, zero collateral, and zero sign-up fees.
-                                </li>
-                                <li><strong class="text-[var(--ink)]">Commission Rates:</strong> Promoter performance
-                                    yields range from 8% to 16% as specified on each individual tour card.</li>
-                                <li><strong class="text-[var(--ink)]">Sub-Minute Clearing:</strong> Payouts are
-                                    triggered over NPCI UPI 2.0 direct rails within 60 seconds of pass turnstile
-                                    verification at the venue gates.</li>
-                                <li><strong class="text-[var(--ink)]">Tax Responsibility:</strong> Promoters are
-                                    independent contractors and remain solely responsible for any applicable local
-                                    income tax or TDS reporting on earned commissions.</li>
+                                <li><strong class="text-[var(--ink)]">Zero Joining Fees:</strong> Joining Tixora requires no deposit, collateral, or onboarding fee.</li>
+                                <li><strong class="text-[var(--ink)]">Commission Tiers:</strong> Verified promoters earn 8% to 16% based on volume and tour terms.</li>
+                                <li><strong class="text-[var(--ink)]">Under-60s UPI Payouts:</strong> NPCI UPI 2.0 settlements trigger within 60 seconds of gate admission.</li>
+                                <li><strong class="text-[var(--ink)]">Taxes:</strong> Promoters act as independent contractors responsible for applicable income tax or TDS compliance.</li>
                             </ul>
                         </section>
 
                         <!-- Refund Policy Anchor -->
                         <section id="refund-policy" class="legal-block legal-block--callout">
-                            <span class="modal-badge-emerald" style="align-self: flex-start;">Official Refund
-                                Specification</span>
-                            <h2>05. 100% Cancellation &amp; Refund Guarantee</h2>
+                            <span class="modal-badge-emerald" style="align-self: flex-start;">Official Refund Guarantee</span>
+                            <h2>05. 100% Cancellation &amp; Refund Policy</h2>
                             <div class="space-y-3">
                                 <p style="color: var(--ink);">
-                                    <strong>Event Cancellation:</strong> If a live music tour is formally cancelled by
-                                    the
-                                    headline artist, promoter, or organizing festival producer, attendees are entitled
-                                    to an
-                                    automatic <strong>100% full refund</strong> of the face value ticket price. Refunds
-                                    are
-                                    processed back to the original payment source within 5&ndash;7 banking business days
-                                    without penalty.
+                                    <strong>Cancelled Events:</strong> If a tour is formally cancelled by the artist or
+                                    organizer, attendees receive a <strong>100% face-value refund</strong> to the original
+                                    payment method within 5&ndash;7 banking business days.
                                 </p>
                                 <p style="color: var(--ink);">
-                                    <strong>Rescheduling &amp; Venue Relocation:</strong> If an event is postponed or
-                                    moved
-                                    to an alternative date/venue, your issued pass remains 100% valid for the
-                                    rescheduled
-                                    performance. Attendees unable to attend the rescheduled date may request a full
-                                    refund
-                                    within 72 hours of the official postponement notice by contacting
+                                    <strong>Rescheduled Shows:</strong> Passes remain valid for new dates. If you cannot
+                                    attend, request a full refund within 72 hours of the notice via
                                     <a href="mailto:support@tixora.live"
                                         style="color: var(--emerald-ink); font-weight: 700; text-decoration: underline;">support@tixora.live</a>.
                                 </p>
                                 <p style="color: var(--ink);">
-                                    <strong>Scanned / Attended Passes:</strong> Passes that have been successfully
-                                    verified
-                                    and admitted through venue turnstiles on the event date are strictly non-refundable.
+                                    <strong>Admitted Passes:</strong> Passes already scanned at venue turnstiles are non-refundable.
                                 </p>
                             </div>
                         </section>
 
                         <section class="legal-block">
-                            <h2>06. Intellectual Property &amp; Trademarks</h2>
+                            <h2>06. Trademarks &amp; IP</h2>
                             <p>
-                                All artist names, concert artwork, and festival logos are the intellectual property of
-                                their respective creators, rights owners, and festival producers, displayed strictly
-                                under
-                                authorized tour allocation promoter agreements. BookMyShow is a registered trademark of
-                                Bigtree Entertainment Pvt. Ltd. Tixora claims no proprietary ownership over third-party
-                                registered trademarks.
+                                Artist names, show artwork, and partner logos belong to their respective rights owners.
+                                BookMyShow is a registered trademark of Bigtree Entertainment Pvt. Ltd.
                             </p>
                         </section>
 
                         <section class="legal-block">
-                            <h2>07. Limitation of Liability &amp; Governing Law</h2>
+                            <h2>07. Liability &amp; Governing Law</h2>
                             <p>
-                                Tixora shall not be liable for indirect, incidental, or consequential damages arising
-                                out
-                                of event scheduling or venue operations beyond its control. In all cases, Tixora&rsquo;s
-                                maximum aggregate liability is limited to the pass face value paid. These Terms are
-                                governed by the laws of India, subject to the exclusive jurisdiction of the competent
-                                courts in Bengaluru / Mumbai.
+                                Tixora&rsquo;s maximum liability is limited to the face value paid for the pass. Governed
+                                by Indian law with exclusive jurisdiction in Bengaluru / Mumbai courts.
                             </p>
                         </section>
 
                         <section class="legal-block">
-                            <h2>08. Official Support &amp; Grievance Contacts</h2>
+                            <h2>08. Official Support &amp; Grievances</h2>
                             <div class="editorial-card editorial-card--soft text-sm space-y-1.5 mt-2">
                                 <div class="font-bold text-[var(--ink)]">Tixora Protocol Technologies Private Limited
                                 </div>
                                 <div class="text-[var(--muted)]">
                                     Support Desk:
-                                    <a href="mailto:support@tixora.live" style="color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">support@tixora.live</a>
+                                    <a href="mailto:support@tixora.live"
+                                        style="color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">support@tixora.live</a>
                                 </div>
                                 <div class="text-[var(--muted)]">
                                     Legal &amp; Grievances:
-                                    <a href="mailto:grievance@tixora.live" style="color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">grievance@tixora.live</a>
+                                    <a href="mailto:grievance@tixora.live"
+                                        style="color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">grievance@tixora.live</a>
                                 </div>
                                 <div class="text-[var(--muted)]">
                                     Official Community:
@@ -339,9 +297,6 @@
                     <div class="space-y-3">
                         <span class="eyebrow eyebrow--dark">Get In Touch &amp; Join</span>
                         <h2 class="section-h2">Start your promoter quota.</h2>
-                        <p class="text-sm" style="color: var(--on-dark-muted); max-inline-size: 52ch;">
-                            Direct primary ticketing inventory meets instant promoter liquidity. Zero upfront deposit.
-                        </p>
                     </div>
                     <div class="flex flex-wrap gap-3">
                         <button type="button" onclick="openModal('promoter-modal')" class="btn-editorial-gold">
@@ -362,10 +317,8 @@
                             </picture>
                         </a>
                         <p
-                            style="font-size: 13.5px; line-height: 1.65; color: var(--on-dark-muted); max-inline-size: 38ch;">
-                            Authorized primary live concert ticket allocations &amp; automated promoter clearing
-                            protocol. Delivering genuine passes and instant UPI performance payouts across India’s
-                            biggest tours.
+                            style="font-size: 0.875rem; line-height: 1.65; color: var(--on-dark-muted); max-inline-size: 38ch;">
+                            Primary live concert allocations with automated &lt;60s UPI promoter payouts across India.
                         </p>
 
                         <div class="trust-badges">
@@ -433,8 +386,7 @@
 
                 <div class="footer-bottom">
                     <div>
-                        &copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. All rights reserved.
-                        Authorized primary partner network.
+                        &copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. All rights reserved.
                     </div>
                     <div class="flex flex-wrap gap-4">
                         <a href="/privacy" onclick="openPrivacyModal(event)">Privacy Policy</a>
@@ -495,10 +447,10 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="desk-referral-input" class="modal-field-label">Your Official Shareable Pass Link</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="desk-referral-input" readonly
-                            value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
+                    <label for="desk-referral-input" class="modal-field-label">Shareable Pass Link</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="desk-referral-input" readonly autocorrect="off" autocapitalize="none"
+                            spellcheck="false" value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
                             class="modal-input flex-1 tabular-nums">
                         <button type="button" onclick="copyPromoterReferralLink()" class="btn-editorial-primary">
                             <span id="copy-btn-text">Copy</span>
@@ -529,27 +481,26 @@
                     <a id="desk-admin-link" href="/admin" class="hidden btn-editorial-gold w-full">
                         Open Operations Desk &rarr;
                     </a>
-                    <a href="/dashboard" class="btn-editorial-primary w-full">Open Full Promoter Dashboard &rarr;</a>
+                    <a href="/dashboard" class="btn-editorial-primary w-full">Open Promoter Dashboard &rarr;</a>
                     <a id="desk-whatsapp-btn" target="_blank" rel="noopener noreferrer"
                         href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
                         class="btn-editorial-outline-light w-full">
-                        Broadcast Link on WhatsApp &rarr;
+                        Share on WhatsApp &rarr;
                     </a>
                     <button type="button" onclick="handlePromoterSignOut()" class="btn-editorial-outline-light w-full">
-                        Sign Out of Promoter Desk
+                        Sign Out
                     </button>
                 </div>
             </div>
 
             <div id="promoter-auth-view" class="space-y-4">
                 <div class="text-center space-y-2">
-                    <span style="display:inline-flex; padding: 8px 16px; border-radius: 100px; background: var(--bg-elevated); border: 1px solid var(--line-strong);">
+                    <span
+                        style="display:inline-flex; padding: 8px 16px; border-radius: 100px; background: var(--bg-elevated); border: 1px solid var(--line-strong);">
                         <img src="tixora-logo.png" alt="Tixora" width="96" height="24">
                     </span>
-                    <h2 id="promoter-modal-heading" style="font-size: 1.55rem; font-weight: 700;">Promoter Network
-                        Access</h2>
-                    <p style="font-size: 13px; color: var(--muted);">Authorized partner login &amp; official youth
-                        promoter registration</p>
+                    <h2 id="promoter-modal-heading" style="font-size: 1.55rem; font-weight: 700;">Promoter Access</h2>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Partner login &amp; youth promoter sign-up</p>
                 </div>
 
                 <div class="auth-tab-strip">
@@ -567,21 +518,23 @@
                 <form id="form-promoter-signin" onsubmit="handlePromoterSignIn(event)" class="space-y-3">
                     <div>
                         <label for="signin-email" class="modal-field-label">Email Address</label>
-                        <input type="email" id="signin-email" required autocomplete="email"
-                            placeholder="you@network.com" class="modal-input">
+                        <input type="email" id="signin-email" required autocomplete="username" autocorrect="off"
+                            autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="you@network.com"
+                            class="modal-input">
                     </div>
                     <div>
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between gap-2">
                             <label for="signin-password" class="modal-field-label">Password</label>
                             <a href="/reset-password"
-                                style="font-size: 11.5px; color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">Forgot
+                                style="font-size: 0.75rem; color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">Forgot
                                 password?</a>
                         </div>
                         <input type="password" id="signin-password" required autocomplete="current-password"
+                            autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done"
                             placeholder="••••••••••••" class="modal-input">
                     </div>
                     <button type="submit" id="btn-signin-submit" class="btn-editorial-primary w-full">
-                        <span>Sign In to Promoter Desk</span>
+                        <span>Sign In</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -590,41 +543,44 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-fullname" class="modal-field-label">Full Name</label>
-                            <input type="text" id="signup-fullname" required placeholder="Aarav Sharma"
-                                class="modal-input">
+                            <input type="text" id="signup-fullname" required autocomplete="name" autocapitalize="words"
+                                enterkeyhint="next" placeholder="Aarav Sharma" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-phone" class="modal-field-label">WhatsApp (+91)</label>
-                            <input type="tel" id="signup-phone" required placeholder="+91 98200 11223"
-                                class="modal-input">
+                            <input type="tel" id="signup-phone" required autocomplete="tel" inputmode="tel"
+                                enterkeyhint="next" placeholder="+91 98200 11223" class="modal-input">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-email" class="modal-field-label">Email Address</label>
-                            <input type="email" id="signup-email" required placeholder="aarav@college.edu"
-                                class="modal-input">
+                            <input type="email" id="signup-email" required autocomplete="email" autocorrect="off"
+                                autocapitalize="none" spellcheck="false" enterkeyhint="next"
+                                placeholder="aarav@college.edu" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-password" class="modal-field-label">Create Password</label>
-                            <input type="password" id="signup-password" required placeholder="••••••••••••"
-                                class="modal-input">
+                            <input type="password" id="signup-password" required autocomplete="new-password"
+                                autocorrect="off" autocapitalize="none" spellcheck="false" minlength="6"
+                                enterkeyhint="next" placeholder="••••••••••••" class="modal-input">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-city" class="modal-field-label">Metro Circuit</label>
-                            <input type="text" id="signup-city" required placeholder="Mumbai / Delhi NCR"
-                                class="modal-input">
+                            <input type="text" id="signup-city" required autocomplete="address-level2"
+                                enterkeyhint="next" placeholder="Mumbai / Delhi NCR" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-upi" class="modal-field-label">Settlement UPI ID</label>
-                            <input type="text" id="signup-upi" required placeholder="aarav@okhdfcbank"
+                            <input type="text" id="signup-upi" required autocorrect="off" autocapitalize="none"
+                                spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
                                 class="modal-input">
                         </div>
                     </div>
                     <button type="submit" id="btn-signup-submit" class="btn-editorial-gold w-full">
-                        <span>Apply For Official Promoter Quota</span>
+                        <span>Apply for Promoter Quota</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -642,8 +598,7 @@
                     </p>
                 </div>
                 <div class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] text-xs text-left">
-                    Check your email inbox (and spam folder) for the verification link sent by Tixora. Once verified,
-                    sign in to access your Promoter Command Center.
+                    Verify via the link in your inbox (check spam), then sign in.
                 </div>
                 <div class="space-y-2">
                     <button type="button" onclick="switchPromoterAuthTab('signin')"
@@ -717,7 +672,7 @@
             </div>
 
             <div id="cart-expired-notice" class="hidden cart-expired-bar">
-                Your 10-minute pass hold has expired to release inventory. Please re-select your concert passes.
+                10-minute hold expired. Re-add your passes to continue.
             </div>
 
             <div id="cart-modal-body" class="space-y-4">
@@ -726,9 +681,8 @@
                         class="w-12 h-12 rounded-full bg-[var(--soft)] border mx-auto flex items-center justify-center">
                         <i data-lucide="ticket" class="w-6 h-6 text-[var(--crimson-ink)]"></i>
                     </div>
-                    <div class="text-sm font-bold text-[var(--ink)]">Your pass cart is empty</div>
-                    <p class="text-xs text-[var(--muted)]">Select a concert tour to reserve your official passes with a
-                        10-minute hold timer.</p>
+                    <div class="text-sm font-bold text-[var(--ink)]">Your cart is empty</div>
+                    <p class="text-xs text-[var(--muted)]">Select a tour pass to start a 10-minute hold.</p>
                 </div>
 
                 <div id="cart-items-container" class="space-y-2"></div>
@@ -738,19 +692,20 @@
                         <span class="modal-field-label">Attendee Information</span>
                         <div>
                             <label for="cart-cust-name" class="modal-field-label">Customer Full Name *</label>
-                            <input type="text" id="cart-cust-name" placeholder="Rohan Sharma" required
-                                class="modal-input">
+                            <input type="text" id="cart-cust-name" autocomplete="name" autocapitalize="words"
+                                enterkeyhint="next" placeholder="Rohan Sharma" required class="modal-input">
                         </div>
                         <div>
                             <label for="cart-cust-phone" class="modal-field-label">WhatsApp / Mobile Number *</label>
-                            <input type="tel" id="cart-cust-phone" placeholder="+91 98200 11223" required
-                                class="modal-input">
+                            <input type="tel" id="cart-cust-phone" autocomplete="tel" inputmode="tel" enterkeyhint="next"
+                                placeholder="+91 98200 11223" required class="modal-input">
                         </div>
                         <div>
                             <label for="cart-cust-email" class="modal-field-label">Email Address (Pass Delivery)
                                 *</label>
-                            <input type="email" id="cart-cust-email" placeholder="rohan@example.com" required
-                                class="modal-input">
+                            <input type="email" id="cart-cust-email" autocomplete="email" autocorrect="off"
+                                autocapitalize="none" spellcheck="false" enterkeyhint="done"
+                                placeholder="rohan@example.com" required class="modal-input">
                         </div>
                     </div>
 
@@ -782,19 +737,20 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div>
-                <span class="eyebrow">Affiliate Tracking Link</span>
+                <span class="eyebrow">Promoter Referral Link</span>
                 <h2 id="link-event-name" style="font-size: 1.35rem; font-weight: 700; margin-block-start: 6px;">Tour
                     Name</h2>
             </div>
             <div class="space-y-1">
-                <label for="generated-link-input" class="modal-field-label">Your Unique Distribution URL</label>
-                <div class="flex gap-2">
-                    <input type="text" id="generated-link-input" readonly class="modal-input flex-1">
+                <label for="generated-link-input" class="modal-field-label">Your Referral URL</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="generated-link-input" readonly autocorrect="off" autocapitalize="none"
+                        spellcheck="false" class="modal-input flex-1">
                     <button type="button" onclick="copyToClipboardAction()" class="btn-editorial-primary">Copy</button>
                 </div>
             </div>
             <p class="text-xs text-[var(--muted)] leading-relaxed">
-                Every attendee purchasing passes via this link is cryptographically tied to your promoter account.
+                Bookings from this link credit straight to your account.
             </p>
         </div>
     </div>
@@ -807,28 +763,16 @@
                 aria-label="Close Privacy Policy">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <h2 id="privacy-modal-title" style="font-size: 1.45rem; font-weight: 700;">Privacy Policy &amp; Data
-                Governance</h2>
+            <h2 id="privacy-modal-title" style="font-size: 1.45rem; font-weight: 700;">Privacy Policy</h2>
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
-                <p><strong class="text-[var(--ink)]">1. Information Collection:</strong> Tixora collects necessary
-                    ticketing identity data (name, mobile number, and email) solely to generate authorized event
-                    admission passes and route verified dynamic barcodes via BookMyShow and partner venue turnstiles.
-                </p>
-                <p><strong class="text-[var(--ink)]">2. Promoter Settlement Data:</strong> For registered promoters,
-                    verified UPI handles and WhatsApp contact numbers are utilized strictly for automated performance
-                    payouts and direct KYC verification. Banking credentials and UPI PINs are never requested or stored.
-                </p>
-                <p><strong class="text-[var(--ink)]">3. Anti-Scalp Telemetry:</strong> Anonymized device integrity and
-                    rapid-request telemetry are analyzed during checkout to shield inventory from automated scalper bots
-                    and duplicate pass generation.</p>
-                <p><strong class="text-[var(--ink)]">4. Third-Party Allocations:</strong> Tixora does not sell, rent, or
-                    trade customer data to advertising brokers. Ticket fulfillment complies with Indian Digital Personal
-                    Data Protection (DPDP) Act standards.</p>
+                <p><strong class="text-[var(--ink)]">1. Pass Delivery:</strong> Attendee contact details are used solely to issue BookMyShow/District Live passes.</p>
+                <p><strong class="text-[var(--ink)]">2. Promoter Payouts:</strong> Verified UPI handles and WhatsApp numbers process KYC and &lt;60s payouts; banking PINs are never collected.</p>
+                <p><strong class="text-[var(--ink)]">3. Anti-Scalping:</strong> Device telemetry blocks bots and duplicate QR generation.</p>
+                <p><strong class="text-[var(--ink)]">4. DPDP Compliance:</strong> Tixora complies with India&rsquo;s DPDP Act and never sells user data.</p>
             </div>
-            <div class="pt-2 flex justify-end gap-2">
+            <div class="pt-2 flex flex-wrap justify-end gap-2">
                 <a href="/privacy" class="btn-editorial-outline-light">Full Policy Page</a>
-                <button type="button" onclick="closePrivacyModal()" class="btn-editorial-primary">Close
-                    Disclosures</button>
+                <button type="button" onclick="closePrivacyModal()" class="btn-editorial-primary">Close</button>
             </div>
         </div>
     </div>
@@ -840,24 +784,14 @@
                 aria-label="Close Terms of Service">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <h2 id="terms-modal-title" style="font-size: 1.45rem; font-weight: 700;">Terms of Protocol &amp; Ticket
-                Allocation</h2>
+            <h2 id="terms-modal-title" style="font-size: 1.45rem; font-weight: 700;">Terms of Protocol</h2>
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
-                <p><strong class="text-[var(--ink)]">1. Official Primary Allocations:</strong> All passes issued via
-                    the Tixora mesh protocol are direct primary tier allocations from authorized event organizers.
-                    Secondary resale, commercial markup, and unauthorized ticket transferring are strictly prohibited.
-                </p>
-                <p><strong class="text-[var(--ink)]">2. Dynamic Turnstile Verification:</strong> Passes must be
-                    displayed on a live digital device at the venue gate turnstile. Static screenshots, photocopies, and
-                    forwarded images fail cryptographic verification and will be denied entry without refund.</p>
-                <p><strong class="text-[var(--ink)]">3. Promoter Commission Settlement:</strong> Promoter commission
-                    yields are calculated based on confirmed venue gate verification. In the event of chargebacks,
-                    fraudulent bookings, or cancelled orders, unearned commissions are voided.</p>
-                <p><strong class="text-[var(--ink)]">4. Event Rescheduling:</strong> In the event of artist
-                    cancellation or venue postponement by the festival producer, original passes remain valid for
-                    rescheduled dates in accordance with BookMyShow primary ticketing regulations.</p>
+                <p><strong class="text-[var(--ink)]">1. Primary Passes:</strong> All passes come from authorized primary allocations. Commercial resale or markups are prohibited.</p>
+                <p><strong class="text-[var(--ink)]">2. Gate Entry:</strong> Show live Dynamic QR passes on your phone at entry. Screenshots or forwards fail verification without refund.</p>
+                <p><strong class="text-[var(--ink)]">3. Promoter Payouts:</strong> Commissions settle on confirmed gate scans. Chargebacks, fraud, or cancelled orders void payouts.</p>
+                <p><strong class="text-[var(--ink)]">4. Cancellations:</strong> Cancelled shows receive a 100% face-value refund; postponed passes remain valid under BookMyShow rules.</p>
             </div>
-            <div class="pt-2 flex justify-end gap-2">
+            <div class="pt-2 flex flex-wrap justify-end gap-2">
                 <a href="/terms" class="btn-editorial-outline-light">Full Terms Page</a>
                 <button type="button" onclick="closeTermsModal()" class="btn-editorial-primary">I Understand</button>
             </div>
@@ -872,25 +806,24 @@
     </div>
 
     <div id="cookie-banner" class="cookie-card translate-y-36 opacity-0 pointer-events-none">
-        <div class="space-y-3">
+        <div class="space-y-2.5">
             <div class="flex items-start gap-2.5">
                 <div
                     class="w-7 h-7 rounded-full bg-[var(--soft)] text-[var(--crimson-ink)] flex items-center justify-center flex-shrink-0">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-xs font-bold text-[var(--ink)]">Cookie &amp; Session Compliance</div>
-                    <p class="text-[11px] text-[var(--muted)] leading-relaxed">
-                        We use essential cookies to maintain promoter sessions, track pass referral links, and prevent
-                        scalping bots on official concert allocations.
+                <div class="space-y-0.5">
+                    <div class="text-xs font-bold text-[var(--ink)]">Cookie &amp; Session Notice</div>
+                    <p class="text-[11px] text-[var(--muted)] leading-snug">
+                        Essential cookies keep promoter sessions active, attribute links, and block scalper bots.
                     </p>
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2">
-                <button type="button" onclick="acceptCookies('essential')" class="btn-editorial-outline-light"
-                    style="min-block-size: 36px; padding-inline: 14px; font-size: 12px;">Essential Only</button>
-                <button type="button" onclick="acceptCookies('all')" class="btn-editorial-primary"
-                    style="min-block-size: 36px; padding-inline: 16px; font-size: 12px;">Accept All</button>
+                <button type="button" onclick="acceptCookies('essential')"
+                    class="btn-editorial-outline-light cookie-btn">Essential</button>
+                <button type="button" onclick="acceptCookies('all')"
+                    class="btn-editorial-primary cookie-btn">Accept</button>
             </div>
         </div>
     </div>
@@ -910,16 +843,16 @@
                 <i data-lucide="sparkles" class="w-4 h-4 text-[var(--crimson-ink)]"></i>
                 <div>
                     <div class="text-xs font-bold">Tixora AI</div>
-                    <div style="font-size: 11px; color: var(--on-dark-muted);">Concert info, venues &amp; payouts</div>
+                    <div style="font-size: 0.75rem; color: var(--on-dark-muted);">Tours, venues &amp; payouts</div>
                 </div>
             </div>
             <div class="flex items-center gap-1">
                 <button type="button" onclick="resetChat()" title="Reset Chat" aria-label="Reset Chat"
-                    style="color: var(--on-dark-muted); padding: 6px;">
+                    class="chat-icon-btn">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </button>
                 <button type="button" onclick="toggleChatbot()" title="Close" aria-label="Close Chat"
-                    style="color: var(--white); padding: 6px;">
+                    class="chat-icon-btn chat-icon-btn--close">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -935,10 +868,11 @@
 
         <form id="chat-form" onsubmit="handleChatSubmit(event)" class="chat-form">
             <label for="chat-input" class="visually-hidden">Ask Tixora AI</label>
-            <input type="text" id="chat-input" placeholder="Ask about venues, timings, songs, posters..."
-                autocomplete="off" class="modal-input flex-1" style="background: var(--bg-card);">
-            <button type="submit" id="chat-send-btn" aria-label="Send Message" class="btn-editorial-primary"
-                style="min-block-size: 44px; padding-inline: 14px;">
+            <input type="text" id="chat-input" placeholder="Ask venues, dates, cuts..."
+                autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="send" class="modal-input flex-1"
+                style="background: var(--bg-card);">
+            <button type="submit" id="chat-send-btn" aria-label="Send Message"
+                class="btn-editorial-primary btn-compact">
                 <i data-lucide="send" class="w-4 h-4"></i>
             </button>
         </form>

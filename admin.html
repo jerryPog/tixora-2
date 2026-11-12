@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
     <meta name="robots" content="noindex, nofollow">
-    <title>Tixora Operations Desk | Live Tour Inventory &amp; Settlements</title>
+    <title>Operations Desk | Tixora Live Protocol</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
     <meta name="theme-color" content="#050608">
@@ -51,7 +52,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="editorial.css?v=3">
+    <link rel="stylesheet" href="editorial.css?v=4">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -64,8 +65,8 @@
 <body class="ops-body ops-shell antialiased">
 
     <!-- Top Command Navigation Bar (Protected) -->
-    <header id="admin-header" class="hidden ops-topbar sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between">
-        <div class="flex items-center space-x-3 sm:space-x-4">
+    <header id="admin-header" class="hidden ops-topbar sticky top-0 z-40 px-4 sm:px-6 min-h-16 py-2 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center space-x-2.5 sm:space-x-4">
             <a href="/" class="flex items-center space-x-2.5 group" aria-label="Tixora Homepage">
                 <picture>
                     <source srcset="tixora-logo.webp" type="image/webp">
@@ -78,17 +79,17 @@
 
             <div class="h-4 w-px bg-white/20 hidden sm:block"></div>
 
-            <button type="button" onclick="toggleSidebar()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu">
+            <button type="button" id="sidebar-toggle-btn" onclick="toggleSidebar()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Toggle Navigation Menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="main-sidebar">
                 <i data-lucide="menu" class="w-4 h-4"></i>
             </button>
 
             <div class="relative hidden md:block w-72">
-                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#94a3b8]"></i>
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-3 text-[#94a3b8]"></i>
                 <label for="global-search-input" class="visually-hidden">Global Operations Search</label>
-                <input type="text" id="global-search-input" placeholder="Search tours, venues, promoters..."
-                    class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-xs text-white placeholder-[#94a3b8] focus:outline-none focus:border-[#ff2e54] transition-colors"
+                <input type="search" id="global-search-input" enterkeyhint="search" placeholder="Search tours, venues, promoters..."
+                    class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-base text-white placeholder-[#94a3b8] focus:outline-none focus:border-[#ff2e54] transition-colors"
                     oninput="handleGlobalSearch(this.value)">
-                <span class="absolute right-2.5 top-1.5 text-[10px] font-mono text-[#94a3b8] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
+                <span class="absolute right-2.5 top-2.5 text-[10px] font-mono text-[#94a3b8] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
             </div>
 
             <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 hover:border-[#ff2e54] transition-colors">
@@ -98,20 +99,21 @@
         </div>
 
         <div class="flex items-center space-x-2 sm:space-x-3">
-            <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-gold" style="min-block-size: 38px; padding-inline: 16px; padding-block: 6px; font-size: 12px;">
+            <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-gold btn-compact">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span>Allocate Tour</span>
+                <span class="hidden sm:inline">Allocate Tour</span>
+                <span class="sm:hidden">New Tour</span>
             </button>
 
-            <button type="button" onclick="refreshAllData()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Refresh Live Data" aria-label="Refresh Live Data">
+            <button type="button" onclick="refreshAllData()" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Refresh Live Data" aria-label="Refresh Live Data">
                 <i data-lucide="refresh-cw" class="w-4 h-4" id="refresh-icon"></i>
             </button>
 
-            <button type="button" onclick="openModal('supabase-modal')" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors" title="Database Configuration" aria-label="Database Configuration">
+            <button type="button" onclick="openModal('supabase-modal')" class="text-[#94a3b8] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors inline-flex items-center justify-center" title="Database Configuration" aria-label="Database Configuration">
                 <i data-lucide="database" class="w-4 h-4"></i>
             </button>
 
-            <div id="admin-user-badge-container" class="flex items-center space-x-2.5 pl-3 border-l border-white/20 cursor-pointer" onclick="handleAdminSignOut()" title="Click to Sign Out">
+            <button type="button" id="admin-user-badge-container" class="flex items-center space-x-2.5 pl-3 bg-transparent border-0 border-l border-white/20 text-left cursor-pointer" onclick="handleAdminSignOut()" title="Sign Out" aria-label="Sign Out">
                 <div id="admin-user-avatar" class="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs" style="background: rgba(255,46,84,0.18); border: 1px solid #ff2e54; color: #ff4d6d;">
                     <span>OP</span>
                 </div>
@@ -120,7 +122,7 @@
                     <span id="admin-user-role-badge" class="text-[10px] font-mono leading-none mt-1" style="color: #ff4d6d;">SUPER ADMIN</span>
                 </div>
                 <i data-lucide="log-out" class="w-3.5 h-3.5 text-[#94a3b8] hover:text-white ml-1 hidden sm:block"></i>
-            </div>
+            </button>
         </div>
     </header>
 
@@ -131,8 +133,8 @@
         <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
             <div class="ops-spinner mx-auto" role="status" aria-label="Verifying operations clearance"></div>
             <div class="space-y-1">
-                <div class="font-bold text-[var(--ink)] text-sm">Verifying Operations Clearance</div>
-                <div class="text-xs font-mono text-[var(--muted)]">Authenticating session via Supabase RBAC Protocol</div>
+                <div class="font-bold text-[var(--ink)] text-sm">Verifying Access</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Checking RBAC session</div>
             </div>
         </div>
     </div>
@@ -152,12 +154,12 @@
                 <div>
                     <span class="ops-badge-gold inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider font-bold">
                         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                        <span>Administrative Access Gateway</span>
+                        <span>Admin Gateway</span>
                     </span>
                 </div>
                 <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Tixora Operations Desk</h1>
                 <p class="text-xs text-[var(--muted)] leading-relaxed">
-                    Authentication required. Sign in with your administrator account to access live tour allocations, orders, and settlements.
+                    Sign in to manage tours, orders, and payouts.
                 </p>
             </div>
 
@@ -179,11 +181,11 @@
                         <label for="admin-login-password" class="modal-field-label" style="margin:0;">Master Password</label>
                         <a href="/reset-password" class="text-[11px] font-mono font-semibold" style="color: var(--crimson-ink); text-decoration: underline;">Forgot password?</a>
                     </div>
-                    <input type="password" id="admin-login-password" name="password" required autocomplete="current-password" enterkeyhint="done" placeholder="••••••••••••" class="modal-input font-mono">
+                    <input type="password" id="admin-login-password" name="password" required autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="••••••••••••" class="modal-input font-mono">
                 </div>
 
                 <button type="submit" id="admin-login-btn" class="btn-editorial-primary w-full">
-                    <span id="admin-login-btn-text">Authenticate &amp; Enter Desk</span>
+                    <span id="admin-login-btn-text">Sign In</span>
                     <i data-lucide="arrow-right" class="w-4 h-4" id="admin-login-btn-icon"></i>
                 </button>
             </form>
@@ -192,10 +194,10 @@
             <div class="pt-2 border-t border-[var(--line)]">
                 <div class="ops-subcard p-3.5 text-[11px] font-mono text-[var(--muted)] space-y-1">
                     <div class="flex items-center justify-between font-bold text-[var(--ink)]">
-                        <span>Database RBAC Active</span>
-                        <span style="color: var(--emerald-ink);">Strict Auth Enforced</span>
+                        <span>Database RBAC</span>
+                        <span style="color: var(--emerald-ink);">Strict Auth</span>
                     </div>
-                    <div>Administrative access requires verified Supabase JWT credentials.</div>
+                    <div>Requires verified Supabase JWT credentials.</div>
                 </div>
             </div>
 
@@ -245,11 +247,20 @@
     <!-- ========================================================= -->
     <!-- MAIN WORKSPACE LAYOUT (PROTECTED - DESK COMMAND INTERFACE) -->
     <!-- ========================================================= -->
-    <div id="admin-workspace" class="hidden flex-1 flex overflow-hidden">
+    <div id="admin-workspace" class="hidden flex-1 flex overflow-x-clip relative">
+
+        <div id="sidebar-backdrop" class="sidebar-backdrop hidden" onclick="toggleSidebar(false)" aria-hidden="true"></div>
 
         <!-- Sidebar Navigation -->
-        <aside id="main-sidebar" class="ops-sidebar w-64 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-300">
+        <aside id="main-sidebar" class="ops-sidebar lg:w-64 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-300">
             <div class="space-y-5">
+                <div class="flex items-center justify-between lg:hidden pb-2 border-b border-white/10">
+                    <span class="text-xs font-mono font-bold uppercase tracking-wider text-white">Operations Nav</span>
+                    <button type="button" onclick="toggleSidebar(false)" class="text-[#94a3b8] hover:text-white p-2 rounded-lg inline-flex items-center justify-center" aria-label="Close Navigation Menu">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
                 <!-- User Clearance Profile Card -->
                 <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5 min-w-0">
@@ -347,7 +358,7 @@
         </aside>
 
         <!-- Main Content Area -->
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 max-w-7xl mx-auto w-full">
+        <main id="admin-main-content" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 max-w-7xl mx-auto w-full">
 
             <!-- Supabase Alert Banner if unconfigured -->
             <div id="supabase-alert-banner" class="hidden ops-subcard p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4" style="background-color: var(--amber-bg); border-color: var(--amber-border);">
@@ -355,10 +366,10 @@
                     <i data-lucide="alert-triangle" class="w-4 h-4 flex-shrink-0" style="color: var(--amber-ink);"></i>
                     <div class="text-xs text-[var(--ink)]">
                         <span class="font-bold">Running on Embedded Local Memory.</span>
-                        <span class="text-[var(--muted)]"> Connect your Supabase project URL &amp; Key to sync with live PostgreSQL database.</span>
+                        <span class="text-[var(--muted)]"> Connect Supabase URL &amp; Key for live PostgreSQL sync.</span>
                     </div>
                 </div>
-                <button type="button" onclick="openModal('supabase-modal')" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 38px; padding-inline: 16px; font-size: 12px;">
+                <button type="button" onclick="openModal('supabase-modal')" class="btn-editorial-primary btn-compact whitespace-nowrap">
                     Connect Supabase
                 </button>
             </div>
@@ -372,48 +383,48 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-xs font-semibold text-[var(--muted)]">Active Concert Allocations</span>
+                            <span class="text-xs font-semibold text-[var(--muted)]">Active Tours</span>
                             <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0">100% On-Sale</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight" id="metric-tours-count">8 Tours</div>
                             <div class="text-xs text-[var(--muted)] flex items-center space-x-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full" style="background-color: var(--emerald-ink);"></span>
-                                <span>Across 7 National Metros</span>
+                                <span>7 National Metros</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-xs font-semibold text-[var(--muted)]">Gross Booking Volume</span>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-gmv-badge">Live DB Synced</span>
+                            <span class="text-xs font-semibold text-[var(--muted)]">Booking Volume</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-gmv-badge">DB Synced</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-gmv">₹0.00</div>
-                            <div class="text-xs text-[var(--muted)]" id="metric-gmv-sub">0 Confirmed Bookings</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-gmv-sub">0 Bookings</div>
                         </div>
                     </div>
 
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-xs font-semibold text-[var(--muted)]">Pass Inventory Utilization</span>
+                            <span class="text-xs font-semibold text-[var(--muted)]">Pass Utilization</span>
                             <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-passes-badge">0% Reserved</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-passes">0 passes</div>
-                            <div class="text-xs text-[var(--muted)]" id="metric-passes-sub">0.0% reserved &bull; 8 Tours on sale</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-passes-sub">0.0% used &bull; 8 Tours</div>
                         </div>
                     </div>
 
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-xs font-semibold text-[var(--muted)]">Instant UPI Settlement Pool</span>
+                            <span class="text-xs font-semibold text-[var(--muted)]">UPI Settlement Pool</span>
                             <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-commissions-badge">Rail Ready</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-commissions">₹0.00</div>
-                            <div class="text-xs text-[var(--muted)]" id="metric-commissions-sub">0 UPI Disbursals Logged</div>
+                            <div class="text-xs text-[var(--muted)]" id="metric-commissions-sub">0 Disbursals</div>
                         </div>
                     </div>
                 </div>
@@ -671,12 +682,12 @@
                                 <span class="text-[10px] font-mono text-[var(--muted)]" id="overview-activity-feed">Active</span>
                             </div>
 
-                            <div class="flex space-x-2 mb-3">
+                            <div class="flex flex-wrap gap-2 mb-3">
                                 <label for="todo-input" class="visually-hidden">Add operations task</label>
-                                <input type="text" id="todo-input" placeholder="Enter operations task..."
-                                    class="modal-input flex-1 text-xs" style="min-block-size: 38px; padding: 6px 12px;"
-                                    onkeydown="if(event.key==='Enter') addTodo()">
-                                <button type="button" onclick="addTodo()" class="btn-editorial-primary" style="min-block-size: 38px; padding-inline: 14px; font-size: 12px;">
+                                <input type="text" id="todo-input" enterkeyhint="done" placeholder="Enter operations task..."
+                                    class="modal-input flex-1 min-w-[160px]"
+                                    onkeydown="if(event.key==='Enter' && !event.isComposing && event.keyCode!==229) addTodo()">
+                                <button type="button" onclick="addTodo()" class="btn-editorial-primary btn-compact">
                                     Add
                                 </button>
                             </div>
@@ -744,9 +755,9 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 id="tours-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Tour Allocations &amp; Inventory</h2>
-                        <p class="text-xs text-[var(--muted)]">Configure headliner concerts, venue layouts, pricing tiers, partner engines, and promoter cuts.</p>
+                        <p class="text-xs text-[var(--muted)]">Manage pricing, layouts, ticketing partners, and promoter cuts.</p>
                     </div>
-                    <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+                    <button type="button" onclick="openModal('add-tour-modal')" class="btn-editorial-primary btn-compact whitespace-nowrap">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span>Allocate New Tour</span>
                     </button>
@@ -785,12 +796,12 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 id="promoters-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Promoter Network &amp; Performance</h2>
-                        <p class="text-xs text-[var(--muted)]">Promoter velocity tiers, verified WhatsApp contact routing, and instant UPI VPAs.</p>
+                        <p class="text-xs text-[var(--muted)]">Promoter tiers, WhatsApp contacts, and instant UPI VPAs.</p>
                     </div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex items-center w-full sm:w-auto">
                         <label for="promoter-search-input" class="visually-hidden">Search promoters or referral codes</label>
-                        <input type="text" id="promoter-search-input" oninput="filterPromoters()" placeholder="Search promoter or code..."
-                            class="modal-input font-mono text-xs" style="min-block-size: 38px; padding: 6px 12px; inline-size: 240px;">
+                        <input type="search" id="promoter-search-input" enterkeyhint="search" oninput="filterPromoters()" placeholder="Search promoter or code..."
+                            class="modal-input font-mono w-full sm:w-60">
                     </div>
                 </div>
 
@@ -825,8 +836,8 @@
             <section id="tab-orders" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 id="orders-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Ticket Orders &amp; BMS Wallet Provisioning</h2>
-                        <p class="text-xs text-[var(--muted)]">Pass reservations dispatched directly to attendee BookMyShow and District wallets.</p>
+                        <h2 id="orders-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Ticket Orders &amp; Wallet Delivery</h2>
+                        <p class="text-xs text-[var(--muted)]">Orders dispatched to BookMyShow and District wallets.</p>
                     </div>
                 </div>
 
@@ -861,9 +872,9 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 id="payouts-heading" class="text-xl font-bold text-[var(--ink)] tracking-tight">Instant UPI Settlement Hub</h2>
-                        <p class="text-xs text-[var(--muted)]">Automated NPCI settlement rail auditing per verified gate scan.</p>
+                        <p class="text-xs text-[var(--muted)]">Automated NPCI settlements per verified gate scan.</p>
                     </div>
-                    <button type="button" onclick="simulateNewPayout()" class="btn-editorial-primary whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+                    <button type="button" onclick="simulateNewPayout()" class="btn-editorial-primary btn-compact whitespace-nowrap">
                         <i data-lucide="send" class="w-3.5 h-3.5"></i>
                         <span>Trigger Instant Payout</span>
                     </button>
@@ -900,9 +911,9 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-[var(--ink)] tracking-tight">Turnstile Gate Access &amp; Scalper Prevention</h2>
-                        <p class="text-xs text-[var(--muted)]">Dynamic barcode rotation telemetry, screenshot duplicate rejection, and bot mitigation.</p>
+                        <p class="text-xs text-[var(--muted)]">Dynamic QR telemetry, screenshot rejection, and bot defense.</p>
                     </div>
-                    <button type="button" onclick="simulateGateScan()" class="btn-editorial-outline-light whitespace-nowrap" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+                    <button type="button" onclick="simulateGateScan()" class="btn-editorial-outline-light btn-compact whitespace-nowrap">
                         <i data-lucide="scan" class="w-3.5 h-3.5" style="color: var(--emerald-ink);"></i>
                         <span>Simulate Turnstile Scan</span>
                     </button>
@@ -950,14 +961,14 @@
                     <h3 id="supabase-modal-title" class="text-lg font-bold text-[var(--ink)]">Supabase Database Connection</h3>
                 </div>
                 <p class="text-xs text-[var(--muted)]">
-                    Connect Tixora directly to your Supabase PostgreSQL database for real-time inventory and order sync.
+                    Connect Tixora to Supabase PostgreSQL for live inventory and order sync.
                 </p>
             </div>
 
             <div class="space-y-3 text-xs">
                 <div>
                     <label for="cfg-supabase-url" class="modal-field-label">Supabase Project URL</label>
-                    <input type="text" id="cfg-supabase-url" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co"
+                    <input type="url" id="cfg-supabase-url" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co"
                         class="modal-input font-mono">
                 </div>
                 <div>
@@ -965,7 +976,7 @@
                         Supabase Anon / Publishable Key
                         <span class="font-normal normal-case tracking-normal ml-1" style="color: var(--crimson-ink);">(Never enter a service_role key here)</span>
                     </label>
-                    <input type="password" id="cfg-supabase-key" placeholder="sb_publishable_... or anon key"
+                    <input type="password" id="cfg-supabase-key" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="sb_publishable_... or anon key"
                         class="modal-input font-mono">
                 </div>
             </div>
@@ -976,15 +987,15 @@
                     <span>Database Schema Setup</span>
                 </div>
                 <div>
-                    Execute <code class="font-mono font-bold" style="color: var(--crimson-ink);">database/tixora.sql</code> in your Supabase SQL Editor to initialize all tables, RLS policies, and triggers.
+                    Execute <code class="font-mono font-bold" style="color: var(--crimson-ink);">database/tixora.sql</code> in Supabase SQL Editor to initialize tables and RLS policies.
                 </div>
             </div>
 
-            <div class="flex items-center justify-end space-x-2 pt-2">
-                <button type="button" onclick="testSupabaseConnection()" class="btn-editorial-outline-light" style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+            <div class="flex flex-wrap items-center justify-end gap-2 pt-2">
+                <button type="button" onclick="testSupabaseConnection()" class="btn-editorial-outline-light btn-compact">
                     Test Ping
                 </button>
-                <button type="button" onclick="saveSupabaseConfig()" class="btn-editorial-primary" style="min-block-size: 40px; padding-inline: 18px; font-size: 12px;">
+                <button type="button" onclick="saveSupabaseConfig()" class="btn-editorial-primary btn-compact">
                     Save &amp; Sync Database
                 </button>
             </div>
@@ -1001,7 +1012,7 @@
             </button>
             <div class="space-y-1 pr-8">
                 <h3 id="add-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Create Tour Allocation</h3>
-                <p class="text-xs text-[var(--muted)]">Launch an authorized concert quota on Tixora. Synchronizes immediately with the fan site.</p>
+                <p class="text-xs text-[var(--muted)]">Publish an official tour quota live across Tixora.</p>
             </div>
 
             <form onsubmit="handleCreateTourSubmit(event)" class="space-y-4 text-xs">
@@ -1061,14 +1072,14 @@
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-1">
+                    <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
                         <label for="tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-[var(--muted)] font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <span class="text-[10px] text-[var(--muted)] font-mono">JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="text" id="tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg"
-                            class="modal-input flex-1 font-mono text-xs">
-                        <label for="tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: 44px; padding-inline: 14px; font-size: 12px;">
+                    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                        <input type="text" id="tour-poster" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="posters/anyma-aeden-poster-1.jpg"
+                            class="modal-input flex-1 font-mono">
+                        <label for="tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: max(44px, var(--target-size)); padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="tour-poster-upload-btn-text">Upload</span>
                         </label>
@@ -1084,20 +1095,20 @@
                 </div>
 
                 <!-- Feature Event Checkbox -->
-                <div class="ops-subcard p-3.5 flex items-center space-x-2.5" style="background-color: var(--crimson-bg); border-color: var(--crimson-border);">
+                <label for="tour-is-featured" class="ops-subcard p-3.5 flex items-center space-x-2.5 cursor-pointer" style="min-block-size: max(44px, var(--target-size)); background-color: var(--crimson-bg); border-color: var(--crimson-border);">
                     <input type="checkbox" id="tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
-                    <label for="tour-is-featured" class="text-xs font-bold cursor-pointer flex items-center space-x-1.5" style="color: var(--crimson-ink);">
+                    <span class="text-xs font-bold flex items-center space-x-1.5" style="color: var(--crimson-ink);">
                         <i data-lucide="star" class="w-3.5 h-3.5"></i>
-                        <span>Feature this Event in Fan Hero Section (Homepage Spotlight)</span>
-                    </label>
-                </div>
+                        <span>Feature in Homepage Spotlight</span>
+                    </span>
+                </label>
 
                 <!-- Tier Price List Builder -->
                 <div class="space-y-2 pt-3 border-t border-[var(--line)]">
                     <div class="flex items-center justify-between">
                         <div>
-                            <span class="modal-field-label" style="margin:0;">Ticket Price List &amp; Tier Quotas</span>
-                            <span class="text-[11px] text-[var(--muted)]">Define custom tiers, seating areas &amp; promoter cuts</span>
+                            <span class="modal-field-label" style="margin:0;">Ticket Tiers &amp; Quotas</span>
+                            <span class="text-[11px] text-[var(--muted)]">Set tier names, prices, and quotas</span>
                         </div>
                         <button type="button" onclick="addTierRow('add-tiers-container')" class="text-xs font-mono font-bold flex items-center space-x-1" style="color: var(--crimson-ink);">
                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -1111,7 +1122,7 @@
 
                 <div>
                     <label for="tour-desc" class="modal-field-label">Event Description</label>
-                    <textarea id="tour-desc" rows="2" placeholder="Official tour promoter allocation pass. Guaranteed authenticity via BookMyShow dynamic barcode engine."
+                    <textarea id="tour-desc" rows="2" placeholder="Official primary pass quota via BookMyShow dynamic QR."
                         class="modal-input resize-none" style="min-block-size: auto;"></textarea>
                 </div>
 
@@ -1136,9 +1147,9 @@
             <div class="space-y-1 pr-8">
                 <div class="flex items-center space-x-2">
                     <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">Edit Mode</span>
-                    <h3 id="edit-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Modify Event Details &amp; Pricing</h3>
+                    <h3 id="edit-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Edit Event &amp; Pricing</h3>
                 </div>
-                <p class="text-xs text-[var(--muted)]">Edits sync live to Supabase and reflect instantly on the public fan website.</p>
+                <p class="text-xs text-[var(--muted)]">Changes sync live to Supabase and the public site.</p>
             </div>
 
             <form onsubmit="handleEditTourSubmit(event)" class="space-y-4 text-xs">
@@ -1204,14 +1215,14 @@
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-1">
+                    <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
                         <label for="edit-tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-[var(--muted)] font-mono">Allowed: JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <span class="text-[10px] text-[var(--muted)] font-mono">JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="text" id="edit-tour-poster" placeholder="posters/anyma-aeden-poster-1.jpg"
-                            class="modal-input flex-1 font-mono text-xs">
-                        <label for="edit-tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: 44px; padding-inline: 14px; font-size: 12px;">
+                    <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                        <input type="text" id="edit-tour-poster" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="posters/anyma-aeden-poster-1.jpg"
+                            class="modal-input flex-1 font-mono">
+                        <label for="edit-tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: max(44px, var(--target-size)); padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="edit-tour-poster-upload-btn-text">Upload</span>
                         </label>
@@ -1227,13 +1238,13 @@
                 </div>
 
                 <!-- Feature Event Checkbox -->
-                <div class="ops-subcard p-3.5 flex items-center space-x-2.5" style="background-color: var(--crimson-bg); border-color: var(--crimson-border);">
+                <label for="edit-tour-is-featured" class="ops-subcard p-3.5 flex items-center space-x-2.5 cursor-pointer" style="min-block-size: max(44px, var(--target-size)); background-color: var(--crimson-bg); border-color: var(--crimson-border);">
                     <input type="checkbox" id="edit-tour-is-featured" class="rounded accent-[#ff2e54] w-4 h-4 cursor-pointer">
-                    <label for="edit-tour-is-featured" class="text-xs font-bold cursor-pointer flex items-center space-x-1.5" style="color: var(--crimson-ink);">
+                    <span class="text-xs font-bold flex items-center space-x-1.5" style="color: var(--crimson-ink);">
                         <i data-lucide="star" class="w-3.5 h-3.5"></i>
-                        <span>Feature this Event in Fan Hero Section (Homepage Spotlight)</span>
-                    </label>
-                </div>
+                        <span>Feature in Homepage Spotlight</span>
+                    </span>
+                </label>
 
                 <!-- Tier Price List Builder -->
                 <div class="space-y-2 pt-3 border-t border-[var(--line)]">
@@ -1257,13 +1268,13 @@
                     <textarea id="edit-tour-desc" rows="2" class="modal-input resize-none" style="min-block-size: auto;"></textarea>
                 </div>
 
-                <div class="pt-2 flex items-center space-x-3">
-                    <button type="button" onclick="closeModal('edit-tour-modal')" class="btn-editorial-outline-light w-1/3">
+                <div class="pt-2 flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3">
+                    <button type="button" onclick="closeModal('edit-tour-modal')" class="btn-editorial-outline-light w-full sm:w-1/3">
                         Cancel
                     </button>
-                    <button type="submit" class="btn-editorial-primary w-2/3">
+                    <button type="submit" class="btn-editorial-primary w-full sm:w-2/3">
                         <i data-lucide="save" class="w-4 h-4"></i>
-                        <span>Save Changes &amp; Sync to Web</span>
+                        <span>Save Changes &amp; Sync</span>
                     </button>
                 </div>
             </form>
@@ -1271,7 +1282,7 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" role="status" aria-live="polite">
+    <div id="toast" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 flex justify-center sm:justify-end translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" role="status" aria-live="polite">
         <div class="toast-inner">
             <i data-lucide="check-circle" class="w-4 h-4" style="color: var(--gold-on-dark);"></i>
             <span id="toast-msg">Operation completed</span>
@@ -1298,14 +1309,75 @@
         let _adminClient = null;
 
         // --------------------------------------------------------------------
-        // SIDEBAR TOGGLE HELPER
+        // SIDEBAR TOGGLE HELPER (Responsive Drawer on <1024px)
         // --------------------------------------------------------------------
-        function toggleSidebar() {
+        const _mobileSidebarMq = window.matchMedia('(max-width: 1023px)');
+
+        function toggleSidebar(forceOpen) {
             const sb = document.getElementById('main-sidebar');
-            if (sb) {
-                sb.classList.toggle('hidden');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleBtn = document.getElementById('sidebar-toggle-btn');
+            const mainEl = document.getElementById('admin-main-content');
+            const headerEl = document.getElementById('admin-header');
+            if (!sb) return;
+
+            if (_mobileSidebarMq.matches) {
+                sb.classList.remove('hidden');
+                const currentlyOpen = sb.classList.contains('is-drawer-open');
+                const open = typeof forceOpen === 'boolean' ? forceOpen : !currentlyOpen;
+                sb.classList.toggle('is-drawer-open', open);
+                if (backdrop) backdrop.classList.toggle('hidden', !open);
+                if (toggleBtn) toggleBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) {
+                    sb.setAttribute('role', 'dialog');
+                    sb.setAttribute('aria-modal', 'true');
+                    sb.setAttribute('aria-label', 'Operations Navigation');
+                    if (mainEl) mainEl.inert = true;
+                    if (headerEl) headerEl.inert = true;
+                    const firstBtn = sb.querySelector('button, a');
+                    if (firstBtn) setTimeout(() => firstBtn.focus(), 40);
+                } else {
+                    sb.removeAttribute('role');
+                    sb.removeAttribute('aria-modal');
+                    if (mainEl) mainEl.inert = false;
+                    if (headerEl) headerEl.inert = false;
+                    if (toggleBtn && document.activeElement && sb.contains(document.activeElement)) {
+                        toggleBtn.focus();
+                    }
+                }
+                return;
             }
+
+            sb.classList.remove('is-drawer-open');
+            if (backdrop) backdrop.classList.add('hidden');
+            if (mainEl) mainEl.inert = false;
+            if (headerEl) headerEl.inert = false;
+            const desktopCollapsed = typeof forceOpen === 'boolean' ? !forceOpen : !sb.classList.contains('hidden');
+            sb.classList.toggle('hidden', desktopCollapsed);
+            if (toggleBtn) toggleBtn.setAttribute('aria-expanded', desktopCollapsed ? 'false' : 'true');
         }
+
+        _mobileSidebarMq.addEventListener('change', (e) => {
+            const sb = document.getElementById('main-sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            const toggleBtn = document.getElementById('sidebar-toggle-btn');
+            const mainEl = document.getElementById('admin-main-content');
+            const headerEl = document.getElementById('admin-header');
+            if (!sb) return;
+            if (!e.matches) {
+                sb.classList.remove('is-drawer-open', 'hidden');
+                sb.removeAttribute('role');
+                sb.removeAttribute('aria-modal');
+                if (backdrop) backdrop.classList.add('hidden');
+                if (mainEl) mainEl.inert = false;
+                if (headerEl) headerEl.inert = false;
+                if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+            } else {
+                sb.classList.remove('hidden', 'is-drawer-open');
+                if (backdrop) backdrop.classList.add('hidden');
+                if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
 
         function escHtml(v) {
             return String(v ?? '')
@@ -1365,18 +1437,18 @@
             const row = document.createElement('div');
             row.className = 'tier-row grid grid-cols-12 gap-2 items-center ops-subcard p-2 text-xs font-mono';
             row.innerHTML = `
-                <div class="col-span-5">
-                    <input type="text" placeholder="Tier Name (e.g. GA Standard)" class="tier-name modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
+                <div class="col-span-12 sm:col-span-5">
+                    <input type="text" placeholder="Tier Name (e.g. GA Standard)" aria-label="Tier Name" class="tier-name modal-input" style="padding: 8px 10px;" required>
                 </div>
-                <div class="col-span-3">
-                    <input type="number" placeholder="MRP (₹)" class="tier-price modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
+                <div class="col-span-5 sm:col-span-3">
+                    <input type="number" placeholder="MRP (₹)" aria-label="Tier MRP" class="tier-price modal-input" style="padding: 8px 10px;" required>
                 </div>
-                <div class="col-span-3">
-                    <input type="number" placeholder="Quota" class="tier-quota modal-input text-xs" style="min-block-size: 34px; padding: 4px 8px;" required>
+                <div class="col-span-5 sm:col-span-3">
+                    <input type="number" placeholder="Quota" aria-label="Tier Quota" class="tier-quota modal-input" style="padding: 8px 10px;" required>
                 </div>
-                <div class="col-span-1 text-right">
-                    <button type="button" onclick="this.closest('.tier-row').remove()" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] p-1" aria-label="Remove Tier" title="Remove Tier">
-                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                <div class="col-span-2 sm:col-span-1 text-right">
+                    <button type="button" onclick="this.closest('.tier-row').remove()" class="cart-remove-btn text-[var(--muted)] hover:text-[var(--crimson-ink)]" aria-label="Remove Tier" title="Remove Tier">
+                        <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
                 </div>
             `;
@@ -1451,6 +1523,16 @@
         // --------------------------------------------------------------------
         // MODAL HELPERS
         // --------------------------------------------------------------------
+        function syncAdminModalInert() {
+            const anyOpen = !!document.querySelector('.modal-backdrop:not(.hidden)');
+            const headerEl = document.getElementById('admin-header');
+            const wsEl = document.getElementById('admin-workspace');
+            const authEl = document.getElementById('admin-auth-gate');
+            if (headerEl) headerEl.inert = anyOpen;
+            if (wsEl) wsEl.inert = anyOpen;
+            if (authEl) authEl.inert = anyOpen;
+        }
+
         function openModal(id) {
             // Guard: Only allow opening operational modals if authenticated in workspace (or supabase-modal)
             if (id !== 'supabase-modal') {
@@ -1460,10 +1542,14 @@
                     return;
                 }
             }
+            if (_mobileSidebarMq.matches) {
+                toggleSidebar(false);
+            }
             const m = document.getElementById(id);
             if (m) {
                 m.classList.remove('hidden');
                 setTimeout(() => m.classList.remove('opacity-0'), 10);
+                syncAdminModalInert();
             }
             if (id === 'supabase-modal') {
                 const u = document.getElementById('cfg-supabase-url');
@@ -1485,10 +1571,26 @@
             const m = document.getElementById(id);
             if (m) {
                 m.classList.add('opacity-0');
-                setTimeout(() => m.classList.add('hidden'), 250);
+                setTimeout(() => {
+                    m.classList.add('hidden');
+                    syncAdminModalInert();
+                }, 250);
             }
         }
         window.closeModal = closeModal;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const openModalEl = document.querySelector('.modal-backdrop:not(.hidden)');
+            if (openModalEl && openModalEl.id) {
+                closeModal(openModalEl.id);
+                return;
+            }
+            const sb = document.getElementById('main-sidebar');
+            if (_mobileSidebarMq.matches && sb && sb.classList.contains('is-drawer-open')) {
+                toggleSidebar(false);
+            }
+        });
 
         // --------------------------------------------------------------------
         // AUTHENTICATION LOGIC & RBAC GATE
@@ -1508,7 +1610,7 @@
 
             if (errBox) errBox.classList.add('hidden');
             if (btn) btn.disabled = true;
-            if (btnText) btnText.textContent = 'Verifying credentials...';
+            if (btnText) btnText.textContent = 'Signing in...';
 
             try {
                 if (!window.TixoraAuth) {
@@ -1530,11 +1632,11 @@
                     if (forEmail) forEmail.textContent = session.user.email || 'user';
                     if (forRole) forRole.textContent = (role || 'promoter').toUpperCase();
                     liveData = JSON.parse(JSON.stringify(INITIAL_DATA));
-                    showToast('Access Denied: Account lacks Administrator clearance.');
+                    showToast('Access denied: Administrator role required.');
                     return;
                 }
 
-                showToast('Authentication approved. Entering Operations Desk...');
+                showToast('Signed in. Opening Operations Desk...');
                 await handleAdminSession(session);
             } catch (err) {
                 console.error('Admin Sign In Error:', err);
@@ -1550,7 +1652,7 @@
                         if (countdown <= 0) {
                             clearInterval(timer);
                             btn.disabled = false;
-                            btnText.textContent = 'Authenticate & Enter Desk';
+                            btnText.textContent = 'Sign In';
                         } else {
                             btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
                         }
@@ -1561,7 +1663,7 @@
             } finally {
                 if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
                     btn.disabled = false;
-                    if (btnText) btnText.textContent = 'Authenticate & Enter Desk';
+                    if (btnText) btnText.textContent = 'Sign In';
                 }
             }
         }
@@ -1575,7 +1677,7 @@
                 console.warn('Sign out notice:', e);
             }
             showGateState('login');
-            showToast('Signed out of Operations Desk.');
+            showToast('Signed out.');
         }
 
         function showGateState(state) {
@@ -1989,7 +2091,7 @@
                         `;
                     }).join('');
                 } else {
-                    projectsList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No active tour allocations. Click &ldquo;Allocate Tour&rdquo; to launch your first stage.</div>';
+                    projectsList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No active tour allocations yet.</div>';
                 }
             }
 
@@ -2054,7 +2156,7 @@
                     `;
                     }).join('');
                 } else {
-                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here as they occur.</td></tr>';
+                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet.</td></tr>';
                 }
             }
         }
@@ -2063,7 +2165,7 @@
             const tbody = document.getElementById('tours-table-body');
             if (!tbody) return;
             if (!liveData.tours || liveData.tours.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No tour allocations active. Click &ldquo;Allocate Tour&rdquo; above to launch your first stage.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No active tours. Click &ldquo;Allocate New Tour&rdquo; above to add one.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.tours.map(t => {
@@ -2111,7 +2213,7 @@
                                     <span>Active Hero</span>
                                 </span>
                             ` : `
-                                <button type="button" onclick="setFeaturedTour(${Number(t.id)})" class="btn-editorial-outline-light" style="min-block-size: 28px; padding-inline: 10px; font-size: 10px;" title="Set as Featured Tour in Fan Hero Section">
+                                <button type="button" onclick="setFeaturedTour(${Number(t.id)})" class="btn-editorial-outline-light" style="min-block-size: max(36px, var(--target-size)); padding-inline: 10px; font-size: 11px;" title="Set as Featured Tour in Fan Hero Section">
                                     <i data-lucide="star" class="w-3 h-3" style="color: var(--amber-ink);"></i>
                                     <span>Feature</span>
                                 </button>
@@ -2142,7 +2244,7 @@
             const tbody = document.getElementById('promoters-table-body');
             if (!tbody) return;
             if (!liveData.promoters || liveData.promoters.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No promoters registered yet. When fans register on the website, they will appear here.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No promoters registered yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.promoters.map(p => `
@@ -2183,7 +2285,7 @@
             const tbody = document.getElementById('orders-table-body');
             if (!tbody) return;
             if (!liveData.orders || liveData.orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet. Fan pass bookings will stream live here.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.orders.map(o => `
@@ -2212,7 +2314,7 @@
             const tbody = document.getElementById('payouts-table-body');
             if (!tbody) return;
             if (!liveData.payouts || liveData.payouts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No instant payouts triggered yet. Click &ldquo;Trigger Instant Payout&rdquo; above to test the NPCI settlement rail.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No payouts triggered yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.payouts.map(p => `
@@ -2237,7 +2339,7 @@
             const scanList = document.getElementById('gate-scans-list');
             if (scanList) {
                 if (!liveData.gateScans || liveData.gateScans.length === 0) {
-                    scanList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No turnstile gate scans recorded yet. Live turnstile scans log here during concert entry.</div>';
+                    scanList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No gate scans recorded yet.</div>';
                 } else {
                     scanList.innerHTML = liveData.gateScans.map(s => `
                         <div class="ops-subcard p-3 flex items-center justify-between gap-3">
@@ -2257,7 +2359,7 @@
             const blockList = document.getElementById('bot-blocks-list');
             if (blockList) {
                 if (!liveData.botBlocks || liveData.botBlocks.length === 0) {
-                    blockList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">Anti-scalping shield active. 0 malicious bot scrapers detected.</div>';
+                    blockList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">Anti-scalping shield active &bull; 0 bot blocks.</div>';
                 } else {
                     blockList.innerHTML = liveData.botBlocks.map(b => `
                         <div class="ops-subcard p-3 flex items-center justify-between gap-3">
@@ -2294,6 +2396,9 @@
                     }
                 }
             });
+            if (_mobileSidebarMq.matches) {
+                toggleSidebar(false);
+            }
             if (window.lucide) lucide.createIcons();
         }
 
@@ -2353,7 +2458,7 @@
                     }
                 }
 
-                showToast(`"${tour.title}" is now the Featured Tour in the Hero section.`);
+                showToast(`"${tour.title}" set as Hero Featured Tour.`);
             } catch (err) {
                 console.error('setFeaturedTour error:', err);
                 showToast(`Featured tour updated: ${err.message || 'Saved'}`);
@@ -2483,7 +2588,7 @@
                     }
                     localStorage.setItem('tixora_events_updated', String(Date.now()));
 
-                    showToast(`Tour "${title}" published live with ${tiers.length} price tiers & ${layout} layout.`);
+                    showToast(`Tour "${title}" published.`);
                     await loadDataFromSupabase();
                 } else {
                     const newId = Date.now();
@@ -2539,7 +2644,7 @@
                     }
                     localStorage.setItem('tixora_events_updated', String(Date.now()));
 
-                    showToast('Tour allocation removed from Supabase and Fan portal.');
+                    showToast('Tour allocation removed.');
                     await loadDataFromSupabase();
                 } else {
                     liveData.tours = liveData.tours.filter(t => t.id !== id);
@@ -2678,7 +2783,7 @@
                     }
                     localStorage.setItem('tixora_events_updated', String(Date.now()));
 
-                    showToast(`Event "${title}" updated live in database and fan portal.`);
+                    showToast(`Updated "${title}".`);
                     await loadDataFromSupabase();
                 } else {
                     const tour = liveData.tours.find(t => t.id === id);
@@ -2722,7 +2827,7 @@
         function simulateNewPayout() {
             const prom = (liveData.promoters && liveData.promoters.length > 0) ? liveData.promoters[0] : null;
             if (!prom) {
-                showToast('No registered promoters found. Register a promoter first to trigger settlement.');
+                showToast('No promoters registered yet.');
                 return;
             }
             const newPayout = {
@@ -2738,7 +2843,7 @@
             liveData.payouts.unshift(newPayout);
             renderPayoutsTable();
             renderOverview();
-            showToast(`Instant UPI Settlement of ₹680 triggered (${newPayout.speed}s) to ${prom.name}`);
+            showToast(`₹680 UPI payout sent (${newPayout.speed}s) to ${prom.name}`);
         }
 
         function simulateGateScan() {
@@ -2750,12 +2855,12 @@
                 terminal: 'TERM-GATE-01',
                 time: new Date().toLocaleTimeString('en-US', { hour12: false }) + ' IST',
                 status: 'GRANTED',
-                note: 'Dynamic rotating token authenticated. Entry unlocked.'
+                note: 'Dynamic QR verified. Entry granted.'
             };
             liveData.gateScans.unshift(newScan);
             renderGateScans();
             renderOverview();
-            showToast('Turnstile scan verified successfully.');
+            showToast('Gate scan verified.');
         }
 
         // --------------------------------------------------------------------
@@ -2772,9 +2877,9 @@
                 TixoraAuth.setCredentials(url, key);
                 closeModal('supabase-modal');
                 initSupabase();
-                showToast('Supabase settings saved and verified.');
+                showToast('Supabase settings saved.');
             } else {
-                showToast('Please enter both Supabase Project URL and Key.');
+                showToast('Enter both Project URL and Key.');
             }
         }
 
@@ -2795,7 +2900,7 @@
                 if (error) {
                     showToast(`Connection failed: ${error.message}`);
                 } else {
-                    showToast('Connection verified successfully with Supabase.');
+                    showToast('Supabase connection verified.');
                 }
             } catch (err) {
                 showToast(`Ping failed: ${err.message}`);
@@ -2881,7 +2986,7 @@
                 if (nameElem) nameElem.textContent = data.originalName;
                 if (sizeElem) sizeElem.textContent = `${data.sizeFormatted} • Verified ${data.mimeType}`;
 
-                showToast(`Poster uploaded successfully (${data.sizeFormatted})`);
+                showToast(`Poster uploaded (${data.sizeFormatted}).`);
             } catch (err) {
                 alert(`Upload Failed: ${err.message}`);
             } finally {
@@ -2900,7 +3005,7 @@
                     renderAllViews();
                 }
                 if (icon) icon.classList.remove('animate-spin');
-                showToast('Operational data refreshed.');
+                showToast('Data refreshed.');
             }, 500);
         }
 

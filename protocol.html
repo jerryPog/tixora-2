@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
     <title>Mesh Protocol &amp; Anti-Scalp Architecture | Tixora</title>
     <meta name="description"
         content="Technical specifications of Tixora dynamic QR mesh, primary ticketing engine integrations, and automated promoter clearing protocols.">
@@ -42,13 +43,13 @@
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="editorial.css?v=3">
+    <link rel="stylesheet" href="editorial.css?v=4">
 
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="supabase-config.js" defer></script>
     <script src="auth.js?v=4" defer></script>
-    <script src="editorial.js?v=3" defer></script>
+    <script src="editorial.js?v=4" defer></script>
     <script src="cart.js?v=4" defer></script>
 </head>
 
@@ -102,14 +103,14 @@
 
             <nav id="mobile-nav-menu" class="mobile-nav-panel hidden" aria-label="Mobile Navigation">
                 <div class="mobile-nav-links">
-                    <a href="/">Home Overview</a>
-                    <a href="/tours">Live Concert Tours (8)</a>
-                    <a href="/promoter">Promoter Hub &amp; Tiers</a>
-                    <a href="/protocol" aria-current="page">Dynamic QR Mesh Protocol</a>
-                    <a href="/about">Founders &amp; Partners</a>
-                    <a href="/faq">Protocol FAQ</a>
+                    <a href="/">Home</a>
+                    <a href="/tours">Live Tours (8)</a>
+                    <a href="/promoter">Promoter Hub</a>
+                    <a href="/protocol" aria-current="page">QR Protocol</a>
+                    <a href="/about">About &amp; Founders</a>
+                    <a href="/faq">FAQ</a>
                 </div>
-                <div class="mobile-nav-footer">
+                <div id="mobile-nav-footer" class="mobile-nav-footer">
                     <button type="button" onclick="toggleMobileMenu(false); openModal('promoter-modal');"
                         class="btn-editorial-primary w-full">
                         Promoter Portal
@@ -141,15 +142,15 @@
                             The Tixora <span class="hero-accent">Mesh Protocol</span>
                         </h1>
                         <p class="hero-desc">
-                            A decentralized, anti-scalping distribution protocol connecting primary stadium allocations
-                            directly to campus organizers with dynamic cryptographic turnstile authentication.
+                            Anti-scalp pass architecture with rotating QR verification and &lt;60s promoter payouts.
                         </p>
                         <div class="hero-actions">
                             <a href="#turnstile-simulator" class="btn-editorial-gold">
                                 <span>Test Turnstile Simulator</span>
                                 <i data-lucide="arrow-down" class="w-4 h-4"></i>
                             </a>
-                            <button type="button" onclick="openModal('promoter-modal')" class="btn-editorial-outline-dark">
+                            <button type="button" onclick="openModal('promoter-modal')"
+                                class="btn-editorial-outline-dark">
                                 Open Promoter Portal
                             </button>
                         </div>
@@ -164,8 +165,7 @@
                         <span class="eyebrow">Distribution Pipeline</span>
                         <h2 id="pipeline-heading" class="section-h2">Four-Stage Anti-Scalp Architecture</h2>
                         <p class="section-lead">
-                            Every issued concert pass flows through cryptographic KYC verification, primary engine sync,
-                            rotating turnstile validation, and automated NPCI UPI clearing.
+                            From KYC verification to rotating gate QR and automated UPI payout.
                         </p>
                     </div>
 
@@ -177,8 +177,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[var(--ink)]">Identity Clearance</h3>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Each promoter undergoes WhatsApp and mobile KYC. Unique cryptographic referral tokens tie
-                                pass allocations directly to verified human organizers.
+                                WhatsApp KYC ties each promoter code to a verified partner.
                             </p>
                         </article>
 
@@ -189,8 +188,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[var(--ink)]">Primary Engine Sync</h3>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Real-time API sync directly with BookMyShow and partner organizers guarantees zero secondary
-                                scalping markup or duplicate pass issuance.
+                                Direct BookMyShow &amp; festival sync stops secondary markups.
                             </p>
                         </article>
 
@@ -201,8 +199,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[var(--ink)]">Dynamic Barcode</h3>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Passes feature time-seeded rotating QR signatures that refresh every 15 seconds. Static
-                                screenshots and video recordings fail gate scanner entry.
+                                QR signatures rotate every 15s, blocking static screenshots at entry.
                             </p>
                         </article>
 
@@ -213,8 +210,7 @@
                             </div>
                             <h3 class="text-lg font-bold text-[var(--ink)]">Instant UPI Clearing</h3>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Upon turnstile laser confirmation, our direct NPCI settlement webhook automatically
-                                deposits promoter yields into their bank account in &lt;60s.
+                                Gate scans trigger NPCI UPI payouts in under 60 seconds.
                             </p>
                         </article>
                     </div>
@@ -230,17 +226,15 @@
                                 <span class="eyebrow">Cryptographic Simulator</span>
                                 <h2 id="sim-heading" class="section-h2">Dynamic QR Rotating Hash</h2>
                                 <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                    Experience how Tixora&rsquo;s gate turnstile mesh operates in real-time. Notice how
-                                    the pass signature and security hash rotate dynamically to render screenshot scalping
-                                    completely impossible.
+                                    Test how rotating signatures block static screenshots at the gate.
                                 </p>
                                 <div class="flex flex-wrap items-center gap-3 pt-2">
                                     <button type="button" onclick="simulateScan()" id="sim-scan-btn"
                                         class="btn-editorial-primary">
-                                        Simulate Turnstile Gate Scan
+                                        Simulate Gate Scan
                                     </button>
                                     <span id="sim-status" role="status" aria-live="polite"
-                                        style="font-size: 13px; color: var(--muted); font-weight: 600;">
+                                        style="font-size: 0.8125rem; color: var(--muted); font-weight: 600;">
                                         Status: Turnstile Idle
                                     </span>
                                 </div>
@@ -248,32 +242,32 @@
 
                             <div class="protocol-terminal">
                                 <div class="flex items-center justify-between pb-3"
-                                    style="border-block-end: 1px solid var(--on-dark-line); font-size: 11px; letter-spacing: 0.1em; color: var(--on-dark-muted);">
+                                    style="border-block-end: 1px solid var(--on-dark-line); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--on-dark-muted);">
                                     <span>GATE TURNSTILE NODE #04</span>
                                     <span style="color: var(--emerald-tint); font-weight: 700;">LIVE NODE</span>
                                 </div>
 
                                 <div class="space-y-2 text-xs">
-                                    <div style="font-size: 10.5px; letter-spacing: 0.1em; color: var(--on-dark-muted);">
+                                    <div style="font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--on-dark-muted);">
                                         DYNAMIC TIME-SEED
                                     </div>
                                     <div id="sim-time-seed" class="tabular-nums"
-                                        style="color: var(--gold-on-dark); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; font-size: 13px;">
+                                        style="color: var(--gold-on-dark); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; font-size: 0.8125rem;">
                                         2026-11-07T12:00:15Z
                                     </div>
 
-                                    <div style="font-size: 10.5px; letter-spacing: 0.1em; color: var(--on-dark-muted); padding-block-start: 6px;">
+                                    <div style="font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--on-dark-muted); padding-block-start: 6px;">
                                         SHA-256 ROTATING SIGNATURE
                                     </div>
                                     <div class="protocol-hash-box" id="sim-hash">
                                         9f83ac7498c1b3f947a11e847c9e0d174ffb5690
                                     </div>
 
-                                    <div style="font-size: 10.5px; letter-spacing: 0.1em; color: var(--on-dark-muted); padding-block-start: 6px;">
+                                    <div style="font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--on-dark-muted); padding-block-start: 6px;">
                                         PASS ALLOCATION ENGINE
                                     </div>
                                     <div
-                                        style="color: var(--emerald-tint); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 600; font-size: 12.5px;">
+                                        style="color: var(--emerald-tint); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 600; font-size: 0.8125rem;">
                                         BookMyShow Authorized Bridge
                                     </div>
                                 </div>
@@ -292,9 +286,6 @@
                     <div class="space-y-3">
                         <span class="eyebrow eyebrow--dark">Get In Touch &amp; Join</span>
                         <h2 class="section-h2">Start your promoter quota.</h2>
-                        <p class="text-sm" style="color: var(--on-dark-muted); max-inline-size: 52ch;">
-                            Direct primary ticketing inventory meets instant promoter liquidity. Zero upfront deposit.
-                        </p>
                     </div>
                     <div class="flex flex-wrap gap-3">
                         <button type="button" onclick="openModal('promoter-modal')" class="btn-editorial-gold">
@@ -314,10 +305,8 @@
                                     height="32">
                             </picture>
                         </a>
-                        <p style="font-size: 13.5px; line-height: 1.65; color: var(--on-dark-muted); max-inline-size: 38ch;">
-                            Authorized primary live concert ticket allocations &amp; automated promoter clearing
-                            protocol. Delivering genuine passes and instant UPI performance payouts across India’s
-                            biggest tours.
+                        <p style="font-size: 0.875rem; line-height: 1.65; color: var(--on-dark-muted); max-inline-size: 38ch;">
+                            Primary live concert allocations with automated &lt;60s UPI promoter payouts across India.
                         </p>
 
                         <div class="trust-badges">
@@ -360,7 +349,8 @@
                             <li><a href="/promoter#simulator">Earnings Calculator</a></li>
                             <li><a href="/promoter#tiers">Commission Tiers (8%–16%)</a></li>
                             <li><a href="/protocol">Dynamic Turnstile Barcodes</a></li>
-                            <li><button type="button" onclick="openModal('promoter-modal')">Promoter Onboarding Portal</button></li>
+                            <li><button type="button" onclick="openModal('promoter-modal')">Promoter Onboarding
+                                    Portal</button></li>
                             <li><a href="/faq">Protocol FAQ &amp; Guides</a></li>
                         </ul>
                     </div>
@@ -376,21 +366,23 @@
                             <li><a href="/about">Prajwal Gowrish H S</a></li>
                             <li><a href="mailto:support@tixora.live">support@tixora.live</a></li>
                             <li><a href="mailto:grievance@tixora.live">grievance@tixora.live</a></li>
-                            <li><a href="/terms#refund-policy" style="color: var(--gold-on-dark);">100% Refund Guarantee &rarr;</a></li>
+                            <li><a href="/terms#refund-policy" style="color: var(--gold-on-dark);">100% Refund Guarantee
+                                    &rarr;</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="footer-bottom">
                     <div>
-                        &copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. All rights reserved.
-                        Authorized primary partner network.
+                        &copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. All rights
+                        reserved.
                     </div>
                     <div class="flex flex-wrap gap-4">
                         <a href="/privacy" onclick="openPrivacyModal(event)">Privacy Policy</a>
                         <a href="/terms" onclick="openTermsModal(event)">Terms of Service</a>
                         <a href="/faq">FAQ</a>
-                        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to top &uarr;</a>
+                        <a href="#top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Back to
+                            top &uarr;</a>
                     </div>
                 </div>
             </div>
@@ -404,7 +396,8 @@
             <img id="lightbox-image" class="lightbox-img" src="artists/anyma.webp" alt="">
             <div class="lightbox-bar">
                 <div>
-                    <h2 id="lightbox-title" style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 600;">
+                    <h2 id="lightbox-title"
+                        style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 600;">
                         Concert Showcase
                     </h2>
                     <p id="lightbox-meta" style="font-size: 12.5px; color: var(--on-dark-muted);"></p>
@@ -427,7 +420,8 @@
             <div id="promoter-desk-view" class="hidden space-y-4">
                 <div class="modal-dark-banner">
                     <div>
-                        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-on-dark);">
+                        <div
+                            style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold-on-dark);">
                             Active Promoter Desk
                         </div>
                         <h2 id="desk-promoter-name" style="font-size: 1.25rem; font-weight: 700;">Welcome, Promoter</h2>
@@ -442,10 +436,11 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="desk-referral-input" class="modal-field-label">Your Official Shareable Pass Link</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="desk-referral-input" readonly
-                            value="https://tixoralive.vercel.app/?ref=TIX-PROMO" class="modal-input flex-1 tabular-nums">
+                    <label for="desk-referral-input" class="modal-field-label">Shareable Pass Link</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="desk-referral-input" readonly autocorrect="off" autocapitalize="none"
+                            spellcheck="false" value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
+                            class="modal-input flex-1 tabular-nums">
                         <button type="button" onclick="copyPromoterReferralLink()" class="btn-editorial-primary">
                             <span id="copy-btn-text">Copy</span>
                         </button>
@@ -473,29 +468,29 @@
 
                 <div class="space-y-2 pt-2">
                     <a id="desk-admin-link" href="/admin" class="hidden btn-editorial-gold w-full">
-                        Open Operations Desk &rarr;
+                        Operations Desk &rarr;
                     </a>
-                    <a href="/dashboard" class="btn-editorial-primary w-full">Open Full Promoter Dashboard &rarr;</a>
+                    <a href="/dashboard" class="btn-editorial-primary w-full">Promoter Dashboard &rarr;</a>
                     <a id="desk-whatsapp-btn" target="_blank" rel="noopener noreferrer"
                         href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
                         class="btn-editorial-outline-light w-full">
-                        Broadcast Link on WhatsApp &rarr;
+                        Share on WhatsApp &rarr;
                     </a>
-                    <button type="button" onclick="handlePromoterSignOut()"
-                        class="btn-editorial-outline-light w-full">
-                        Sign Out of Promoter Desk
+                    <button type="button" onclick="handlePromoterSignOut()" class="btn-editorial-outline-light w-full">
+                        Sign Out
                     </button>
                 </div>
             </div>
 
             <div id="promoter-auth-view" class="space-y-4">
                 <div class="text-center space-y-2">
-                    <span style="display:inline-flex; padding: 8px 16px; border-radius: 100px; background: var(--bg-elevated); border: 1px solid var(--line-strong);">
+                    <span
+                        style="display:inline-flex; padding: 8px 16px; border-radius: 100px; background: var(--bg-elevated); border: 1px solid var(--line-strong);">
                         <img src="tixora-logo.png" alt="Tixora" width="96" height="24">
                     </span>
-                    <h2 id="promoter-modal-heading" style="font-size: 1.55rem; font-weight: 700;">Promoter Network Access</h2>
-                    <p style="font-size: 13px; color: var(--muted);">Authorized partner login &amp; official youth
-                        promoter registration</p>
+                    <h2 id="promoter-modal-heading" style="font-size: 1.55rem; font-weight: 700;">Promoter Network
+                        Access</h2>
+                    <p style="font-size: 13px; color: var(--muted);">Partner sign-in and promoter registration</p>
                 </div>
 
                 <div class="auth-tab-strip">
@@ -513,21 +508,22 @@
                 <form id="form-promoter-signin" onsubmit="handlePromoterSignIn(event)" class="space-y-3">
                     <div>
                         <label for="signin-email" class="modal-field-label">Email Address</label>
-                        <input type="email" id="signin-email" required autocomplete="email"
+                        <input type="email" id="signin-email" required autocomplete="email" inputmode="email"
+                            autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next"
                             placeholder="you@network.com" class="modal-input">
                     </div>
                     <div>
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between gap-2">
                             <label for="signin-password" class="modal-field-label">Password</label>
                             <a href="/reset-password"
-                                style="font-size: 11.5px; color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">Forgot
+                                style="font-size: 0.75rem; color: var(--crimson-ink); font-weight: 600; text-decoration: underline;">Forgot
                                 password?</a>
                         </div>
                         <input type="password" id="signin-password" required autocomplete="current-password"
-                            placeholder="••••••••••••" class="modal-input">
+                            enterkeyhint="done" placeholder="••••••••••••" class="modal-input">
                     </div>
                     <button type="submit" id="btn-signin-submit" class="btn-editorial-primary w-full">
-                        <span>Sign In to Promoter Desk</span>
+                        <span>Sign In</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -536,35 +532,43 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-fullname" class="modal-field-label">Full Name</label>
-                            <input type="text" id="signup-fullname" required placeholder="Aarav Sharma" class="modal-input">
+                            <input type="text" id="signup-fullname" required autocomplete="name"
+                                placeholder="Aarav Sharma" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-phone" class="modal-field-label">WhatsApp (+91)</label>
-                            <input type="tel" id="signup-phone" required placeholder="+91 98200 11223" class="modal-input">
+                            <input type="tel" id="signup-phone" required autocomplete="tel" inputmode="tel"
+                                placeholder="+91 98200 11223" class="modal-input">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-email" class="modal-field-label">Email Address</label>
-                            <input type="email" id="signup-email" required placeholder="aarav@college.edu" class="modal-input">
+                            <input type="email" id="signup-email" required autocomplete="email" inputmode="email"
+                                autocorrect="off" autocapitalize="none" spellcheck="false"
+                                placeholder="aarav@college.edu" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-password" class="modal-field-label">Create Password</label>
-                            <input type="password" id="signup-password" required placeholder="••••••••••••" class="modal-input">
+                            <input type="password" id="signup-password" required autocomplete="new-password"
+                                placeholder="••••••••••••" class="modal-input">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label for="signup-city" class="modal-field-label">Metro Circuit</label>
-                            <input type="text" id="signup-city" required placeholder="Mumbai / Delhi NCR" class="modal-input">
+                            <input type="text" id="signup-city" required autocomplete="address-level2"
+                                placeholder="Mumbai / Delhi NCR" class="modal-input">
                         </div>
                         <div>
                             <label for="signup-upi" class="modal-field-label">Settlement UPI ID</label>
-                            <input type="text" id="signup-upi" required placeholder="aarav@okhdfcbank" class="modal-input">
+                            <input type="text" id="signup-upi" required autocorrect="off" autocapitalize="none"
+                                spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
+                                class="modal-input">
                         </div>
                     </div>
                     <button type="submit" id="btn-signup-submit" class="btn-editorial-gold w-full">
-                        <span>Apply For Official Promoter Quota</span>
+                        <span>Apply for Promoter Quota</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
@@ -582,8 +586,7 @@
                     </p>
                 </div>
                 <div class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] text-xs text-left">
-                    Check your email inbox (and spam folder) for the verification link sent by Tixora. Once verified,
-                    sign in to access your Promoter Command Center.
+                    Verify via the link in your inbox (check spam), then sign in.
                 </div>
                 <div class="space-y-2">
                     <button type="button" onclick="switchPromoterAuthTab('signin')"
@@ -596,8 +599,7 @@
     </div>
 
     <!-- 2. TICKET TIER PURCHASE MODAL -->
-    <div id="buy-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true"
-        aria-labelledby="buy-event-title">
+    <div id="buy-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="buy-event-title">
         <div class="modal-card space-y-5">
             <button type="button" onclick="closeModal('buy-modal')" class="modal-close-btn"
                 aria-label="Close pass allocation dialog">
@@ -646,8 +648,8 @@
                     <i data-lucide="shopping-bag" class="w-5 h-5 text-[var(--crimson-ink)]"></i>
                     <h2 id="cart-modal-title" style="font-size: 1.25rem; font-weight: 700;">Ticket Cart</h2>
                 </div>
-                <button type="button" onclick="TixoraCart.closeCart()" class="modal-close-btn"
-                    style="position: static;" aria-label="Close cart">
+                <button type="button" onclick="TixoraCart.closeCart()" class="modal-close-btn" style="position: static;"
+                    aria-label="Close cart">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -658,17 +660,17 @@
             </div>
 
             <div id="cart-expired-notice" class="hidden cart-expired-bar">
-                Your 10-minute pass hold has expired to release inventory. Please re-select your concert passes.
+                10-minute hold expired. Re-add your passes to continue.
             </div>
 
             <div id="cart-modal-body" class="space-y-4">
                 <div id="cart-empty-state" class="text-center py-8 space-y-3">
-                    <div class="w-12 h-12 rounded-full bg-[var(--soft)] border mx-auto flex items-center justify-center">
+                    <div
+                        class="w-12 h-12 rounded-full bg-[var(--soft)] border mx-auto flex items-center justify-center">
                         <i data-lucide="ticket" class="w-6 h-6 text-[var(--crimson-ink)]"></i>
                     </div>
-                    <div class="text-sm font-bold text-[var(--ink)]">Your pass cart is empty</div>
-                    <p class="text-xs text-[var(--muted)]">Select a concert tour to reserve your official passes with a
-                        10-minute hold timer.</p>
+                    <div class="text-sm font-bold text-[var(--ink)]">Your cart is empty</div>
+                    <p class="text-xs text-[var(--muted)]">Select a tour pass to start a 10-minute hold.</p>
                 </div>
 
                 <div id="cart-items-container" class="space-y-2"></div>
@@ -678,19 +680,24 @@
                         <span class="modal-field-label">Attendee Information</span>
                         <div>
                             <label for="cart-cust-name" class="modal-field-label">Customer Full Name *</label>
-                            <input type="text" id="cart-cust-name" placeholder="Rohan Sharma" required class="modal-input">
+                            <input type="text" id="cart-cust-name" autocomplete="name" enterkeyhint="next"
+                                placeholder="Rohan Sharma" required class="modal-input">
                         </div>
                         <div>
                             <label for="cart-cust-phone" class="modal-field-label">WhatsApp / Mobile Number *</label>
-                            <input type="tel" id="cart-cust-phone" placeholder="+91 98200 11223" required class="modal-input">
+                            <input type="tel" id="cart-cust-phone" autocomplete="tel" inputmode="tel"
+                                enterkeyhint="next" placeholder="+91 98200 11223" required class="modal-input">
                         </div>
                         <div>
                             <label for="cart-cust-email" class="modal-field-label">Email Address (Pass Delivery) *</label>
-                            <input type="email" id="cart-cust-email" placeholder="rohan@example.com" required class="modal-input">
+                            <input type="email" id="cart-cust-email" autocomplete="email" inputmode="email"
+                                autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done"
+                                placeholder="rohan@example.com" required class="modal-input">
                         </div>
                     </div>
 
-                    <div class="p-3.5 rounded-2xl bg-[var(--soft)] border flex items-center justify-between tabular-nums">
+                    <div
+                        class="p-3.5 rounded-2xl bg-[var(--soft)] border flex items-center justify-between tabular-nums">
                         <div>
                             <span class="modal-field-label" style="margin:0;">Total Due</span>
                             <span class="text-base font-bold text-[var(--ink)]" id="cart-total-amount">₹0</span>
@@ -717,19 +724,20 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div>
-                <span class="eyebrow">Affiliate Tracking Link</span>
+                <span class="eyebrow">Promoter Referral Link</span>
                 <h2 id="link-event-name" style="font-size: 1.35rem; font-weight: 700; margin-block-start: 6px;">Tour
                     Name</h2>
             </div>
             <div class="space-y-1">
-                <label for="generated-link-input" class="modal-field-label">Your Unique Distribution URL</label>
-                <div class="flex gap-2">
-                    <input type="text" id="generated-link-input" readonly class="modal-input flex-1">
+                <label for="generated-link-input" class="modal-field-label">Your Referral URL</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="generated-link-input" readonly autocorrect="off" autocapitalize="none"
+                        spellcheck="false" class="modal-input flex-1">
                     <button type="button" onclick="copyToClipboardAction()" class="btn-editorial-primary">Copy</button>
                 </div>
             </div>
             <p class="text-xs text-[var(--muted)] leading-relaxed">
-                Every attendee purchasing passes via this link is cryptographically tied to your promoter account.
+                Bookings from this link credit straight to your account.
             </p>
         </div>
     </div>
@@ -742,28 +750,16 @@
                 aria-label="Close Privacy Policy">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <h2 id="privacy-modal-title" style="font-size: 1.45rem; font-weight: 700;">Privacy Policy &amp; Data
-                Governance</h2>
+            <h2 id="privacy-modal-title" style="font-size: 1.45rem; font-weight: 700;">Privacy Policy</h2>
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
-                <p><strong class="text-[var(--ink)]">1. Information Collection:</strong> Tixora collects necessary
-                    ticketing identity data (name, mobile number, and email) solely to generate authorized event
-                    admission passes and route verified dynamic barcodes via BookMyShow and partner venue turnstiles.
-                </p>
-                <p><strong class="text-[var(--ink)]">2. Promoter Settlement Data:</strong> For registered promoters,
-                    verified UPI handles and WhatsApp contact numbers are utilized strictly for automated performance
-                    payouts and direct KYC verification. Banking credentials and UPI PINs are never requested or stored.
-                </p>
-                <p><strong class="text-[var(--ink)]">3. Anti-Scalp Telemetry:</strong> Anonymized device integrity and
-                    rapid-request telemetry are analyzed during checkout to shield inventory from automated scalper bots
-                    and duplicate pass generation.</p>
-                <p><strong class="text-[var(--ink)]">4. Third-Party Allocations:</strong> Tixora does not sell, rent, or
-                    trade customer data to advertising brokers. Ticket fulfillment complies with Indian Digital Personal
-                    Data Protection (DPDP) Act standards.</p>
+                <p><strong class="text-[var(--ink)]">1. Pass Delivery:</strong> Attendee contact details are used solely to issue BookMyShow/District Live passes.</p>
+                <p><strong class="text-[var(--ink)]">2. Promoter Payouts:</strong> Verified UPI handles and WhatsApp numbers process KYC and &lt;60s payouts; banking PINs are never collected.</p>
+                <p><strong class="text-[var(--ink)]">3. Anti-Scalping:</strong> Device telemetry blocks bots and duplicate QR generation.</p>
+                <p><strong class="text-[var(--ink)]">4. DPDP Compliance:</strong> Tixora complies with India&rsquo;s DPDP Act and never sells user data.</p>
             </div>
-            <div class="pt-2 flex justify-end gap-2">
+            <div class="pt-2 flex flex-wrap justify-end gap-2">
                 <a href="/privacy" class="btn-editorial-outline-light">Full Policy Page</a>
-                <button type="button" onclick="closePrivacyModal()" class="btn-editorial-primary">Close
-                    Disclosures</button>
+                <button type="button" onclick="closePrivacyModal()" class="btn-editorial-primary">Close</button>
             </div>
         </div>
     </div>
@@ -775,24 +771,14 @@
                 aria-label="Close Terms of Service">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            <h2 id="terms-modal-title" style="font-size: 1.45rem; font-weight: 700;">Terms of Protocol &amp; Ticket
-                Allocation</h2>
+            <h2 id="terms-modal-title" style="font-size: 1.45rem; font-weight: 700;">Terms of Protocol</h2>
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
-                <p><strong class="text-[var(--ink)]">1. Official Primary Allocations:</strong> All passes issued via
-                    the Tixora mesh protocol are direct primary tier allocations from authorized event organizers.
-                    Secondary resale, commercial markup, and unauthorized ticket transferring are strictly prohibited.
-                </p>
-                <p><strong class="text-[var(--ink)]">2. Dynamic Turnstile Verification:</strong> Passes must be
-                    displayed on a live digital device at the venue gate turnstile. Static screenshots, photocopies, and
-                    forwarded images fail cryptographic verification and will be denied entry without refund.</p>
-                <p><strong class="text-[var(--ink)]">3. Promoter Commission Settlement:</strong> Promoter commission
-                    yields are calculated based on confirmed venue gate verification. In the event of chargebacks,
-                    fraudulent bookings, or cancelled orders, unearned commissions are voided.</p>
-                <p><strong class="text-[var(--ink)]">4. Event Rescheduling:</strong> In the event of artist
-                    cancellation or venue postponement by the festival producer, original passes remain valid for
-                    rescheduled dates in accordance with BookMyShow primary ticketing regulations.</p>
+                <p><strong class="text-[var(--ink)]">1. Primary Passes:</strong> All passes come from authorized primary allocations. Commercial resale or markups are prohibited.</p>
+                <p><strong class="text-[var(--ink)]">2. Gate Entry:</strong> Show live Dynamic QR passes on your phone at entry. Screenshots or forwards fail verification without refund.</p>
+                <p><strong class="text-[var(--ink)]">3. Promoter Payouts:</strong> Commissions settle on confirmed gate scans. Chargebacks, fraud, or cancelled orders void payouts.</p>
+                <p><strong class="text-[var(--ink)]">4. Cancellations:</strong> Cancelled shows receive a 100% face-value refund; postponed passes remain valid under BookMyShow rules.</p>
             </div>
-            <div class="pt-2 flex justify-end gap-2">
+            <div class="pt-2 flex flex-wrap justify-end gap-2">
                 <a href="/terms" class="btn-editorial-outline-light">Full Terms Page</a>
                 <button type="button" onclick="closeTermsModal()" class="btn-editorial-primary">I Understand</button>
             </div>
@@ -807,25 +793,24 @@
     </div>
 
     <div id="cookie-banner" class="cookie-card translate-y-36 opacity-0 pointer-events-none">
-        <div class="space-y-3">
+        <div class="space-y-2.5">
             <div class="flex items-start gap-2.5">
                 <div
                     class="w-7 h-7 rounded-full bg-[var(--soft)] text-[var(--crimson-ink)] flex items-center justify-center flex-shrink-0">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-xs font-bold text-[var(--ink)]">Cookie &amp; Session Compliance</div>
-                    <p class="text-[11px] text-[var(--muted)] leading-relaxed">
-                        We use essential cookies to maintain promoter sessions, track pass referral links, and prevent
-                        scalping bots on official concert allocations.
+                <div class="space-y-0.5">
+                    <div class="text-xs font-bold text-[var(--ink)]">Cookie &amp; Session Notice</div>
+                    <p class="text-[11px] text-[var(--muted)] leading-snug">
+                        Essential cookies keep promoter sessions active, attribute links, and block scalper bots.
                     </p>
                 </div>
             </div>
             <div class="flex items-center justify-end gap-2">
-                <button type="button" onclick="acceptCookies('essential')" class="btn-editorial-outline-light"
-                    style="min-block-size: 36px; padding-inline: 14px; font-size: 12px;">Essential Only</button>
-                <button type="button" onclick="acceptCookies('all')" class="btn-editorial-primary"
-                    style="min-block-size: 36px; padding-inline: 16px; font-size: 12px;">Accept All</button>
+                <button type="button" onclick="acceptCookies('essential')"
+                    class="btn-editorial-outline-light cookie-btn">Essential</button>
+                <button type="button" onclick="acceptCookies('all')"
+                    class="btn-editorial-primary cookie-btn">Accept</button>
             </div>
         </div>
     </div>
@@ -845,16 +830,16 @@
                 <i data-lucide="sparkles" class="w-4 h-4 text-[var(--crimson-ink)]"></i>
                 <div>
                     <div class="text-xs font-bold">Tixora AI</div>
-                    <div style="font-size: 11px; color: var(--on-dark-muted);">Concert info, venues &amp; payouts</div>
+                    <div style="font-size: 0.75rem; color: var(--on-dark-muted);">Tours, venues &amp; payouts</div>
                 </div>
             </div>
             <div class="flex items-center gap-1">
                 <button type="button" onclick="resetChat()" title="Reset Chat" aria-label="Reset Chat"
-                    style="color: var(--on-dark-muted); padding: 6px;">
+                    class="chat-icon-btn">
                     <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                 </button>
                 <button type="button" onclick="toggleChatbot()" title="Close" aria-label="Close Chat"
-                    style="color: var(--white); padding: 6px;">
+                    class="chat-icon-btn chat-icon-btn--close">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -870,10 +855,11 @@
 
         <form id="chat-form" onsubmit="handleChatSubmit(event)" class="chat-form">
             <label for="chat-input" class="visually-hidden">Ask Tixora AI</label>
-            <input type="text" id="chat-input" placeholder="Ask about venues, timings, songs, posters..."
-                autocomplete="off" class="modal-input flex-1" style="background: var(--bg-card);">
-            <button type="submit" id="chat-send-btn" aria-label="Send Message" class="btn-editorial-primary"
-                style="min-block-size: 44px; padding-inline: 14px;">
+            <input type="text" id="chat-input" placeholder="Ask venues, dates, cuts..." autocomplete="off"
+                autocorrect="off" spellcheck="false" enterkeyhint="send" class="modal-input flex-1"
+                style="background: var(--bg-card);">
+            <button type="submit" id="chat-send-btn" aria-label="Send Message"
+                class="btn-editorial-primary btn-compact">
                 <i data-lucide="send" class="w-4 h-4"></i>
             </button>
         </form>
@@ -904,10 +890,10 @@
                 rotateHash();
                 status.style.color = 'var(--emerald-ink)';
                 status.style.fontWeight = '700';
-                status.textContent = '✓ Gate Turnstile Cleared! <60s UPI payout triggered.';
+                status.textContent = '✓ Gate cleared! <60s UPI payout triggered.';
                 btn.disabled = false;
                 if (typeof window.showToast === 'function') {
-                    window.showToast('Turnstile scan validated! Automated payout triggered.');
+                    window.showToast('Turnstile scan verified. Payout triggered.');
                 }
             }, 900);
         }

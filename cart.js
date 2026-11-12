@@ -153,7 +153,7 @@
             if (remainingMs <= 0) {
                 // Cart Expired!
                 stopCountdownTimer();
-                clearCart('⚠️ Pass Reservation Expired: Your 10-minute hold has elapsed.');
+                clearCart('Hold expired. Re-add your passes.');
                 if (timerBanner) timerBanner.classList.add('hidden');
                 const expiredNotice = document.getElementById('cart-expired-notice');
                 if (expiredNotice) expiredNotice.classList.remove('hidden');
@@ -218,14 +218,14 @@
 
             return `
                 <div class="cart-item-row">
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-[var(--ink)] truncate text-sm">${escapeHtml(item.title)}</div>
+                    <div class="cart-item-info min-w-0">
+                        <div class="font-bold text-[var(--ink)] text-sm leading-snug">${escapeHtml(item.title)}</div>
                         <div class="text-xs text-[var(--muted)] mt-0.5 tabular-nums">
                             <span class="text-[var(--crimson-ink)] font-semibold">${escapeHtml(item.tier)}</span> &middot; ₹${Number(item.price).toLocaleString('en-IN')} each
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-2.5">
+                    <div class="cart-item-actions flex items-center flex-wrap gap-2.5">
                         <!-- Quantity +/- -->
                         <div class="cart-qty-box tabular-nums">
                             <button type="button" onclick="TixoraCart.updateQuantity('${item.id}', -1)" class="cart-qty-btn hover:text-[var(--crimson-ink)]" aria-label="Decrease quantity">&minus;</button>
@@ -239,7 +239,7 @@
                         </div>
 
                         <!-- Remove Button -->
-                        <button type="button" onclick="TixoraCart.removeItem('${item.id}')" class="text-[var(--muted)] hover:text-[var(--crimson-ink)] transition-colors p-1.5" aria-label="Remove pass from cart">
+                        <button type="button" onclick="TixoraCart.removeItem('${item.id}')" class="cart-remove-btn text-[var(--muted)] hover:text-[var(--crimson-ink)] transition-colors" aria-label="Remove pass from cart">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -260,9 +260,13 @@
     function openCart() {
         const modal = document.getElementById('tixora-cart-modal');
         if (modal) {
+            if (typeof window.toggleMobileMenu === 'function') {
+                window.toggleMobileMenu(false);
+            }
             renderCartUI();
             startCountdownTimer();
             modal.classList.remove('hidden');
+            document.body.classList.add('has-modal-open');
             if (typeof window.syncModalFocusInert === 'function') {
                 window.syncModalFocusInert(modal, true);
             }
@@ -276,6 +280,8 @@
             modal.classList.add('hidden');
             if (typeof window.syncModalFocusInert === 'function') {
                 window.syncModalFocusInert(modal, false);
+            } else {
+                document.body.classList.remove('has-modal-open');
             }
         }
     }
@@ -286,14 +292,14 @@
 
         const cart = loadCart();
         if (!cart.items.length) {
-            alert('Your cart is empty. Add a concert pass first.');
+            alert('Your cart is empty. Add a pass first.');
             return;
         }
 
         // Check if hold has expired
         if (cart.expiresAt && Date.now() > cart.expiresAt) {
-            clearCart('⚠️ Pass Reservation Expired: Your 10-minute hold has elapsed.');
-            alert('Your 10-minute reservation hold has expired. Please re-add your tickets.');
+            clearCart('Hold expired. Re-add your passes.');
+            alert('Your 10-minute hold has expired. Re-add your passes.');
             return;
         }
 
@@ -307,20 +313,20 @@
 
         // Client-side validations
         if (!customerName || customerName.length < 2) {
-            alert('Please enter your full name (at least 2 characters).');
+            alert('Enter your full name (min 2 characters).');
             nameInput?.focus();
             return;
         }
 
         const cleanPhone = customerPhone.replace(/[\s-]/g, '');
         if (!cleanPhone || cleanPhone.length < 10 || !/^\+?[0-9]{10,15}$/.test(cleanPhone)) {
-            alert('Please enter a valid mobile number (10-15 digits for WhatsApp pass delivery).');
+            alert('Enter a valid 10-15 digit WhatsApp number.');
             phoneInput?.focus();
             return;
         }
 
         if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-            alert('Please enter a valid email address.');
+            alert('Enter a valid email address.');
             emailInput?.focus();
             return;
         }
@@ -404,7 +410,7 @@
                     <i data-lucide="check" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h3 class="text-lg font-bold text-[var(--ink)]">Passes Reserved Successfully</h3>
+                    <h3 class="text-lg font-bold text-[var(--ink)]">Passes Reserved</h3>
                     <p class="text-xs text-[var(--muted)] mt-1 tabular-nums">Order Ref: <span class="text-[var(--crimson-ink)] font-bold">${escapeHtml(order.orderId || 'TIX-CONFIRMED')}</span></p>
                 </div>
 
@@ -428,7 +434,7 @@
                 </div>
 
                 <p class="text-xs text-[var(--muted)] leading-relaxed">
-                    Dynamic QR turnstile passes have been dispatched to your WhatsApp number and email. BookMyShow verification active.
+                    Dynamic QR passes sent to your WhatsApp and email. Synced with BookMyShow.
                 </p>
 
                 <button type="button" onclick="TixoraCart.resetModal()" class="btn-editorial-primary w-full">
@@ -462,7 +468,7 @@
             return;
         }
         const t = document.createElement('div');
-        t.className = 'fixed bottom-5 right-5 z-50 bg-[#0d1019] border border-[#ff2e54] text-white px-4 py-2.5 rounded-full shadow-2xl text-xs flex items-center space-x-2';
+        t.className = 'fixed bottom-5 right-5 left-5 sm:left-auto z-50 max-w-[calc(100vw-40px)] bg-[#0d1019] border border-[#ff2e54] text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs flex items-center space-x-2';
         t.innerHTML = `<span>${escapeHtml(msg)}</span>`;
         document.body.appendChild(t);
         setTimeout(() => {

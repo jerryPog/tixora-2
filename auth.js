@@ -502,8 +502,8 @@
                         remaining: 0,
                         retryAfterSeconds: remainingSec,
                         message: action === 'login'
-                            ? `Too many sign in attempts. For account security, access is temporarily locked. Try again in ${Math.ceil(remainingSec / 60)} min.`
-                            : `Too many registration attempts. Please wait ${Math.ceil(remainingSec / 60)} min before trying again.`
+                            ? `Too many attempts. Account locked for ${Math.ceil(remainingSec / 60)} min.`
+                            : `Too many sign-ups. Account locked for ${Math.ceil(remainingSec / 60)} min.`
                     };
                 }
             } catch (e) {}
@@ -524,7 +524,7 @@
                         allowed: false,
                         remaining: 0,
                         retryAfterSeconds: data.retry_after_seconds || 900,
-                        message: data.message || 'Too many attempts. Access is temporarily locked.'
+                        message: data.message || 'Too many attempts. Account locked.'
                     };
                 }
                 return {
@@ -642,22 +642,22 @@
 
             const msg = (error.message || '').toLowerCase();
             if (msg.includes('invalid login credentials') || msg.includes('invalid_credentials')) {
-                const err = new Error('Invalid email or password. Please verify your credentials or register a new account.');
+                const err = new Error('Invalid email or password.');
                 err.code = 'invalid_credentials';
                 throw err;
             }
             if (msg.includes('email not confirmed')) {
-                const err = new Error('Your email address has not been confirmed yet. Please click the confirmation link sent to your email.');
+                const err = new Error('Verify your email via the link sent to your inbox first.');
                 err.code = 'email_not_confirmed';
                 err.email = cleanEmail;
                 throw err;
             }
             if (msg.includes('rate limit') || msg.includes('too many')) {
-                const err = new Error('Too many sign in attempts. Please wait a moment and try again.');
+                const err = new Error('Too many attempts. Account locked briefly; try again shortly.');
                 err.code = 'rate_limit';
                 throw err;
             }
-            throw new Error(error.message || 'Authentication failed. Please try again.');
+            throw new Error(error.message || 'Sign-in failed.');
         }
 
         if (!data || !data.session || !data.user) {
@@ -794,7 +794,7 @@
     async function requestPasswordReset(email) {
         const cleanEmail = (email || '').trim().toLowerCase();
         if (!cleanEmail || !cleanEmail.includes('@')) {
-            throw new Error('Please enter a valid email address.');
+            throw new Error('Enter a valid email address.');
         }
 
         try {
@@ -861,7 +861,7 @@
     async function resetPasswordWithToken(token, newPassword) {
         if (!token) throw new Error('Reset token is required.');
         if (!newPassword || newPassword.length < 6) {
-            throw new Error('New password must be at least 6 characters long.');
+            throw new Error('Password must be at least 6 characters.');
         }
 
         try {
@@ -873,7 +873,7 @@
                 });
                 const data = await res.json();
                 if (!res.ok) {
-                    throw new Error(data.message || 'Password reset failed. Link may have expired or already been used.');
+                    throw new Error(data.message || 'Reset failed. Link may be expired or already used.');
                 }
 
                 // Invalidate any active session caches

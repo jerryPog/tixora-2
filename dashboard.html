@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
     <meta name="robots" content="noindex, nofollow">
-    <title>Tixora Promoter Command Center | Real-time Settlements &amp; Yield Ledger</title>
+    <title>Promoter Portal | Tixora Live Protocol</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
     <meta name="theme-color" content="#050608">
@@ -54,7 +55,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="editorial.css?v=3">
+    <link rel="stylesheet" href="editorial.css?v=4">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -74,8 +75,8 @@
         <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
             <div class="ops-spinner mx-auto" role="status" aria-label="Verifying promoter clearance"></div>
             <div class="space-y-1">
-                <div class="font-bold text-[var(--ink)] text-sm">Verifying Promoter Clearance</div>
-                <div class="text-xs font-mono text-[var(--muted)]">Authenticating session via Supabase RBAC Protocol</div>
+                <div class="font-bold text-[var(--ink)] text-sm">Checking Clearance</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Verifying session via Supabase</div>
             </div>
         </div>
     </div>
@@ -100,8 +101,7 @@
                 </div>
                 <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Promoter Command Center</h1>
                 <p class="text-xs text-[var(--muted)] leading-relaxed max-w-md mx-auto">
-                    Sign in with your verified promoter credentials to track live tour ticket allocations, commission
-                    yields, and instant UPI settlements.
+                    Sign in to track pass allocations, commission tiers, and UPI payouts.
                 </p>
             </div>
 
@@ -141,12 +141,13 @@
                         </a>
                     </div>
                     <input type="password" id="dash-signin-password" name="password" required
-                        autocomplete="current-password" enterkeyhint="done" placeholder="••••••••••••"
+                        autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        enterkeyhint="done" placeholder="••••••••••••"
                         class="modal-input font-mono">
                 </div>
 
                 <button type="submit" id="btn-dash-signin" class="btn-editorial-primary w-full">
-                    <span id="btn-dash-signin-text">Sign In to Promoter Desk</span>
+                    <span id="btn-dash-signin-text">Sign In</span>
                     <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signin-icon"></i>
                 </button>
             </form>
@@ -157,12 +158,13 @@
                     <div>
                         <label for="dash-signup-fullname" class="modal-field-label">Full Name</label>
                         <input type="text" id="dash-signup-fullname" name="fullname" required autocomplete="name"
-                            placeholder="Aarav Sharma" class="modal-input">
+                            autocapitalize="words" enterkeyhint="next" placeholder="Aarav Sharma" class="modal-input">
                     </div>
                     <div>
                         <label for="dash-signup-phone" class="modal-field-label">WhatsApp (+91)</label>
                         <input type="tel" id="dash-signup-phone" name="phone" required autocomplete="tel"
-                            placeholder="+91 98200 11223" class="modal-input font-mono">
+                            inputmode="tel" enterkeyhint="next" placeholder="+91 98200 11223"
+                            class="modal-input font-mono">
                     </div>
                 </div>
 
@@ -170,13 +172,14 @@
                     <div>
                         <label for="dash-signup-email" class="modal-field-label">Email Address</label>
                         <input type="email" id="dash-signup-email" name="email" required autocomplete="email"
-                            autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="aarav@college.edu"
-                            class="modal-input font-mono">
+                            autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next"
+                            placeholder="aarav@college.edu" class="modal-input font-mono">
                     </div>
                     <div>
                         <label for="dash-signup-password" class="modal-field-label">Create Password</label>
                         <input type="password" id="dash-signup-password" name="password" required
-                            autocomplete="new-password" minlength="6" placeholder="••••••••••••"
+                            autocomplete="new-password" autocorrect="off" autocapitalize="none" spellcheck="false"
+                            minlength="6" enterkeyhint="next" placeholder="••••••••••••"
                             class="modal-input font-mono">
                     </div>
                 </div>
@@ -185,18 +188,18 @@
                     <div>
                         <label for="dash-signup-city" class="modal-field-label">Metro Circuit</label>
                         <input type="text" id="dash-signup-city" name="city" required autocomplete="address-level2"
-                            placeholder="Mumbai / Delhi NCR / Bengaluru" class="modal-input">
+                            enterkeyhint="next" placeholder="Mumbai / Delhi NCR / Bengaluru" class="modal-input">
                     </div>
                     <div>
                         <label for="dash-signup-upi" class="modal-field-label">Settlement UPI ID</label>
                         <input type="text" id="dash-signup-upi" name="upi" required autocorrect="off"
-                            autocapitalize="none" spellcheck="false" placeholder="aarav@okhdfcbank"
+                            autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
                             class="modal-input font-mono">
                     </div>
                 </div>
 
                 <button type="submit" id="btn-dash-signup" class="btn-editorial-gold w-full">
-                    <span id="btn-dash-signup-text">Submit Application &amp; Register</span>
+                    <span id="btn-dash-signup-text">Apply &amp; Register</span>
                     <i data-lucide="arrow-right" class="w-4 h-4" id="btn-dash-signup-icon"></i>
                 </button>
             </form>
@@ -207,15 +210,14 @@
                     <i data-lucide="mail-check" class="w-6 h-6"></i>
                 </div>
                 <div class="space-y-1">
-                    <h2 class="text-xl font-bold text-[var(--ink)]">Application Received!</h2>
+                    <h2 class="text-xl font-bold text-[var(--ink)]">Application Received</h2>
                     <p class="text-xs text-[var(--muted)]">
                         Verification link sent to
                         <strong class="text-[var(--ink)] font-mono" id="dash-confirm-email"></strong>.
                     </p>
                 </div>
                 <div class="ops-subcard p-3.5 text-xs text-[var(--muted)] text-left leading-relaxed">
-                    Please check your email inbox (and spam folder) for the verification link sent by Tixora. Once
-                    verified, sign in to your Promoter Command Center.
+                    Verify your email (check spam if needed), then sign in below.
                 </div>
                 <div class="space-y-2 pt-2">
                     <button type="button" onclick="switchDashboardTab('signin')" class="btn-editorial-primary w-full">
@@ -249,7 +251,7 @@
     <div id="dashboard-workspace" class="hidden flex-1 flex flex-col">
 
         <!-- Protected Top Command Header -->
-        <header class="ops-topbar sticky top-0 z-40 px-4 sm:px-6 h-16 flex items-center justify-between">
+        <header class="ops-topbar sticky top-0 z-40 px-4 sm:px-6 min-h-16 py-2 flex flex-wrap items-center justify-between gap-2">
             <div class="flex items-center gap-4">
                 <a href="/" class="flex items-center gap-2.5" aria-label="Tixora Home">
                     <picture>
@@ -264,15 +266,14 @@
                 <div class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono"
                     style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: var(--on-dark-muted);">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>Live Turnstile Node Active</span>
+                    <span>Turnstile Node Live</span>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="/tours" class="hidden sm:inline-flex btn-editorial-outline-dark"
-                    style="min-block-size: 38px; padding-inline: 14px; font-size: 12px;">
+                <a href="/tours" class="hidden sm:inline-flex btn-editorial-outline-dark btn-compact">
                     <i data-lucide="ticket" class="w-3.5 h-3.5" style="color: var(--gold-on-dark);"></i>
-                    <span>Concert Allocations</span>
+                    <span>Live Tours</span>
                 </a>
 
                 <div class="flex items-center gap-2.5 pl-3"
@@ -285,11 +286,12 @@
                     <div class="hidden sm:flex flex-col text-left">
                         <span id="dash-header-name" class="text-xs text-white font-semibold leading-none">Promoter</span>
                         <span id="dash-header-tier" class="text-[10px] font-mono leading-none mt-1"
-                            style="color: var(--gold-on-dark);">TIER 01 &bull; SCOUT</span>
+                            style="color: var(--gold-on-dark);">TIER &bull; SCOUT (8.0%)</span>
                     </div>
                     <button type="button" onclick="handleDashboardSignOut()"
-                        class="p-2 rounded-xl hover:bg-white/10 transition-colors" style="color: var(--on-dark-muted);"
-                        title="Sign Out of Promoter Desk" aria-label="Sign Out of Promoter Desk">
+                        class="p-2 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center justify-center"
+                        style="color: var(--on-dark-muted);"
+                        title="Sign Out" aria-label="Sign Out">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -336,24 +338,24 @@
             <div class="ops-card p-6 sm:p-7 space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div class="space-y-1">
-                        <span class="eyebrow">Unique Promoter Allocation Link</span>
-                        <h2 class="text-lg font-bold text-[var(--ink)]">Your Official Shareable Pass Link</h2>
+                        <span class="eyebrow">Shareable Pass Link</span>
+                        <h2 class="text-lg font-bold text-[var(--ink)]">Promoter Referral URL</h2>
                         <p class="text-xs text-[var(--muted)] leading-relaxed max-w-2xl">
-                            Passes purchased through this verified protocol link automatically route commissions to your
-                            settlement ledger upon venue turnstile scan.
+                            Passes booked through this link credit to your ledger on gate scan.
                         </p>
                     </div>
                     <span id="dash-tier-badge"
                         class="ops-badge-gold px-3 py-1.5 rounded-full text-xs font-mono font-bold self-start">
-                        TIER 01 &bull; SCOUT (8%)
+                        TIER &bull; SCOUT (8.0%)
                     </span>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1">
                     <div class="flex-1">
                         <label for="dash-referral-input" class="visually-hidden">Official Shareable Pass Link</label>
-                        <input type="text" id="dash-referral-input" readonly
-                            value="https://tixoralive.vercel.app/?ref=TIX-PROMO" class="modal-input font-mono tabular-nums">
+                        <input type="text" id="dash-referral-input" readonly autocorrect="off" autocapitalize="none"
+                            spellcheck="false" value="https://tixoralive.vercel.app/?ref=TIX-PROMO"
+                            class="modal-input font-mono tabular-nums">
                     </div>
                     <button type="button" onclick="copyDashboardReferralLink()"
                         class="btn-editorial-primary whitespace-nowrap">
@@ -363,9 +365,9 @@
                     <a id="dash-whatsapp-btn" target="_blank" rel="noopener noreferrer"
                         href="https://wa.me/?text=Get%20official%20concert%20passes%20via%20Tixora"
                         class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-xs font-bold whitespace-nowrap transition-colors"
-                        style="min-block-size: 46px; background-color: #0f764a; color: var(--white);">
+                        style="min-block-size: max(46px, var(--target-size)); background-color: #0f764a; color: var(--white);">
                         <i data-lucide="share-2" class="w-4 h-4"></i>
-                        <span>Broadcast to WhatsApp</span>
+                        <span>Share on WhatsApp</span>
                     </a>
                 </div>
             </div>
@@ -379,37 +381,37 @@
                     </div>
                     <div class="text-2xl sm:text-3xl font-bold font-mono text-[var(--ink)] tabular-nums"
                         id="dash-kpi-passes">0</div>
-                    <div class="text-xs text-[var(--muted)]">Live venue gate turnstile scans</div>
+                    <div class="text-xs text-[var(--muted)]">Venue gate scans</div>
                 </div>
 
                 <div class="ops-card p-5 space-y-1.5">
                     <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Allocation Gross Volume</span>
+                        <span>Gross Volume</span>
                         <i data-lucide="trending-up" class="w-4 h-4" style="color: var(--crimson-ink);"></i>
                     </div>
                     <div class="text-2xl sm:text-3xl font-bold font-mono text-[var(--ink)] tabular-nums"
                         id="dash-kpi-volume">₹0.00</div>
-                    <div class="text-xs text-[var(--muted)]">Total tickets settled via bridge</div>
+                    <div class="text-xs text-[var(--muted)]">Total passes settled</div>
                 </div>
 
                 <div class="ops-card p-5 space-y-1.5">
                     <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Lifetime Commission</span>
+                        <span>Total Earnings</span>
                         <i data-lucide="wallet" class="w-4 h-4" style="color: var(--emerald-ink);"></i>
                     </div>
                     <div class="text-2xl sm:text-3xl font-bold font-mono tabular-nums" style="color: var(--emerald-ink);"
                         id="dash-kpi-earnings">₹0.00</div>
-                    <div class="text-xs text-[var(--muted)]">Audited commission yield sum</div>
+                    <div class="text-xs text-[var(--muted)]">Commission earned</div>
                 </div>
 
                 <div class="ops-card p-5 space-y-1.5">
                     <div class="text-[11px] font-mono uppercase text-[var(--muted)] font-bold flex items-center justify-between">
-                        <span>Settlement Velocity</span>
+                        <span>Payout Speed</span>
                         <i data-lucide="zap" class="w-4 h-4" style="color: var(--gold-deep);"></i>
                     </div>
                     <div class="text-2xl sm:text-3xl font-bold font-mono tabular-nums" style="color: var(--gold-deep);">
                         &lt;60s</div>
-                    <div class="text-xs text-[var(--muted)]">Automated NPCI UPI bridge</div>
+                    <div class="text-xs text-[var(--muted)]">Direct NPCI UPI 2.0</div>
                 </div>
             </div>
 
@@ -418,14 +420,14 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                         <h2 id="dash-ledger-heading" class="text-base font-bold text-[var(--ink)]">
-                            Live Commission Ledger
+                            Commission Ledger
                         </h2>
                         <p class="text-xs text-[var(--muted)] font-mono">
-                            Real-time gate scan verification and payout status
+                            Gate scan checks and UPI payouts
                         </p>
                     </div>
                     <span class="ops-badge-emerald px-3 py-1 rounded-full text-[11px] font-mono font-bold self-start sm:self-auto">
-                        Real-time Ledger
+                        Live Ledger
                     </span>
                 </div>
 
@@ -445,8 +447,7 @@
                         <tbody id="dash-ledger-body" class="text-[var(--ink)]">
                             <tr>
                                 <td colspan="7" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
-                                    No turnstile pass scans recorded yet. Share your pass link above to begin generating
-                                    commissions!
+                                    No gate scans yet. Share your link to start earning.
                                 </td>
                             </tr>
                         </tbody>
@@ -457,25 +458,25 @@
             <!-- Card 5: Tier Ladder Progression -->
             <div class="ops-card p-6 sm:p-7 space-y-5">
                 <div class="space-y-1">
-                    <span class="eyebrow">Velocity Progression Ladder</span>
+                    <span class="eyebrow">Commission Tiers</span>
                     <h2 class="text-lg font-bold text-[var(--ink)]">Promoter Performance Ladder</h2>
                     <p class="text-xs text-[var(--muted)]">
-                        Higher volume unlocks elevated commission percentages and priority backstage access.
+                        Higher volume unlocks higher commission cuts and priority perks.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="ops-subcard p-5 space-y-2"
                         style="background-color: var(--bg-card); border-color: var(--crimson); border-width: 1.5px;">
                         <span class="ops-badge-navy inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
                             TIER 01 &bull; ACTIVE
                         </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Scout Ambassador</div>
+                        <div class="text-base font-bold text-[var(--ink)]">Scout</div>
                         <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--crimson-ink);">
                             8.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
                         </div>
                         <p class="text-xs text-[var(--muted)]">
-                            Baseline entry quota for campus influencers. 0&ndash;50 passes sold.
+                            1&ndash;25 passes &bull; Entry tier.
                         </p>
                     </div>
 
@@ -483,25 +484,38 @@
                         <span class="ops-badge-gold inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
                             TIER 02
                         </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Capo Director</div>
+                        <div class="text-base font-bold text-[var(--ink)]">Capo</div>
                         <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--gold-deep);">
                             11.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
                         </div>
                         <p class="text-xs text-[var(--muted)]">
-                            Unlocked at 51+ passes sold. Includes backstage media pass &amp; accelerated settlements.
+                            26&ndash;100 passes &bull; Priority UPI payouts.
+                        </p>
+                    </div>
+
+                    <div class="ops-subcard p-5 space-y-2">
+                        <span class="ops-badge-navy inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                            TIER 03
+                        </span>
+                        <div class="text-base font-bold text-[var(--ink)]">Syndicate</div>
+                        <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--crimson-ink);">
+                            13.5% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
+                        </div>
+                        <p class="text-xs text-[var(--muted)]">
+                            101&ndash;300 passes &bull; Regional lead access.
                         </p>
                     </div>
 
                     <div class="ops-subcard p-5 space-y-2">
                         <span class="ops-badge-emerald inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold">
-                            TIER 03
+                            TIER 04
                         </span>
-                        <div class="text-base font-bold text-[var(--ink)]">Patron Syndicate</div>
+                        <div class="text-base font-bold text-[var(--ink)]">Patron</div>
                         <div class="text-2xl font-bold font-mono tabular-nums" style="color: var(--emerald-ink);">
                             16.0% <span class="text-xs font-normal text-[var(--muted)]">Cut</span>
                         </div>
                         <p class="text-xs text-[var(--muted)]">
-                            Unlocked at 150+ passes sold. Maximum revenue share and dedicated venue host desk.
+                            300+ passes &bull; Max cut &amp; host desk.
                         </p>
                     </div>
                 </div>
@@ -526,7 +540,7 @@
     </div>
 
     <!-- Toast Notification Element -->
-    <div id="dashboard-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
+    <div id="dashboard-toast" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:bottom-6 sm:right-6 z-50 flex justify-center sm:justify-end transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
         role="status" aria-live="polite">
         <div class="toast-inner">
             <i data-lucide="info" class="w-4 h-4 text-[var(--crimson-ink)]"></i>
@@ -610,12 +624,12 @@
 
             if (errBox) errBox.classList.add('hidden');
             if (btn) btn.disabled = true;
-            if (btnText) btnText.textContent = 'Verifying with Supabase...';
+            if (btnText) btnText.textContent = 'Signing in...';
 
             try {
                 if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
                 const res = await TixoraAuth.signIn(email, password);
-                showToast('Authentication approved. Welcome back!');
+                showToast('Signed in. Welcome back!');
                 await renderPromoterWorkspace(res.user, res.promoter);
             } catch (err) {
                 console.error('Sign In Error:', err);
@@ -631,7 +645,7 @@
                         if (countdown <= 0) {
                             clearInterval(timer);
                             btn.disabled = false;
-                            btnText.textContent = 'Sign In to Promoter Desk';
+                            btnText.textContent = 'Sign In';
                         } else {
                             btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
                         }
@@ -642,7 +656,7 @@
             } finally {
                 if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
                     btn.disabled = false;
-                    if (btnText) btnText.textContent = 'Sign In to Promoter Desk';
+                    if (btnText) btnText.textContent = 'Sign In';
                 }
             }
         }
@@ -669,14 +683,14 @@
             const upiRegex = /^[\w.\-]{2,64}@[a-zA-Z]{2,64}$/;
             if (!upiRegex.test(upiId)) {
                 if (errBox && errText) {
-                    errText.textContent = 'Please enter a valid UPI VPA handle (e.g. name@oksbi, mobile@paytm).';
+                    errText.textContent = 'Enter a valid UPI ID (e.g. name@oksbi, mobile@paytm).';
                     errBox.classList.remove('hidden');
                 }
                 return;
             }
 
             if (btn) btn.disabled = true;
-            if (btnText) btnText.textContent = 'Submitting Application...';
+            if (btnText) btnText.textContent = 'Submitting...';
 
             try {
                 if (!window.TixoraAuth) throw new Error('Supabase Auth layer not initialized.');
@@ -689,15 +703,15 @@
                     if (emailTarget) emailTarget.textContent = email;
                     if (formSignup) formSignup.classList.add('hidden');
                     if (notice) notice.classList.remove('hidden');
-                    showToast('Account registered! Please verify your email.');
+                    showToast('Registered! Verify your email to continue.');
                 } else if (res && res.user) {
-                    showToast('Promoter account activated!');
+                    showToast('Promoter account activated.');
                     await renderPromoterWorkspace(res.user, res.promoter);
                 }
             } catch (err) {
                 console.error('Sign Up Error:', err);
                 if (errBox && errText) {
-                    errText.textContent = err.message || 'Registration failed. Please check your inputs.';
+                    errText.textContent = err.message || 'Registration failed. Check your details.';
                     errBox.classList.remove('hidden');
                 }
                 if (err.code === 'rate_limit' && btn) {
@@ -708,7 +722,7 @@
                         if (countdown <= 0) {
                             clearInterval(timer);
                             btn.disabled = false;
-                            btnText.textContent = 'Submit Application & Register';
+                            btnText.textContent = 'Apply & Register';
                         } else {
                             btnText.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
                         }
@@ -719,7 +733,7 @@
             } finally {
                 if (btn && (!errBox || !errBox.textContent.includes('locked'))) {
                     btn.disabled = false;
-                    if (btnText) btnText.textContent = 'Submit Application & Register';
+                    if (btnText) btnText.textContent = 'Apply & Register';
                 }
             }
         }
@@ -727,14 +741,14 @@
         async function handleDashboardResend() {
             const email = document.getElementById('dash-signup-email').value.trim() || document.getElementById('dash-signin-email').value.trim();
             if (!email) {
-                showToast('Please enter an email address to resend.');
+                showToast('Enter an email address to resend.');
                 return;
             }
             try {
                 await TixoraAuth.resendConfirmation(email);
-                showToast('Verification email resent to ' + email);
+                showToast('Verification email sent to ' + email);
             } catch (err) {
-                showToast(err.message || 'Error resending email');
+                showToast(err.message || 'Could not resend email');
             }
         }
 
@@ -747,7 +761,7 @@
                 console.warn('Sign out notice:', e);
             }
             showDashboardState('login');
-            showToast('Signed out of Promoter Command Center.');
+            showToast('Signed out.');
         }
 
         async function renderPromoterWorkspace(user, promoter) {
@@ -762,7 +776,7 @@
             const passes = (_activePromoter && _activePromoter.total_passes_sold) || 0;
             const earnings = (_activePromoter && _activePromoter.total_earnings) || 0;
             const tierName = (_activePromoter && _activePromoter.tier_name) || 'Scout';
-            const commRate = (_activePromoter && _activePromoter.commission_rate) || 8.00;
+            const commRate = Number((_activePromoter && _activePromoter.commission_rate) || 8.00);
 
             const fullRefUrl = window.location.origin + '/?ref=' + refCode;
 

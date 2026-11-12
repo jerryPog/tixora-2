@@ -229,18 +229,29 @@
     });
   }
 
+  function syncBodyModalState() {
+    const hasBackdropModal = hasAnyOpenModal();
+    const hasDialogModal = Boolean(document.querySelector('dialog[open]'));
+    document.body.classList.toggle('has-modal-open', hasBackdropModal || hasDialogModal);
+  }
+
   function syncPageShellInert(isModalOpen) {
     const shell = document.getElementById('page-shell');
-    if (!shell) return;
-    if (isModalOpen) {
-      shell.setAttribute('inert', '');
-    } else {
-      shell.removeAttribute('inert');
+    if (shell) {
+      if (isModalOpen) {
+        shell.setAttribute('inert', '');
+      } else {
+        shell.removeAttribute('inert');
+      }
     }
+    syncBodyModalState();
   }
 
   window.syncModalFocusInert = function (openedModalEl, isOpen) {
     if (isOpen) {
+      if (typeof window.toggleMobileMenu === 'function') {
+        window.toggleMobileMenu(false);
+      }
       if (!hasAnyOpenModal() || !document.getElementById('page-shell')?.hasAttribute('inert')) {
         if (document.activeElement && document.activeElement !== document.body) {
           _lastModalTrigger = document.activeElement;
@@ -271,6 +282,9 @@
   window.openModal = function (id) {
     const modal = document.getElementById(id);
     if (!modal) return;
+    if (typeof window.toggleMobileMenu === 'function') {
+      window.toggleMobileMenu(false);
+    }
     if (document.activeElement && document.activeElement !== document.body && !hasAnyOpenModal()) {
       _lastModalTrigger = document.activeElement;
     }
@@ -376,8 +390,12 @@
         }
         if (titleEl) titleEl.textContent = title;
         if (metaEl) metaEl.textContent = meta;
+        if (typeof window.toggleMobileMenu === 'function') {
+          window.toggleMobileMenu(false);
+        }
         if (typeof dialog.showModal === 'function') {
           dialog.showModal();
+          syncBodyModalState();
         }
       });
     });
@@ -391,6 +409,8 @@
         dialog.close();
       }
     });
+
+    dialog.addEventListener('close', syncBodyModalState);
   }
 
   /* =========================================================================
@@ -488,18 +508,18 @@
       if (priceVal) priceVal.textContent = '₹' + price.toLocaleString('en-IN');
 
       const gmv = passes * price;
-      let rate = 0.06;
-      let tierName = 'Rookie Scout';
+      let rate = 0.08;
+      let tierName = 'Scout';
 
-      if (passes >= 150) {
-        rate = 0.15;
-        tierName = 'Headliner Syndicate';
-      } else if (passes >= 51) {
-        rate = 0.12;
-        tierName = 'Nightlife Curator';
-      } else if (passes >= 16) {
-        rate = 0.09;
-        tierName = 'Network Promoter';
+      if (passes >= 300) {
+        rate = 0.16;
+        tierName = 'Patron';
+      } else if (passes >= 101) {
+        rate = 0.135;
+        tierName = 'Syndicate';
+      } else if (passes >= 26) {
+        rate = 0.11;
+        tierName = 'Capo';
       }
 
       const monthlyCommission = Math.round(gmv * rate);
@@ -668,26 +688,26 @@
         .writeText(input.value)
         .then(() => {
           window.closeModal('link-modal');
-          window.showToast('Tracking link copied to clipboard!');
+          window.showToast('Link copied.');
         })
         .catch(() => {
           window.closeModal('link-modal');
-          window.showToast('Tracking link copied!');
+          window.showToast('Link copied.');
         });
     } else {
       window.closeModal('link-modal');
-      window.showToast('Tracking link ready to copy.');
+      window.showToast('Copy the link above.');
     }
   };
 
   window.simulateSignupSuccess = function () {
     window.closeModal('promoter-modal');
-    window.showToast('Promoter account submitted! Verification SMS sent via WhatsApp.');
+    window.showToast('Application submitted. Verification sent on WhatsApp.');
   };
 
   window.simulateOrderSuccess = function () {
     window.closeModal('buy-modal');
-    window.showToast('Booking verified! Digital passes dispatched to your BookMyShow app.');
+    window.showToast('Booking verified. Passes sent to BookMyShow.');
   };
 
   function initCookieBanner() {
@@ -712,7 +732,7 @@
       banner.classList.remove('translate-y-0', 'opacity-100');
       banner.classList.add('translate-y-36', 'opacity-0', 'pointer-events-none');
     }
-    window.showToast(type === 'essential' ? 'Essential cookies recorded.' : 'All cookies approved.');
+    window.showToast(type === 'essential' ? 'Essential cookies saved.' : 'Cookie preferences saved.');
   };
 
   /* =========================================================================
@@ -742,7 +762,7 @@
         'Running (feat. Meg Myers)'
       ],
       overview:
-        'The global visual-techno sensation Anyma brings his mind-bending Genesys audio-visual production to Mumbai for a monolithic open-air spectacle at Mahalaxmi Racecourse.'
+        'Anyma brings his Genesys audio-visual show to Mumbai for one open-air night at Mahalaxmi Racecourse.'
     },
     {
       id: 'gnr',
@@ -768,7 +788,7 @@
         'Civil War'
       ],
       overview:
-        'Rock and Roll Hall of Famers Axl Rose, Slash, and Duff McKagan bring their full stadium world tour production to New Delhi for an epic 3-hour rock journey.'
+        'Axl Rose, Slash, and Duff McKagan play a full 3-hour stadium rock set in New Delhi.'
     },
     {
       id: 'fredagain',
@@ -794,7 +814,7 @@
         'places to be (with Anderson .Paak & CHIKA)'
       ],
       overview:
-        'The Grammy-winning electronic pioneer brings his high-energy, emotionally raw USB live set to Bengaluru with custom stage lighting and live sampling.'
+        'Grammy winner Fred again.. brings his USB live set and custom lighting rig to Bengaluru.'
     },
     {
       id: 'chainsmokers',
@@ -820,7 +840,7 @@
         'High'
       ],
       overview:
-        'Celebrate the year-end in Goa with multi-platinum chart-toppers The Chainsmokers, featuring massive live pyrotechnics, anthemic hits, and sunset festival vibes.'
+        'Year-end festival set in Goa with The Chainsmokers and supporting international acts.'
     },
     {
       id: 'karanaujla',
@@ -847,7 +867,7 @@
         'Mexico'
       ],
       overview:
-        'Global Punjabi powerhouse Karan Aujla performs chart-shattering records from "Making Memories" and "Four Me" backed by a 14-piece live band.'
+        'Karan Aujla performs tracks from Making Memories and Four Me with a 14-piece live band.'
     },
     {
       id: 'boris',
@@ -873,7 +893,7 @@
         'Liebe Will'
       ],
       overview:
-        'Donning his signature Venetian carnival Joker mask, Boris Brejcha delivers his mesmerizing, signature High-Tech Minimal soundscapes.'
+        'Masked German producer Boris Brejcha brings his 3-hour High-Tech Minimal set to Delhi.'
     },
     {
       id: 'martingarrix',
@@ -899,7 +919,7 @@
         'Pressure (feat. Tove Lo)'
       ],
       overview:
-        '4-time World No.1 DJ Martin Garrix lights up Mumbai with a breathtaking stadium laser array, pyrotechnics, and timeless festival anthems.'
+        'Martin Garrix headlines DY Patil Stadium with custom laser arrays and festival anthems.'
     },
     {
       id: 'dualipa',
@@ -926,7 +946,7 @@
         'Break My Heart'
       ],
       overview:
-        'Global pop superstar Dua Lipa brings her dazzling Radical Optimism stadium spectacular to Mumbai with full choreography, live brass, and disco-pop anthems.'
+        'Dua Lipa brings the Radical Optimism stadium tour to Mumbai with live band and choreography.'
     }
   ];
 
@@ -957,6 +977,9 @@
     if (toggleBtn) toggleBtn.setAttribute('aria-expanded', isChatOpen ? 'true' : 'false');
 
     if (isChatOpen) {
+      if (typeof window.toggleMobileMenu === 'function') {
+        window.toggleMobileMenu(false);
+      }
       widget.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
       widget.classList.add('scale-100', 'opacity-100', 'pointer-events-auto');
       const input = document.getElementById('chat-input');
@@ -972,7 +995,7 @@
     if (!container) return;
     container.innerHTML = CHAT_SUGGESTIONS.map(
       (s) =>
-        `<button type="button" onclick="askQuestion('${s.replace(/'/g, "\\'")}')" class="whitespace-nowrap px-3 py-1 rounded-full text-[11px] font-medium bg-[var(--soft)] hover:bg-[var(--crimson-btn)] hover:text-white text-[var(--ink)] border border-[var(--line)] transition-colors flex-shrink-0">${escapeHtml(s)}</button>`
+        `<button type="button" onclick="askQuestion('${s.replace(/'/g, "\\'")}')" class="chat-suggestion-chip whitespace-nowrap px-3 py-1 rounded-full text-[11px] font-medium bg-[var(--soft)] hover:bg-[var(--crimson-btn)] hover:text-white text-[var(--ink)] border border-[var(--line)] transition-colors flex-shrink-0">${escapeHtml(s)}</button>`
     ).join('');
   }
 
@@ -985,8 +1008,8 @@
           <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
         </div>
         <div class="bg-[var(--soft)] border border-[var(--line)] rounded-2xl rounded-tl-none p-3.5 space-y-2 text-[var(--ink)] max-w-[88%] leading-relaxed text-xs">
-          <p><strong>Tixora AI</strong> is ready.</p>
-          <p class="text-[var(--muted)]">Ask about official tour posters, venues, gate timings, and setlist highlights for Anyma, Guns N' Roses, Fred again.., Karan Aujla, The Chainsmokers, and Dua Lipa — or promoter UPI payouts.</p>
+          <p><strong>Tixora AI</strong></p>
+          <p class="text-[var(--muted)]">Ask about tour dates, venues, setlists, or promoter UPI payouts.</p>
         </div>
       </div>
     `;
@@ -1013,8 +1036,8 @@
 
     if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|\s|[!?.])/i.test(clean)) {
       return {
-        title: 'Welcome to Tixora AI',
-        answer: 'Hello! Ask me about upcoming concert venues, timings, artist top songs, or instant promoter UPI payouts.',
+        title: 'Tixora AI',
+        answer: 'Ask me about tour dates, venues, setlists, or promoter UPI payouts.',
         actions: [
           { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
           { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
@@ -1087,8 +1110,8 @@
     }
 
     return {
-      title: 'Tixora AI Assistant',
-      answer: 'Ask me about Anyma, Guns N\' Roses, Fred again.., Karan Aujla, The Chainsmokers, Boris Brejcha, Martin Garrix, Dua Lipa, or promoter UPI commissions.',
+      title: 'Tixora AI',
+      answer: 'Try asking about an artist, venue, setlist, or promoter commission rates.',
       actions: [
         { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
         { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
@@ -1156,6 +1179,7 @@
     if (!window.TixoraAuth) return;
     const session = await window.TixoraAuth.getSession();
     const authSlot = document.getElementById('nav-auth-slot');
+    const mobileFooter = document.getElementById('mobile-nav-footer');
     const deskView = document.getElementById('promoter-desk-view');
     const authView = document.getElementById('promoter-auth-view');
 
@@ -1163,13 +1187,13 @@
       const role = await window.TixoraAuth.getUserRole(session.user);
       const promoter = await window.TixoraAuth.getPromoterProfile(session.user);
 
-      if (authSlot) {
-        const displayName =
-          (promoter && promoter.full_name) ||
-          (session.user.user_metadata && session.user.user_metadata.full_name) ||
-          session.user.email.split('@')[0];
-        const cutPct = (promoter && promoter.commission_rate) || 8;
+      const displayName =
+        (promoter && promoter.full_name) ||
+        (session.user.user_metadata && session.user.user_metadata.full_name) ||
+        session.user.email.split('@')[0];
+      const cutPct = (promoter && promoter.commission_rate) || 8;
 
+      if (authSlot) {
         authSlot.innerHTML = `
           ${role === 'admin' ? `<a href="/admin" class="nav-ops-link"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i><span>Ops Desk</span></a>` : ''}
           <button type="button" onclick="openModal('promoter-modal')" class="nav-promoter-pill">
@@ -1179,6 +1203,16 @@
           <button type="button" onclick="handlePromoterSignOut()" class="nav-signout-btn" aria-label="Sign Out of Promoter Desk">
             <i data-lucide="log-out" class="w-4 h-4"></i>
           </button>
+        `;
+      }
+
+      if (mobileFooter) {
+        mobileFooter.innerHTML = `
+          <button type="button" onclick="toggleMobileMenu(false); openModal('promoter-modal')" class="btn-editorial-primary">
+            ${escapeHtml(displayName)} (${escapeHtml(String(cutPct))}%)
+          </button>
+          ${role === 'admin' ? `<a href="/admin" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Ops Desk</a>` : ''}
+          <button type="button" onclick="toggleMobileMenu(false); handlePromoterSignOut()" class="btn-editorial-outline-light">Sign Out</button>
         `;
       }
 
@@ -1231,6 +1265,12 @@
           <button type="button" onclick="openModal('promoter-modal')" class="nav-cta-pill">
             Promoter Portal
           </button>
+        `;
+      }
+      if (mobileFooter) {
+        mobileFooter.innerHTML = `
+          <button type="button" onclick="toggleMobileMenu(false); openModal('promoter-modal')" class="btn-editorial-primary">Promoter Portal</button>
+          <button type="button" onclick="toggleMobileMenu(false); if (window.TixoraCart) { TixoraCart.openCart(); }" class="btn-editorial-outline-light">Open Cart</button>
         `;
       }
       if (deskView && authView) {
@@ -1298,16 +1338,16 @@
       document.getElementById('signin-email')?.value ||
       document.getElementById('signup-email')?.value;
     if (!email) {
-      window.showToast('No email address found to resend.');
+      window.showToast('Enter an email address first.');
       return;
     }
     const btn = document.getElementById('btn-resend-confirm');
     if (btn) btn.disabled = true;
     try {
       await window.TixoraAuth.resendConfirmation(email);
-      window.showToast(`Verification email resent to ${email}`);
+      window.showToast(`Verification email sent to ${email}`);
     } catch (err) {
-      window.showToast(err.message || 'Error resending verification email');
+      window.showToast(err.message || 'Could not resend email');
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -1329,14 +1369,14 @@
 
     try {
       const res = await window.TixoraAuth.signIn(email, password);
-      window.showToast(`Welcome back! Signed in as ${res.user.email}`);
+      window.showToast(`Signed in as ${res.user.email}`);
       await window.refreshPromoterUI();
     } catch (err) {
       if (err.code === 'email_not_confirmed') {
         showRegistrationSuccessNotice(email);
         if (errText)
           errText.textContent =
-            'Email verification pending. Please verify your email via the link sent to your inbox, then sign in.';
+            'Email verification pending. Click the link in your inbox, then sign in.';
       } else if (errText) {
         errText.textContent = err.message || 'Invalid email or password.';
       }
@@ -1349,7 +1389,7 @@
           if (countdown <= 0) {
             clearInterval(timer);
             btn.disabled = false;
-            btn.textContent = 'Sign In to Promoter Desk';
+            btn.textContent = 'Sign In';
           } else {
             btn.textContent = `Locked: Retry in ${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, '0')}`;
           }
@@ -1381,13 +1421,13 @@
 
     const phoneDigits = phone.replace(/[^0-9]/g, '');
     if (phoneDigits.length < 10) {
-      if (errText) errText.textContent = 'Please enter a valid 10-digit mobile number for WhatsApp pass alerts.';
+      if (errText) errText.textContent = 'Enter a valid 10-digit WhatsApp number.';
       if (errBox) errBox.classList.remove('hidden');
       return;
     }
 
     if (!/^[\w.\-]{2,64}@[a-zA-Z]{2,64}$/.test(upiId)) {
-      if (errText) errText.textContent = 'Please enter a valid UPI VPA handle (e.g. name@oksbi, mobile@paytm).';
+      if (errText) errText.textContent = 'Enter a valid UPI ID (e.g. name@oksbi).';
       if (errBox) errBox.classList.remove('hidden');
       return;
     }
@@ -1403,13 +1443,13 @@
       const res = await window.TixoraAuth.signUp({ email, password, fullName, phone, city, upiId, role: 'promoter' });
       if (res && res.emailConfirmationRequired) {
         showRegistrationSuccessNotice(res.email || email);
-        window.showToast('Account registered! Verification link sent to your email.');
+        window.showToast('Verification link sent to your email.');
       } else {
-        window.showToast('Promoter account activated! Your referral tracking code is live.');
+        window.showToast('Account active. Your referral link is live.');
         await window.refreshPromoterUI();
       }
     } catch (err) {
-      if (errText) errText.textContent = err.message || 'Registration failed. Please check your inputs.';
+      if (errText) errText.textContent = err.message || 'Registration failed. Check your details.';
       if (errBox) errBox.classList.remove('hidden');
     } finally {
       if (btn) btn.disabled = false;
@@ -1419,7 +1459,7 @@
   window.handlePromoterSignOut = async function () {
     if (!window.TixoraAuth) return;
     await window.TixoraAuth.signOut();
-    window.showToast('Signed out of Promoter Portal.');
+    window.showToast('Signed out.');
     window.closeModal('promoter-modal');
     await window.refreshPromoterUI();
   };
@@ -1432,12 +1472,12 @@
       .writeText(input.value)
       .then(() => {
         if (btnText) btnText.textContent = 'Copied!';
-        window.showToast('Official referral link copied to clipboard!');
+        window.showToast('Link copied.');
         setTimeout(() => {
           if (btnText) btnText.textContent = 'Copy';
         }, 2500);
       })
-      .catch(() => window.showToast('Referral link copied!'));
+      .catch(() => window.showToast('Link copied.'));
   };
 
   /* =========================================================================
@@ -1697,6 +1737,21 @@
     initFaqFilter();
     initCookieBanner();
     renderInitialGreeting();
+    const chatInput = document.getElementById('chat-input');
+    const chatForm = chatInput && chatInput.closest('form');
+    if (chatInput && chatForm) {
+      chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          if (e.isComposing || e.keyCode === 229) return;
+          e.preventDefault();
+          if (typeof chatForm.requestSubmit === 'function') {
+            chatForm.requestSubmit();
+          } else {
+            window.handleChatSubmit(e);
+          }
+        }
+      });
+    }
     initPromoterAuth();
     loadLiveEvents();
     subscribeToLiveEventsRealtime();

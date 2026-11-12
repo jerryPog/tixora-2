@@ -14,8 +14,9 @@
         }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="text-scale" content="scale">
     <meta name="robots" content="noindex, follow">
-    <title>404 — Pass Allocation Not Found | Tixora Live Concert Protocol</title>
+    <title>404 — Allocation Not Found | Tixora Live Protocol</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="/tixora-logo.png">
     <meta name="theme-color" content="#050608">
@@ -25,7 +26,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="editorial.css?v=3">
+    <link rel="stylesheet" href="editorial.css?v=4">
 
     <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
@@ -33,17 +34,16 @@
 <body class="ops-body ops-shell">
 
     <header class="ops-topbar"
-        style="padding: 14px clamp(16px, 4vw, 32px); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+        style="padding: 12px clamp(16px, 4vw, 32px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
         <a href="/" class="brand-mark" aria-label="Tixora Homepage">
             <picture>
                 <source srcset="tixora-logo.webp" type="image/webp">
-                <img src="tixora-logo.png" alt="Tixora Official Protocol Emblem" width="112" height="28">
+                <img src="tixora-logo.png" alt="Tixora" width="112" height="28">
             </picture>
         </a>
-        <a href="/" class="btn-editorial-outline-dark"
-            style="min-block-size: 40px; padding-inline: 16px; font-size: 12px;">
+        <a href="/" class="btn-editorial-outline-dark btn-compact">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            <span>Back to Portal</span>
+            <span>Back to Home</span>
         </a>
     </header>
 
@@ -55,21 +55,20 @@
             </div>
 
             <div class="space-y-2">
-                <div class="eyebrow" style="justify-content: center;">Error 404 &bull; Void Scan</div>
+                <div class="eyebrow" style="justify-content: center;">Error 404 &bull; Route Unavailable</div>
                 <h1 class="font-bold tracking-tight text-[var(--ink)]"
-                    style="font-size: clamp(1.65rem, 3.4vw, 2.15rem); line-height: 1.1;">
+                    style="font-size: clamp(1.65rem, 1.3rem + 2vw, 2.15rem); line-height: 1.1;">
                     Allocation Not Found
                 </h1>
                 <p class="text-sm text-[var(--muted)] leading-relaxed pt-1">
-                    The requested route or concert allocation pass does not exist on the Tixora mesh protocol. It may
-                    have expired, been rescheduled, or moved.
+                    This page or pass allocation has moved or expired.
                 </p>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
                 <a href="/" class="btn-editorial-primary">
                     <i data-lucide="compass" class="w-4 h-4"></i>
-                    <span>Explore Live Tours</span>
+                    <span>Explore Tours</span>
                 </a>
                 <a href="/protocol" class="btn-editorial-outline-light">
                     <i data-lucide="cpu" class="w-4 h-4"></i>
@@ -78,7 +77,7 @@
             </div>
 
             <div class="pt-4 border-t text-xs text-[var(--muted)] font-mono">
-                Official BookMyShow &amp; District Live Node &bull; SLA 99.98%
+                BookMyShow &amp; District Live Partner Network
             </div>
         </div>
     </main>
