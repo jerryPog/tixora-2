@@ -532,7 +532,7 @@ CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenti
 CREATE POLICY "Promoters read own profile only" ON promoters FOR SELECT TO authenticated
   USING (
     user_id = (SELECT auth.uid())
-    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
     OR (SELECT private.is_admin())
   );
 CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO authenticated
@@ -540,7 +540,7 @@ CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO authenti
     (SELECT private.is_admin())
     OR (
       user_id = (SELECT auth.uid())
-      AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+      AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), ''))
       AND tier_id = 1
       AND COALESCE(total_passes_sold, 0) = 0
       AND COALESCE(total_earnings, 0) = 0
@@ -553,7 +553,7 @@ CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO authenti
 CREATE POLICY "Update promoters" ON promoters FOR UPDATE TO authenticated
   USING (
     user_id = (SELECT auth.uid())
-    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+    OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
     OR (SELECT private.is_admin())
   )
   WITH CHECK (
@@ -565,7 +565,7 @@ CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated 
 -- 4.8: Attendees (Strict Data Privacy: Attendees read own record only, Admin Read All)
 CREATE POLICY "Users read own attendee profile only" ON attendees FOR SELECT TO authenticated
   USING (
-    LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+    LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), ''))
     OR (SELECT private.is_admin())
   );
 CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
@@ -586,10 +586,10 @@ CREATE POLICY "Read own orders only" ON orders FOR SELECT TO authenticated
     promoter_id IN (
       SELECT id FROM promoters
       WHERE user_id = (SELECT auth.uid())
-         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
     )
     OR attendee_id IN (
-      SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+      SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), ''))
     )
     OR (SELECT private.is_admin())
   );
@@ -619,10 +619,10 @@ CREATE POLICY "Read own passes only" ON issued_passes FOR SELECT TO authenticate
         promoter_id IN (
           SELECT id FROM promoters
           WHERE user_id = (SELECT auth.uid())
-             OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+             OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
         )
         OR attendee_id IN (
-          SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+          SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), ''))
         )
     )
     OR (SELECT private.is_admin())
@@ -637,7 +637,7 @@ CREATE POLICY "Promoters read own commissions only" ON promoter_commissions FOR 
     promoter_id IN (
       SELECT id FROM promoters
       WHERE user_id = (SELECT auth.uid())
-         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
     )
     OR (SELECT private.is_admin())
   );
@@ -651,7 +651,7 @@ CREATE POLICY "Promoters read own upi payouts only" ON upi_payout_logs FOR SELEC
     promoter_id IN (
       SELECT id FROM promoters
       WHERE user_id = (SELECT auth.uid())
-         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
+         OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE(((SELECT auth.jwt()) ->> 'email'), '')))
     )
     OR (SELECT private.is_admin())
   );
