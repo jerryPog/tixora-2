@@ -680,7 +680,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ formType, data })
                 }),
-                2500,
+                4000,
                 null
             );
             if (!res) return { valid: true };
@@ -1217,28 +1217,10 @@
     }
 
     /**
-     * Parameterized Query: Safely verify a promoter referral code via database RPC
-     * Uses PostgreSQL parameterized binding with zero string concatenation.
+     * Referral links/verification disabled per product policy (public RPC removed).
      */
-    async function verifyReferralCode(code) {
-        if (!code || typeof code !== 'string') return { is_valid: false, message: 'Invalid referral code' };
-        const client = getClient();
-        if (!client) return { is_valid: false, message: 'Database client not ready' };
-        const cleanCode = code.trim().slice(0, 30);
-        try {
-            const { data, error } = await client.rpc('verify_referral_code', { code_input: cleanCode });
-            if (error) {
-                console.warn('[TixoraAuth] verifyReferralCode RPC error:', error);
-                return { is_valid: false };
-            }
-            if (Array.isArray(data) && data.length > 0) {
-                return data[0];
-            }
-            return { is_valid: false };
-        } catch (err) {
-            console.warn('[TixoraAuth] verifyReferralCode error:', err);
-            return { is_valid: false };
-        }
+    async function verifyReferralCode() {
+        return { is_valid: false, disabled: true };
     }
 
     /**

@@ -10,9 +10,32 @@
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Non-exposed private schema for internal SECURITY DEFINER helpers & triggers
+CREATE SCHEMA IF NOT EXISTS private;
+REVOKE ALL ON SCHEMA private FROM PUBLIC;
+GRANT USAGE ON SCHEMA private TO anon, authenticated, service_role;
+
+-- Harden default function privileges in public so new functions are never accidentally executable by anon/PUBLIC
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC, anon, authenticated;
+
 -- ----------------------------------------------------------------------------
 -- CLEANUP / RESET EXISTING OBJECTS
 -- ----------------------------------------------------------------------------
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP FUNCTION IF EXISTS public.verify_referral_code(TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.get_promoter_profile_parameterized(UUID, TEXT) CASCADE;
+DROP FUNCTION IF EXISTS public.get_orders_parameterized(INT, INT, INT) CASCADE;
+DROP FUNCTION IF EXISTS public.get_commissions_parameterized(INT, INT, INT) CASCADE;
+DROP FUNCTION IF EXISTS public.get_payouts_parameterized(INT, INT, INT) CASCADE;
+DROP FUNCTION IF EXISTS public.trg_fn_protect_promoter_privileged_cols() CASCADE;
+DROP FUNCTION IF EXISTS public.trg_fn_update_promoter_tier() CASCADE;
+DROP FUNCTION IF EXISTS public.handle_new_auth_user() CASCADE;
+DROP FUNCTION IF EXISTS public.is_admin() CASCADE;
+DROP FUNCTION IF EXISTS private.trg_fn_protect_promoter_privileged_cols() CASCADE;
+DROP FUNCTION IF EXISTS private.trg_fn_update_promoter_tier() CASCADE;
+DROP FUNCTION IF EXISTS private.handle_new_auth_user() CASCADE;
+DROP FUNCTION IF EXISTS private.is_admin() CASCADE;
+
 DROP VIEW IF EXISTS v_recent_upi_settlements CASCADE;
 DROP VIEW IF EXISTS v_promoter_performance CASCADE;
 DROP VIEW IF EXISTS v_active_lineup_vault CASCADE;
@@ -298,8 +321,8 @@ ORDER BY u.created_at DESC;
 -- 3. FUNCTIONS & TRIGGERS (SECURE SEARCH PATH & ACCESS RESTRICTIONS)
 -- ============================================================================
 
--- Function 1: Promoter Tier Progression
-CREATE OR REPLACE FUNCTION public.trg_fn_update_promoter_tier()
+-- Function 1: Promoter Tier Progression (isolated in non-exposed private schema)
+CREATE OR REPLACE FUNCTION private.trg_fn_update_promoter_tier()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -333,14 +356,16 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION private.trg_fn_update_promoter_tier() FROM PUBLIC, anon, authenticated;
+
 DROP TRIGGER IF EXISTS trg_update_promoter_tier ON promoter_commissions;
 CREATE TRIGGER trg_update_promoter_tier
 AFTER INSERT ON promoter_commissions
 FOR EACH ROW
-EXECUTE FUNCTION public.trg_fn_update_promoter_tier();
+EXECUTE FUNCTION private.trg_fn_update_promoter_tier();
 
--- Function 2: New Auth User Profile Linking
-CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
+-- Function 2: New Auth User Profile Linking (isolated in non-exposed private schema)
+CREATE OR REPLACE FUNCTION private.handle_new_auth_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -354,14 +379,13 @@ BEGIN
 END;
 $$;
 
--- Revoke public execution of internal auth trigger function
-REVOKE EXECUTE ON FUNCTION public.handle_new_auth_user() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION private.handle_new_auth_user() FROM PUBLIC, anon, authenticated;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
 AFTER INSERT ON auth.users
 FOR EACH ROW
-EXECUTE FUNCTION public.handle_new_auth_user();
+EXECUTE FUNCTION private.handle_new_auth_user();
 
 -- Function 3: Assign Admin Role (Locked down to service_role)
 CREATE OR REPLACE FUNCTION public.assign_admin_role(target_user_id UUID)
@@ -377,16 +401,16 @@ BEGIN
 END;
 $$;
 
-REVOKE EXECUTE ON FUNCTION public.assign_admin_role(UUID) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.assign_admin_role(UUID) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.assign_admin_role(UUID) TO service_role;
 
--- Function 4: Admin Role Helper (SECURITY DEFINER breaks user_roles RLS recursion cleanly)
-CREATE OR REPLACE FUNCTION public.is_admin()
+-- Function 4: Admin Role Helper (Non-exposed private schema; breaks user_roles RLS recursion cleanly)
+CREATE OR REPLACE FUNCTION private.is_admin()
 RETURNS BOOLEAN
 LANGUAGE sql
 STABLE
 SECURITY DEFINER
-SET search_path = public, pg_temp
+SET search_path = public, auth, pg_temp
 AS $$
   SELECT COALESCE(LOWER(auth.jwt() ->> 'email'), '') = 'admin@tixora.live'
     OR COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', '') IN ('admin', 'manager')
@@ -396,21 +420,22 @@ AS $$
     );
 $$;
 
-GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated, service_role;
+REVOKE ALL ON FUNCTION private.is_admin() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION private.is_admin() TO anon, authenticated, service_role;
 
 
--- Function 5: Protect Privileged Promoter Columns Against Self-Modification
-CREATE OR REPLACE FUNCTION public.trg_fn_protect_promoter_privileged_cols()
+-- Function 5: Protect Privileged Promoter Columns Against Self-Modification (private schema)
+CREATE OR REPLACE FUNCTION private.trg_fn_protect_promoter_privileged_cols()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, pg_temp
+SET search_path = public, auth, pg_temp
 AS $$
 BEGIN
     -- Allow backend/service_role triggers and authenticated admins
     IF COALESCE(current_setting('role', true), '') = 'service_role'
        OR COALESCE(auth.role(), '') = 'service_role'
-       OR public.is_admin() THEN
+       OR private.is_admin() THEN
         RETURN NEW;
     END IF;
 
@@ -432,11 +457,13 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION private.trg_fn_protect_promoter_privileged_cols() FROM PUBLIC, anon, authenticated;
+
 DROP TRIGGER IF EXISTS trg_protect_promoter_privileged_cols ON promoters;
 CREATE TRIGGER trg_protect_promoter_privileged_cols
 BEFORE UPDATE ON promoters
 FOR EACH ROW
-EXECUTE FUNCTION public.trg_fn_protect_promoter_privileged_cols();
+EXECUTE FUNCTION private.trg_fn_protect_promoter_privileged_cols();
 
 
 -- ============================================================================
@@ -465,52 +492,52 @@ ALTER TABLE cookie_consent_records ENABLE ROW LEVEL SECURITY;
 -- 4.1: User Roles
 CREATE POLICY "Users can read own role" ON user_roles
   FOR SELECT TO authenticated
-  USING (user_id = (SELECT auth.uid()) OR (SELECT public.is_admin()));
+  USING (user_id = (SELECT auth.uid()) OR (SELECT private.is_admin()));
 
-CREATE POLICY "Admin insert user_roles" ON user_roles FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update user_roles" ON user_roles FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete user_roles" ON user_roles FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert user_roles" ON user_roles FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update user_roles" ON user_roles FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete user_roles" ON user_roles FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.2: Promoter Tiers (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read promoter_tiers" ON promoter_tiers FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin insert promoter_tiers" ON promoter_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update promoter_tiers" ON promoter_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete promoter_tiers" ON promoter_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert promoter_tiers" ON promoter_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update promoter_tiers" ON promoter_tiers FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete promoter_tiers" ON promoter_tiers FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.3: Venues (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read venues" ON venues FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin insert venues" ON venues FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update venues" ON venues FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete venues" ON venues FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert venues" ON venues FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update venues" ON venues FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete venues" ON venues FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.4: Artists (Catalog: Public Read, Admin Write)
 CREATE POLICY "Public Read artists" ON artists FOR SELECT TO anon, authenticated USING (true);
-CREATE POLICY "Admin insert artists" ON artists FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update artists" ON artists FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete artists" ON artists FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert artists" ON artists FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update artists" ON artists FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete artists" ON artists FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.5: Events (Catalog: Public Read active/admin, Admin Write)
-CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR (SELECT public.is_admin()));
-CREATE POLICY "Admin insert events" ON events FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update events" ON events FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete events" ON events FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Public Read events" ON events FOR SELECT TO anon, authenticated USING (status = 'active' OR (SELECT private.is_admin()));
+CREATE POLICY "Admin insert events" ON events FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update events" ON events FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete events" ON events FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.6: Ticket Tiers (Catalog: Public Read active/admin, Admin Write)
-CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR (SELECT public.is_admin()));
-CREATE POLICY "Admin insert ticket_tiers" ON ticket_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update ticket_tiers" ON ticket_tiers FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Public Read ticket_tiers" ON ticket_tiers FOR SELECT TO anon, authenticated USING (is_active = true OR (SELECT private.is_admin()));
+CREATE POLICY "Admin insert ticket_tiers" ON ticket_tiers FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update ticket_tiers" ON ticket_tiers FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete ticket_tiers" ON ticket_tiers FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.7: Promoters (Strict Multi-Tenant Data Privacy & Anti-Escalation)
 CREATE POLICY "Promoters read own profile only" ON promoters FOR SELECT TO authenticated
   USING (
     user_id = (SELECT auth.uid())
     OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
 CREATE POLICY "Register or insert promoters" ON promoters FOR INSERT TO authenticated
   WITH CHECK (
-    (SELECT public.is_admin())
+    (SELECT private.is_admin())
     OR (
       user_id = (SELECT auth.uid())
       AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
@@ -527,31 +554,31 @@ CREATE POLICY "Update promoters" ON promoters FOR UPDATE TO authenticated
   USING (
     user_id = (SELECT auth.uid())
     OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   )
   WITH CHECK (
     user_id = (SELECT auth.uid())
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
-CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin delete promoters" ON promoters FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.8: Attendees (Strict Data Privacy: Attendees read own record only, Admin Read All)
 CREATE POLICY "Users read own attendee profile only" ON attendees FOR SELECT TO authenticated
   USING (
     LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
 CREATE POLICY "Create attendees" ON attendees FOR INSERT TO anon, authenticated
   WITH CHECK (
-    (SELECT public.is_admin())
+    (SELECT private.is_admin())
     OR (
       full_name IS NOT NULL AND length(trim(full_name)) >= 2
       AND email IS NOT NULL AND length(trim(email)) > 3
       AND mobile_number IS NOT NULL AND length(trim(mobile_number)) >= 10
     )
   );
-CREATE POLICY "Admin update attendees" ON attendees FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete attendees" ON attendees FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin update attendees" ON attendees FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete attendees" ON attendees FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.9: Orders (Strict Data Privacy & Anti-Price-Tampering)
 CREATE POLICY "Read own orders only" ON orders FOR SELECT TO authenticated
@@ -564,11 +591,11 @@ CREATE POLICY "Read own orders only" ON orders FOR SELECT TO authenticated
     OR attendee_id IN (
       SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
     )
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
 CREATE POLICY "Create orders" ON orders FOR INSERT TO authenticated
   WITH CHECK (
-    (SELECT public.is_admin())
+    (SELECT private.is_admin())
     OR (
       order_number IS NOT NULL AND length(trim(order_number)) > 0
       AND quantity BETWEEN 1 AND 10
@@ -581,8 +608,8 @@ CREATE POLICY "Create orders" ON orders FOR INSERT TO authenticated
       AND (promoter_id IS NULL OR promoter_id IN (SELECT id FROM promoters WHERE user_id = (SELECT auth.uid())))
     )
   );
-CREATE POLICY "Admin update orders" ON orders FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete orders" ON orders FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin update orders" ON orders FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete orders" ON orders FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.10: Issued Passes (Strict Data Privacy: Users only read own passes or referred passes)
 CREATE POLICY "Read own passes only" ON issued_passes FOR SELECT TO authenticated
@@ -598,11 +625,11 @@ CREATE POLICY "Read own passes only" ON issued_passes FOR SELECT TO authenticate
           SELECT id FROM attendees WHERE LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
         )
     )
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
-CREATE POLICY "Admin insert issued_passes" ON issued_passes FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update issued_passes" ON issued_passes FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete issued_passes" ON issued_passes FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert issued_passes" ON issued_passes FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update issued_passes" ON issued_passes FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete issued_passes" ON issued_passes FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.11: Promoter Commissions (Strict Data Privacy: Promoters read own commissions only)
 CREATE POLICY "Promoters read own commissions only" ON promoter_commissions FOR SELECT TO authenticated
@@ -612,11 +639,11 @@ CREATE POLICY "Promoters read own commissions only" ON promoter_commissions FOR 
       WHERE user_id = (SELECT auth.uid())
          OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
     )
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
-CREATE POLICY "Admin insert promoter_commissions" ON promoter_commissions FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update promoter_commissions" ON promoter_commissions FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete promoter_commissions" ON promoter_commissions FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert promoter_commissions" ON promoter_commissions FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update promoter_commissions" ON promoter_commissions FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete promoter_commissions" ON promoter_commissions FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.12: UPI Payout Logs (Strict Data Privacy: Promoters read own payouts only)
 CREATE POLICY "Promoters read own upi payouts only" ON upi_payout_logs FOR SELECT TO authenticated
@@ -626,14 +653,14 @@ CREATE POLICY "Promoters read own upi payouts only" ON upi_payout_logs FOR SELEC
       WHERE user_id = (SELECT auth.uid())
          OR (user_id IS NULL AND LOWER(email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), '')))
     )
-    OR (SELECT public.is_admin())
+    OR (SELECT private.is_admin())
   );
-CREATE POLICY "Admin insert upi_payout_logs" ON upi_payout_logs FOR INSERT TO authenticated WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin update upi_payout_logs" ON upi_payout_logs FOR UPDATE TO authenticated USING ((SELECT public.is_admin())) WITH CHECK ((SELECT public.is_admin()));
-CREATE POLICY "Admin delete upi_payout_logs" ON upi_payout_logs FOR DELETE TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin insert upi_payout_logs" ON upi_payout_logs FOR INSERT TO authenticated WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin update upi_payout_logs" ON upi_payout_logs FOR UPDATE TO authenticated USING ((SELECT private.is_admin())) WITH CHECK ((SELECT private.is_admin()));
+CREATE POLICY "Admin delete upi_payout_logs" ON upi_payout_logs FOR DELETE TO authenticated USING ((SELECT private.is_admin()));
 
 -- 4.13: Gate Turnstile Logs (Admin Read, Scanner Insert)
-CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read gate logs" ON gate_verification_logs FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO anon, authenticated
   WITH CHECK (
     gate_name IS NOT NULL AND length(trim(gate_name)) > 0
@@ -641,42 +668,17 @@ CREATE POLICY "Public insert gate logs" ON gate_verification_logs FOR INSERT TO 
   );
 
 -- 4.14: Anti Scalping Shield (Admin Read, Engine Insert)
-CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read anti scalping" ON anti_scalping_events FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 CREATE POLICY "Public insert anti scalping" ON anti_scalping_events FOR INSERT TO anon, authenticated
   WITH CHECK (event_type IS NOT NULL AND length(trim(event_type)) > 0);
 
 -- 4.15: Cookie Consent Records (Admin Read, Public Insert)
-CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT public.is_admin()));
+CREATE POLICY "Admin read cookie consent" ON cookie_consent_records FOR SELECT TO authenticated USING ((SELECT private.is_admin()));
 CREATE POLICY "Public insert cookie consent" ON cookie_consent_records FOR INSERT TO anon, authenticated
   WITH CHECK (consent_type IS NOT NULL);
 
--- 4.16: Safe Referral Code Verification Function (Zero PII Leakage)
-CREATE OR REPLACE FUNCTION public.verify_referral_code(code_input TEXT)
-RETURNS TABLE (
-    is_valid BOOLEAN,
-    referral_code TEXT,
-    promoter_first_name TEXT
-)
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT 
-        true AS is_valid,
-        p.referral_code,
-        split_part(trim(p.full_name), ' ', 1) AS promoter_first_name
-    FROM promoters p
-    WHERE LOWER(p.referral_code) = LOWER(trim(code_input))
-      AND p.kyc_status = 'verified'
-    LIMIT 1;
-END;
-$$;
-
-GRANT EXECUTE ON FUNCTION public.verify_referral_code(TEXT) TO anon, authenticated;
-
--- 4.17: Parameterized Query Procedure: Fetch Promoter Profile with Multi-Tenant Clearance
+-- 4.16: Parameterized Query Procedure: Fetch Promoter Profile with Multi-Tenant Clearance
+-- Runs under SECURITY INVOKER so table RLS and auth.uid()/auth.jwt() checks enforce isolation natively.
 CREATE OR REPLACE FUNCTION public.get_promoter_profile_parameterized(
     p_user_id UUID DEFAULT NULL,
     p_email TEXT DEFAULT NULL
@@ -698,13 +700,13 @@ RETURNS TABLE (
     total_earnings NUMERIC(12,2)
 )
 LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
+SECURITY INVOKER
+SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
     v_calling_email TEXT := LOWER(TRIM(auth.jwt() ->> 'email'));
-    v_is_admin BOOLEAN := public.is_admin();
+    v_is_admin BOOLEAN := private.is_admin();
 BEGIN
     -- Strict Multi-Tenant Authorization Check
     IF NOT v_is_admin THEN
@@ -747,9 +749,10 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION public.get_promoter_profile_parameterized(UUID, TEXT) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.get_promoter_profile_parameterized(UUID, TEXT) TO authenticated, service_role;
 
--- 4.18: Parameterized Query Procedure: Fetch Orders for Promoter
+-- 4.17: Parameterized Query Procedure: Fetch Orders for Promoter (SECURITY INVOKER)
 CREATE OR REPLACE FUNCTION public.get_orders_parameterized(
     p_promoter_id INT DEFAULT NULL,
     p_limit INT DEFAULT 50,
@@ -770,13 +773,13 @@ RETURNS TABLE (
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
+SECURITY INVOKER
+SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
     v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
-    v_is_admin BOOLEAN := public.is_admin();
+    v_is_admin BOOLEAN := private.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF p_promoter_id IS NULL OR NOT EXISTS (
@@ -811,9 +814,10 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION public.get_orders_parameterized(INT, INT, INT) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.get_orders_parameterized(INT, INT, INT) TO authenticated, service_role;
 
--- 4.19: Parameterized Query Procedure: Fetch Commissions for Promoter
+-- 4.18: Parameterized Query Procedure: Fetch Commissions for Promoter (SECURITY INVOKER)
 CREATE OR REPLACE FUNCTION public.get_commissions_parameterized(
     p_promoter_id INT,
     p_limit INT DEFAULT 50,
@@ -830,13 +834,13 @@ RETURNS TABLE (
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
+SECURITY INVOKER
+SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
     v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
-    v_is_admin BOOLEAN := public.is_admin();
+    v_is_admin BOOLEAN := private.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF NOT EXISTS (
@@ -865,9 +869,10 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION public.get_commissions_parameterized(INT, INT, INT) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.get_commissions_parameterized(INT, INT, INT) TO authenticated, service_role;
 
--- 4.20: Parameterized Query Procedure: Fetch UPI Payout Logs for Promoter
+-- 4.19: Parameterized Query Procedure: Fetch UPI Payout Logs for Promoter (SECURITY INVOKER)
 CREATE OR REPLACE FUNCTION public.get_payouts_parameterized(
     p_promoter_id INT,
     p_limit INT DEFAULT 50,
@@ -883,13 +888,13 @@ RETURNS TABLE (
     created_at TIMESTAMPTZ
 )
 LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public
+SECURITY INVOKER
+SET search_path = public, auth, pg_temp
 AS $$
 DECLARE
     v_calling_user_id UUID := auth.uid();
     v_calling_email TEXT := LOWER(TRIM(COALESCE(auth.jwt() ->> 'email', '')));
-    v_is_admin BOOLEAN := public.is_admin();
+    v_is_admin BOOLEAN := private.is_admin();
 BEGIN
     IF NOT v_is_admin THEN
         IF NOT EXISTS (
@@ -917,6 +922,7 @@ BEGIN
 END;
 $$;
 
+REVOKE ALL ON FUNCTION public.get_payouts_parameterized(INT, INT, INT) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.get_payouts_parameterized(INT, INT, INT) TO authenticated, service_role;
 
 
@@ -1130,7 +1136,7 @@ BEGIN
 END;
 $$;
 
-REVOKE EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.create_secure_admin(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) TO service_role;
 
 -- ============================================================================
@@ -1160,7 +1166,8 @@ CREATE POLICY "Deny all public reads on reset tokens"
     ON public.password_reset_tokens
     FOR ALL
     TO anon, authenticated
-    USING (false);
+    USING (false)
+    WITH CHECK (false);
 
 -- Cryptographic Stored Procedure to Create Expiring Single-Use Reset Token (15 min validity)
 CREATE OR REPLACE FUNCTION public.create_password_reset_token(
@@ -1173,7 +1180,7 @@ CREATE OR REPLACE FUNCTION public.create_password_reset_token(
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, extensions
+SET search_path = public, extensions, pg_temp
 AS $$
 DECLARE
     v_clean_email TEXT := LOWER(TRIM(p_email));
@@ -1218,7 +1225,7 @@ CREATE OR REPLACE FUNCTION public.consume_password_reset_token(
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path = public, extensions
+SET search_path = public, extensions, auth, pg_temp
 AS $$
 DECLARE
     v_token_record RECORD;
@@ -1283,8 +1290,8 @@ BEGIN
 END;
 $$;
 
-REVOKE EXECUTE ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, TEXT, INT) FROM PUBLIC, anon;
-REVOKE EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, TEXT, INT) FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.create_password_reset_token(TEXT, TEXT, TEXT, TEXT, INT) TO service_role;
 GRANT EXECUTE ON FUNCTION public.consume_password_reset_token(TEXT, TEXT) TO service_role;
 
