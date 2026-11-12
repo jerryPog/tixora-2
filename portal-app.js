@@ -552,7 +552,7 @@
                 artist: ev.artist_name || ev.title,
                 city: venueCity,
                 venue: venueName,
-                date: ev.event_date ? String(ev.event_date).slice(0, 16) : '2026 Live Date',
+                date: ev.event_date ? String(ev.event_date).slice(0, 16) : 'Upcoming Live Date',
                 poster: ev.poster_url || 'posters/anyma-aeden-poster-1.webp',
                 featured: Boolean(ev.is_featured),
                 tiers
@@ -641,7 +641,7 @@
                   <span>${escapeHtml(ev.date)}</span>
                 </div>
                 <h3 class="tour-card-title">${escapeHtml(ev.title)}</h3>
-                <p class="tour-card-desc">${escapeHtml(baseTier.name)} allocation ready &bull; Instant gate QR &amp; sub-60s UPI cut.</p>
+                <p class="tour-card-desc">${escapeHtml(baseTier.name)} pass &bull; Live QR entry &amp; instant UPI payout.</p>
               </div>
 
               <div class="tour-card-footer">
@@ -893,7 +893,7 @@
       tbody.innerHTML = `
         <tr>
           <td colspan="6" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
-            No UPI payouts dispatched yet. Settlements appear here once passes clear the gate.
+            No UPI payouts yet. Payouts appear here once passes clear the gate.
           </td>
         </tr>
       `;
@@ -918,7 +918,7 @@
             <td class="font-bold text-white">${escapeHtml(p.payout_ref || p.id || 'PAY-01')}</td>
             <td class="text-[var(--crimson-ink)]">${escapeHtml(p.upi_id || (_activePromoter && _activePromoter.upi_id) || 'user@upi')}</td>
             <td class="tabular-nums font-bold text-[var(--emerald-ink)]">₹${Number(p.amount || 0).toLocaleString('en-IN')}</td>
-            <td class="text-[var(--muted)]">${escapeHtml(p.utr_number || p.utr || 'NPCI-AUTO')}</td>
+            <td class="text-[var(--muted)]">${escapeHtml(p.utr_number || p.utr || 'AUTO-UPI')}</td>
             <td class="text-[var(--muted)] whitespace-nowrap">${escapeHtml(dt)}</td>
             <td><span class="${badgeClass} px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">${escapeHtml(p.status || 'Settled')}</span></td>
           </tr>
@@ -1000,7 +1000,7 @@
       if (accountUpi) accountUpi.textContent = res.upi_id;
       if (idCardUpi) idCardUpi.textContent = res.upi_id;
       input.value = res.upi_id;
-      showToast('Settlement UPI updated to ' + res.upi_id);
+      showToast('Payout UPI ID updated to ' + res.upi_id);
     } catch (err) {
       showToast(err.message || 'Invalid UPI ID format');
     } finally {

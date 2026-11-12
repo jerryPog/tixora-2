@@ -41,7 +41,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="editorial.css?v=5">
 
     <script src="https://unpkg.com/lucide@latest" defer></script>
@@ -59,7 +61,7 @@
             <div class="ops-spinner mx-auto" role="status" aria-label="Loading promoter events"></div>
             <div class="space-y-1">
                 <div class="font-bold text-[var(--ink)] text-sm">Opening Events Portal</div>
-                <div class="text-xs font-mono text-[var(--muted)]">Checking promoter clearance</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Checking your account...</div>
             </div>
         </div>
     </div>
@@ -109,7 +111,8 @@
                     </button>
 
                     <button type="button" onclick="togglePortalMobileMenu()" id="mobile-menu-btn" class="nav-menu-btn"
-                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false" aria-controls="mobile-nav-menu">
+                        aria-label="Toggle Promoter Navigation Menu" aria-expanded="false"
+                        aria-controls="mobile-nav-menu">
                         <span>Menu</span>
                         <i data-lucide="menu" class="w-4 h-4"></i>
                     </button>
@@ -126,7 +129,8 @@
                     <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
                 </div>
                 <div class="mobile-nav-footer">
-                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);" class="btn-editorial-outline-light">
+                    <button type="button" onclick="copyPromoterId(); togglePortalMobileMenu(false);"
+                        class="btn-editorial-outline-light">
                         ID: <span id="mobile-promoter-id" class="font-mono text-[var(--crimson-ink)]">TIX-PROMO</span>
                     </button>
                     <button type="button" onclick="handlePortalSignOut()" class="btn-editorial-primary">
@@ -143,7 +147,8 @@
                 <div class="hero-backdrop" aria-hidden="true">
                     <picture>
                         <source srcset="posters/anyma-aeden-poster-1.webp" type="image/webp">
-                        <img src="posters/anyma-aeden-poster-1.jpg" alt="" width="1600" height="900" fetchpriority="high">
+                        <img src="posters/anyma-aeden-poster-1.jpg" alt="" width="1600" height="900"
+                            fetchpriority="high">
                     </picture>
                     <div class="hero-scrim"></div>
                 </div>
@@ -165,7 +170,8 @@
                             </h1>
 
                             <p class="hero-desc">
-                                Browse official 2026 concert tours and reserve verified client passes directly under your Promoter ID with sub-60s UPI settlement.
+                                Browse official concert tours and book verified passes under your Promoter ID with
+                                instant UPI payouts.
                             </p>
 
                             <div class="hero-actions">
@@ -183,7 +189,8 @@
                             <div class="hero-pass-head">
                                 <div>
                                     <span class="hero-pass-sub">Spotlight Allocation</span>
-                                    <div id="events-featured-title" class="hero-pass-title">Anyma Presents Genesys Live</div>
+                                    <div id="events-featured-title" class="hero-pass-title">Anyma Presents Genesys Live
+                                    </div>
                                 </div>
                                 <span class="hero-pass-badge">High Yield</span>
                             </div>
@@ -191,7 +198,8 @@
                                 <img id="events-featured-img" src="posters/anyma-aeden-poster-1.webp"
                                     alt="Anyma Presents Genesys Live" width="640" height="360">
                                 <div class="hero-pass-caption">
-                                    <span id="events-featured-venue" class="hero-pass-venue">Mahalaxmi Racecourse, Mumbai</span>
+                                    <span id="events-featured-venue" class="hero-pass-venue">Mahalaxmi Racecourse,
+                                        Mumbai</span>
                                     <span id="events-featured-cut" class="hero-pass-cut">Earn ₹490 / pass (14%)</span>
                                 </div>
                             </div>
@@ -200,7 +208,8 @@
                                     <span>Starting Face Value</span>
                                     <span id="events-featured-mrp" class="hero-pass-val tabular-nums">₹3,499</span>
                                 </div>
-                                <button type="button" id="events-featured-btn" onclick="openPortalBookModal('anyma-genesys-mumbai-2026')"
+                                <button type="button" id="events-featured-btn"
+                                    onclick="openPortalBookModal('anyma-genesys-mumbai-2026')"
                                     class="btn-editorial-primary w-full">
                                     <i data-lucide="ticket" class="w-4 h-4"></i>
                                     <span>Reserve Client Pass</span>
@@ -217,8 +226,8 @@
 
                     <div class="flex flex-wrap items-end justify-between gap-4">
                         <div class="space-y-1">
-                            <span class="eyebrow">Active Concert Inventory</span>
-                            <h2 id="events-list-heading" class="section-h2">Live 2026 India Events</h2>
+                            <span class="eyebrow">Official Lineup</span>
+                            <h2 id="events-list-heading" class="section-h2">Live India Events</h2>
                         </div>
                         <p id="promo-events-count" class="text-xs font-mono text-[var(--muted)] tabular-nums">
                             Showing 8 of 8 Events
@@ -229,12 +238,14 @@
                         <div class="flex flex-wrap items-center justify-between gap-3 w-full">
                             <div class="search-input-wrap">
                                 <i data-lucide="search" class="w-4 h-4 search-input-icon" aria-hidden="true"></i>
-                                <label for="promo-events-search" class="visually-hidden">Search events by artist, city, or venue</label>
+                                <label for="promo-events-search" class="visually-hidden">Search events by artist, city,
+                                    or venue</label>
                                 <input id="promo-events-search" type="search" oninput="filterPortalEvents()"
                                     autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search"
                                     placeholder="Search artist, venue, or city..." class="search-input-field">
                             </div>
-                            <button type="button" onclick="resetPortalEventFilters()" class="btn-editorial-outline-light btn-compact">
+                            <button type="button" onclick="resetPortalEventFilters()"
+                                class="btn-editorial-outline-light btn-compact">
                                 Reset Filters
                             </button>
                         </div>
@@ -242,14 +253,14 @@
                         <div class="city-chip-group w-full" role="group" aria-label="Filter events by city">
                             <button type="button" class="city-filter-btn is-active" data-portal-city="all"
                                 aria-pressed="true" onclick="setPortalCityFilter('all')">All (8)</button>
-                            <button type="button" class="city-filter-btn" data-portal-city="mumbai"
-                                aria-pressed="false" onclick="setPortalCityFilter('mumbai')">Mumbai (3)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="mumbai" aria-pressed="false"
+                                onclick="setPortalCityFilter('mumbai')">Mumbai (3)</button>
                             <button type="button" class="city-filter-btn" data-portal-city="new delhi"
                                 aria-pressed="false" onclick="setPortalCityFilter('new delhi')">New Delhi (2)</button>
                             <button type="button" class="city-filter-btn" data-portal-city="bengaluru"
                                 aria-pressed="false" onclick="setPortalCityFilter('bengaluru')">Bengaluru (1)</button>
-                            <button type="button" class="city-filter-btn" data-portal-city="goa"
-                                aria-pressed="false" onclick="setPortalCityFilter('goa')">Goa (1)</button>
+                            <button type="button" class="city-filter-btn" data-portal-city="goa" aria-pressed="false"
+                                onclick="setPortalCityFilter('goa')">Goa (1)</button>
                             <button type="button" class="city-filter-btn" data-portal-city="chandigarh"
                                 aria-pressed="false" onclick="setPortalCityFilter('chandigarh')">Chandigarh (1)</button>
                         </div>
@@ -259,7 +270,8 @@
 
                     <div id="promo-events-empty" class="hidden ops-card p-8 text-center space-y-3">
                         <div class="text-sm font-bold text-white">No events match your current filter.</div>
-                        <button type="button" onclick="resetPortalEventFilters()" class="btn-editorial-primary btn-compact mx-auto">
+                        <button type="button" onclick="resetPortalEventFilters()"
+                            class="btn-editorial-primary btn-compact mx-auto">
                             Show All 8 Events
                         </button>
                     </div>
@@ -270,7 +282,8 @@
         <footer class="site-footer" role="contentinfo">
             <div class="editorial-container">
                 <div class="footer-bottom">
-                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div>&copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. | Promoter
+                        Partner Network</div>
                     <div class="flex flex-wrap gap-4">
                         <a href="/portal">Events</a>
                         <a href="/dashboard">Dashboard</a>
@@ -287,12 +300,14 @@
     <div id="portal-book-modal" class="modal-backdrop hidden opacity-0" role="dialog" aria-modal="true"
         aria-labelledby="portal-book-title">
         <div class="modal-card space-y-4">
-            <button type="button" onclick="closePortalModal('portal-book-modal')" class="modal-close-btn" aria-label="Close booking dialog">
+            <button type="button" onclick="closePortalModal('portal-book-modal')" class="modal-close-btn"
+                aria-label="Close booking dialog">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="modal-dark-banner">
                 <div>
-                    <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Direct Promoter Reservation</div>
+                    <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Direct
+                        Promoter Reservation</div>
                     <h2 id="portal-book-title" class="text-lg font-bold text-white">Event Allocation</h2>
                     <p id="portal-book-meta" class="text-xs text-[var(--muted)]">Venue &bull; Date</p>
                 </div>
@@ -302,7 +317,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="book-tier-select" class="modal-field-label">Pass Tier</label>
-                        <select id="book-tier-select" onchange="updatePortalBookingSummary()" class="modal-input"></select>
+                        <select id="book-tier-select" onchange="updatePortalBookingSummary()"
+                            class="modal-input"></select>
                     </div>
                     <div>
                         <label for="book-qty-select" class="modal-field-label">Quantity</label>
@@ -322,15 +338,18 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="book-cust-phone" class="modal-field-label">WhatsApp Number</label>
-                        <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223" class="modal-input">
+                        <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223"
+                            class="modal-input">
                     </div>
                     <div>
                         <label for="book-cust-email" class="modal-field-label">Ticket Delivery Email</label>
-                        <input id="book-cust-email" type="email" required placeholder="guest@example.com" class="modal-input">
+                        <input id="book-cust-email" type="email" required placeholder="guest@example.com"
+                            class="modal-input">
                     </div>
                 </div>
 
-                <div class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1.5 text-xs font-mono">
+                <div
+                    class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1.5 text-xs font-mono">
                     <div class="flex justify-between">
                         <span class="text-[var(--muted)]">Promoter Attribution</span>
                         <span id="book-promo-id" class="font-bold text-white">TIX-PROMO</span>
@@ -340,7 +359,7 @@
                         <span id="book-total-mrp" class="font-bold text-white tabular-nums">₹0</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-[var(--muted)]">Estimated Promoter Cut</span>
+                        <span class="text-[var(--muted)]">Estimated Earnings</span>
                         <span id="book-est-cut" class="font-bold text-[var(--emerald-ink)] tabular-nums">+₹0</span>
                     </div>
                 </div>
@@ -354,7 +373,8 @@
     </div>
 
     <!-- TOAST -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toast"
+        class="fixed bottom-5 right-5 z-50 bg-[#1d1d21] border border-[#ef4444] text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold font-mono transform translate-y-36 opacity-0 transition-all duration-300 pointer-events-none">
         <i data-lucide="check-circle-2" class="w-4 h-4 text-[#ef4444]"></i>
         <span id="toast-message">Updated</span>
     </div>
@@ -362,4 +382,3 @@
 </body>
 
 </html>
-

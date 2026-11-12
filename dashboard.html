@@ -60,8 +60,8 @@
         <div class="ops-card p-8 text-center space-y-4 max-w-sm w-full">
             <div class="ops-spinner mx-auto" role="status" aria-label="Verifying promoter clearance"></div>
             <div class="space-y-1">
-                <div class="font-bold text-[var(--ink)] text-sm">Checking Clearance</div>
-                <div class="text-xs font-mono text-[var(--muted)]">Verifying session via Supabase</div>
+                <div class="font-bold text-[var(--ink)] text-sm">Loading Dashboard</div>
+                <div class="text-xs font-mono text-[var(--muted)]">Checking your session...</div>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
                 <div>
                     <span class="ops-badge-gold inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">
                         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                        <span>Promoter Network Gateway</span>
+                        <span>Promoter Portal</span>
                     </span>
                 </div>
                 <h1 class="text-2xl font-bold text-[var(--ink)] tracking-tight">Promoter Portal Sign In</h1>
@@ -164,12 +164,12 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="dash-signup-city" class="modal-field-label">Metro Circuit</label>
+                        <label for="dash-signup-city" class="modal-field-label">City</label>
                         <input type="text" id="dash-signup-city" name="city" required autocomplete="address-level2"
                             enterkeyhint="next" placeholder="Mumbai / Delhi NCR / Bengaluru" class="modal-input">
                     </div>
                     <div>
-                        <label for="dash-signup-upi" class="modal-field-label">Settlement UPI ID</label>
+                        <label for="dash-signup-upi" class="modal-field-label">Payout UPI ID</label>
                         <input type="text" id="dash-signup-upi" name="upi" required autocorrect="off"
                             autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
                             class="modal-input font-mono">
@@ -210,7 +210,7 @@
                 </a>
                 <a href="/protocol" class="inline-flex items-center gap-1.5 font-semibold" style="color: var(--crimson-ink);">
                     <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-                    <span>Protocol Architecture</span>
+                    <span>QR Security</span>
                 </a>
             </div>
         </div>
@@ -304,7 +304,7 @@
                             <span id="dash-tier-badge" class="modal-badge-navy font-mono">TIER &bull; SCOUT</span>
                             <h1 id="dash-hero-title" class="hero-h1 hero-h1--subpage">Welcome, Promoter</h1>
                             <p class="hero-desc">
-                                Live pass sales, instant commission yield, and verified NPCI settlement ledger.
+                                Track live pass sales, commission earnings, and direct UPI payouts.
                             </p>
                         </div>
 
@@ -333,7 +333,7 @@
                                 <span class="ops-badge-emerald px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase">KYC &bull; Active Partner</span>
                             </div>
                             <div class="flex flex-wrap items-center gap-3">
-                                <span id="id-card-tier" class="text-xs font-mono font-bold text-[var(--crimson-ink)] uppercase">SCOUT TIER &bull; 8.0% CUT</span>
+                                <span id="id-card-tier" class="text-xs font-mono font-bold text-[var(--crimson-ink)] uppercase">SCOUT TIER</span>
                                 <span class="text-[11px] font-mono text-[var(--muted)]">Member Since <span id="id-card-joined">2026</span></span>
                             </div>
                         </div>
@@ -366,11 +366,11 @@
                                 <span id="id-card-phone" class="text-white font-semibold block">+91 Verified</span>
                             </div>
                             <div class="ops-subcard p-3">
-                                <span class="text-[10px] text-[var(--muted)] uppercase block">Circuit City</span>
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">City</span>
                                 <span id="dash-account-city" class="text-white font-semibold block">Mumbai</span>
                             </div>
                             <div class="ops-subcard p-3">
-                                <span class="text-[10px] text-[var(--muted)] uppercase block">Settlement UPI</span>
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">Payout UPI ID</span>
                                 <span id="id-card-upi" class="text-[var(--emerald-ink)] font-semibold truncate block">user@upi</span>
                             </div>
                         </div>
@@ -381,12 +381,12 @@
                         <div class="ops-card p-5 space-y-1.5">
                             <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Passes Sold</span>
                             <div class="text-2xl font-bold text-white" id="dash-kpi-passes">0</div>
-                            <span class="text-[11px] font-mono text-[var(--emerald-ink)]">Turnstile Verified</span>
+                            <span class="text-[11px] font-mono text-[var(--emerald-ink)]">Gate Verified</span>
                         </div>
                         <div class="ops-card p-5 space-y-1.5">
-                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Gross Pass Volume</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Ticket Value</span>
                             <div class="text-2xl font-bold text-white" id="dash-kpi-volume">₹0.00</div>
-                            <span class="text-[11px] font-mono text-[var(--muted)]">Total MRP attributed</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Total pass MRP</span>
                         </div>
                         <div class="ops-card p-5 space-y-1.5">
                             <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Lifetime Earnings</span>
@@ -396,7 +396,7 @@
                         <div class="ops-card p-5 space-y-1.5">
                             <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Payout Speed</span>
                             <div class="text-2xl font-bold text-[var(--crimson-ink)]">&lt;60s</div>
-                            <span class="text-[11px] font-mono text-[var(--muted)]">NPCI instant transfer</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Direct UPI transfer</span>
                         </div>
                     </div>
 
@@ -405,7 +405,7 @@
                         <div class="p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3">
                             <div>
                                 <h2 class="text-base font-bold text-white">Commission Ledger</h2>
-                                <p class="text-xs text-[var(--muted)]">Attributed pass allocations &amp; live cut status.</p>
+                                <p class="text-xs text-[var(--muted)]">Passes booked or referred under your Promoter ID.</p>
                             </div>
                             <a href="/portal/bookings" class="btn-editorial-outline-light btn-compact">
                                 Full Booking History &rarr;
@@ -434,29 +434,29 @@
                     <div class="ops-card p-6 space-y-4">
                         <div>
                             <h2 class="text-base font-bold text-white">Commission Tier Ladder</h2>
-                            <p class="text-xs text-[var(--muted)]">Your yield upgrades automatically as pass volume crosses milestones.</p>
+                            <p class="text-xs text-[var(--muted)]">Your commission rate upgrades automatically as your pass volume grows.</p>
                         </div>
 
                         <div id="dash-tier-grid" class="editorial-grid-4">
                             <div data-tier="Scout" class="ops-subcard p-4 space-y-1.5">
                                 <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 01 &bull; Scout</div>
                                 <div class="text-2xl font-bold text-white tabular-nums">8.0% Cut</div>
-                                <div class="text-xs text-[var(--muted)]">0 – 25 Passes</div>
+                                <div class="text-xs text-[var(--muted)]">1 – 25 Passes</div>
                             </div>
                             <div data-tier="Capo" class="ops-subcard p-4 space-y-1.5">
                                 <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 02 &bull; Capo</div>
                                 <div class="text-2xl font-bold text-white tabular-nums">11.0% Cut</div>
-                                <div class="text-xs text-[var(--muted)]">26 – 75 Passes</div>
+                                <div class="text-xs text-[var(--muted)]">26 – 100 Passes</div>
                             </div>
                             <div data-tier="Syndicate" class="ops-subcard p-4 space-y-1.5">
                                 <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 03 &bull; Syndicate</div>
                                 <div class="text-2xl font-bold text-white tabular-nums">13.5% Cut</div>
-                                <div class="text-xs text-[var(--muted)]">76 – 200 Passes</div>
+                                <div class="text-xs text-[var(--muted)]">101 – 300 Passes</div>
                             </div>
                             <div data-tier="Patron" class="ops-subcard p-4 space-y-1.5">
                                 <div class="text-xs font-mono text-[var(--muted)] uppercase">Tier 04 &bull; Patron</div>
                                 <div class="text-2xl font-bold text-white tabular-nums">16.0% Cut</div>
-                                <div class="text-xs text-[var(--muted)]">200+ Passes</div>
+                                <div class="text-xs text-[var(--muted)]">300+ Passes</div>
                             </div>
                         </div>
                     </div>
@@ -467,7 +467,7 @@
         <footer class="site-footer" role="contentinfo">
             <div class="editorial-container">
                 <div class="footer-bottom">
-                    <div>&copy; <span id="current-year">2026</span> Tixora Protocol Technologies Pvt. Ltd. | Promoter Partner Network</div>
+                    <div>&copy; <span id="current-year">2026</span> Tixora Technologies Pvt. Ltd. | Promoter Partner Network</div>
                     <div class="flex flex-wrap gap-4">
                         <a href="/portal">Events</a>
                         <a href="/dashboard">Dashboard</a>

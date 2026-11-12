@@ -657,7 +657,7 @@
 
   window.copyPromoterLink = function (eventName) {
     const slug = eventName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const link = `https://tixora.in/p/${slug}?ref=PROMO-${Math.floor(1000 + Math.random() * 9000)}`;
+    const link = `https://tixoralive.vercel.app/?tour=${slug}&ref=PROMO-${Math.floor(1000 + Math.random() * 9000)}`;
     const nameEl = document.getElementById('link-event-name');
     const inputEl = document.getElementById('generated-link-input');
     if (nameEl) nameEl.textContent = eventName;
@@ -861,7 +861,7 @@
       artist: 'Boris Brejcha',
       tour: 'Boris Brejcha In Concert - New Delhi Edition',
       genre: 'High-Tech Minimal Techno',
-      date: 'Friday, 16 January 2026',
+      date: 'Saturday, 16 January 2027',
       timings: 'Doors Open: 6:00 PM • Supporting DJs: 7:00 PM • Boris Brejcha 3-Hour Headliner Set: 9:30 PM – 12:30 AM IST',
       venue: 'Indira Gandhi Indoor Arena, New Delhi',
       mrp: '₹2,799 (GA) • ₹6,499 (VIP Stage Enclosure)',
@@ -887,7 +887,7 @@
       artist: 'Martin Garrix',
       tour: 'Martin Garrix India Arena Tour - Mumbai Special',
       genre: 'EDM / Progressive House / Electro',
-      date: 'Saturday, 20 February 2026',
+      date: 'Saturday, 20 February 2027',
       timings: 'Gates Open: 4:00 PM • STMPD RCRDS Showcase: 5:30 PM • Martin Garrix Headline Show: 8:00 PM – 10:15 PM IST',
       venue: 'DY Patil Stadium, Nerul, Navi Mumbai',
       mrp: '₹3,299 (GA) • ₹6,999 (Arena Gold) • ₹12,999 (VIP Platinum)',
@@ -913,7 +913,7 @@
       artist: 'Dua Lipa',
       tour: 'Dua Lipa - Radical Optimism World Tour India',
       genre: 'Dance-Pop / Nu-Disco',
-      date: 'Sunday, 15 March 2026',
+      date: 'Monday, 15 March 2027',
       timings: 'Gates Open: 4:00 PM • Support Acts: 6:00 PM • Dua Lipa Live on Stage: 8:00 PM – 10:00 PM IST',
       venue: 'MMRDA Grounds, Bandra-Kurla Complex (BKC), Mumbai',
       mrp: '₹4,499 (Silver GA) • ₹9,999 (Gold Pitch) • ₹16,999 (Diamond Lounge)',
@@ -1088,10 +1088,10 @@
 
     if (/payout|upi|settle|withdraw|bank/i.test(clean)) {
       return {
-        title: 'Instant UPI Settlement (<60s)',
+        title: 'Instant UPI Payouts (<60s)',
         answer:
-          '<div class="space-y-1 text-xs">Commissions clear via NPCI direct settlement within <strong>&lt;60 seconds</strong> of venue turnstile scan directly to your registered UPI VPA.</div>',
-        actions: [{ label: 'Register UPI Handle', action: "openModal('promoter-modal')" }]
+          '<div class="space-y-1 text-xs">Commissions transfer directly to your registered UPI ID within <strong>60 seconds</strong> of venue gate entry scan.</div>',
+        actions: [{ label: 'Update Payout UPI ID', action: "openModal('promoter-modal')" }]
       };
     }
 
@@ -1228,7 +1228,7 @@
         if (tierEl)
           tierEl.textContent =
             promoter && promoter.tier_name
-              ? `${promoter.tier_name} Tier (${promoter.commission_rate}% Cut)`
+              ? `${promoter.tier_name} Tier`
               : 'Active Promoter Tier';
         if (refInput && refInput.closest('.space-y-2')) {
           refInput.closest('.space-y-2').classList.add('hidden');
@@ -1541,7 +1541,7 @@
     const btnEl = document.getElementById('hero-featured-btn');
 
     const tiers = Array.isArray(featured.ticket_tiers) ? featured.ticket_tiers : [];
-    const basePrice = Number(tiers[0]?.price || featured.base_price || 4250);
+    const basePrice = Number(tiers[0]?.price || featured.base_price || 3499);
     const cutPct = Number(tiers[0]?.promoter_cut_pct || 14);
     const earnRs = Math.round((basePrice * cutPct) / 100);
     const venueName =
