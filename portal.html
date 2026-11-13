@@ -82,7 +82,7 @@
                     <nav class="desktop-nav" aria-label="Promoter Menu">
                         <a href="/portal" aria-current="page">Events</a>
                         <a href="/dashboard">Dashboard</a>
-                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/wallet">Margin Ledger</a>
                         <a href="/portal/bookings">Booking History</a>
                     </nav>
                 </div>
@@ -123,7 +123,7 @@
                 <div class="mobile-nav-links">
                     <a href="/portal" aria-current="page"><span>Events Home</span><span class="cart-count-pill">8</span></a>
                     <a href="/dashboard"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">SCOUT</span></a>
-                    <a href="/portal/wallet"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/wallet"><span>Margin Ledger</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
                     <a href="/portal/bookings"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
                     <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
                     <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
@@ -171,7 +171,7 @@
 
                             <p class="hero-desc">
                                 Browse official concert tours and book verified passes under your Promoter ID with
-                                instant UPI payouts.
+                                instant upfront discounts (net billing).
                             </p>
 
                             <div class="hero-actions">
@@ -287,7 +287,7 @@
                     <div class="flex flex-wrap gap-4">
                         <a href="/portal">Events</a>
                         <a href="/dashboard">Dashboard</a>
-                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/wallet">Margin Ledger</a>
                         <a href="/portal/bookings">Booking History</a>
                         <a href="/?public=1">Public Site</a>
                     </div>
@@ -307,7 +307,7 @@
             <div class="modal-dark-banner">
                 <div>
                     <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Direct
-                        Promoter Reservation</div>
+                        Promoter Booking &amp; Net Billing</div>
                     <h2 id="portal-book-title" class="text-lg font-bold text-white">Event Allocation</h2>
                     <p id="portal-book-meta" class="text-xs text-[var(--muted)]">Venue &bull; Date</p>
                 </div>
@@ -337,12 +337,12 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="book-cust-phone" class="modal-field-label">WhatsApp Number</label>
+                        <label for="book-cust-phone" class="modal-field-label">Attendee Phone (BookMyShow / District linked)</label>
                         <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223"
                             class="modal-input">
                     </div>
                     <div>
-                        <label for="book-cust-email" class="modal-field-label">Ticket Delivery Email</label>
+                        <label for="book-cust-email" class="modal-field-label">Attendee Email (BookMyShow / District linked)</label>
                         <input id="book-cust-email" type="email" required placeholder="guest@example.com"
                             class="modal-input">
                     </div>
@@ -359,14 +359,22 @@
                         <span id="book-total-mrp" class="font-bold text-white tabular-nums">₹0</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-[var(--muted)]">Estimated Earnings</span>
-                        <span id="book-est-cut" class="font-bold text-[var(--emerald-ink)] tabular-nums">+₹0</span>
+                        <span class="text-[var(--muted)]">Promoter Margin Discount</span>
+                        <span id="book-est-cut" class="font-bold text-[var(--emerald-ink)] tabular-nums">-₹0</span>
+                    </div>
+                    <div class="flex justify-between border-t border-[var(--line)] pt-1.5">
+                        <span class="text-white font-bold">Net Amount to Pay</span>
+                        <span id="book-net-payable" class="font-bold text-[var(--crimson-ink)] tabular-nums">₹0</span>
                     </div>
                 </div>
 
+                <p class="text-[11px] text-[var(--muted)] leading-relaxed">
+                    Official tickets are punched directly to this attendee's mobile &amp; email in BookMyShow or District upon booking.
+                </p>
+
                 <button id="btn-portal-book-submit" type="submit" class="btn-editorial-primary w-full">
                     <i data-lucide="check-circle" class="w-4 h-4"></i>
-                    <span id="btn-portal-book-text">Confirm &amp; Issue Pass</span>
+                    <span id="btn-portal-book-text">Pay Net Amount &amp; Book Pass</span>
                 </button>
             </form>
         </div>

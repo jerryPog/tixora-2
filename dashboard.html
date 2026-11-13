@@ -169,8 +169,8 @@
                             enterkeyhint="next" placeholder="Mumbai / Delhi NCR / Bengaluru" class="modal-input">
                     </div>
                     <div>
-                        <label for="dash-signup-upi" class="modal-field-label">Payout UPI ID</label>
-                        <input type="text" id="dash-signup-upi" name="upi" required autocorrect="off"
+                        <label for="dash-signup-upi" class="modal-field-label">Billing / Payment UPI (Optional)</label>
+                        <input type="text" id="dash-signup-upi" name="upi" autocorrect="off"
                             autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
                             class="modal-input font-mono">
                     </div>
@@ -209,8 +209,8 @@
                     <span>Back to Fan Site</span>
                 </a>
                 <a href="/protocol" class="inline-flex items-center gap-1.5 font-semibold" style="color: var(--crimson-ink);">
-                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-                    <span>QR Security</span>
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i>
+                    <span>How It Works</span>
                 </a>
             </div>
         </div>
@@ -304,7 +304,7 @@
                             <span id="dash-tier-badge" class="modal-badge-navy font-mono">TIER &bull; SCOUT</span>
                             <h1 id="dash-hero-title" class="hero-h1 hero-h1--subpage">Welcome, Promoter</h1>
                             <p class="hero-desc">
-                                Track live pass sales, commission earnings, and direct UPI payouts.
+                                Track live pass sales, upfront commission discounts, and BookMyShow / District ticket punching.
                             </p>
                         </div>
 
@@ -314,7 +314,7 @@
                                 <span>Browse Live Events</span>
                             </a>
                             <a href="/portal/wallet" class="btn-editorial-outline-dark">
-                                Open Wallet
+                                Margin Ledger
                             </a>
                         </div>
                     </div>
@@ -370,7 +370,7 @@
                                 <span id="dash-account-city" class="text-white font-semibold block">Mumbai</span>
                             </div>
                             <div class="ops-subcard p-3">
-                                <span class="text-[10px] text-[var(--muted)] uppercase block">Payout UPI ID</span>
+                                <span class="text-[10px] text-[var(--muted)] uppercase block">Billing Handle</span>
                                 <span id="id-card-upi" class="text-[var(--emerald-ink)] font-semibold truncate block">user@upi</span>
                             </div>
                         </div>
@@ -381,7 +381,7 @@
                         <div class="ops-card p-5 space-y-1.5">
                             <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Passes Sold</span>
                             <div class="text-2xl font-bold text-white" id="dash-kpi-passes">0</div>
-                            <span class="text-[11px] font-mono text-[var(--emerald-ink)]">Gate Verified</span>
+                            <span class="text-[11px] font-mono text-[var(--emerald-ink)]">App Punched</span>
                         </div>
                         <div class="ops-card p-5 space-y-1.5">
                             <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Ticket Value</span>
@@ -389,14 +389,14 @@
                             <span class="text-[11px] font-mono text-[var(--muted)]">Total pass MRP</span>
                         </div>
                         <div class="ops-card p-5 space-y-1.5">
-                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Lifetime Earnings</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Total Margin Saved</span>
                             <div class="text-2xl font-bold text-[var(--emerald-ink)]" id="dash-kpi-earnings">₹0.00</div>
-                            <span class="text-[11px] font-mono text-[var(--muted)]">Settled + pending UPI</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Upfront discount kept</span>
                         </div>
                         <div class="ops-card p-5 space-y-1.5">
-                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Payout Speed</span>
-                            <div class="text-2xl font-bold text-[var(--crimson-ink)]">&lt;60s</div>
-                            <span class="text-[11px] font-mono text-[var(--muted)]">Direct UPI transfer</span>
+                            <span class="text-[11px] font-mono text-[var(--muted)] uppercase">Billing Model</span>
+                            <div class="text-2xl font-bold text-[var(--crimson-ink)]">Instant</div>
+                            <span class="text-[11px] font-mono text-[var(--muted)]">Upfront net discount</span>
                         </div>
                     </div>
 
@@ -421,7 +421,7 @@
                                         <th>Tier</th>
                                         <th>Face Value</th>
                                         <th>Rate</th>
-                                        <th>Commission</th>
+                                        <th>Margin Saved</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>

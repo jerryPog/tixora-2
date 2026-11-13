@@ -464,7 +464,7 @@
                 </div>
 
                 <p class="text-xs text-[var(--muted)] leading-relaxed">
-                    Dynamic QR passes sent to your WhatsApp and email. Synced with BookMyShow.
+                    Official passes punched directly to your BookMyShow / District account, with confirmation sent to your WhatsApp and email.
                 </p>
 
                 <button type="button" onclick="TixoraCart.resetModal()" class="btn-editorial-primary w-full">

@@ -510,7 +510,7 @@
     setEl('events-featured-title', ev.title);
     setEl('events-featured-venue', ev.venue);
     setEl('events-featured-mrp', '₹' + Number(baseTier.price).toLocaleString('en-IN'));
-    setEl('events-featured-cut', `Earn ₹${earnAmt.toLocaleString('en-IN')} / pass (${activeCut}%)`);
+    setEl('events-featured-cut', `Save ₹${earnAmt.toLocaleString('en-IN')} / pass (${activeCut}% Margin)`);
     const imgEl = document.getElementById('events-featured-img');
     if (imgEl && ev.poster) imgEl.src = sanitizeAssetUrl(ev.poster);
     const btnEl = document.getElementById('events-featured-btn');
@@ -641,7 +641,7 @@
                   <span>${escapeHtml(ev.date)}</span>
                 </div>
                 <h3 class="tour-card-title">${escapeHtml(ev.title)}</h3>
-                <p class="tour-card-desc">${escapeHtml(baseTier.name)} pass &bull; Live QR entry &amp; instant UPI payout.</p>
+                <p class="tour-card-desc">${escapeHtml(baseTier.name)} pass &bull; Punched to BookMyShow / District &bull; Upfront promoter discount.</p>
               </div>
 
               <div class="tour-card-footer">
@@ -651,8 +651,8 @@
                     <span class="tour-price-val">₹${Number(baseTier.price).toLocaleString('en-IN')}</span>
                   </div>
                   <div class="text-right">
-                    <span class="tour-price-label">Your Earnings</span>
-                    <span class="tour-price-val" style="color: var(--emerald-ink);">+₹${earnAmt.toLocaleString('en-IN')}/pass</span>
+                    <span class="tour-price-label">Upfront Margin</span>
+                    <span class="tour-price-val" style="color: var(--emerald-ink);">-₹${earnAmt.toLocaleString('en-IN')}/pass</span>
                   </div>
                 </div>
 
@@ -717,11 +717,17 @@
     const rate = Math.max(userCut, Number(tier.cutPct || 12));
     const total = Number(tier.price) * qty;
     const cut = Math.round((total * rate) / 100);
+    const netPayable = Math.max(0, total - cut);
 
     const mrpEl = document.getElementById('book-total-mrp');
     const cutEl = document.getElementById('book-est-cut');
+    const netEl = document.getElementById('book-net-payable');
+    const btnText = document.getElementById('btn-portal-book-text');
+
     if (mrpEl) mrpEl.textContent = '₹' + total.toLocaleString('en-IN');
-    if (cutEl) cutEl.textContent = '+₹' + cut.toLocaleString('en-IN') + ` (${rate}%)`;
+    if (cutEl) cutEl.textContent = '-₹' + cut.toLocaleString('en-IN') + ` (${rate}% Margin)`;
+    if (netEl) netEl.textContent = '₹' + netPayable.toLocaleString('en-IN');
+    if (btnText) btnText.textContent = `Pay ₹${netPayable.toLocaleString('en-IN')} & Book Pass`;
   }
 
   async function handlePortalBookingSubmit(e) {
@@ -738,12 +744,13 @@
     const btn = document.getElementById('btn-portal-book-submit');
     const btnText = document.getElementById('btn-portal-book-text');
     if (btn) btn.disabled = true;
-    if (btnText) btnText.textContent = 'Issuing Pass...';
+    if (btnText) btnText.textContent = 'Booking & Punching Pass...';
 
     const userCut = Number((_activePromoter && _activePromoter.commission_rate) || 8);
     const rate = Math.max(userCut, Number(tier.cutPct || 12));
     const totalAmount = Number(tier.price) * qty;
     const commissionAmount = Math.round((totalAmount * rate) / 100);
+    const netAmountPaid = totalAmount - commissionAmount;
     let orderRef = 'TIX-' + Math.floor(100000 + Math.random() * 900000);
 
     try {
@@ -774,20 +781,22 @@
         total_amount: totalAmount,
         commission_rate: rate,
         commission_amount: commissionAmount,
+        net_amount_paid: netAmountPaid,
         attendee_name: custName,
         attendee_phone: custPhone,
         attendee_email: custEmail,
-        status: 'confirmed',
+        status: 'Punched to BookMyShow',
+        fulfillment: 'Punched to BookMyShow / District',
         channel: 'Promoter Portal',
         created_at: new Date().toISOString()
       });
     }
 
     if (btn) btn.disabled = false;
-    if (btnText) btnText.textContent = 'Confirm & Issue Pass';
+    if (btnText) btnText.textContent = 'Pay Net Amount & Book Pass';
     closePortalModal('portal-book-modal');
     await hydratePortalLedgerAndHistory();
-    showToast(`Pass ${orderRef} issued! Added to Booking History.`);
+    showToast(`Pass ${orderRef} booked! Official ticket punched to attendee's BookMyShow / District account.`);
   }
 
   function setBookingStatusFilter(status) {
@@ -893,7 +902,7 @@
       tbody.innerHTML = `
         <tr>
           <td colspan="6" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
-            No UPI payouts yet. Payouts appear here once passes clear the gate.
+            No pass billing transactions yet. Book passes from <a href="/portal" class="text-[var(--crimson-ink)] font-semibold">Events Home &rarr;</a>
           </td>
         </tr>
       `;
@@ -948,14 +957,14 @@
             mrp: Number(b.total_amount || 0),
             rate: Number(b.commission_rate || 8),
             comm: Number(b.commission_amount || 0),
-            status: b.status || 'Pending Scan'
+            status: b.status || 'Punched to BookMyShow'
           }));
 
     if (rows.length === 0) {
       tbody.innerHTML = `
         <tr>
           <td colspan="7" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
-            No gate scans yet. Book client passes from <a href="/portal" class="text-[var(--crimson-ink)] font-semibold">Events Home &rarr;</a>
+            No pass bookings yet. Book client passes from <a href="/portal" class="text-[var(--crimson-ink)] font-semibold">Events Home &rarr;</a>
           </td>
         </tr>
       `;

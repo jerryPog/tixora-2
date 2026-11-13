@@ -73,7 +73,7 @@
                     <nav class="desktop-nav" aria-label="Primary">
                         <a href="/tours">Live Tours</a>
                         <a href="/promoter">Promoter</a>
-                        <a href="/protocol">QR Security</a>
+                        <a href="/protocol">How It Works</a>
                         <a href="/about" aria-current="page">About</a>
                         <a href="/faq">FAQ</a>
                     </nav>
@@ -106,7 +106,7 @@
                     <a href="/">Home</a>
                     <a href="/tours">Live Tours (8)</a>
                     <a href="/promoter">Promoter Program</a>
-                    <a href="/protocol">QR Security</a>
+                    <a href="/protocol">How It Works</a>
                     <a href="/about" aria-current="page">About &amp; Founders</a>
                     <a href="/faq">FAQ</a>
                 </div>
@@ -169,17 +169,16 @@
                                     Bots buy up concert tickets in minutes and resell them at 300%–500% markups.
                                 </p>
                                 <p>
-                                    Meanwhile, campus promoters driving turnout face delayed payouts and opaque tracking.
+                                    Meanwhile, campus promoters driving turnout face delayed commissions and opaque settlement cycles.
                                 </p>
                             </div>
                             <div class="space-y-4 text-sm text-[var(--muted)] leading-relaxed">
                                 <p>
                                     <strong class="text-[var(--ink)] font-semibold">Tixora solves both.</strong> Direct
-                                    BookMyShow &amp; festival allocations wipe out fake passes and price gouging.
+                                    BookMyShow &amp; District allocations wipe out fake passes and price gouging.
                                 </p>
                                 <p>
-                                    Dynamic QR passes block unauthorized transfers, while verified promoters receive
-                                    instant UPI payouts after gate scan.
+                                    Passes punch directly into customer BookMyShow or District accounts, while promoters enjoy instant upfront discounts (net billing) at checkout.
                                 </p>
                             </div>
                         </div>
@@ -218,7 +217,7 @@
                                 <div class="eyebrow mt-1" style="color: var(--gold-deep);">Co-Founder &amp; Security Architecture</div>
                             </div>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Architects dynamic QR ticketing, gate scanners, and anti-scalp entry verification.
+                                Architects direct box-office pass fulfillment, platform security, and ticketing system integrations.
                             </p>
                         </article>
 
@@ -229,7 +228,7 @@
                                 <div class="eyebrow mt-1" style="color: var(--gold-deep);">Co-Founder &amp; Engineering</div>
                             </div>
                             <p class="text-sm text-[var(--muted)] leading-relaxed">
-                                Leads payout systems, instant UPI transfers, and real-time pass tracking.
+                                Leads upfront net billing architecture, promoter quota infrastructure, and pass fulfillment tracking.
                             </p>
                         </article>
                     </div>
@@ -293,13 +292,13 @@
                             </picture>
                         </a>
                         <p style="font-size: 0.875rem; line-height: 1.65; color: var(--on-dark-muted); max-inline-size: 38ch;">
-                            Official live concert passes with automated UPI promoter payouts across India.
+                            Official live concert passes with instant upfront promoter discounts and direct BookMyShow &amp; District app fulfillment.
                         </p>
 
                         <div class="trust-badges">
                             <span class="trust-badge">BookMyShow Partner</span>
                             <span class="trust-badge">District Live</span>
-                            <span class="trust-badge">Instant UPI</span>
+                            <span class="trust-badge">Direct Net Billing</span>
                         </div>
 
                         <div style="padding-block-start: 8px;">
@@ -335,7 +334,7 @@
                         <ul class="footer-links">
                             <li><a href="/promoter#simulator">Earnings Calculator</a></li>
                             <li><a href="/promoter#tiers">Commission Tiers (8%–16%)</a></li>
-                            <li><a href="/protocol">Dynamic QR Security</a></li>
+                            <li><a href="/protocol">How It Works</a></li>
                             <li><button type="button" onclick="openModal('promoter-modal')">Promoter Onboarding Portal</button></li>
                             <li><a href="/faq">FAQ &amp; Guides</a></li>
                         </ul>
@@ -441,7 +440,7 @@
                     <div
                         class="col-span-2 p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] flex items-center justify-between">
                         <div>
-                            <span class="modal-field-label">Linked Settlement UPI</span>
+                            <span class="modal-field-label">Billing Handle</span>
                             <span class="text-sm font-bold text-[var(--ink)]" id="desk-upi-id">user@upi</span>
                         </div>
                         <span class="modal-badge-emerald">Auto-Verified</span>
@@ -542,8 +541,8 @@
                                 placeholder="Mumbai / Delhi NCR" class="modal-input">
                         </div>
                         <div>
-                            <label for="signup-upi" class="modal-field-label">Settlement UPI ID</label>
-                            <input type="text" id="signup-upi" required autocorrect="off" autocapitalize="none"
+                            <label for="signup-upi" class="modal-field-label">Billing / Payment UPI (Optional)</label>
+                            <input type="text" id="signup-upi" autocorrect="off" autocapitalize="none"
                                 spellcheck="false" enterkeyhint="done" placeholder="aarav@okhdfcbank"
                                 class="modal-input">
                         </div>
@@ -734,11 +733,8 @@
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
                 <p><strong class="text-[var(--ink)]">1. Information Collection:</strong> Attendee contact details
                     (name, mobile, email) are used solely to issue BookMyShow and District Live passes.</p>
-                <p><strong class="text-[var(--ink)]">2. Promoter Settlement Data:</strong> Verified UPI VPAs and
-                    WhatsApp numbers handle KYC and payouts. UPI PINs and banking credentials are never
-                    collected.</p>
-                <p><strong class="text-[var(--ink)]">3. Anti-Scalp Telemetry:</strong> Device signals block scalper
-                    bots and duplicate QR minting.</p>
+                <p><strong class="text-[var(--ink)]">2. Promoter Billing:</strong> Upfront net discounts (MRP − Commission %) are applied at checkout; banking PINs and sensitive financial credentials are never collected.</p>
+                <p><strong class="text-[var(--ink)]">3. App Fulfillment:</strong> Passes are punched directly to customer accounts on BookMyShow or District Live.</p>
                 <p><strong class="text-[var(--ink)]">4. DPDP Compliance:</strong> Tixora never sells or rents user
                     data and complies with India&rsquo;s DPDP Act.</p>
             </div>
@@ -760,10 +756,8 @@
             <div class="space-y-3 text-sm text-[var(--muted)] leading-relaxed">
                 <p><strong class="text-[var(--ink)]">1. Primary Allocations:</strong> All passes come from official
                     primary allocations. Secondary resale or markups are prohibited.</p>
-                <p><strong class="text-[var(--ink)]">2. Dynamic Gate Entry:</strong> Passes must be shown live on
-                    your phone at the gate. Screenshots or forwards fail verification without refund.</p>
-                <p><strong class="text-[var(--ink)]">3. Promoter Settlement:</strong> Commissions settle on confirmed
-                    gate scans. Chargebacks, fraud, or cancelled orders void unearned payouts.</p>
+                <p><strong class="text-[var(--ink)]">2. App Fulfillment:</strong> Passes are punched directly to the attendee's BookMyShow or District app account. Attendees enter using their official app.</p>
+                <p><strong class="text-[var(--ink)]">3. Net Billing:</strong> Promoters pay the net discounted pass amount directly upon booking. Margins are retained upfront.</p>
                 <p><strong class="text-[var(--ink)]">4. Rescheduling &amp; Cancellations:</strong> Postponed passes
                     stay valid for new dates under BookMyShow rules.</p>
             </div>
@@ -819,7 +813,7 @@
                 <i data-lucide="sparkles" class="w-4 h-4 text-[var(--crimson-ink)]"></i>
                 <div>
                     <div class="text-xs font-bold">Tixora AI</div>
-                    <div style="font-size: 0.75rem; color: var(--on-dark-muted);">Tours, venues &amp; payouts</div>
+                    <div style="font-size: 0.75rem; color: var(--on-dark-muted);">Tours, venues &amp; pass booking</div>
                 </div>
             </div>
             <div class="flex items-center gap-1">

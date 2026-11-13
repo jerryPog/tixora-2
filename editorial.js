@@ -942,7 +942,7 @@
     "Guns N' Roses timings",
     'Fred again.. venue',
     'Chainsmokers Goa',
-    'Promoter payouts'
+    'Net billing & cuts'
   ];
 
   let isChatOpen = false;
@@ -995,7 +995,7 @@
         </div>
         <div class="bg-[var(--soft)] border border-[var(--line)] rounded-2xl rounded-tl-none p-3.5 space-y-2 text-[var(--ink)] max-w-[88%] leading-relaxed text-xs">
           <p><strong>Tixora AI</strong></p>
-          <p class="text-[var(--muted)]">Ask about tour dates, venues, setlists, or promoter UPI payouts.</p>
+          <p class="text-[var(--muted)]">Ask about tour dates, venues, setlists, or promoter upfront discounts.</p>
         </div>
       </div>
     `;
@@ -1023,11 +1023,11 @@
     if (/^(hi|hello|hey|yo|sup|namaste|morning|evening|howdy)($|\s|[!?.])/i.test(clean)) {
       return {
         title: 'Tixora AI',
-        answer: 'Ask me about tour dates, venues, setlists, or promoter UPI payouts.',
+        answer: 'Ask me about tour dates, venues, setlists, or promoter upfront discounts.',
         actions: [
           { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
           { label: 'GNR Songs', action: "askQuestion('Guns N Roses popular songs')" },
-          { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
+          { label: 'Net Billing', action: "askQuestion('How does net billing work?')" }
         ]
       };
     }
@@ -1081,17 +1081,17 @@
       return {
         title: 'Promoter Commission Structure',
         answer:
-          '<div class="space-y-1 text-xs">• <strong>Tier 1 (Scout):</strong> 8.0%<br>• <strong>Tier 2 (Capo):</strong> 11.0%<br>• <strong>Tier 3 (Syndicate):</strong> 13.5%<br>• <strong>Tier 4 (Patron):</strong> 16.0%<br>Zero deposit required. Automated UPI payouts under 60s.</div>',
+          '<div class="space-y-1 text-xs">• <strong>Tier 1 (Scout):</strong> 8.0%<br>• <strong>Tier 2 (Capo):</strong> 11.0%<br>• <strong>Tier 3 (Syndicate):</strong> 13.5%<br>• <strong>Tier 4 (Patron):</strong> 16.0%<br>Zero deposit required. Instant upfront discounts (MRP − Commission %) at checkout.</div>',
         actions: [{ label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }]
       };
     }
 
-    if (/payout|upi|settle|withdraw|bank/i.test(clean)) {
+    if (/payout|upi|settle|withdraw|bank|billing|net billing|discount/i.test(clean)) {
       return {
-        title: 'Instant UPI Payouts (<60s)',
+        title: 'Upfront Net Billing (Direct Discount)',
         answer:
-          '<div class="space-y-1 text-xs">Commissions transfer directly to your registered UPI ID within <strong>60 seconds</strong> of venue gate entry scan.</div>',
-        actions: [{ label: 'Update Payout UPI ID', action: "openModal('promoter-modal')" }]
+          '<div class="space-y-1 text-xs">There are no payout delays. If pass MRP is ₹1,000 and your commission is 8%, you pay only ₹920 on the portal—keeping your margin instantly upfront. Tickets punch directly onto your customer’s BookMyShow or District app account.</div>',
+        actions: [{ label: 'Open Promoter Portal', action: "openModal('promoter-modal')" }]
       };
     }
 
@@ -1100,7 +1100,7 @@
       answer: 'Try asking about an artist, venue, setlist, or promoter commission rates.',
       actions: [
         { label: 'Anyma Mumbai', action: "askQuestion('Anyma venue and timings')" },
-        { label: 'Promoter Payouts', action: "askQuestion('How fast are UPI payouts?')" }
+        { label: 'Net Billing', action: "askQuestion('How does net billing work?')" }
       ]
     };
   }

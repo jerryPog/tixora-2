@@ -78,7 +78,7 @@
                     <nav class="desktop-nav" aria-label="Promoter Menu">
                         <a href="/portal">Events</a>
                         <a href="/dashboard">Dashboard</a>
-                        <a href="/portal/wallet">Wallet</a>
+                        <a href="/portal/wallet">Margin Ledger</a>
                         <a href="/portal/bookings" aria-current="page">Booking History</a>
                     </nav>
                 </div>
@@ -118,7 +118,7 @@
                 <div class="mobile-nav-links">
                     <a href="/portal"><span>Events Home</span><span class="cart-count-pill">8</span></a>
                     <a href="/dashboard"><span>Dashboard</span><span id="dash-header-tier" class="text-[11px] font-mono text-[var(--crimson-ink)]">SCOUT</span></a>
-                    <a href="/portal/wallet"><span>Wallet</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
+                    <a href="/portal/wallet"><span>Margin Ledger</span><span id="nav-wallet-badge" class="text-[11px] font-mono text-[var(--emerald-ink)]">₹0</span></a>
                     <a href="/portal/bookings" aria-current="page"><span>Booking History</span><span id="nav-bookings-count" class="cart-count-pill">0</span></a>
                     <a id="promo-mobile-admin-link" href="/admin" class="hidden"><span>Ops Desk</span><i data-lucide="shield-check" class="w-4 h-4"></i></a>
                     <a href="/?public=1"><span>Public Tixora Site</span><i data-lucide="external-link" class="w-4 h-4"></i></a>
@@ -148,7 +148,7 @@
                             <span class="modal-badge-navy font-mono">PASS ORDERS &amp; RECEIPTS</span>
                             <h1 id="bookings-hero-heading" class="hero-h1 hero-h1--subpage">Booking History</h1>
                             <p class="hero-desc">
-                                All passes booked in your portal or credited to your referral links.
+                                All passes booked under your Promoter ID and punched to attendee BookMyShow or District accounts.
                             </p>
                         </div>
 
@@ -158,7 +158,7 @@
                                 <span>Book More Passes</span>
                             </a>
                             <a href="/portal/wallet" class="btn-editorial-outline-dark">
-                                Wallet &amp; Payouts
+                                Margin Ledger
                             </a>
                         </div>
                     </div>
@@ -217,7 +217,7 @@
                                         <th>Qty</th>
                                         <th>Attendee</th>
                                         <th>MRP</th>
-                                        <th>Commission</th>
+                                        <th>Margin Saved</th>
                                         <th>Date</th>
                                         <th>Status</th>
                                         <th>Receipt</th>
@@ -288,7 +288,7 @@
                     <span id="receipt-amount" class="font-bold text-white tabular-nums">₹0</span>
                 </div>
                 <div class="flex justify-between gap-2">
-                    <span class="text-[var(--muted)]">Your Commission</span>
+                    <span class="text-[var(--muted)]">Margin Saved</span>
                     <span id="receipt-commission" class="font-bold text-[var(--emerald-ink)] tabular-nums">+₹0</span>
                 </div>
             </div>
