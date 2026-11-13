@@ -174,20 +174,28 @@ CREATE INDEX idx_ticket_tiers_event ON ticket_tiers(event_id);
 CREATE TABLE attendees (
     id SERIAL PRIMARY KEY,
     full_name VARCHAR(150) NOT NULL,
-    mobile_number VARCHAR(15) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL,
+    mobile_number VARCHAR(15) NOT NULL,
+    email VARCHAR(255) DEFAULT NULL,
     bms_account_id VARCHAR(100),
     digilocker_verified BOOLEAN DEFAULT TRUE,
     CONSTRAINT chk_attendee_name_len CHECK (length(trim(full_name)) >= 2),
-    CONSTRAINT chk_attendee_email_fmt CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    CONSTRAINT chk_attendee_email_fmt CHECK (email IS NULL OR email = '' OR email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
--- Note: mobile_number has an automatic UNIQUE B-Tree index
+CREATE INDEX idx_attendees_mobile_number ON attendees(mobile_number);
 
 -- 8. Orders (Pass Bookings)
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     order_number VARCHAR(50) NOT NULL UNIQUE,
+    external_sale_id INT UNIQUE,
+    source_event_name VARCHAR(200),
+    source_category VARCHAR(100),
+    seat_details VARCHAR(255),
+    customer_name VARCHAR(150),
+    customer_phone VARCHAR(20),
+    customer_email VARCHAR(255),
+    import_batch VARCHAR(150) DEFAULT 'External import — Tixoraticket_sales_copy.xlsx',
     attendee_id INT NOT NULL REFERENCES attendees(id) ON DELETE RESTRICT,
     event_id INT NOT NULL REFERENCES events(id) ON DELETE RESTRICT,
     ticket_tier_id INT NOT NULL REFERENCES ticket_tiers(id) ON DELETE RESTRICT,
@@ -195,19 +203,19 @@ CREATE TABLE orders (
     unit_price NUMERIC(10, 2) NOT NULL,
     total_amount NUMERIC(12, 2) NOT NULL,
     payment_method VARCHAR(50) DEFAULT 'UPI' CHECK (payment_method IN ('UPI', 'Card', 'NetBanking')),
-    payment_status VARCHAR(30) DEFAULT 'successful' CHECK (payment_status IN ('pending', 'successful', 'failed', 'refunded')),
+    payment_status VARCHAR(30) DEFAULT 'confirmed' CHECK (payment_status IN ('pending', 'successful', 'confirmed', 'imported', 'failed', 'refunded')),
     payment_gateway_ref VARCHAR(100),
     promoter_id INT REFERENCES promoters(id) ON DELETE SET NULL,
     delivery_channel VARCHAR(50) DEFAULT 'BookMyShow / District Wallet',
     delivery_status VARCHAR(30) DEFAULT 'dispatched' CHECK (delivery_status IN ('pending', 'dispatched', 'delivered', 'failed')),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX idx_orders_external_sale_id ON orders(external_sale_id);
 CREATE INDEX idx_orders_promoter ON orders(promoter_id);
--- orders.payment_status is a low-cardinality status enum
 CREATE INDEX idx_orders_attendee_id ON orders(attendee_id);
 CREATE INDEX idx_orders_event_id ON orders(event_id);
 CREATE INDEX idx_orders_ticket_tier_id ON orders(ticket_tier_id);
--- Note: order_number has an automatic UNIQUE B-Tree index
+-- Note: order_number and external_sale_id have automatic UNIQUE B-Tree indexes
 
 -- 9. Issued Passes (Dynamic QR Mesh Protocol)
 CREATE TABLE issued_passes (
@@ -310,7 +318,7 @@ SELECT p.id AS promoter_id, p.full_name, p.city, p.organization, p.referral_code
        COALESCE(SUM(pc.commission_amount), 0.00) AS audited_commission_sum
 FROM promoters p
 JOIN promoter_tiers pt ON p.tier_id = pt.tier_id
-LEFT JOIN orders o ON o.promoter_id = p.id AND o.payment_status = 'successful'
+LEFT JOIN orders o ON o.promoter_id = p.id AND (o.payment_status IN ('successful', 'confirmed', 'imported'))
 LEFT JOIN promoter_commissions pc ON pc.promoter_id = p.id AND pc.payout_status = 'settled'
 GROUP BY p.id, p.full_name, p.city, p.organization, p.referral_code, pt.tier_name, pt.commission_rate, p.total_passes_sold, p.total_earnings;
 
@@ -1027,140 +1035,164 @@ INSERT INTO promoters (id, full_name, whatsapp_number, email, city, organization
 ON CONFLICT (id) DO UPDATE SET full_name = EXCLUDED.full_name, email = EXCLUDED.email, whatsapp_number = EXCLUDED.whatsapp_number, total_passes_sold = EXCLUDED.total_passes_sold, total_earnings = EXCLUDED.total_earnings, tier_id = EXCLUDED.tier_id;
 SELECT setval('promoters_id_seq', GREATEST((SELECT MAX(id) FROM promoters), 1));
 
--- 5. Attendees (18 Ticket Buyers from Register)
+-- 5. Attendees (18 Ticket Buyers from Register — preserving NULL emails without fake values)
 INSERT INTO attendees (id, full_name, mobile_number, email, bms_account_id, digilocker_verified) VALUES
 (1, 'Abeer', '+919971778481', 'jncy121@gmail.com', 'BMS-778481', TRUE),
-(2, 'aarav', '+918951085366', 'aarav.5366@passes.tixora.live', 'BMS-085366', TRUE),
+(2, 'aarav', '+918951085366', 'aaravparekh007@gmail.com', 'BMS-085366', TRUE),
 (3, 'Devansh', '+919920686585', 'devanshbangad128@gmail.com', 'BMS-686585', TRUE),
-(4, 'daksh', '+918310665642', 'daksh.5642@passes.tixora.live', 'BMS-665642', TRUE),
+(4, 'daksh', '+918310665642', NULL, 'BMS-665642', TRUE),
 (5, 'ronak', '+917892145475', 'ronakj303@gmail.com', 'BMS-145475', TRUE),
 (6, 'Akash Tewari', '+918303545661', 'akasht9952@gmail.com', 'BMS-545661', TRUE),
-(7, 'Prajin Chopra', '+919906185105', 'prajinchopra.5105@passes.tixora.live', 'BMS-185105', TRUE),
+(7, 'Prajin Chopra', '+919906185105', NULL, 'BMS-185105', TRUE),
 (8, 'Dimple Chopra', '+916363327399', 'dimple.pc141203@gmail.com', 'BMS-327399', TRUE),
 (9, 'Tisha Saklecha', '+919008433416', 'tishasaklecha512@gmail.com', 'BMS-433416', TRUE),
 (10, 'Rachana', '+917892244643', 'rachana.j00@gmail.com', 'BMS-244643', TRUE),
 (11, 'Vishal', '+919845350802', 'vishal.mamtha@gmail.com', 'BMS-350802', TRUE),
-(12, 'Rishab Gadiya', '+917892244644', 'rachana.j00@gmail.com', 'BMS-244644', TRUE),
+(12, 'Rishab Gadiya', '+917892244643', 'rachana.j00@gmail.com', 'BMS-244644', TRUE),
 (13, 'sahil', '+919113225959', 'sahiljain2017@gmail.com', 'BMS-225959', TRUE),
 (14, 'Poorvi Khatri', '+917259880344', 'poorvikhatri27@gmail.com', 'BMS-880344', TRUE),
 (15, 'Arnaz Taj', '+917259108835', 'arnaztaj301@gmail.com', 'BMS-108835', TRUE),
-(16, 'Harsh Mehta', '+918105865828', 'harshmehta.5828@passes.tixora.live', 'BMS-865828', TRUE),
-(17, 'Likitha', '+916361004463', 'likitha.4463@passes.tixora.live', 'BMS-004463', TRUE),
+(16, 'Harsh Mehta', '+918105865828', NULL, 'BMS-865828', TRUE),
+(17, 'Likitha', '+916361004463', NULL, 'BMS-004463', TRUE),
 (18, 'Karan', '+918555910998', 'karanahuja9995@gmail.com', 'BMS-910998', TRUE)
-ON CONFLICT (mobile_number) DO UPDATE SET full_name = EXCLUDED.full_name, email = EXCLUDED.email;
+ON CONFLICT (id) DO UPDATE SET full_name = EXCLUDED.full_name, mobile_number = EXCLUDED.mobile_number, email = EXCLUDED.email;
 SELECT setval('attendees_id_seq', GREATEST((SELECT MAX(id) FROM attendees), 18));
 
--- 6. Orders (21 Confirmed Bookings Attributed to Ronak Jain)
-INSERT INTO orders (id, order_number, attendee_id, event_id, ticket_tier_id, quantity, unit_price, total_amount, payment_method, payment_status, payment_gateway_ref, promoter_id, delivery_channel, delivery_status, created_at) VALUES
-(1, 'TIX-2026-RJ0001', 1, 7, 19, 4, 6500.00, 26000.00, 'UPI', 'successful', 'UPI-NPCI-2026100001', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-04 00:00:00+05:30'),
-(2, 'TIX-2026-RJ0002', 2, 9, 20, 1, 7750.00, 7750.00, 'UPI', 'successful', 'UPI-NPCI-2026100002', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-06 00:00:00+05:30'),
-(3, 'TIX-2026-RJ0005', 3, 10, 24, 2, 5500.00, 11000.00, 'UPI', 'successful', 'UPI-NPCI-2026100005', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-10 00:00:00+05:30'),
-(4, 'TIX-2026-RJ0006', 3, 11, 27, 2, 5000.00, 10000.00, 'UPI', 'successful', 'UPI-NPCI-2026100006', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-10 00:00:00+05:30'),
-(5, 'TIX-2026-RJ0007', 4, 10, 25, 2, 7800.00, 15600.00, 'UPI', 'successful', 'UPI-NPCI-2026100007', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-10 00:00:00+05:30'),
-(6, 'TIX-2026-RJ0009', 2, 10, 23, 1, 3000.00, 3000.00, 'UPI', 'successful', 'UPI-NPCI-2026100009', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-10 00:00:00+05:30'),
-(7, 'TIX-2026-RJ0010', 5, 10, 23, 1, 3000.00, 3000.00, 'UPI', 'successful', 'UPI-NPCI-2026100010', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-10 00:00:00+05:30'),
-(8, 'TIX-2026-RJ0013', 6, 11, 26, 4, 2999.00, 12000.00, 'UPI', 'successful', 'UPI-NPCI-2026100013', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-11 00:00:00+05:30'),
-(9, 'TIX-2026-RJ0015', 7, 9, 21, 2, 8250.00, 16500.00, 'UPI', 'successful', 'UPI-NPCI-2026100015', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-12 00:00:00+05:30'),
-(10, 'TIX-2026-RJ0017', 8, 10, 22, 2, 2750.00, 5500.00, 'UPI', 'successful', 'UPI-NPCI-2026100017', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-12 00:00:00+05:30'),
-(11, 'TIX-2026-RJ0019', 9, 10, 24, 1, 6000.00, 6000.00, 'UPI', 'successful', 'UPI-NPCI-2026100019', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-13 00:00:00+05:30'),
-(12, 'TIX-2026-RJ0020', 10, 10, 22, 1, 2750.00, 3000.00, 'UPI', 'successful', 'UPI-NPCI-2026100020', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-13 00:00:00+05:30'),
-(13, 'TIX-2026-RJ0021', 11, 10, 23, 2, 4125.00, 9000.00, 'UPI', 'successful', 'UPI-NPCI-2026100021', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-13 00:00:00+05:30'),
-(14, 'TIX-2026-RJ0022', 11, 10, 23, 9, 4125.00, 40500.00, 'UPI', 'successful', 'UPI-NPCI-2026100022', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-13 00:00:00+05:30'),
-(15, 'TIX-2026-RJ0023', 12, 10, 22, 7, 3000.00, 21000.00, 'UPI', 'successful', 'UPI-NPCI-2026100023', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-13 00:00:00+05:30'),
-(16, 'TIX-2026-RJ0025', 13, 10, 24, 2, 6000.00, 12000.00, 'UPI', 'successful', 'UPI-NPCI-2026100025', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-15 00:00:00+05:30'),
-(17, 'TIX-2026-RJ0037', 14, 13, 29, 1, 1500.00, 1500.00, 'UPI', 'successful', 'UPI-NPCI-2026100037', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-21 00:00:00+05:30'),
-(18, 'TIX-2026-RJ0038', 15, 13, 29, 2, 1500.00, 3000.00, 'UPI', 'successful', 'UPI-NPCI-2026100038', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-21 00:00:00+05:30'),
-(19, 'TIX-2026-RJ0040', 16, 10, 22, 5, 4000.00, 20000.00, 'UPI', 'successful', 'UPI-NPCI-2026100040', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-27 00:00:00+05:30'),
-(20, 'TIX-2026-RJ0041', 17, 14, 30, 3, 3800.00, 11100.00, 'UPI', 'successful', 'UPI-NPCI-2026100041', 1, 'BookMyShow / District Wallet', 'delivered', '2026-10-28 00:00:00+05:30'),
-(21, 'TIX-2026-RJ0043', 18, 12, 28, 2, 9500.00, 19000.00, 'UPI', 'successful', 'UPI-NPCI-2026100043', 1, 'BookMyShow / District Wallet', 'delivered', '2026-11-01 00:00:00+05:30')
-ON CONFLICT (order_number) DO UPDATE SET total_amount = EXCLUDED.total_amount, promoter_id = EXCLUDED.promoter_id;
+-- 6. Orders (21 Confirmed Bookings Attributed to Ronak Jain — Idempotent on external_sale_id)
+INSERT INTO orders (id, order_number, external_sale_id, source_event_name, source_category, seat_details, customer_name, customer_phone, customer_email, import_batch, attendee_id, event_id, ticket_tier_id, quantity, unit_price, total_amount, payment_method, payment_status, payment_gateway_ref, promoter_id, delivery_channel, delivery_status, created_at) VALUES
+(1, 'TIX-2026-RJ0001', 1, 'Diljit ahmedabaad', 'A block bay 5', 'KK 94 95 96 97', 'Abeer', '+919971778481', 'jncy121@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 1, 7, 19, 4, 6500.00, 26000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100001', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-04 00:00:00+05:30'),
+(2, 'TIX-2026-RJ0002', 2, 'diljit dosanjh bangalore', 'gold', 'free standing', 'aarav', '+918951085366', NULL, 'External import — Tixoraticket_sales_copy.xlsx', 2, 9, 20, 1, 7750.00, 7750.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100002', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-06 00:00:00+05:30'),
+(3, 'TIX-2026-RJ0005', 5, 'arijit bangalore ', 'gold', 'free seating', 'Devansh', '+919920686585', 'devanshbangad128@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 3, 10, 24, 2, 5500.00, 11000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100005', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-10 00:00:00+05:30'),
+(4, 'TIX-2026-RJ0006', 6, 'arijit mumbai', 'gold', 'free seating', 'Devansh', '+919920686585', 'devanshbangad128@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 3, 11, 27, 2, 5000.00, 10000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100006', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-10 00:00:00+05:30'),
+(5, 'TIX-2026-RJ0007', 7, 'arijit bangalore', 'platinum left', 'free seating', 'daksh', '+918310665642', NULL, 'External import — Tixoraticket_sales_copy.xlsx', 4, 10, 25, 2, 7800.00, 15600.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100007', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-10 00:00:00+05:30'),
+(6, 'TIX-2026-RJ0009', 9, 'arijit bangalore', 'gold', 'free seating', 'aarav', '+918951085366', 'aaravparekh007@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 2, 10, 23, 1, 3000.00, 3000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100009', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-10 00:00:00+05:30'),
+(7, 'TIX-2026-RJ0010', 10, 'arijit bangalore', 'gold', 'free seating', 'ronak', '+917892145475', 'ronakj303@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 5, 10, 23, 1, 3000.00, 3000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100010', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-10 00:00:00+05:30'),
+(8, 'TIX-2026-RJ0013', 13, 'arijit mumbai', 'silver', 'free seating', 'Akash Tewari', '+918303545661', 'akasht9952@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 6, 11, 26, 4, 2999.00, 12000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100013', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-11 00:00:00+05:30'),
+(9, 'TIX-2026-RJ0015', 15, 'diljit bangalore', 'gold', 'free seating', 'Prajin Chopra', '+919906185105', NULL, 'External import — Tixoraticket_sales_copy.xlsx', 7, 9, 21, 2, 8250.00, 16500.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100015', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-12 00:00:00+05:30'),
+(10, 'TIX-2026-RJ0017', 17, 'arijit bangalore', 'silver', 'free seating', 'Dimple Chopra', '+916363327399', 'dimple.pc141203@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 8, 10, 22, 2, 2750.00, 5500.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100017', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-12 00:00:00+05:30'),
+(11, 'TIX-2026-RJ0019', 19, 'Arjit Singh', 'gold', 'free seating', 'Tisha Saklecha', '+919008433416', 'tishasaklecha512@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 9, 10, 24, 1, 6000.00, 6000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100019', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-13 00:00:00+05:30'),
+(12, 'TIX-2026-RJ0020', 20, 'Arjit Singh', 'silver', 'free seating', 'Rachana', '+917892244643', 'rachana.j00@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 10, 10, 22, 1, 2750.00, 3000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100020', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-13 00:00:00+05:30'),
+(13, 'TIX-2026-RJ0021', 21, 'Arjit Singh', 'gold', 'free seating', 'Vishal', '+919845350802', 'vishal.mamtha@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 11, 10, 23, 2, 4125.00, 9000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100021', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-13 00:00:00+05:30'),
+(14, 'TIX-2026-RJ0022', 22, 'Arjit Singh', 'gold', 'free seating', 'Vishal', '+919845350802', 'vishal.mamtha@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 11, 10, 23, 9, 4125.00, 40500.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100022', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-13 00:00:00+05:30'),
+(15, 'TIX-2026-RJ0023', 23, 'Arjit Singh', 'silver', 'free seating', 'Rishab Gadiya', '+917892244643', 'rachana.j00@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 12, 10, 22, 7, 3000.00, 21000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100023', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-13 00:00:00+05:30'),
+(16, 'TIX-2026-RJ0025', 25, 'arijit bangalore', 'gold', 'free seating', 'sahil', '+919113225959', 'sahiljain2017@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 13, 10, 24, 2, 6000.00, 12000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100025', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-15 00:00:00+05:30'),
+(17, 'TIX-2026-RJ0037', 37, 'Darshan raval bangalore', 'silver', 'free seating', 'Poorvi Khatri', '+917259880344', 'poorvikhatri27@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 14, 13, 29, 1, 1500.00, 1500.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100037', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-21 00:00:00+05:30'),
+(18, 'TIX-2026-RJ0038', 38, 'Darshan raval bangalore', 'silver', 'free seating', 'Arnaz Taj', '+917259108835', 'arnaztaj301@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 15, 13, 29, 2, 1500.00, 3000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100038', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-21 00:00:00+05:30'),
+(19, 'TIX-2026-RJ0040', 40, 'Arijit Banglore', 'silver', 'free seating', 'Harsh Mehta', '+918105865828', NULL, 'External import — Tixoraticket_sales_copy.xlsx', 16, 10, 22, 5, 4000.00, 20000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100040', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-27 00:00:00+05:30'),
+(20, 'TIX-2026-RJ0041', 41, 'Chainsmokers bangalore', 'GA', 'standing', 'Likitha', '+916361004463', NULL, 'External import — Tixoraticket_sales_copy.xlsx', 17, 14, 30, 3, 3800.00, 11100.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100041', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-10-28 00:00:00+05:30'),
+(21, 'TIX-2026-RJ0043', 43, 'Arijit hyderabad', 'platinum left', 'free seating', 'Karan', '+918555910998', 'karanahuja9995@gmail.com', 'External import — Tixoraticket_sales_copy.xlsx', 18, 12, 28, 2, 9500.00, 19000.00, 'UPI', 'confirmed', 'UPI-NPCI-2026100043', 1, 'BookMyShow / District Wallet', 'dispatched', '2026-11-01 00:00:00+05:30')
+ON CONFLICT (external_sale_id) DO UPDATE SET
+    order_number = EXCLUDED.order_number,
+    attendee_id = EXCLUDED.attendee_id,
+    event_id = EXCLUDED.event_id,
+    ticket_tier_id = EXCLUDED.ticket_tier_id,
+    quantity = EXCLUDED.quantity,
+    unit_price = EXCLUDED.unit_price,
+    total_amount = EXCLUDED.total_amount,
+    source_event_name = EXCLUDED.source_event_name,
+    source_category = EXCLUDED.source_category,
+    seat_details = EXCLUDED.seat_details,
+    customer_name = EXCLUDED.customer_name,
+    customer_phone = EXCLUDED.customer_phone,
+    customer_email = EXCLUDED.customer_email,
+    payment_status = EXCLUDED.payment_status,
+    promoter_id = EXCLUDED.promoter_id,
+    created_at = EXCLUDED.created_at;
 SELECT setval('orders_id_seq', GREATEST((SELECT MAX(id) FROM orders), 21));
 
 -- 7. Issued Passes (56 Passes Punched & Distributed)
 INSERT INTO issued_passes (id, order_id, pass_code, dynamic_qr_seed, attendee_phone, gate_scan_status, created_at) VALUES
-(1, 1, 'TIX-PASS-2026-RJ0001-01', 'd7bcaa3dbe0d9cda1b93ba3cfcbdd4b2', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
-(2, 1, 'TIX-PASS-2026-RJ0001-02', 'e0467924e47fe5e6e5c179dc8d83a497', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
-(3, 1, 'TIX-PASS-2026-RJ0001-03', 'da1376181a2f3b006cd662ac89683535', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
-(4, 1, 'TIX-PASS-2026-RJ0001-04', '91c3e904acb0ce1aba88380cc6076ed8', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
-(5, 2, 'TIX-PASS-2026-RJ0002-01', 'ca05ab72491c40d964ef6256c050a913', '+918951085366', 'unscanned', '2026-10-06 00:00:00+05:30'),
-(6, 3, 'TIX-PASS-2026-RJ0005-01', 'c8b9ffcfbbefa87bb0e9feab220fc509', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(7, 3, 'TIX-PASS-2026-RJ0005-02', '8eb1656e67c877c0215714cae2c6a0c9', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(8, 4, 'TIX-PASS-2026-RJ0006-01', '4e949d006d50baa9b865023b976df091', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(9, 4, 'TIX-PASS-2026-RJ0006-02', '537945182a9e69563860a151bd9b8454', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(10, 5, 'TIX-PASS-2026-RJ0007-01', 'd64aa4ea98621af6b8fa834599f82dd9', '+918310665642', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(11, 5, 'TIX-PASS-2026-RJ0007-02', '3e307b6c99fe41974bc3824e494a038b', '+918310665642', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(12, 6, 'TIX-PASS-2026-RJ0009-01', '39ecddbf2fdc841c87d363d3d0199d2e', '+918951085366', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(13, 7, 'TIX-PASS-2026-RJ0010-01', '7508f69cf349ef7f2b1ca6ab117db049', '+917892145475', 'unscanned', '2026-10-10 00:00:00+05:30'),
-(14, 8, 'TIX-PASS-2026-RJ0013-01', 'cc9b132d55ef9a0750358a35e79800a9', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
-(15, 8, 'TIX-PASS-2026-RJ0013-02', 'fefa0cc0ebbc8f7dce119607fc9d5d7d', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
-(16, 8, 'TIX-PASS-2026-RJ0013-03', 'fc7153784230fba740d8d06b35f4e4fb', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
-(17, 8, 'TIX-PASS-2026-RJ0013-04', '62e7998e26700d042fcbcf38ace30627', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
-(18, 9, 'TIX-PASS-2026-RJ0015-01', '3ad8ce5050b991a89971417180dd452e', '+919906185105', 'unscanned', '2026-10-12 00:00:00+05:30'),
-(19, 9, 'TIX-PASS-2026-RJ0015-02', '1087a3aa37c687aea882735dd0a4cc76', '+919906185105', 'unscanned', '2026-10-12 00:00:00+05:30'),
-(20, 10, 'TIX-PASS-2026-RJ0017-01', 'ab40cde32a8b4eac8eae55a02301d2f2', '+916363327399', 'unscanned', '2026-10-12 00:00:00+05:30'),
-(21, 10, 'TIX-PASS-2026-RJ0017-02', '4c400061a8ad52c04f7e2e337fa8f55d', '+916363327399', 'unscanned', '2026-10-12 00:00:00+05:30'),
-(22, 11, 'TIX-PASS-2026-RJ0019-01', '93940021204f9ed28ae87367137a17ff', '+919008433416', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(23, 12, 'TIX-PASS-2026-RJ0020-01', '29b0d1fa5b329950caf10454f33baadc', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(24, 13, 'TIX-PASS-2026-RJ0021-01', '24c03a43bece9b6becebc3fd98abd65d', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(25, 13, 'TIX-PASS-2026-RJ0021-02', '439ac7cd1785f3b00c81ddf1dae46e0e', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(26, 14, 'TIX-PASS-2026-RJ0022-01', 'ebe36ad0f5629b2adda8e4f857999b21', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(27, 14, 'TIX-PASS-2026-RJ0022-02', 'e0fbcae185d193e0c875f9a2b6611760', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(28, 14, 'TIX-PASS-2026-RJ0022-03', '301db579238ef6598ea52bd3391e5efb', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(29, 14, 'TIX-PASS-2026-RJ0022-04', '41b9da4a28263031794e298faf497451', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(30, 14, 'TIX-PASS-2026-RJ0022-05', '570622fd8c9824050048c3bb212837f5', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(31, 14, 'TIX-PASS-2026-RJ0022-06', 'cd7303cedb550c038f56d79299e43ce5', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(32, 14, 'TIX-PASS-2026-RJ0022-07', 'aea71fff3847cd1d700370e3752e0eb4', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(33, 14, 'TIX-PASS-2026-RJ0022-08', '33f64ed0c91feb41f10f7fb1e963aa24', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(34, 14, 'TIX-PASS-2026-RJ0022-09', 'd2401e81c344ab4d2f1a86eddcbfa1fb', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(35, 15, 'TIX-PASS-2026-RJ0023-01', '37317d93681a9bb1b99193aee863e3a9', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(36, 15, 'TIX-PASS-2026-RJ0023-02', 'b221eee920a7ef4911ad0d44304e92fc', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(37, 15, 'TIX-PASS-2026-RJ0023-03', '5f3186ddc54821a3a7c7d6c40d8479fe', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(38, 15, 'TIX-PASS-2026-RJ0023-04', '5b5490d8fbc2777e7c563f63cc8014b2', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(39, 15, 'TIX-PASS-2026-RJ0023-05', '82f785a6f11753f7d34679e1390c9bba', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(40, 15, 'TIX-PASS-2026-RJ0023-06', 'c98404d586d6d8f515a65041d3526664', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(41, 15, 'TIX-PASS-2026-RJ0023-07', 'e7d0da16033f00071fd28684d56f8bae', '+917892244644', 'unscanned', '2026-10-13 00:00:00+05:30'),
-(42, 16, 'TIX-PASS-2026-RJ0025-01', '9eb04026143e4e6f04b41ca98e9e5573', '+919113225959', 'unscanned', '2026-10-15 00:00:00+05:30'),
-(43, 16, 'TIX-PASS-2026-RJ0025-02', 'bd6c82476b68d59774f4806b32cda202', '+919113225959', 'unscanned', '2026-10-15 00:00:00+05:30'),
-(44, 17, 'TIX-PASS-2026-RJ0037-01', 'c7b817ab374f42202b21e3bb931057f4', '+917259880344', 'unscanned', '2026-10-21 00:00:00+05:30'),
-(45, 18, 'TIX-PASS-2026-RJ0038-01', '344ef0446de76dfc28afaa05bcc4de0e', '+917259108835', 'unscanned', '2026-10-21 00:00:00+05:30'),
-(46, 18, 'TIX-PASS-2026-RJ0038-02', '1dc80e216e276150468c15f235db8329', '+917259108835', 'unscanned', '2026-10-21 00:00:00+05:30'),
-(47, 19, 'TIX-PASS-2026-RJ0040-01', '5b7a6eaf6f04b96a1676cce86fa0e4a2', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
-(48, 19, 'TIX-PASS-2026-RJ0040-02', 'ef118df1443c113bf2e72222193e7ab8', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
-(49, 19, 'TIX-PASS-2026-RJ0040-03', 'f6678d882d813653a16eb420d56ebb65', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
-(50, 19, 'TIX-PASS-2026-RJ0040-04', '96cdfcdad92eedd68854228bf29330b2', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
-(51, 19, 'TIX-PASS-2026-RJ0040-05', '134de318ed115e2730a0a7644666b044', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
-(52, 20, 'TIX-PASS-2026-RJ0041-01', '37880ba2077af318b8e7eb83e654585a', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
-(53, 20, 'TIX-PASS-2026-RJ0041-02', '23bbe8bccf6d0354b4895734b71952d6', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
-(54, 20, 'TIX-PASS-2026-RJ0041-03', 'bd6f924663007bed09ae70311e053936', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
-(55, 21, 'TIX-PASS-2026-RJ0043-01', '9c616e1a8eefbdfdc115df3725a5034b', '+918555910998', 'unscanned', '2026-11-01 00:00:00+05:30'),
-(56, 21, 'TIX-PASS-2026-RJ0043-02', '36bba693404984a96276ed98d7223322', '+918555910998', 'unscanned', '2026-11-01 00:00:00+05:30')
+(1, 1, 'TIX-PASS-2026-RJ0001-01', '631bf2ff1ee6f76104f17722a3728447', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
+(2, 1, 'TIX-PASS-2026-RJ0001-02', '74b0e88e5969d6078af47418ea130664', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
+(3, 1, 'TIX-PASS-2026-RJ0001-03', 'aeaca95e697c38121e12d260cb5f48bf', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
+(4, 1, 'TIX-PASS-2026-RJ0001-04', 'fa731634bec8ee77157d1d5ef5c94fd4', '+919971778481', 'unscanned', '2026-10-04 00:00:00+05:30'),
+(5, 2, 'TIX-PASS-2026-RJ0002-01', '4b6b7ce3b06c907e100bd9238ffc0ee7', '+918951085366', 'unscanned', '2026-10-06 00:00:00+05:30'),
+(6, 3, 'TIX-PASS-2026-RJ0005-01', '8269e1d91e4c5b8e2669bbaef320b04c', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(7, 3, 'TIX-PASS-2026-RJ0005-02', 'fbc9d62ecebeb6da1b59647279fe7bf2', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(8, 4, 'TIX-PASS-2026-RJ0006-01', '823acd482bf1949002267d12e0edf793', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(9, 4, 'TIX-PASS-2026-RJ0006-02', '85ed1d314ddfb729981666f41b88c811', '+919920686585', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(10, 5, 'TIX-PASS-2026-RJ0007-01', '957689bbecac5af3c72b2b39e767452d', '+918310665642', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(11, 5, 'TIX-PASS-2026-RJ0007-02', 'da339a1bd0adb20bf415ce74f33aca87', '+918310665642', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(12, 6, 'TIX-PASS-2026-RJ0009-01', '51ab30a864ad95ac1b5bac88dd23aa59', '+918951085366', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(13, 7, 'TIX-PASS-2026-RJ0010-01', 'c3e3d9457e4a46a2164c4ae520d91590', '+917892145475', 'unscanned', '2026-10-10 00:00:00+05:30'),
+(14, 8, 'TIX-PASS-2026-RJ0013-01', '9b05fb73eaeea8f8545495899d91a8c5', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
+(15, 8, 'TIX-PASS-2026-RJ0013-02', 'f7d03bd6b5a00ca31788004d46cac01b', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
+(16, 8, 'TIX-PASS-2026-RJ0013-03', 'cbd9d68e3e2bdc048f7da5d01d544bea', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
+(17, 8, 'TIX-PASS-2026-RJ0013-04', '8ff7f77954cf597a64186ca0d1ec952c', '+918303545661', 'unscanned', '2026-10-11 00:00:00+05:30'),
+(18, 9, 'TIX-PASS-2026-RJ0015-01', 'c362859ef4a63a5c286e0ecdd8fb0450', '+919906185105', 'unscanned', '2026-10-12 00:00:00+05:30'),
+(19, 9, 'TIX-PASS-2026-RJ0015-02', 'a50806f431d1315ce028f37ebd35cc09', '+919906185105', 'unscanned', '2026-10-12 00:00:00+05:30'),
+(20, 10, 'TIX-PASS-2026-RJ0017-01', '57c763c7e02ae7c5130a1650d5ad150f', '+916363327399', 'unscanned', '2026-10-12 00:00:00+05:30'),
+(21, 10, 'TIX-PASS-2026-RJ0017-02', '1edb16d61c42cd33d8865e183cafc663', '+916363327399', 'unscanned', '2026-10-12 00:00:00+05:30'),
+(22, 11, 'TIX-PASS-2026-RJ0019-01', '355dfc142dc32ab4753c945f4e75889c', '+919008433416', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(23, 12, 'TIX-PASS-2026-RJ0020-01', 'e8abf88492ff85fdd0a47464b70e8e5f', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(24, 13, 'TIX-PASS-2026-RJ0021-01', 'e97d243d632e17a493ada09599203bb3', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(25, 13, 'TIX-PASS-2026-RJ0021-02', '1f5e9acd09c64bed455e4b1e05e73bb4', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(26, 14, 'TIX-PASS-2026-RJ0022-01', '61ffb18a66886be5ffc84ac33feac953', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(27, 14, 'TIX-PASS-2026-RJ0022-02', '93bd0423584aee74f553fe133a767db4', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(28, 14, 'TIX-PASS-2026-RJ0022-03', 'fbefb1e3b3dafcc442610c6068fc5bbd', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(29, 14, 'TIX-PASS-2026-RJ0022-04', '21e1037946bccea78ccd11f3718762c1', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(30, 14, 'TIX-PASS-2026-RJ0022-05', 'c9399f31c258de843b1cae8c74eb117d', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(31, 14, 'TIX-PASS-2026-RJ0022-06', '4498b492dbb8fe8afd7bc68c9eca3d4a', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(32, 14, 'TIX-PASS-2026-RJ0022-07', '34664b086669faa4f2761d65a9a107ab', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(33, 14, 'TIX-PASS-2026-RJ0022-08', 'c2dc049a0b6214be8c975667b0e0811c', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(34, 14, 'TIX-PASS-2026-RJ0022-09', 'b747422d6f8a8bbc9b27211ec609c9bd', '+919845350802', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(35, 15, 'TIX-PASS-2026-RJ0023-01', 'e5bda525db2d05dcd34832df2569e9a9', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(36, 15, 'TIX-PASS-2026-RJ0023-02', '8e43e5e515a4c4deceacc7063dd47864', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(37, 15, 'TIX-PASS-2026-RJ0023-03', '345cfe8846fb70365f6a8bd4d85c66f0', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(38, 15, 'TIX-PASS-2026-RJ0023-04', '2d5b944466df2ae2d53edac4c7be5977', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(39, 15, 'TIX-PASS-2026-RJ0023-05', '57a8acb66e3ddaeb1c5fed04839203d1', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(40, 15, 'TIX-PASS-2026-RJ0023-06', '79f160e5c4f0a231eb67db66d79dae1c', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(41, 15, 'TIX-PASS-2026-RJ0023-07', '717f5972b4497f24ccc1a1fe040263ea', '+917892244643', 'unscanned', '2026-10-13 00:00:00+05:30'),
+(42, 16, 'TIX-PASS-2026-RJ0025-01', '0ce57664874d373782ce78416b8d6d27', '+919113225959', 'unscanned', '2026-10-15 00:00:00+05:30'),
+(43, 16, 'TIX-PASS-2026-RJ0025-02', '9609888bc620ad05a63dffb0d795a110', '+919113225959', 'unscanned', '2026-10-15 00:00:00+05:30'),
+(44, 17, 'TIX-PASS-2026-RJ0037-01', 'dfd65272a4eaaf4d6cb900297763f1af', '+917259880344', 'unscanned', '2026-10-21 00:00:00+05:30'),
+(45, 18, 'TIX-PASS-2026-RJ0038-01', 'c36837f1e95443d7bfcfd666c0573319', '+917259108835', 'unscanned', '2026-10-21 00:00:00+05:30'),
+(46, 18, 'TIX-PASS-2026-RJ0038-02', '1538e5673a4921abfe7c2f01eda2155f', '+917259108835', 'unscanned', '2026-10-21 00:00:00+05:30'),
+(47, 19, 'TIX-PASS-2026-RJ0040-01', '937a1f753334abece9bbf7ce2eda4eb8', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
+(48, 19, 'TIX-PASS-2026-RJ0040-02', 'ebd327e8b663dac69d43243445aa93f5', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
+(49, 19, 'TIX-PASS-2026-RJ0040-03', '3185b842a22974b1ccd7fde20273d807', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
+(50, 19, 'TIX-PASS-2026-RJ0040-04', '8bd13bbfa1328ac1e04d368465ef2558', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
+(51, 19, 'TIX-PASS-2026-RJ0040-05', '09ab145ca24636892e9fbd15703277e3', '+918105865828', 'unscanned', '2026-10-27 00:00:00+05:30'),
+(52, 20, 'TIX-PASS-2026-RJ0041-01', '30c6147ba20c7e69788c828a2a33fe33', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
+(53, 20, 'TIX-PASS-2026-RJ0041-02', 'affd80202dfdda0d749214522220250d', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
+(54, 20, 'TIX-PASS-2026-RJ0041-03', '006d5b56be1a70f2aa3385fb024b494e', '+916361004463', 'unscanned', '2026-10-28 00:00:00+05:30'),
+(55, 21, 'TIX-PASS-2026-RJ0043-01', '9b04fd0214a244257d8b8939deafc05b', '+918555910998', 'unscanned', '2026-11-01 00:00:00+05:30'),
+(56, 21, 'TIX-PASS-2026-RJ0043-02', '27c08900e6d0a0771f18e9b4ed329dc2', '+918555910998', 'unscanned', '2026-11-01 00:00:00+05:30')
 ON CONFLICT (pass_code) DO NOTHING;
 SELECT setval('issued_passes_id_seq', GREATEST((SELECT MAX(id) FROM issued_passes), 56));
 
--- 8. Promoter Commissions (11.0% Performance Cut on 21 Orders)
-INSERT INTO promoter_commissions (id, order_id, promoter_id, pass_quantity, ticket_price, commission_rate, commission_amount, payout_status, upi_reference, settled_at) VALUES
-(1, 1, 1, 4, 6500.00, 11.00, 2860.00, 'settled', 'SETTLE-NPCI-RJ0001', '2026-10-04 00:00:00+05:30'),
-(2, 2, 1, 1, 7750.00, 11.00, 852.50, 'settled', 'SETTLE-NPCI-RJ0002', '2026-10-06 00:00:00+05:30'),
-(3, 3, 1, 2, 5500.00, 11.00, 1210.00, 'settled', 'SETTLE-NPCI-RJ0005', '2026-10-10 00:00:00+05:30'),
-(4, 4, 1, 2, 5000.00, 11.00, 1100.00, 'settled', 'SETTLE-NPCI-RJ0006', '2026-10-10 00:00:00+05:30'),
-(5, 5, 1, 2, 7800.00, 11.00, 1716.00, 'settled', 'SETTLE-NPCI-RJ0007', '2026-10-10 00:00:00+05:30'),
-(6, 6, 1, 1, 3000.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0009', '2026-10-10 00:00:00+05:30'),
-(7, 7, 1, 1, 3000.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0010', '2026-10-10 00:00:00+05:30'),
-(8, 8, 1, 4, 2999.00, 11.00, 1320.00, 'settled', 'SETTLE-NPCI-RJ0013', '2026-10-11 00:00:00+05:30'),
-(9, 9, 1, 2, 8250.00, 11.00, 1815.00, 'settled', 'SETTLE-NPCI-RJ0015', '2026-10-12 00:00:00+05:30'),
-(10, 10, 1, 2, 2750.00, 11.00, 605.00, 'settled', 'SETTLE-NPCI-RJ0017', '2026-10-12 00:00:00+05:30'),
-(11, 11, 1, 1, 6000.00, 11.00, 660.00, 'settled', 'SETTLE-NPCI-RJ0019', '2026-10-13 00:00:00+05:30'),
-(12, 12, 1, 1, 2750.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0020', '2026-10-13 00:00:00+05:30'),
-(13, 13, 1, 2, 4125.00, 11.00, 990.00, 'settled', 'SETTLE-NPCI-RJ0021', '2026-10-13 00:00:00+05:30'),
-(14, 14, 1, 9, 4125.00, 11.00, 4455.00, 'settled', 'SETTLE-NPCI-RJ0022', '2026-10-13 00:00:00+05:30'),
-(15, 15, 1, 7, 3000.00, 11.00, 2310.00, 'settled', 'SETTLE-NPCI-RJ0023', '2026-10-13 00:00:00+05:30'),
-(16, 16, 1, 2, 6000.00, 11.00, 1320.00, 'settled', 'SETTLE-NPCI-RJ0025', '2026-10-15 00:00:00+05:30'),
-(17, 17, 1, 1, 1500.00, 11.00, 165.00, 'settled', 'SETTLE-NPCI-RJ0037', '2026-10-21 00:00:00+05:30'),
-(18, 18, 1, 2, 1500.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0038', '2026-10-21 00:00:00+05:30'),
-(19, 19, 1, 5, 4000.00, 11.00, 2200.00, 'settled', 'SETTLE-NPCI-RJ0040', '2026-10-27 00:00:00+05:30'),
-(20, 20, 1, 3, 3800.00, 11.00, 1221.00, 'settled', 'SETTLE-NPCI-RJ0041', '2026-10-28 00:00:00+05:30'),
-(21, 21, 1, 2, 9500.00, 11.00, 2090.00, 'settled', 'SETTLE-NPCI-RJ0043', '2026-11-01 00:00:00+05:30')
-ON CONFLICT (id) DO UPDATE SET commission_amount = EXCLUDED.commission_amount, payout_status = EXCLUDED.payout_status;
+-- 8. Promoter Commissions (11.0% Performance Cut on 21 Orders = ₹28,209.50)
+INSERT INTO promoter_commissions (id, order_id, promoter_id, pass_quantity, ticket_price, commission_rate, commission_amount, payout_status, upi_reference, settled_at, created_at) VALUES
+(1, 1, 1, 4, 6500.00, 11.00, 2860.00, 'settled', 'SETTLE-NPCI-RJ0001', '2026-10-04 00:00:00+05:30', '2026-10-04 00:00:00+05:30'),
+(2, 2, 1, 1, 7750.00, 11.00, 852.50, 'settled', 'SETTLE-NPCI-RJ0002', '2026-10-06 00:00:00+05:30', '2026-10-06 00:00:00+05:30'),
+(3, 3, 1, 2, 5500.00, 11.00, 1210.00, 'settled', 'SETTLE-NPCI-RJ0005', '2026-10-10 00:00:00+05:30', '2026-10-10 00:00:00+05:30'),
+(4, 4, 1, 2, 5000.00, 11.00, 1100.00, 'settled', 'SETTLE-NPCI-RJ0006', '2026-10-10 00:00:00+05:30', '2026-10-10 00:00:00+05:30'),
+(5, 5, 1, 2, 7800.00, 11.00, 1716.00, 'settled', 'SETTLE-NPCI-RJ0007', '2026-10-10 00:00:00+05:30', '2026-10-10 00:00:00+05:30'),
+(6, 6, 1, 1, 3000.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0009', '2026-10-10 00:00:00+05:30', '2026-10-10 00:00:00+05:30'),
+(7, 7, 1, 1, 3000.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0010', '2026-10-10 00:00:00+05:30', '2026-10-10 00:00:00+05:30'),
+(8, 8, 1, 4, 2999.00, 11.00, 1320.00, 'settled', 'SETTLE-NPCI-RJ0013', '2026-10-11 00:00:00+05:30', '2026-10-11 00:00:00+05:30'),
+(9, 9, 1, 2, 8250.00, 11.00, 1815.00, 'settled', 'SETTLE-NPCI-RJ0015', '2026-10-12 00:00:00+05:30', '2026-10-12 00:00:00+05:30'),
+(10, 10, 1, 2, 2750.00, 11.00, 605.00, 'settled', 'SETTLE-NPCI-RJ0017', '2026-10-12 00:00:00+05:30', '2026-10-12 00:00:00+05:30'),
+(11, 11, 1, 1, 6000.00, 11.00, 660.00, 'settled', 'SETTLE-NPCI-RJ0019', '2026-10-13 00:00:00+05:30', '2026-10-13 00:00:00+05:30'),
+(12, 12, 1, 1, 2750.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0020', '2026-10-13 00:00:00+05:30', '2026-10-13 00:00:00+05:30'),
+(13, 13, 1, 2, 4125.00, 11.00, 990.00, 'settled', 'SETTLE-NPCI-RJ0021', '2026-10-13 00:00:00+05:30', '2026-10-13 00:00:00+05:30'),
+(14, 14, 1, 9, 4125.00, 11.00, 4455.00, 'settled', 'SETTLE-NPCI-RJ0022', '2026-10-13 00:00:00+05:30', '2026-10-13 00:00:00+05:30'),
+(15, 15, 1, 7, 3000.00, 11.00, 2310.00, 'settled', 'SETTLE-NPCI-RJ0023', '2026-10-13 00:00:00+05:30', '2026-10-13 00:00:00+05:30'),
+(16, 16, 1, 2, 6000.00, 11.00, 1320.00, 'settled', 'SETTLE-NPCI-RJ0025', '2026-10-15 00:00:00+05:30', '2026-10-15 00:00:00+05:30'),
+(17, 17, 1, 1, 1500.00, 11.00, 165.00, 'settled', 'SETTLE-NPCI-RJ0037', '2026-10-21 00:00:00+05:30', '2026-10-21 00:00:00+05:30'),
+(18, 18, 1, 2, 1500.00, 11.00, 330.00, 'settled', 'SETTLE-NPCI-RJ0038', '2026-10-21 00:00:00+05:30', '2026-10-21 00:00:00+05:30'),
+(19, 19, 1, 5, 4000.00, 11.00, 2200.00, 'settled', 'SETTLE-NPCI-RJ0040', '2026-10-27 00:00:00+05:30', '2026-10-27 00:00:00+05:30'),
+(20, 20, 1, 3, 3800.00, 11.00, 1221.00, 'settled', 'SETTLE-NPCI-RJ0041', '2026-10-28 00:00:00+05:30', '2026-10-28 00:00:00+05:30'),
+(21, 21, 1, 2, 9500.00, 11.00, 2090.00, 'settled', 'SETTLE-NPCI-RJ0043', '2026-11-01 00:00:00+05:30', '2026-11-01 00:00:00+05:30')
+ON CONFLICT (id) DO UPDATE SET 
+    order_id = EXCLUDED.order_id,
+    promoter_id = EXCLUDED.promoter_id,
+    pass_quantity = EXCLUDED.pass_quantity,
+    ticket_price = EXCLUDED.ticket_price,
+    commission_rate = EXCLUDED.commission_rate,
+    commission_amount = EXCLUDED.commission_amount,
+    payout_status = EXCLUDED.payout_status,
+    settled_at = EXCLUDED.settled_at;
 SELECT setval('promoter_commissions_id_seq', GREATEST((SELECT MAX(id) FROM promoter_commissions), 21));
 
 

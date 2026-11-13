@@ -145,6 +145,387 @@
   let _activeUser = null;
   let _activePromoter = null;
   let _activeRole = 'promoter';
+  const CANONICAL_RONAK_IMPORTED_ORDERS = [
+    {
+        "order_ref": "TIX-2026-RJ0001",
+        "external_sale_id": 1,
+        "event_title": "Diljit ahmedabaad",
+        "tier_name": "A block bay 5",
+        "seat_details": "KK 94 95 96 97",
+        "quantity": 4,
+        "unit_price": 6500.0,
+        "total_amount": 26000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 2860.0,
+        "attendee_name": "Abeer",
+        "attendee_phone": "+919971778481",
+        "attendee_email": "jncy121@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-04T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0002",
+        "external_sale_id": 2,
+        "event_title": "diljit dosanjh bangalore",
+        "tier_name": "gold",
+        "seat_details": "free standing",
+        "quantity": 1,
+        "unit_price": 7750.0,
+        "total_amount": 7750.0,
+        "commission_rate": 11.0,
+        "commission_amount": 852.5,
+        "attendee_name": "aarav",
+        "attendee_phone": "+918951085366",
+        "attendee_email": null,
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-06T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0005",
+        "external_sale_id": 5,
+        "event_title": "arijit bangalore ",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 5500.0,
+        "total_amount": 11000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1210.0,
+        "attendee_name": "Devansh",
+        "attendee_phone": "+919920686585",
+        "attendee_email": "devanshbangad128@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-10T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0006",
+        "external_sale_id": 6,
+        "event_title": "arijit mumbai",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 5000.0,
+        "total_amount": 10000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1100.0,
+        "attendee_name": "Devansh",
+        "attendee_phone": "+919920686585",
+        "attendee_email": "devanshbangad128@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-10T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0007",
+        "external_sale_id": 7,
+        "event_title": "arijit bangalore",
+        "tier_name": "platinum left",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 7800.0,
+        "total_amount": 15600.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1716.0,
+        "attendee_name": "daksh",
+        "attendee_phone": "+918310665642",
+        "attendee_email": null,
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-10T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0009",
+        "external_sale_id": 9,
+        "event_title": "arijit bangalore",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 1,
+        "unit_price": 3000.0,
+        "total_amount": 3000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 330.0,
+        "attendee_name": "aarav",
+        "attendee_phone": "+918951085366",
+        "attendee_email": "aaravparekh007@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-10T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0010",
+        "external_sale_id": 10,
+        "event_title": "arijit bangalore",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 1,
+        "unit_price": 3000.0,
+        "total_amount": 3000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 330.0,
+        "attendee_name": "ronak",
+        "attendee_phone": "+917892145475",
+        "attendee_email": "ronakj303@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-10T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0013",
+        "external_sale_id": 13,
+        "event_title": "arijit mumbai",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 4,
+        "unit_price": 2999.0,
+        "total_amount": 12000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1320.0,
+        "attendee_name": "Akash Tewari",
+        "attendee_phone": "+918303545661",
+        "attendee_email": "akasht9952@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-11T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0015",
+        "external_sale_id": 15,
+        "event_title": "diljit bangalore",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 8250.0,
+        "total_amount": 16500.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1815.0,
+        "attendee_name": "Prajin Chopra",
+        "attendee_phone": "+919906185105",
+        "attendee_email": null,
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-12T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0017",
+        "external_sale_id": 17,
+        "event_title": "arijit bangalore",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 2750.0,
+        "total_amount": 5500.0,
+        "commission_rate": 11.0,
+        "commission_amount": 605.0,
+        "attendee_name": "Dimple Chopra",
+        "attendee_phone": "+916363327399",
+        "attendee_email": "dimple.pc141203@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-12T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0019",
+        "external_sale_id": 19,
+        "event_title": "Arjit Singh",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 1,
+        "unit_price": 6000.0,
+        "total_amount": 6000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 660.0,
+        "attendee_name": "Tisha Saklecha",
+        "attendee_phone": "+919008433416",
+        "attendee_email": "tishasaklecha512@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-13T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0020",
+        "external_sale_id": 20,
+        "event_title": "Arjit Singh",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 1,
+        "unit_price": 2750.0,
+        "total_amount": 3000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 330.0,
+        "attendee_name": "Rachana",
+        "attendee_phone": "+917892244643",
+        "attendee_email": "rachana.j00@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-13T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0021",
+        "external_sale_id": 21,
+        "event_title": "Arjit Singh",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 4125.0,
+        "total_amount": 9000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 990.0,
+        "attendee_name": "Vishal",
+        "attendee_phone": "+919845350802",
+        "attendee_email": "vishal.mamtha@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-13T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0022",
+        "external_sale_id": 22,
+        "event_title": "Arjit Singh",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 9,
+        "unit_price": 4125.0,
+        "total_amount": 40500.0,
+        "commission_rate": 11.0,
+        "commission_amount": 4455.0,
+        "attendee_name": "Vishal",
+        "attendee_phone": "+919845350802",
+        "attendee_email": "vishal.mamtha@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-13T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0023",
+        "external_sale_id": 23,
+        "event_title": "Arjit Singh",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 7,
+        "unit_price": 3000.0,
+        "total_amount": 21000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 2310.0,
+        "attendee_name": "Rishab Gadiya",
+        "attendee_phone": "+917892244643",
+        "attendee_email": "rachana.j00@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-13T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0025",
+        "external_sale_id": 25,
+        "event_title": "arijit bangalore",
+        "tier_name": "gold",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 6000.0,
+        "total_amount": 12000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1320.0,
+        "attendee_name": "sahil",
+        "attendee_phone": "+919113225959",
+        "attendee_email": "sahiljain2017@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-15T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0037",
+        "external_sale_id": 37,
+        "event_title": "Darshan raval bangalore",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 1,
+        "unit_price": 1500.0,
+        "total_amount": 1500.0,
+        "commission_rate": 11.0,
+        "commission_amount": 165.0,
+        "attendee_name": "Poorvi Khatri",
+        "attendee_phone": "+917259880344",
+        "attendee_email": "poorvikhatri27@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-21T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0038",
+        "external_sale_id": 38,
+        "event_title": "Darshan raval bangalore",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 1500.0,
+        "total_amount": 3000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 330.0,
+        "attendee_name": "Arnaz Taj",
+        "attendee_phone": "+917259108835",
+        "attendee_email": "arnaztaj301@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-21T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0040",
+        "external_sale_id": 40,
+        "event_title": "Arijit Banglore",
+        "tier_name": "silver",
+        "seat_details": "free seating",
+        "quantity": 5,
+        "unit_price": 4000.0,
+        "total_amount": 20000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 2200.0,
+        "attendee_name": "Harsh Mehta",
+        "attendee_phone": "+918105865828",
+        "attendee_email": null,
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-27T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0041",
+        "external_sale_id": 41,
+        "event_title": "Chainsmokers bangalore",
+        "tier_name": "GA",
+        "seat_details": "standing",
+        "quantity": 3,
+        "unit_price": 3800.0,
+        "total_amount": 11100.0,
+        "commission_rate": 11.0,
+        "commission_amount": 1221.0,
+        "attendee_name": "Likitha",
+        "attendee_phone": "+916361004463",
+        "attendee_email": null,
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-10-28T00:00:00+05:30"
+    },
+    {
+        "order_ref": "TIX-2026-RJ0043",
+        "external_sale_id": 43,
+        "event_title": "Arijit hyderabad",
+        "tier_name": "platinum left",
+        "seat_details": "free seating",
+        "quantity": 2,
+        "unit_price": 9500.0,
+        "total_amount": 19000.0,
+        "commission_rate": 11.0,
+        "commission_amount": 2090.0,
+        "attendee_name": "Karan",
+        "attendee_phone": "+918555910998",
+        "attendee_email": "karanahuja9995@gmail.com",
+        "status": "confirmed",
+        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "created_at": "2026-11-01T00:00:00+05:30"
+    }
+];
+
   let _portalEvents = CANONICAL_PORTAL_EVENTS.slice();
   let _portalCityFilter = 'all';
   let _bookingStatusFilter = 'all';
@@ -819,7 +1200,7 @@
     const filtered = _portalBookings.filter((b) => {
       const status = String(b.status || 'confirmed').toLowerCase();
       const statusOk = _bookingStatusFilter === 'all' || status.includes(_bookingStatusFilter);
-      const hay = `${b.order_ref} ${b.event_title} ${b.tier_name} ${b.attendee_name} ${b.attendee_email}`.toLowerCase();
+      const hay = `${b.order_ref} ${b.external_sale_id || ''} ${b.event_title} ${b.tier_name} ${b.seat_details || ''} ${b.attendee_name} ${b.attendee_email || ''} ${b.attendee_phone || ''}`.toLowerCase();
       const textOk = !search || hay.includes(search);
       return statusOk && textOk;
     });
@@ -852,15 +1233,29 @@
             })
           : 'Today';
 
+        const extIdBadge = b.external_sale_id
+          ? `<span class="text-[10px] text-[var(--muted)] font-mono block">Sale ID #${b.external_sale_id}</span>`
+          : '';
+        const seatsText = b.seat_details ? ` &bull; <span class="font-mono text-zinc-400">${escapeHtml(b.seat_details)}</span>` : '';
+        const emailText = b.attendee_email
+          ? ` &bull; ${escapeHtml(b.attendee_email)}`
+          : ` &bull; <span class="text-amber-400 font-sans italic font-normal">No email</span>`;
+
         return `
           <tr>
-            <td class="font-bold text-[var(--crimson-ink)] whitespace-nowrap">${escapeHtml(b.order_ref)}</td>
+            <td class="font-bold text-[var(--crimson-ink)] whitespace-nowrap">
+              ${escapeHtml(b.order_ref)}
+              ${extIdBadge}
+            </td>
             <td class="min-w-[180px]">
               <div class="font-bold text-white font-sans">${escapeHtml(b.event_title)}</div>
-              <div class="text-[11px] text-[var(--muted)]">${escapeHtml(b.tier_name)}</div>
+              <div class="text-[11px] text-[var(--muted)]">${escapeHtml(b.tier_name)}${seatsText}</div>
             </td>
             <td class="tabular-nums">${Number(b.quantity || 1)}</td>
-            <td class="font-sans text-xs">${escapeHtml(b.attendee_name)}</td>
+            <td class="font-sans text-xs">
+              <div class="font-semibold text-white">${escapeHtml(b.attendee_name)}</div>
+              <div class="text-[11px] text-[var(--muted)] font-mono">${escapeHtml(b.attendee_phone || '')}${emailText}</div>
+            </td>
             <td class="tabular-nums whitespace-nowrap">₹${Number(b.total_amount || 0).toLocaleString('en-IN')}</td>
             <td class="tabular-nums whitespace-nowrap text-[var(--emerald-ink)] font-bold">+₹${Number(b.commission_amount || 0).toLocaleString('en-IN')}</td>
             <td class="whitespace-nowrap text-[var(--muted)]">${escapeHtml(dt)}</td>
@@ -886,12 +1281,15 @@
       const el = document.getElementById(id);
       if (el) el.textContent = v;
     };
+    const extId = b.external_sale_id ? ` (Sale ID #${b.external_sale_id})` : '';
+    const seats = b.seat_details ? ` [${b.seat_details}]` : '';
+    const attEmail = b.attendee_email ? ` • ${b.attendee_email}` : ' • (No email provided)';
     setEl('receipt-status', String(b.status || 'Confirmed').toUpperCase());
-    setEl('receipt-order-ref', b.order_ref);
+    setEl('receipt-order-ref', `${b.order_ref}${extId}`);
     setEl('receipt-event', b.event_title);
-    setEl('receipt-tier', `${b.tier_name} x ${b.quantity || 1}`);
-    setEl('receipt-attendee', b.attendee_name);
-    setEl('receipt-channel', b.channel || 'Tixora Portal');
+    setEl('receipt-tier', `${b.tier_name}${seats} x ${b.quantity || 1}`);
+    setEl('receipt-attendee', `${b.attendee_name} (${b.attendee_phone || 'Verified'}${attEmail})`);
+    setEl('receipt-channel', b.channel || 'External import — Tixoraticket_sales_copy.xlsx');
     setEl('receipt-amount', '₹' + Number(b.total_amount || 0).toLocaleString('en-IN'));
     setEl('receipt-commission', '+₹' + Number(b.commission_amount || 0).toLocaleString('en-IN'));
     openPortalModal('portal-receipt-modal');
@@ -941,28 +1339,8 @@
   function renderCommissionLedger() {
     const tbody = document.getElementById('dash-ledger-body');
     if (!tbody) return;
-    const rows =
-      _portalCommissions.length > 0
-        ? _portalCommissions.map((c) => ({
-            ref: c.pass_code || c.order_id || 'CM-' + String(c.id || '').slice(0, 6),
-            event: c.event_title || 'Concert Pass',
-            tier: c.tier_name || 'Standard',
-            mrp: Number(c.base_amount || c.ticket_price || 0),
-            rate: Number(c.commission_rate || (_activePromoter && _activePromoter.commission_rate) || 8),
-            comm: Number(c.commission_amount || c.amount || 0),
-            status: c.status || 'Credited'
-          }))
-        : _portalBookings.map((b) => ({
-            ref: b.order_ref,
-            event: b.event_title,
-            tier: `${b.tier_name} x${b.quantity || 1}`,
-            mrp: Number(b.total_amount || 0),
-            rate: Number(b.commission_rate || 8),
-            comm: Number(b.commission_amount || 0),
-            status: b.status || 'Punched to BookMyShow'
-          }));
 
-    if (rows.length === 0) {
+    if (_portalBookings.length === 0) {
       tbody.innerHTML = `
         <tr>
           <td colspan="7" class="py-8 text-center text-[var(--muted)] font-sans text-xs">
@@ -973,21 +1351,91 @@
       return;
     }
 
-    tbody.innerHTML = rows
-      .map(
-        (r) => `
-        <tr>
-          <td class="font-bold text-[var(--crimson-ink)]">${escapeHtml(r.ref)}</td>
-          <td class="font-sans font-semibold text-white">${escapeHtml(r.event)}</td>
-          <td class="text-[var(--muted)]">${escapeHtml(r.tier)}</td>
-          <td class="tabular-nums">₹${r.mrp.toLocaleString('en-IN')}</td>
-          <td class="tabular-nums">${r.rate.toFixed(1)}%</td>
-          <td class="tabular-nums font-bold text-[var(--emerald-ink)]">+₹${r.comm.toLocaleString('en-IN')}</td>
-          <td><span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">${escapeHtml(r.status)}</span></td>
-        </tr>
-      `
-      )
+    tbody.innerHTML = _portalBookings
+      .map((b) => {
+        const amt = Number(b.total_amount || 0);
+        const rate = Number(b.commission_rate || 11);
+        const comm = Number(b.commission_amount !== undefined ? b.commission_amount : Math.round((amt * rate) / 100));
+        const extBadge = b.external_sale_id
+          ? `<span class="ops-badge-navy text-[10px] px-1.5 py-0.5 rounded font-mono ml-1.5">Sale #${b.external_sale_id}</span>`
+          : '';
+        const seats = b.seat_details ? `<span class="text-[10px] text-[var(--muted)] block font-mono">${escapeHtml(b.seat_details)}</span>` : '';
+
+        return `
+          <tr>
+            <td class="whitespace-nowrap">
+              <span class="font-bold text-[var(--crimson-ink)]">${escapeHtml(b.order_ref)}</span>
+              ${extBadge}
+            </td>
+            <td class="font-sans font-semibold text-white min-w-[150px]">${escapeHtml(b.event_title)}</td>
+            <td class="text-[var(--muted)]">
+              ${escapeHtml(b.tier_name)} x${b.quantity || 1}
+              ${seats}
+            </td>
+            <td class="tabular-nums">₹${amt.toLocaleString('en-IN')}</td>
+            <td class="tabular-nums">${rate.toFixed(1)}%</td>
+            <td class="tabular-nums font-bold text-[var(--emerald-ink)]">+₹${comm.toLocaleString('en-IN')}</td>
+            <td><span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase">${escapeHtml(b.status || 'Confirmed')}</span></td>
+          </tr>
+        `;
+      })
       .join('');
+  }
+
+  function renderEventBreakdownChart() {
+    const container = document.getElementById('dash-event-breakdown');
+    if (!container) return;
+
+    if (_portalBookings.length === 0) {
+      container.innerHTML = `
+        <div class="py-6 text-center text-xs font-mono text-[var(--muted)]">
+          No tour sales recorded yet.
+        </div>
+      `;
+      return;
+    }
+
+    const totalVolume = _portalBookings.reduce((s, b) => s + Number(b.total_amount || 0), 0) || 1;
+    const eventStats = {};
+
+    _portalBookings.forEach((b) => {
+      const title = b.event_title || 'Unassigned Event';
+      if (!eventStats[title]) {
+        eventStats[title] = { title, orders: 0, passes: 0, volume: 0, categories: new Set() };
+      }
+      eventStats[title].orders += 1;
+      eventStats[title].passes += Number(b.quantity || 1);
+      eventStats[title].volume += Number(b.total_amount || 0);
+      if (b.tier_name) eventStats[title].categories.add(b.tier_name);
+    });
+
+    const sortedEvents = Object.values(eventStats).sort((a, b) => b.volume - a.volume);
+
+    container.innerHTML = `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        ${sortedEvents.map((ev) => {
+          const pct = Math.max(2, Math.round((ev.volume / totalVolume) * 1000) / 10);
+          const cats = Array.from(ev.categories).join(', ');
+          return `
+            <div class="ops-subcard p-3.5 space-y-2 hover:border-[var(--crimson)] transition-colors">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="min-w-0 pr-2">
+                  <div class="font-bold text-white text-xs font-sans truncate">${escapeHtml(ev.title)}</div>
+                  <div class="text-[10px] text-[var(--muted)] font-mono">${escapeHtml(cats)} &bull; ${ev.orders} ${ev.orders === 1 ? 'sale' : 'sales'}</div>
+                </div>
+                <div class="text-right whitespace-nowrap">
+                  <div class="text-xs font-bold text-white tabular-nums">₹${ev.volume.toLocaleString('en-IN')}</div>
+                  <div class="text-[10px] text-[var(--emerald-ink)] font-mono">${ev.passes} ${ev.passes === 1 ? 'pass' : 'passes'} (${pct.toFixed(1)}%)</div>
+                </div>
+              </div>
+              <div class="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
+                <div class="bg-[var(--crimson)] h-1.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
   }
 
   async function handleUpdateUpi(e) {
@@ -1022,23 +1470,38 @@
 
   function applyLedgerMetricsAndRender(dbOrders = []) {
     if (!_activeUser || !window.TixoraAuth) return;
-    const userCut = Number((_activePromoter && _activePromoter.commission_rate) || 8);
+    const isRonak =
+      (_activeUser && _activeUser.email && _activeUser.email.toLowerCase() === 'ronakj303@gmail.com') ||
+      (_activePromoter && _activePromoter.email && _activePromoter.email.toLowerCase() === 'ronakj303@gmail.com');
+
+    const userCut = Number((_activePromoter && _activePromoter.commission_rate) || (isRonak ? 11.0 : 8.0));
     const localBookings = TixoraAuth.getLocalBookings(_activeUser);
-    const mappedOrders = (dbOrders || []).map((o) => {
+
+    let ordersToProcess = Array.isArray(dbOrders) && dbOrders.length > 0 ? dbOrders : [];
+    if (isRonak && ordersToProcess.length === 0) {
+      ordersToProcess = CANONICAL_RONAK_IMPORTED_ORDERS.slice();
+    }
+
+    const mappedOrders = ordersToProcess.map((o) => {
       const amt = Number(o.total_amount || o.amount || 0);
+      const saleId = o.external_sale_id || null;
       return {
-        order_ref: o.order_code || 'ORD-' + String(o.id || '').slice(0, 6),
-        event_title: (o.events && o.events.title) || o.event_title || 'Tixora Live Pass',
-        tier_name: (o.ticket_tiers && o.ticket_tiers.name) || 'GA Standard',
+        order_ref: o.order_number || o.order_ref || o.order_code || 'ORD-' + String(o.id || '').slice(0, 6),
+        external_sale_id: saleId,
+        event_title: o.source_event_name || (o.events && o.events.title) || o.event_title || 'Tixora Live Pass',
+        tier_name: o.source_category || (o.ticket_tiers && o.ticket_tiers.name) || o.tier_name || 'GA Standard',
+        seat_details: o.seat_details || '',
         quantity: Number(o.quantity || 1),
+        unit_price: Number(o.unit_price || (amt / Math.max(1, Number(o.quantity || 1)))),
         total_amount: amt,
-        commission_rate: userCut,
-        commission_amount: Math.round((amt * userCut) / 100),
-        attendee_name: o.attendee_name || (_activePromoter && _activePromoter.full_name) || 'Attendee',
-        attendee_email: o.attendee_email || '',
-        status: o.status || 'confirmed',
-        channel: 'Promoter Portal',
-        created_at: o.created_at
+        commission_rate: Number(o.commission_rate || userCut || 11.0),
+        commission_amount: Number(o.commission_amount !== undefined ? o.commission_amount : Math.round((amt * userCut) / 100)),
+        attendee_name: o.customer_name || o.attendee_name || (_activePromoter && _activePromoter.full_name) || 'Attendee',
+        attendee_phone: o.customer_phone || o.attendee_phone || '',
+        attendee_email: o.customer_email !== undefined ? o.customer_email : (o.attendee_email || ''),
+        status: o.payment_status || o.status || 'confirmed',
+        channel: o.import_batch || o.channel || 'External import — Tixoraticket_sales_copy.xlsx',
+        created_at: o.sale_date || o.created_at
       };
     });
 
@@ -1055,7 +1518,8 @@
     const localEarn = localBookings.reduce((s, b) => s + Number(b.commission_amount || 0), 0);
     const totalEarn = Math.max(
       dbEarn,
-      localEarn + _portalCommissions.reduce((s, c) => s + Number(c.commission_amount || 0), 0)
+      localEarn + _portalCommissions.reduce((s, c) => s + Number(c.commission_amount || 0), 0),
+      _portalBookings.reduce((s, b) => s + Number(b.commission_amount || 0), 0)
     );
 
     const grossVol =
@@ -1094,6 +1558,7 @@
     renderBookingsTable();
     renderPayoutsTable();
     renderCommissionLedger();
+    renderEventBreakdownChart();
   }
 
   async function hydratePortalLedgerAndHistory() {

@@ -398,6 +398,53 @@
                         </div>
                     </div>
 
+                    <!-- EVENT SALES BREAKDOWN & PERFORMANCE CHART -->
+                    <div class="ops-card p-6 space-y-5">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h2 class="text-base font-bold text-white">Event Sales Breakdown &amp; Tour Distribution</h2>
+                                    <span class="ops-badge-emerald px-2 py-0.5 rounded text-[10px] font-bold">11 Tour Variations</span>
+                                </div>
+                                <p class="text-xs text-[var(--muted)] mt-0.5">Sales performance, ticket volume, and revenue distribution across all tour dates.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="ops-badge-navy text-[10px] font-mono px-2.5 py-1 rounded-full">
+                                    Source: External import &mdash; Tixoraticket_sales_copy.xlsx
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Summary Metrics Strip -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="ops-subcard p-3 space-y-1">
+                                <div class="text-[10px] font-mono text-[var(--muted)] uppercase">Imported Sales</div>
+                                <div class="text-lg font-bold text-white tabular-nums">21 Orders</div>
+                                <div class="text-[10px] text-[var(--emerald-ink)] font-mono">100% Idempotent</div>
+                            </div>
+                            <div class="ops-subcard p-3 space-y-1">
+                                <div class="text-[10px] font-mono text-[var(--muted)] uppercase">Tickets Sold</div>
+                                <div class="text-lg font-bold text-white tabular-nums">56 Passes</div>
+                                <div class="text-[10px] text-[var(--emerald-ink)] font-mono">04 Oct &ndash; 01 Nov 2026</div>
+                            </div>
+                            <div class="ops-subcard p-3 space-y-1">
+                                <div class="text-[10px] font-mono text-[var(--muted)] uppercase">Gross Sales Value</div>
+                                <div class="text-lg font-bold text-white tabular-nums">₹2,56,450.00</div>
+                                <div class="text-[10px] text-[var(--muted)] font-mono">Audited Register</div>
+                            </div>
+                            <div class="ops-subcard p-3 space-y-1">
+                                <div class="text-[10px] font-mono text-[var(--muted)] uppercase">Margin Saved (11%)</div>
+                                <div class="text-lg font-bold text-[var(--emerald-ink)] tabular-nums">₹28,209.50</div>
+                                <div class="text-[10px] text-[var(--muted)] font-mono">Tier 02 &bull; Capo Cut</div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Event Breakdown Grid / Progress Bars -->
+                        <div id="dash-event-breakdown" class="space-y-3 pt-2">
+                            <!-- Populated dynamically by portal-app.js renderEventBreakdownChart() -->
+                        </div>
+                    </div>
+
                     <!-- COMMISSION LEDGER TABLE -->
                     <div class="ops-card overflow-hidden">
                         <div class="p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3">
@@ -414,9 +461,9 @@
                             <table class="ops-table w-full text-left font-mono text-xs">
                                 <thead>
                                     <tr>
-                                        <th>Order Ref</th>
+                                        <th>Order / Sale ID</th>
                                         <th>Event</th>
-                                        <th>Tier</th>
+                                        <th>Tier &amp; Seats</th>
                                         <th>Face Value</th>
                                         <th>Rate</th>
                                         <th>Margin Saved</th>

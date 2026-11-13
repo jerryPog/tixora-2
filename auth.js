@@ -520,6 +520,32 @@
             }
         }
 
+        // Dedicated profile mapping for official promoter Ronak Jain
+        if (user.email && user.email.toLowerCase() === 'ronakj303@gmail.com') {
+            const ronakProfile = {
+                id: 1,
+                _dbRow: true,
+                user_id: user.id,
+                full_name: 'Ronak Jain',
+                email: 'ronakj303@gmail.com',
+                phone: '+91 78921 45475',
+                additional_phone: '9845350802',
+                city: 'Bengaluru',
+                organization: 'Tixora Operations & South India Tour Desk',
+                referral_code: 'TIX-RONAK-BLR',
+                tier_id: 2,
+                tier_name: 'Capo',
+                commission_rate: 11.00,
+                total_passes_sold: 56,
+                total_earnings: 28209.50,
+                upi_id: '7892145475@upi',
+                kyc_status: 'verified',
+                created_at: '2026-10-04T00:00:00+05:30'
+            };
+            _cachedPromoter = ronakProfile;
+            return ronakProfile;
+        }
+
         // Fallback: Synthesize promoter profile from user's verified registration metadata
         const meta = user.user_metadata || {};
         const fullName = meta.full_name || (user.email ? user.email.split('@')[0] : 'Promoter Partner');
