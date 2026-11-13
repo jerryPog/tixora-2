@@ -1000,13 +1000,8 @@ INSERT INTO ticket_tiers (id, event_id, name, price, total_quota, available_quot
 (18, 8, 'Fan Pit Front Stage', 7999.00, 2000, 510, 15.00, TRUE);
 SELECT setval('ticket_tiers_id_seq', 18);
 
--- 5.6: Promoters (Ambassadors Initialized with 0 Sales — Clean State)
-INSERT INTO promoters (id, full_name, whatsapp_number, email, city, organization, upi_id, tier_id, referral_code, kyc_status, total_passes_sold, total_earnings) VALUES
-(1, 'Aarav Sharma', '+919820011223', 'aarav.sharma@columbia.edu', 'Mumbai', 'Bombay Techno Collective / NMIMS', 'aarav.sharma@okhdfcbank', 4, 'TIX-AARAV-MUM', 'verified', 0, 0.00),
-(2, 'Rohan Kapoor', '+919811044556', 'rohan.k@du.ac.in', 'New Delhi', 'Delhi Nightlife & SRCC Students Club', 'rohankapoor@paytm', 3, 'TIX-ROHAN-DEL', 'verified', 0, 0.00),
-(3, 'Ananya Sen', '+919845077889', 'ananya.sen@blr-music.in', 'Bengaluru', 'Indiranagar Scene Syndicate', 'ananya@oksbi', 2, 'TIX-ANANYA-BLR', 'verified', 0, 0.00),
-(4, 'Kabir Mehta', '+919876501234', 'kabir.mehta@goafest.io', 'Goa', 'Vagator Sound System', 'kabirmehta@icici', 1, 'TIX-KABIR-GOA', 'verified', 0, 0.00);
-SELECT setval('promoters_id_seq', 4);
+-- 5.6: Promoters (Table ready for real registrations — zero dummy users)
+SELECT setval('promoters_id_seq', 1, false);
 
 
 -- ============================================================================
