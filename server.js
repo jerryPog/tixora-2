@@ -315,8 +315,10 @@ const server = http.createServer((req, res) => {
     resolvedPath = path.join(ROOT_DIR, 'dashboard.html');
   } else if (relFromRoot === 'portal' || relFromRoot === 'portal/events') {
     resolvedPath = path.join(ROOT_DIR, 'portal.html');
-  } else if (relFromRoot === 'portal/wallet') {
-    resolvedPath = path.join(ROOT_DIR, 'portal-wallet.html');
+  } else if (relFromRoot === 'portal/wallet' || relFromRoot === 'portal-wallet.html') {
+    res.writeHead(302, { Location: '/portal/bookings' });
+    res.end();
+    return;
   } else if (relFromRoot === 'portal/bookings') {
     resolvedPath = path.join(ROOT_DIR, 'portal-bookings.html');
   } else if (relFromRoot === 'portal/id' || relFromRoot === 'portal-id.html') {

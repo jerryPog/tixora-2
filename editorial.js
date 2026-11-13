@@ -1196,9 +1196,8 @@
           <a href="/portal" onclick="toggleMobileMenu(false)" class="btn-editorial-primary">
             Events Home &bull; ${escapeHtml(displayName)}
           </a>
-          <div class="grid grid-cols-3 gap-2">
+          <div class="grid grid-cols-2 gap-2">
             <a href="/dashboard" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Dashboard</a>
-            <a href="/portal/wallet" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Wallet</a>
             <a href="/portal/bookings" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Bookings</a>
           </div>
           ${role === 'admin' ? `<a href="/admin" onclick="toggleMobileMenu(false)" class="btn-editorial-outline-light">Ops Desk</a>` : ''}
@@ -1256,10 +1255,9 @@
         if (!quickMenu && portalLink && portalLink.parentElement) {
           quickMenu = document.createElement('div');
           quickMenu.id = 'desk-portal-quick-menu';
-          quickMenu.className = 'grid grid-cols-3 gap-2';
+          quickMenu.className = 'grid grid-cols-2 gap-2';
           quickMenu.innerHTML = `
             <a href="/dashboard" class="btn-editorial-outline-light">Dashboard</a>
-            <a href="/portal/wallet" class="btn-editorial-outline-light">Wallet</a>
             <a href="/portal/bookings" class="btn-editorial-outline-light">Bookings</a>
           `;
           portalLink.parentElement.insertBefore(quickMenu, portalLink.nextSibling);

@@ -137,7 +137,6 @@
     '/portal/events',
     '/dashboard',
     '/portal/dashboard',
-    '/portal/wallet',
     '/portal/bookings',
     '/admin',
     '/tours'
@@ -200,9 +199,12 @@
 
   function resolveCurrentPage() {
     const attr = (document.body && document.body.getAttribute('data-portal-page')) || '';
+    if (attr === 'wallet' || (window.location.pathname || '').toLowerCase().includes('wallet')) {
+      window.location.replace('/portal/bookings');
+      return 'bookings';
+    }
     if (attr) return attr.toLowerCase();
     const path = (window.location.pathname || '/portal').toLowerCase();
-    if (path.includes('wallet')) return 'wallet';
     if (path.includes('booking')) return 'bookings';
     if (path.endsWith('/id') || path.includes('portal-id')) return 'id';
     if (path.includes('dashboard')) return 'dashboard';

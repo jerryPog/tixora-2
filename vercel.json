@@ -47,11 +47,16 @@
     { "source": "/portal", "destination": "/portal.html" },
     { "source": "/portal/events", "destination": "/portal.html" },
     { "source": "/portal/dashboard", "destination": "/dashboard.html" },
-    { "source": "/portal/wallet", "destination": "/portal-wallet.html" },
+    { "source": "/portal/wallet", "destination": "/portal-bookings.html" },
     { "source": "/portal/bookings", "destination": "/portal-bookings.html" },
     { "source": "/", "destination": "/index.html" }
   ],
   "redirects": [
+    {
+      "source": "/portal/wallet",
+      "destination": "/portal/bookings",
+      "permanent": false
+    },
     {
       "source": "/portal/id",
       "destination": "/dashboard",
