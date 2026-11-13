@@ -1,13 +1,13 @@
--- ============================================================================
--- TIXORA SALES & PROMOTER IMPORT: RONAK JAIN (IDEMPOTENT MIGRATION)
--- Source File: c:\Users\rahul\Downloads\Tixora ticket_sales_copy.xlsx
--- Batch Label: External import — Tixoraticket_sales_copy.xlsx
--- Promoter: Ronak Jain (ronakj303@gmail.com | +91 78921 45475 | 9845350802)
--- 21 Verified Ticket Sales | 56 Passes | ₹2,56,450.00 Gross Sales Volume
--- Commission: 11.0% (Tier 02 • Capo) = ₹28,209.50
--- ============================================================================
+/*
+  TIXORA SALES & PROMOTER IMPORT: RONAK JAIN (IDEMPOTENT MIGRATION)
+  Source File: c:\Users\rahul\Downloads\Tixora ticket_sales_copy.xlsx
+  Batch Label: External import — Tixoraticket_sales_copy.xlsx
+  Promoter: Ronak Jain (ronakj303@gmail.com | +91 78921 45475 | 9845350802)
+  21 Verified Ticket Sales | 56 Passes | ₹2,56,450.00 Gross Sales Volume
+  Commission: 11.0% (Tier 02 • Capo) = ₹28,209.50
+  0. Schema Migrations (Ensure columns and relaxed email constraints exist)
+*/
 
--- 0. Schema Migrations (Ensure columns and relaxed email constraints exist)
 ALTER TABLE attendees ALTER COLUMN email DROP NOT NULL;
 ALTER TABLE attendees DROP CONSTRAINT IF EXISTS chk_attendee_email_fmt;
 ALTER TABLE attendees ADD CONSTRAINT chk_attendee_email_fmt 

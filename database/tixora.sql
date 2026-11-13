@@ -1,12 +1,11 @@
--- ============================================================================
--- TIXORA MASTER DATABASE (SUPABASE POSTGRESQL PRODUCTION EDITION)
--- Live Concert Allocations & Youth Promoter Protocol
--- ============================================================================
--- Paste this entire file into your Supabase Project SQL Editor and click "Run".
--- Configures: 14 Relational Tables, Covering Foreign Key Indexes, RLS Policies, 
---             Automated Triggers, Real-Time Views, and Authentic Tour Seeds.
--- 100% Compliant with Supabase Database Linter (0 Security or Performance Warnings).
--- ============================================================================
+/*
+  TIXORA MASTER DATABASE (SUPABASE POSTGRESQL PRODUCTION EDITION)
+  Live Concert Allocations & Youth Promoter Protocol
+  Paste this entire file into your Supabase Project SQL Editor and click "Run".
+  Configures: 14 Relational Tables, Covering Foreign Key Indexes, RLS Policies,
+  Automated Triggers, Real-Time Views, and Authentic Tour Seeds.
+  100% Compliant with Supabase Database Linter (0 Security or Performance Warnings).
+*/
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -18,9 +17,9 @@ GRANT USAGE ON SCHEMA private TO anon, authenticated, service_role;
 -- Harden default function privileges in public so new functions are never accidentally executable by anon/PUBLIC
 ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC, anon, authenticated;
 
--- ----------------------------------------------------------------------------
+-- Subdivider
 -- CLEANUP / RESET EXISTING OBJECTS
--- ----------------------------------------------------------------------------
+-- Subdivider
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP FUNCTION IF EXISTS public.verify_referral_code(TEXT) CASCADE;
 DROP FUNCTION IF EXISTS public.get_promoter_profile_parameterized(UUID, TEXT) CASCADE;
@@ -62,9 +61,9 @@ DROP INDEX IF EXISTS public.idx_events_event_date CASCADE;
 DROP INDEX IF EXISTS public.idx_reset_token_hash CASCADE;
 DROP TABLE IF EXISTS promoter_tiers CASCADE;
 
--- ============================================================================
+-- Section Divider
 -- 1. SCHEMA TABLES, CONSTRAINTS & COVERING INDEXES
--- ============================================================================
+-- Section Divider
 
 -- 0. User Roles (RBAC for Admins, Managers, and Promoters)
 CREATE TABLE user_roles (
@@ -297,9 +296,9 @@ CREATE TABLE cookie_consent_records (
 );
 
 
--- ============================================================================
+-- Section Divider
 -- 2. VIEWS (SECURITY INVOKER ENABLED)
--- ============================================================================
+-- Section Divider
 
 CREATE OR REPLACE VIEW v_active_lineup_vault WITH (security_invoker = true) AS
 SELECT e.id AS event_id, e.title AS event_title, e.slug, a.name AS artist_name, v.name AS venue_name, v.city AS venue_city,
@@ -330,9 +329,9 @@ JOIN promoters p ON u.promoter_id = p.id
 ORDER BY u.created_at DESC;
 
 
--- ============================================================================
+-- Section Divider
 -- 3. FUNCTIONS & TRIGGERS (SECURE SEARCH PATH & ACCESS RESTRICTIONS)
--- ============================================================================
+-- Section Divider
 
 -- Function 1: Promoter Tier Progression (isolated in non-exposed private schema)
 CREATE OR REPLACE FUNCTION private.trg_fn_update_promoter_tier()
@@ -479,12 +478,12 @@ FOR EACH ROW
 EXECUTE FUNCTION private.trg_fn_protect_promoter_privileged_cols();
 
 
--- ============================================================================
+-- Section Divider
 -- 4. ROW LEVEL SECURITY (RLS) & ZERO-COLLISION GRANULAR POLICIES
--- ============================================================================
+-- Section Divider
 -- Each table has at most ONE permissive policy per (role, action) tuple.
 -- Completely resolves all Supabase multiple_permissive_policies warnings.
--- ============================================================================
+-- Section Divider
 
 ALTER TABLE user_roles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE promoter_tiers ENABLE ROW LEVEL SECURITY;
@@ -939,9 +938,9 @@ REVOKE ALL ON FUNCTION public.get_payouts_parameterized(INT, INT, INT) FROM PUBL
 GRANT EXECUTE ON FUNCTION public.get_payouts_parameterized(INT, INT, INT) TO authenticated, service_role;
 
 
--- ============================================================================
+-- Section Divider
 -- 5. AUTHENTIC SEED DATA (8 REAL TOURS & AMBASSADORS — 0 PLACEHOLDER ORDERS)
--- ============================================================================
+-- Section Divider
 
 -- 5.1: Promoter Tiers
 INSERT INTO promoter_tiers (tier_id, tier_name, min_passes, max_passes, commission_rate, perks_description) VALUES
@@ -1197,9 +1196,9 @@ SELECT setval('promoter_commissions_id_seq', GREATEST((SELECT MAX(id) FROM promo
 
 
 
--- ============================================================================
+-- Section Divider
 -- 6. INDEX USAGE INITIALIZATION & QUERY PLANNER OPTIMIZATION
--- ============================================================================
+-- Section Divider
 
 DO $$
 BEGIN
@@ -1256,9 +1255,9 @@ EXCEPTION
     NULL;
 END $$;
 
--- =====================================================================
+-- Section Divider
 -- CRYPTOGRAPHIC PASSWORD HASHING PROTOCOL (ZERO PLAINTEXT GUARANTEE)
--- =====================================================================
+-- Section Divider
 -- Ensure pgcrypto extension is installed in extensions schema
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
 
@@ -1333,9 +1332,9 @@ $$;
 REVOKE ALL ON FUNCTION public.create_secure_admin(TEXT, TEXT) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.create_secure_admin(TEXT, TEXT) TO service_role;
 
--- ============================================================================
+-- Section Divider
 -- 15. PASSWORD RESET TOKENS (CRYPTOGRAPHIC, 15-MIN EXPIRING, SINGLE-USE)
--- ============================================================================
+-- Section Divider
 CREATE TABLE IF NOT EXISTS public.password_reset_tokens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) NOT NULL,
