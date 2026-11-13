@@ -1128,52 +1128,10 @@
   }
 
   async function loadPortalEvents() {
-    let list = CANONICAL_PORTAL_EVENTS.slice();
-    try {
-      if (window.TixoraAuth) {
-        const client = window.TixoraAuth.getClient();
-        if (client) {
-          const { data: events, error } = await Promise.race([
-            client
-              .from('events')
-              .select('*, venues(name, city), ticket_tiers(id, name, price, promoter_cut_pct)')
-              .eq('status', 'active')
-              .order('event_date', { ascending: true }),
-            new Promise((resolve) => setTimeout(() => resolve({ data: null, error: null }), 2500))
-          ]);
-          if (!error && Array.isArray(events) && events.length > 0) {
-            const dbMapped = events.map((ev) => {
-              const tiers =
-                Array.isArray(ev.ticket_tiers) && ev.ticket_tiers.length
-                  ? ev.ticket_tiers.map((t) => ({
-                      name: t.name || 'GA Standard',
-                      price: Number(t.price || ev.base_price || 3499),
-                      cutPct: Number(t.promoter_cut_pct || 12)
-                    }))
-                  : [{ name: 'GA Standard', price: Number(ev.base_price || 3499), cutPct: 12 }];
-              const venueCity = (ev.venues && ev.venues.city) || ev.city || 'Mumbai';
-              const venueName =
-                ev.venues && ev.venues.name ? `${ev.venues.name}, ${venueCity}` : ev.venue_name || venueCity;
-              return {
-                id: String(ev.id || ev.slug || ev.title),
-                title: ev.title,
-                artist: ev.artist_name || ev.title,
-                city: venueCity,
-                venue: venueName,
-                date: ev.event_date ? String(ev.event_date).slice(0, 16) : 'Upcoming Live Date',
-                poster: ev.poster_url || 'posters/anyma-aeden-poster-1.webp',
-                featured: Boolean(ev.is_featured),
-                tiers
-              };
-            });
-            const seenTitles = new Set(dbMapped.map((x) => x.title.toLowerCase()));
-            list = [...dbMapped, ...list.filter((c) => !seenTitles.has(c.title.toLowerCase()))];
-          }
-        }
-      }
-    } catch (e) {}
-    _portalEvents = list;
-    renderFeaturedSpotlight(list);
+    // Strictly authoritative list of 11 verified upcoming tour headliners
+    // Prevents legacy or unverified database rows (e.g. Martin Garrix, Anyma) from showing
+    _portalEvents = CANONICAL_PORTAL_EVENTS.slice();
+    renderFeaturedSpotlight(_portalEvents);
     filterPortalEvents();
   }
 
