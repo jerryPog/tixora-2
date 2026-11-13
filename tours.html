@@ -368,7 +368,7 @@
                         </p>
                         <div class="hero-actions">
                             <a href="#tours-roster" class="btn-editorial-gold">
-                                <span>Browse 8 Active Tours</span>
+                                <span>Browse 11 Active Tours</span>
                                 <i data-lucide="arrow-down" class="w-4 h-4"></i>
                             </a>
                             <button type="button" onclick="openModal('promoter-modal')" class="btn-editorial-outline-dark">
@@ -388,7 +388,7 @@
                             <h2 id="roster-heading" class="section-h2">All Indian Tour Dates</h2>
                         </div>
                         <p class="text-sm text-[var(--muted)] tabular-nums" id="tours-filter-status">
-                            Showing 8 of 8 Tours
+                            Showing 11 of 11 Tours
                         </p>
                     </div>
 
@@ -410,7 +410,7 @@
 
                         <div class="city-chip-group w-full" role="group" aria-label="Filter tours by city">
                             <button type="button" class="city-filter-btn is-active" data-city-filter="all"
-                                aria-pressed="true">All (8)</button>
+                                aria-pressed="true">All (11)</button>
                             <button type="button" class="city-filter-btn" data-city-filter="mumbai"
                                 aria-pressed="false">Mumbai (3)</button>
                             <button type="button" class="city-filter-btn" data-city-filter="new delhi"
@@ -427,39 +427,260 @@
                     <!-- 8 Official Concert Cards -->
                     <div id="tours-grid" class="editorial-grid-3 pt-2">
 
-                        <!-- 1. Anyma -->
-                        <article id="anyma-genesys-mumbai-2026" class="tour-card tour-card--grid" data-city="mumbai"
-                            data-genre="melodic techno"
-                            data-title="anyma presents genesys live anyma mahalaxmi racecourse"
-                            data-search="anyma genesys live mumbai mahalaxmi racecourse melodic techno">
+                        <!-- 1. The Chainsmokers -->
+                        <article id="chainsmokers-india-tour-2026" class="tour-card tour-card--grid" data-city="mumbai"
+                            data-genre="edm / dance pop"
+                            data-title="the chainsmokers — sunburn arena &amp; sneaker fest"
+                            data-search="the chainsmokers the chainsmokers — sunburn arena & sneaker fest mahalaxmi race course / nice grounds mumbai delhi bengaluru edm / dance pop">
                             <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/anyma-aeden-poster-1.webp" type="image/webp">
-                                    <img src="posters/anyma-aeden-poster-1.jpg"
-                                        alt="Anyma Presents Genesys Live official tour poster" width="480" height="300"
-                                        loading="eager" fetchpriority="high" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">14% Yield</span>
+                                <img src="posters/chainsmokers-bengaluru-banner.webp"
+                                    alt="The Chainsmokers — Sunburn Arena &amp; Sneaker Fest official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">12.0% Yield</span>
                                 <span class="tour-venue-pill">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>Mahalaxmi Racecourse, Mumbai</span>
+                                    <span>Mahalaxmi Race Course / NICE Grounds</span>
                                 </span>
                             </div>
                             <div class="tour-card-body">
                                 <div>
                                     <div class="tour-meta-row">
-                                        <span class="tour-tag tour-tag--featured">Primary Allocation</span>
-                                        <span class="tour-tag">Arena Open-Air</span>
-                                        <span>Melodic Techno</span>
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Festival Arena</span>
+                                        <span>EDM / Dance Pop</span>
                                     </div>
-                                    <h3 class="tour-card-title">Anyma Presents Genesys Live</h3>
-                                    <p class="tour-card-desc">Immersive audio-visual melodic techno showcase live in Mumbai.</p>
+                                    <h3 class="tour-card-title">The Chainsmokers — Sunburn Arena &amp; Sneaker Fest</h3>
+                                    <p class="tour-card-desc">Official 3-city India tour spanning Sunburn Festival Mumbai, Indian Sneaker Festival Delhi, and Sunburn Arena Bengaluru.</p>
                                 </div>
                                 <div class="tour-card-footer">
                                     <div class="flex items-center justify-between text-xs text-[var(--muted)]">
                                         <span class="inline-flex items-center gap-1.5">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2026-11-21T17:00:00+05:30">21 NOV 2026 &bull; 5:00 PM</time>
+                                            <time>18–20 DEC 2026</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹5,500</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹660</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('The Chainsmokers — Sunburn Arena &amp; Sneaker Fest', 5500, 'GA Festival Phase 2')"
+                                            aria-label="Reserve official pass for The Chainsmokers — Sunburn Arena &amp; Sneaker Fest"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('The Chainsmokers — Sunburn Arena &amp; Sneaker Fest')"
+                                            aria-label="Share promoter link for The Chainsmokers — Sunburn Arena &amp; Sneaker Fest"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 2. The Home Festival -->
+                        <article id="home-festival-goa-2026" class="tour-card tour-card--grid" data-city="goa"
+                            data-genre="multi-genre festival"
+                            data-title="the home — home festival 2026"
+                            data-search="the home festival the home — home festival 2026 vagator hills, vagator, goa goa multi-genre festival">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80"
+                                    alt="The Home — Home Festival 2026 official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">12.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>Vagator Hills, Vagator, Goa</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Coastal Festival</span>
+                                        <span>Multi-Genre Festival</span>
+                                    </div>
+                                    <h3 class="tour-card-title">The Home — Home Festival 2026</h3>
+                                    <p class="tour-card-desc">Two-day year-end festival at Vagator Hills featuring international headliners, immersive stages, and food &amp; cocktail experiences.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>29–30 DEC 2026 • 2:00 PM</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹6,999</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹840</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('The Home — Home Festival 2026', 6999, 'GA Festival Pass')"
+                                            aria-label="Reserve official pass for The Home — Home Festival 2026"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('The Home — Home Festival 2026')"
+                                            aria-label="Share promoter link for The Home — Home Festival 2026"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 3. Keinemusik &amp; Adam Port -->
+                        <article id="keinemusik-adam-port-india-2026" class="tour-card tour-card--grid" data-city="delhi"
+                            data-genre="afro house / deep house"
+                            data-title="keinemusik presents adam port"
+                            data-search="keinemusik & adam port keinemusik presents adam port nsic okhla / bhartiya mall / biswa bangla delhi kolkata bengaluru afro house / deep house">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80"
+                                    alt="Keinemusik presents Adam Port official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">14.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>NSIC Okhla / Bhartiya Mall / Biswa Bangla</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Open-Air 360°</span>
+                                        <span>Afro House / Deep House</span>
+                                    </div>
+                                    <h3 class="tour-card-title">Keinemusik presents Adam Port</h3>
+                                    <p class="tour-card-desc">The Berlin collective brings Adam Port for a 3-city national tour across Delhi NSIC, Kolkata Biswa Bangla, and Bhartiya Mall Bengaluru.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>13–15 NOV 2026</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹3,500</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹490</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('Keinemusik presents Adam Port', 3500, 'GA Entry Phase 1')"
+                                            aria-label="Reserve official pass for Keinemusik presents Adam Port"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('Keinemusik presents Adam Port')"
+                                            aria-label="Share promoter link for Keinemusik presents Adam Port"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 4. Darshan Raval -->
+                        <article id="darshan-raval-love-letters-2026" class="tour-card tour-card--grid" data-city="ahmedabad"
+                            data-genre="indie pop / romantic"
+                            data-title="darshan raval — love letters india tour"
+                            data-search="darshan raval darshan raval — love letters india tour savanna lawn / bhartiya mall / dome svp ahmedabad bengaluru kolkata mumbai delhi indie pop / romantic">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80"
+                                    alt="Darshan Raval — Love Letters India Tour official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">12.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>SAVANNA Lawn / Bhartiya Mall / Dome SVP</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Arena Concert</span>
+                                        <span>Indie Pop / Romantic</span>
+                                    </div>
+                                    <h3 class="tour-card-title">Darshan Raval — Love Letters India Tour</h3>
+                                    <p class="tour-card-desc">Soulful love anthems and acoustic hits across Ahmedabad, Bengaluru, Kolkata, Mumbai Dome SVP, and Delhi Okhla.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>22 NOV – 19 DEC 2026</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹1,499</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹180</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('Darshan Raval — Love Letters India Tour', 1499, 'Silver Enclosure')"
+                                            aria-label="Reserve official pass for Darshan Raval — Love Letters India Tour"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('Darshan Raval — Love Letters India Tour')"
+                                            aria-label="Share promoter link for Darshan Raval — Love Letters India Tour"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 5. Diljit Dosanjh -->
+                        <article id="diljit-dosanjh-rupay-aura-2026" class="tour-card tour-card--grid" data-city="indore"
+                            data-genre="punjabi / global pop"
+                            data-title="diljit dosanjh — rupay aura india tour"
+                            data-search="diljit dosanjh diljit dosanjh — rupay aura india tour narendra modi stadium / nice grounds / mahalaxmi indore ahmedabad mumbai bengaluru lucknow punjabi / global pop">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=80"
+                                    alt="Diljit Dosanjh — RuPay Aura India Tour official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">11.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>Narendra Modi Stadium / NICE Grounds / Mahalaxmi</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Stadium Tour</span>
+                                        <span>Punjabi / Global Pop</span>
+                                    </div>
+                                    <h3 class="tour-card-title">Diljit Dosanjh — RuPay Aura India Tour</h3>
+                                    <p class="tour-card-desc">The historic national stadium tour with high-energy bhangra and full live band in Indore, Ahmedabad, Mumbai, Bengaluru &amp; Lucknow.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>15 NOV – 05 DEC 2026</time>
                                         </span>
                                     </div>
                                     <div class="tour-price-split tabular-nums">
@@ -469,233 +690,333 @@
                                         </div>
                                         <div class="text-right">
                                             <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹490</span>
+                                            <span class="tour-yield-val">Earn ₹385</span>
                                         </div>
                                     </div>
                                     <div class="tour-btn-pair">
                                         <button type="button"
-                                            onclick="buyTicketModal('Anyma Presents Genesys Live', 3499, 'GA Standard')"
-                                            aria-label="Reserve official pass for Anyma Presents Genesys Live"
+                                            onclick="buyTicketModal('Diljit Dosanjh — RuPay Aura India Tour', 3499, 'Silver Enclosure')"
+                                            aria-label="Reserve official pass for Diljit Dosanjh — RuPay Aura India Tour"
                                             class="btn-editorial-primary">Reserve Pass</button>
                                         <button type="button"
-                                            onclick="copyPromoterLink('Anyma Presents Genesys Live')"
-                                            aria-label="Share promoter link for Anyma Presents Genesys Live"
+                                            onclick="copyPromoterLink('Diljit Dosanjh — RuPay Aura India Tour')"
+                                            aria-label="Share promoter link for Diljit Dosanjh — RuPay Aura India Tour"
                                             class="btn-editorial-outline-light">Share Link</button>
                                     </div>
                                 </div>
                             </div>
                         </article>
 
-                        <!-- 2. Guns N' Roses -->
-                        <article id="gnr-live-delhi-2026" class="tour-card tour-card--grid" data-city="new delhi"
-                            data-genre="classic rock"
-                            data-title="guns n' roses live in delhi guns n' roses jawaharlal nehru stadium"
-                            data-search="guns n roses gnr delhi new delhi jawaharlal nehru stadium classic rock">
+                        <!-- 6. Shreya Ghoshal -->
+                        <article id="shreya-ghoshal-unstoppable-2026" class="tour-card tour-card--grid" data-city="bengaluru"
+                            data-genre="bollywood / classical symphony"
+                            data-title="shreya ghoshal — the unstoppable tour"
+                            data-search="shreya ghoshal shreya ghoshal — the unstoppable tour airtel arena / aca stadium / jio world garden bengaluru guwahati kochi chennai mumbai kolkata bollywood / classical symphony">
                             <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/guns-n-roses-india-poster.webp" type="image/webp">
-                                    <img src="posters/guns-n-roses-india-poster.jpg"
-                                        alt="Guns N' Roses Live in Delhi official tour poster" width="480" height="300"
-                                        loading="lazy" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">12% Yield</span>
+                                <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80"
+                                    alt="Shreya Ghoshal — The Unstoppable Tour official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">12.0% Yield</span>
                                 <span class="tour-venue-pill">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>Jawaharlal Nehru Stadium, New Delhi</span>
+                                    <span>Airtel Arena / ACA Stadium / Jio World Garden</span>
                                 </span>
                             </div>
                             <div class="tour-card-body">
                                 <div>
                                     <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Stadium 360&deg;</span>
-                                        <span>Classic Rock</span>
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Symphony Arena</span>
+                                        <span>Bollywood / Classical Symphony</span>
                                     </div>
-                                    <h3 class="tour-card-title">Guns N' Roses Live in Delhi</h3>
-                                    <p class="tour-card-desc">Axl Rose and Slash play a full 3-hour stadium rock set in New Delhi.</p>
+                                    <h3 class="tour-card-title">Shreya Ghoshal — The Unstoppable Tour</h3>
+                                    <p class="tour-card-desc">India&#x27;s nightingale performs her greatest career classics backed by a grand live orchestra in Bengaluru, Guwahati, Kochi, Chennai &amp; Mumbai.</p>
                                 </div>
                                 <div class="tour-card-footer">
                                     <div class="flex items-center justify-between text-xs text-[var(--muted)]">
                                         <span class="inline-flex items-center gap-1.5">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2026-12-05T18:30:00+05:30">05 DEC 2026 &bull; 6:30 PM</time>
+                                            <time>22 NOV 2026 – 27 MAR 2027</time>
                                         </span>
                                     </div>
                                     <div class="tour-price-split tabular-nums">
                                         <div>
                                             <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹4,999</span>
+                                            <span class="tour-price-val">₹1,500</span>
                                         </div>
                                         <div class="text-right">
                                             <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹600</span>
+                                            <span class="tour-yield-val">Earn ₹180</span>
                                         </div>
                                     </div>
                                     <div class="tour-btn-pair">
                                         <button type="button"
-                                            onclick="buyTicketModal('Guns N\' Roses Live in Delhi', 4999, 'GA Standard')"
-                                            aria-label="Reserve official pass for Guns N' Roses Live in Delhi"
+                                            onclick="buyTicketModal('Shreya Ghoshal — The Unstoppable Tour', 1500, 'Silver Seating')"
+                                            aria-label="Reserve official pass for Shreya Ghoshal — The Unstoppable Tour"
                                             class="btn-editorial-primary">Reserve Pass</button>
                                         <button type="button"
-                                            onclick="copyPromoterLink('Guns N\' Roses Live in Delhi')"
-                                            aria-label="Share promoter link for Guns N' Roses Live in Delhi"
+                                            onclick="copyPromoterLink('Shreya Ghoshal — The Unstoppable Tour')"
+                                            aria-label="Share promoter link for Shreya Ghoshal — The Unstoppable Tour"
                                             class="btn-editorial-outline-light">Share Link</button>
                                     </div>
                                 </div>
                             </div>
                         </article>
 
-                        <!-- 3. Fred again.. -->
-                        <article id="fred-again-usb-bengaluru-2026" class="tour-card tour-card--grid"
-                            data-city="bengaluru" data-genre="electronic / uk garage"
-                            data-title="fred again.. usb india tour fred again.. nice grounds, biec"
-                            data-search="fred again usb india tour bengaluru bangalore nice grounds biec uk garage">
+                        <!-- 7. DJ Snake -->
+                        <article id="dj-snake-sunburn-arena-2026" class="tour-card tour-card--grid" data-city="bengaluru"
+                            data-genre="electronic / bass"
+                            data-title="dj snake — sunburn arena india tour"
+                            data-search="dj snake dj snake — sunburn arena india tour nice grounds bengaluru / mahalaxmi racecourse bengaluru mumbai electronic / bass">
                             <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/fred-again-india-poster-1.webp" type="image/webp">
-                                    <img src="posters/fred-again-india-poster-1.png"
-                                        alt="Fred again.. USB India Tour official tour poster" width="480" height="300"
-                                        loading="lazy" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">15% Yield</span>
+                                <img src="https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=800&auto=format&fit=crop&q=80"
+                                    alt="DJ Snake — Sunburn Arena India Tour official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">14.0% Yield</span>
                                 <span class="tour-venue-pill">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>NICE Grounds, BIEC, Bengaluru</span>
+                                    <span>NICE Grounds Bengaluru / Mahalaxmi Racecourse</span>
                                 </span>
                             </div>
                             <div class="tour-card-body">
                                 <div>
                                     <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Open Air Grounds</span>
-                                        <span>Electronic / UK Garage</span>
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Arena Open-Air</span>
+                                        <span>Electronic / Bass</span>
                                     </div>
-                                    <h3 class="tour-card-title">Fred again.. USB India Tour</h3>
-                                    <p class="tour-card-desc">Grammy winner Fred again.. brings his USB live set to Bengaluru.</p>
+                                    <h3 class="tour-card-title">DJ Snake — Sunburn Arena India Tour</h3>
+                                    <p class="tour-card-desc">Global EDM icon DJ Snake brings stadium trap, French touch bass, and unreleased anthems to Bengaluru and Mumbai Sunburn Festival.</p>
                                 </div>
                                 <div class="tour-card-footer">
                                     <div class="flex items-center justify-between text-xs text-[var(--muted)]">
                                         <span class="inline-flex items-center gap-1.5">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2026-12-12T17:30:00+05:30">12 DEC 2026 &bull; 5:30 PM</time>
+                                            <time>18–19 DEC 2026</time>
                                         </span>
                                     </div>
                                     <div class="tour-price-split tabular-nums">
                                         <div>
                                             <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹2,999</span>
+                                            <span class="tour-price-val">₹2,000</span>
                                         </div>
                                         <div class="text-right">
                                             <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹450</span>
+                                            <span class="tour-yield-val">Earn ₹280</span>
                                         </div>
                                     </div>
                                     <div class="tour-btn-pair">
                                         <button type="button"
-                                            onclick="buyTicketModal('Fred again.. USB India Tour', 2999, 'GA Standard')"
-                                            aria-label="Reserve official pass for Fred again.. USB India Tour"
+                                            onclick="buyTicketModal('DJ Snake — Sunburn Arena India Tour', 2000, 'GA Phase 1')"
+                                            aria-label="Reserve official pass for DJ Snake — Sunburn Arena India Tour"
                                             class="btn-editorial-primary">Reserve Pass</button>
                                         <button type="button"
-                                            onclick="copyPromoterLink('Fred again.. USB India Tour')"
-                                            aria-label="Share promoter link for Fred again.. USB India Tour"
+                                            onclick="copyPromoterLink('DJ Snake — Sunburn Arena India Tour')"
+                                            aria-label="Share promoter link for DJ Snake — Sunburn Arena India Tour"
                                             class="btn-editorial-outline-light">Share Link</button>
                                     </div>
                                 </div>
                             </div>
                         </article>
 
-                        <!-- 4. The Chainsmokers -->
-                        <article id="chainsmokers-arena-goa-2026" class="tour-card tour-card--grid" data-city="goa"
-                            data-genre="edm / pop"
-                            data-title="the chainsmokers arena india the chainsmokers vagator hilltop arena"
-                            data-search="the chainsmokers arena india goa vagator hilltop edm pop">
+                        <!-- 8. Arijit Singh -->
+                        <article id="arijit-singh-india-tour-2026-27" class="tour-card tour-card--grid" data-city="goa"
+                            data-genre="bollywood / acoustic orchestra"
+                            data-title="arijit singh — india tour 2026–2027"
+                            data-search="arijit singh arijit singh — india tour 2026–2027 narendra modi stadium / jln stadium / mahalaxmi goa ahmedabad chandigarh jaipur mumbai bengaluru delhi pune hyderabad bollywood / acoustic orchestra">
                             <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/chainsmokers-bengaluru-banner.webp" type="image/webp">
-                                    <img src="posters/chainsmokers-bengaluru-banner.jpg"
-                                        alt="The Chainsmokers Arena India official tour poster" width="480" height="300"
-                                        loading="lazy" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">12% Yield</span>
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80"
+                                    alt="Arijit Singh — India Tour 2026–2027 official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">11.0% Yield</span>
                                 <span class="tour-venue-pill">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>Vagator Hilltop Arena, Goa</span>
+                                    <span>Narendra Modi Stadium / JLN Stadium / Mahalaxmi</span>
                                 </span>
                             </div>
                             <div class="tour-card-body">
                                 <div>
                                     <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Festival Amphitheatre</span>
-                                        <span>EDM / Pop</span>
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Stadium &amp; Arena Tour</span>
+                                        <span>Bollywood / Acoustic Orchestra</span>
                                     </div>
-                                    <h3 class="tour-card-title">The Chainsmokers Arena India</h3>
-                                    <p class="tour-card-desc">Year-end Goa festival set with The Chainsmokers and supporting acts.</p>
+                                    <h3 class="tour-card-title">Arijit Singh — India Tour 2026–2027</h3>
+                                    <p class="tour-card-desc">A monumental 9-city national stadium tour featuring Arijit Singh with 50-piece symphony orchestra and 360-degree arena staging.</p>
                                 </div>
                                 <div class="tour-card-footer">
                                     <div class="flex items-center justify-between text-xs text-[var(--muted)]">
                                         <span class="inline-flex items-center gap-1.5">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2026-12-30T18:00:00+05:30">30 DEC 2026 &bull; 6:00 PM</time>
+                                            <time>29 DEC 2026 – 15 MAY 2027</time>
                                         </span>
                                     </div>
                                     <div class="tour-price-split tabular-nums">
                                         <div>
                                             <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹3,999</span>
+                                            <span class="tour-price-val">₹1,999</span>
                                         </div>
                                         <div class="text-right">
                                             <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹480</span>
+                                            <span class="tour-yield-val">Earn ₹220</span>
                                         </div>
                                     </div>
                                     <div class="tour-btn-pair">
                                         <button type="button"
-                                            onclick="buyTicketModal('The Chainsmokers Arena India', 3999, 'GA Standard')"
-                                            aria-label="Reserve official pass for The Chainsmokers Arena India"
+                                            onclick="buyTicketModal('Arijit Singh — India Tour 2026–2027', 1999, 'Silver Enclosure')"
+                                            aria-label="Reserve official pass for Arijit Singh — India Tour 2026–2027"
                                             class="btn-editorial-primary">Reserve Pass</button>
                                         <button type="button"
-                                            onclick="copyPromoterLink('The Chainsmokers Arena India')"
-                                            aria-label="Share promoter link for The Chainsmokers Arena India"
+                                            onclick="copyPromoterLink('Arijit Singh — India Tour 2026–2027')"
+                                            aria-label="Share promoter link for Arijit Singh — India Tour 2026–2027"
                                             class="btn-editorial-outline-light">Share Link</button>
                                     </div>
                                 </div>
                             </div>
                         </article>
 
-                        <!-- 5. Karan Aujla -->
-                        <article id="karan-aujla-chandigarh-2026" class="tour-card tour-card--grid"
-                            data-city="chandigarh" data-genre="punjabi hip-hop"
-                            data-title="karan aujla it was all a dream karan aujla sector 34 exhibition ground"
-                            data-search="karan aujla it was all a dream chandigarh sector 34 exhibition ground punjabi hip hop">
+                        <!-- 9. Alesso -->
+                        <article id="alesso-smirnoff-experience-2026" class="tour-card tour-card--grid" data-city="bengaluru"
+                            data-genre="progressive house / edm"
+                            data-title="alesso — smirnoff experience india"
+                            data-search="alesso alesso — smirnoff experience india bhartiya mall bengaluru / huda gymkhana gurugram bengaluru delhi progressive house / edm">
                             <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/khalid-india-banner.webp" type="image/webp">
-                                    <img src="posters/khalid-india-banner.jpg"
-                                        alt="Karan Aujla It Was All A Dream official tour poster" width="480"
-                                        height="300" loading="lazy" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">15% Yield</span>
+                                <img src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&auto=format&fit=crop&q=80"
+                                    alt="Alesso — Smirnoff Experience India official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">14.0% Yield</span>
                                 <span class="tour-venue-pill">
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>Sector 34 Exhibition Ground, Chandigarh</span>
+                                    <span>Bhartiya Mall Bengaluru / Huda Gymkhana Gurugram</span>
                                 </span>
                             </div>
                             <div class="tour-card-body">
                                 <div>
                                     <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Arena Pitch</span>
-                                        <span>Punjabi Hip-Hop</span>
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Sunset Open-Air</span>
+                                        <span>Progressive House / EDM</span>
                                     </div>
-                                    <h3 class="tour-card-title">Karan Aujla It Was All A Dream</h3>
-                                    <p class="tour-card-desc">Karan Aujla brings his live stadium tour back to Chandigarh.</p>
+                                    <h3 class="tour-card-title">Alesso — Smirnoff Experience India</h3>
+                                    <p class="tour-card-desc">Progressive house fireworks, euphoric melodies, and sunset arena anthems at Bhartiya Mall Bengaluru and Huda Gymkhana Gurugram.</p>
                                 </div>
                                 <div class="tour-card-footer">
                                     <div class="flex items-center justify-between text-xs text-[var(--muted)]">
                                         <span class="inline-flex items-center gap-1.5">
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2026-10-18T18:30:00+05:30">18 OCT 2026 &bull; 6:30 PM</time>
+                                            <time>27–28 NOV 2026</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹1,750</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹245</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('Alesso — Smirnoff Experience India', 1750, 'GA Phase 1')"
+                                            aria-label="Reserve official pass for Alesso — Smirnoff Experience India"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('Alesso — Smirnoff Experience India')"
+                                            aria-label="Share promoter link for Alesso — Smirnoff Experience India"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 10. Faheem Abdullah -->
+                        <article id="faheem-abdullah-unbecoming-2026" class="tour-card tour-card--grid" data-city="delhi"
+                            data-genre="kashmiri folk / indie"
+                            data-title="faheem abdullah — the unbecoming tour"
+                            data-search="faheem abdullah faheem abdullah — the unbecoming tour brahmkamal hall, yashobhoomi, new delhi delhi kashmiri folk / indie">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80"
+                                    alt="Faheem Abdullah — The Unbecoming Tour official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">15.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>Brahmkamal Hall, Yashobhoomi, New Delhi</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Auditorium Concert</span>
+                                        <span>Kashmiri Folk / Indie</span>
+                                    </div>
+                                    <h3 class="tour-card-title">Faheem Abdullah — The Unbecoming Tour</h3>
+                                    <p class="tour-card-desc">Soul-stirring poetry, acoustic strings, and Kashmiri melodies in an intimate auditorium performance at Yashobhoomi New Delhi.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>20 NOV 2026 • 6:00 PM</time>
+                                        </span>
+                                    </div>
+                                    <div class="tour-price-split tabular-nums">
+                                        <div>
+                                            <span class="tour-price-label">Starting MRP</span>
+                                            <span class="tour-price-val">₹999</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="tour-price-label">Promoter Yield</span>
+                                            <span class="tour-yield-val">Earn ₹150</span>
+                                        </div>
+                                    </div>
+                                    <div class="tour-btn-pair">
+                                        <button type="button"
+                                            onclick="buyTicketModal('Faheem Abdullah — The Unbecoming Tour', 999, 'Silver Entry')"
+                                            aria-label="Reserve official pass for Faheem Abdullah — The Unbecoming Tour"
+                                            class="btn-editorial-primary">Reserve Pass</button>
+                                        <button type="button"
+                                            onclick="copyPromoterLink('Faheem Abdullah — The Unbecoming Tour')"
+                                            aria-label="Share promoter link for Faheem Abdullah — The Unbecoming Tour"
+                                            class="btn-editorial-outline-light">Share Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 11. Francis Mercier -->
+                        <article id="francis-mercier-india-tour-2026" class="tour-card tour-card--grid" data-city="mumbai"
+                            data-genre="afro tech / deep house"
+                            data-title="francis mercier — sunburn arena &amp; rrov"
+                            data-search="francis mercier francis mercier — sunburn arena & rrov fairmont ballroom / a dot gurugram / rrov goa mumbai delhi goa afro tech / deep house">
+                            <div class="tour-card-media">
+                                <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80"
+                                    alt="Francis Mercier — Sunburn Arena &amp; RROV official tour poster" width="480" height="300"
+                                    loading="lazy" decoding="async" class="w-full h-full object-cover">
+                                <span class="tour-cut-pill tabular-nums">14.0% Yield</span>
+                                <span class="tour-venue-pill">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>Fairmont Ballroom / A DOT Gurugram / RROV Goa</span>
+                                </span>
+                            </div>
+                            <div class="tour-card-body">
+                                <div>
+                                    <div class="tour-meta-row">
+                                        <span class="tour-tag tour-tag--featured">Official Tour</span>
+                                        <span class="tour-tag">Club &amp; Arena</span>
+                                        <span>Afro Tech / Deep House</span>
+                                    </div>
+                                    <h3 class="tour-card-title">Francis Mercier — Sunburn Arena &amp; RROV</h3>
+                                    <p class="tour-card-desc">Haitian-born deep house star Francis Mercier headlines Sunburn Arena Mumbai, A DOT Gurugram, and an exclusive Christmas party in Goa.</p>
+                                </div>
+                                <div class="tour-card-footer">
+                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            <time>24–27 DEC 2026</time>
                                         </span>
                                     </div>
                                     <div class="tour-price-split tabular-nums">
@@ -705,207 +1026,23 @@
                                         </div>
                                         <div class="text-right">
                                             <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹375</span>
+                                            <span class="tour-yield-val">Earn ₹350</span>
                                         </div>
                                     </div>
                                     <div class="tour-btn-pair">
                                         <button type="button"
-                                            onclick="buyTicketModal('Karan Aujla It Was All A Dream', 2499, 'GA Standard')"
-                                            aria-label="Reserve official pass for Karan Aujla It Was All A Dream"
+                                            onclick="buyTicketModal('Francis Mercier — Sunburn Arena &amp; RROV', 2499, 'GA Access')"
+                                            aria-label="Reserve official pass for Francis Mercier — Sunburn Arena &amp; RROV"
                                             class="btn-editorial-primary">Reserve Pass</button>
                                         <button type="button"
-                                            onclick="copyPromoterLink('Karan Aujla It Was All A Dream')"
-                                            aria-label="Share promoter link for Karan Aujla It Was All A Dream"
+                                            onclick="copyPromoterLink('Francis Mercier — Sunburn Arena &amp; RROV')"
+                                            aria-label="Share promoter link for Francis Mercier — Sunburn Arena &amp; RROV"
                                             class="btn-editorial-outline-light">Share Link</button>
                                     </div>
                                 </div>
                             </div>
                         </article>
-
-                        <!-- 6. Boris Brejcha -->
-                        <article id="boris-brejcha-delhi-2026" class="tour-card tour-card--grid"
-                            data-city="new delhi" data-genre="high-tech minimal"
-                            data-title="boris brejcha in concert boris brejcha indira gandhi arena"
-                            data-search="boris brejcha in concert new delhi indira gandhi arena high tech minimal joker">
-                            <div class="tour-card-media">
-                                <img src="ezgif-73126691f624a5ac-jpg/ezgif-frame-045.jpg"
-                                    alt="Boris Brejcha In Concert official tour poster" width="480" height="300"
-                                    loading="lazy" decoding="async">
-                                <span class="tour-cut-pill tabular-nums">14% Yield</span>
-                                <span class="tour-venue-pill">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>Indira Gandhi Arena, New Delhi</span>
-                                </span>
-                            </div>
-                            <div class="tour-card-body">
-                                <div>
-                                    <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Indoor Arena</span>
-                                        <span>High-Tech Minimal</span>
-                                    </div>
-                                    <h3 class="tour-card-title">Boris Brejcha In Concert</h3>
-                                    <p class="tour-card-desc">Boris Brejcha brings his masked High-Tech Minimal show to Delhi.</p>
-                                </div>
-                                <div class="tour-card-footer">
-                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
-                                        <span class="inline-flex items-center gap-1.5">
-                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2027-01-16T20:00:00+05:30">16 JAN 2027 &bull; 8:00 PM</time>
-                                        </span>
-                                    </div>
-                                    <div class="tour-price-split tabular-nums">
-                                        <div>
-                                            <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹2,799</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹390</span>
-                                        </div>
-                                    </div>
-                                    <div class="tour-btn-pair">
-                                        <button type="button"
-                                            onclick="buyTicketModal('Boris Brejcha In Concert', 2799, 'GA Standard')"
-                                            aria-label="Reserve official pass for Boris Brejcha In Concert"
-                                            class="btn-editorial-primary">Reserve Pass</button>
-                                        <button type="button" onclick="copyPromoterLink('Boris Brejcha In Concert')"
-                                            aria-label="Share promoter link for Boris Brejcha In Concert"
-                                            class="btn-editorial-outline-light">Share Link</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- 7. Martin Garrix -->
-                        <article id="martin-garrix-mumbai-2026" class="tour-card tour-card--grid" data-city="mumbai"
-                            data-genre="progressive house"
-                            data-title="martin garrix india arena tour martin garrix dy patil stadium"
-                            data-search="martin garrix india arena tour mumbai dy patil stadium progressive house">
-                            <div class="tour-card-media">
-                                <img src="ezgif-73126691f624a5ac-jpg/ezgif-frame-095.jpg"
-                                    alt="Martin Garrix India Arena Tour official tour poster" width="480" height="300"
-                                    loading="lazy" decoding="async">
-                                <span class="tour-cut-pill tabular-nums">14% Yield</span>
-                                <span class="tour-venue-pill">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>DY Patil Stadium, Mumbai</span>
-                                </span>
-                            </div>
-                            <div class="tour-card-body">
-                                <div>
-                                    <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Stadium Stage</span>
-                                        <span>Progressive House</span>
-                                    </div>
-                                    <h3 class="tour-card-title">Martin Garrix India Arena Tour</h3>
-                                    <p class="tour-card-desc">Martin Garrix headlines DY Patil Stadium with custom lasers and pyrotechnics.</p>
-                                </div>
-                                <div class="tour-card-footer">
-                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
-                                        <span class="inline-flex items-center gap-1.5">
-                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2027-02-20T17:00:00+05:30">20 FEB 2027 &bull; 5:00 PM</time>
-                                        </span>
-                                    </div>
-                                    <div class="tour-price-split tabular-nums">
-                                        <div>
-                                            <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹3,299</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹460</span>
-                                        </div>
-                                    </div>
-                                    <div class="tour-btn-pair">
-                                        <button type="button"
-                                            onclick="buyTicketModal('Martin Garrix India Arena Tour', 3299, 'GA Standard')"
-                                            aria-label="Reserve official pass for Martin Garrix India Arena Tour"
-                                            class="btn-editorial-primary">Reserve Pass</button>
-                                        <button type="button"
-                                            onclick="copyPromoterLink('Martin Garrix India Arena Tour')"
-                                            aria-label="Share promoter link for Martin Garrix India Arena Tour"
-                                            class="btn-editorial-outline-light">Share Link</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-
-                        <!-- 8. Dua Lipa -->
-                        <article id="dua-lipa-mumbai-2026" class="tour-card tour-card--grid" data-city="mumbai"
-                            data-genre="dance-pop"
-                            data-title="dua lipa radical optimism tour dua lipa mmrda grounds, bkc"
-                            data-search="dua lipa radical optimism tour mumbai mmrda grounds bkc dance pop">
-                            <div class="tour-card-media">
-                                <picture>
-                                    <source srcset="posters/anyma-aeden-poster-2.webp" type="image/webp">
-                                    <img src="posters/anyma-aeden-poster-2.jpg"
-                                        alt="Dua Lipa Radical Optimism Tour official tour poster" width="480"
-                                        height="300" loading="lazy" decoding="async">
-                                </picture>
-                                <span class="tour-cut-pill tabular-nums">13% Yield</span>
-                                <span class="tour-venue-pill">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                    <span>MMRDA Grounds, BKC, Mumbai</span>
-                                </span>
-                            </div>
-                            <div class="tour-card-body">
-                                <div>
-                                    <div class="tour-meta-row">
-                                        <span class="tour-tag">Primary Allocation</span>
-                                        <span class="tour-tag">Festival Grounds</span>
-                                        <span>Dance-Pop</span>
-                                    </div>
-                                    <h3 class="tour-card-title">Dua Lipa Radical Optimism Tour</h3>
-                                    <p class="tour-card-desc">Dua Lipa brings her Radical Optimism tour and live band to Mumbai.</p>
-                                </div>
-                                <div class="tour-card-footer">
-                                    <div class="flex items-center justify-between text-xs text-[var(--muted)]">
-                                        <span class="inline-flex items-center gap-1.5">
-                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-                                            <time datetime="2027-03-15T18:00:00+05:30">15 MAR 2027 &bull; 6:00 PM</time>
-                                        </span>
-                                    </div>
-                                    <div class="tour-price-split tabular-nums">
-                                        <div>
-                                            <span class="tour-price-label">Starting MRP</span>
-                                            <span class="tour-price-val">₹4,499</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="tour-price-label">Promoter Yield</span>
-                                            <span class="tour-yield-val">Earn ₹580</span>
-                                        </div>
-                                    </div>
-                                    <div class="tour-btn-pair">
-                                        <button type="button"
-                                            onclick="buyTicketModal('Dua Lipa Radical Optimism Tour', 4499, 'GA Standard')"
-                                            aria-label="Reserve official pass for Dua Lipa Radical Optimism Tour"
-                                            class="btn-editorial-primary">Reserve Pass</button>
-                                        <button type="button"
-                                            onclick="copyPromoterLink('Dua Lipa Radical Optimism Tour')"
-                                            aria-label="Share promoter link for Dua Lipa Radical Optimism Tour"
-                                            class="btn-editorial-outline-light">Share Link</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-
                     </div>
-
-                    <!-- No Results State -->
-                    <div id="no-tours-found" class="hidden editorial-card editorial-card--soft text-center items-center py-8">
-                        <div class="w-12 h-12 rounded-full bg-[var(--bg-card)] border border-[var(--crimson-border)] text-[var(--crimson-ink)] flex items-center justify-center">
-                            <i data-lucide="music" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-[var(--ink)]">No tours match your filter</h3>
-                        <p class="text-sm text-[var(--muted)] max-w-md">Try another artist or reset the city filter.</p>
-                        <button type="button" onclick="resetToursFilters()" class="btn-editorial-primary">
-                            Reset Filters
-                        </button>
-                    </div>
-                </div>
             </section>
 
         </main>
@@ -957,7 +1094,7 @@
                     <div>
                         <h3 class="footer-col-title">
                             <span>Live Tours</span>
-                            <a href="/tours" style="color: var(--white);">All (8)</a>
+                            <a href="/tours" style="color: var(--white);">All (11)</a>
                         </h3>
                         <ul class="footer-links">
                             <li><a href="/tours#anyma-genesys-mumbai-2026">Anyma - Mumbai</a></li>

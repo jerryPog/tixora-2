@@ -25,112 +25,323 @@
 
   const CANONICAL_PORTAL_EVENTS = [
     {
-      id: 'anyma-genesys-mumbai-2026',
-      title: 'Anyma Presents Genesys Live',
-      artist: 'Anyma',
-      city: 'Mumbai',
-      venue: 'Mahalaxmi Racecourse, Mumbai',
-      date: '21 Nov 2026 • 17:00 IST',
-      poster: 'posters/anyma-aeden-poster-1.webp',
-      featured: true,
-      tiers: [
-        { name: 'GA Early Access', price: 3499, cutPct: 14 },
-        { name: 'VIP Pit Standing', price: 7999, cutPct: 16 },
-        { name: 'Backstage Deck', price: 14999, cutPct: 16 }
-      ]
+        "id": "chainsmokers-india-tour-2026",
+        "title": "The Chainsmokers \u2014 Sunburn Arena & Sneaker Fest",
+        "artist": "The Chainsmokers",
+        "city": "Mumbai",
+        "venue": "Mahalaxmi Race Course / NICE Grounds",
+        "date": "18\u201320 Dec 2026 \u2022 14:00 IST",
+        "poster": "posters/chainsmokers-bengaluru-banner.webp",
+        "featured": true,
+        "tiers": [
+            {
+                "name": "GA Festival Phase 2",
+                "price": 5500,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Festival Phase 7",
+                "price": 7000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit Phase 2",
+                "price": 8000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Tuborg Lounge",
+                "price": 12999,
+                "cutPct": 12.0
+            }
+        ]
     },
     {
-      id: 'gnr-live-delhi-2026',
-      title: "Guns N' Roses Live in Delhi",
-      artist: "Guns N' Roses",
-      city: 'New Delhi',
-      venue: 'Jawaharlal Nehru Stadium, New Delhi',
-      date: '05 Dec 2026 • 18:30 IST',
-      poster: 'posters/guns-n-roses-india-poster.webp',
-      tiers: [
-        { name: 'Silver Stand', price: 4999, cutPct: 12 },
-        { name: 'Golden Circle', price: 9999, cutPct: 14 }
-      ]
+        "id": "home-festival-goa-2026",
+        "title": "The Home \u2014 Home Festival 2026",
+        "artist": "The Home Festival",
+        "city": "Goa",
+        "venue": "Vagator Hills, Vagator, Goa",
+        "date": "29\u201330 Dec 2026 \u2022 14:00 IST",
+        "poster": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "GA Festival Pass",
+                "price": 6999,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Festival Pass",
+                "price": 9999,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Starstruck Lounge",
+                "price": 49999,
+                "cutPct": 12.0
+            }
+        ]
     },
     {
-      id: 'fred-again-usb-bengaluru-2026',
-      title: 'Fred again.. USB India Tour',
-      artist: 'Fred again..',
-      city: 'Bengaluru',
-      venue: 'NICE Grounds, BIEC, Bengaluru',
-      date: '12 Dec 2026 • 17:30 IST',
-      poster: 'posters/fred-again-india-poster-1.webp',
-      tiers: [
-        { name: 'GA Floor', price: 2999, cutPct: 14 },
-        { name: 'VIP Lounge', price: 6499, cutPct: 15 }
-      ]
+        "id": "keinemusik-adam-port-india-2026",
+        "title": "Keinemusik presents Adam Port",
+        "artist": "Keinemusik & Adam Port",
+        "city": "New Delhi",
+        "venue": "NSIC Okhla / Bhartiya Mall / Biswa Bangla",
+        "date": "13\u201315 Nov 2026 \u2022 15:00 IST",
+        "poster": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "GA Entry Phase 1",
+                "price": 3500,
+                "cutPct": 14.0
+            },
+            {
+                "name": "VIP Enclosure",
+                "price": 6500,
+                "cutPct": 14.0
+            },
+            {
+                "name": "Backstage Experience",
+                "price": 11000,
+                "cutPct": 14.0
+            }
+        ]
     },
     {
-      id: 'chainsmokers-arena-goa-2026',
-      title: 'The Chainsmokers Arena India',
-      artist: 'The Chainsmokers',
-      city: 'Goa',
-      venue: 'Vagator Hilltop Arena, Goa',
-      date: '30 Dec 2026 • 18:00 IST',
-      poster: 'posters/chainsmokers-bengaluru-banner.webp',
-      tiers: [
-        { name: 'Sunset Lawn', price: 3999, cutPct: 13 },
-        { name: 'Cabana Table Pass', price: 8999, cutPct: 15 }
-      ]
+        "id": "darshan-raval-love-letters-2026",
+        "title": "Darshan Raval \u2014 Love Letters India Tour",
+        "artist": "Darshan Raval",
+        "city": "Ahmedabad",
+        "venue": "SAVANNA Lawn / Bhartiya Mall / Dome SVP",
+        "date": "22 Nov \u2013 19 Dec 2026 \u2022 17:30 IST",
+        "poster": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "Silver Enclosure",
+                "price": 1499,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Gold Front",
+                "price": 2499,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit Standing",
+                "price": 4999,
+                "cutPct": 12.0
+            }
+        ]
     },
     {
-      id: 'karan-aujla-chandigarh-2026',
-      title: 'Karan Aujla It Was All A Dream',
-      artist: 'Karan Aujla',
-      city: 'Chandigarh',
-      venue: 'Sector 34 Exhibition Ground, Chandigarh',
-      date: '18 Oct 2026 • 18:30 IST',
-      poster: 'posters/karan-aujla-poster-1.webp',
-      tiers: [
-        { name: 'Fan Pit GA', price: 2499, cutPct: 12 },
-        { name: 'VIP Enclosure', price: 5499, cutPct: 14 }
-      ]
+        "id": "diljit-dosanjh-rupay-aura-2026",
+        "title": "Diljit Dosanjh \u2014 RuPay Aura India Tour",
+        "artist": "Diljit Dosanjh",
+        "city": "Bengaluru",
+        "venue": "Narendra Modi Stadium / NICE Grounds / Mahalaxmi",
+        "date": "15 Nov \u2013 05 Dec 2026 \u2022 16:00 IST",
+        "poster": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=800&auto=format&fit=crop&q=80",
+        "featured": true,
+        "tiers": [
+            {
+                "name": "Silver Enclosure",
+                "price": 3499,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Gold Standing",
+                "price": 4899,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Fanpit Ring",
+                "price": 8999,
+                "cutPct": 11.0
+            }
+        ]
     },
     {
-      id: 'boris-brejcha-delhi-2026',
-      title: 'Boris Brejcha In Concert',
-      artist: 'Boris Brejcha',
-      city: 'New Delhi',
-      venue: 'Indira Gandhi Arena, New Delhi',
-      date: '16 Jan 2027 • 20:00 IST',
-      poster: 'posters/boris-brejcha-india-poster.webp',
-      tiers: [
-        { name: 'Arena Floor', price: 2799, cutPct: 13 },
-        { name: 'Stage Deck', price: 5999, cutPct: 15 }
-      ]
+        "id": "shreya-ghoshal-unstoppable-2026",
+        "title": "Shreya Ghoshal \u2014 The Unstoppable Tour",
+        "artist": "Shreya Ghoshal",
+        "city": "Bengaluru",
+        "venue": "Airtel Arena / ACA Stadium / Jio World Garden",
+        "date": "22 Nov 2026 \u2013 27 Mar 2027 \u2022 18:00 IST",
+        "poster": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "Silver Seating",
+                "price": 2500,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Gold Front",
+                "price": 4500,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit VIP",
+                "price": 12000,
+                "cutPct": 12.0
+            }
+        ]
     },
     {
-      id: 'martin-garrix-mumbai-2026',
-      title: 'Martin Garrix India Arena Tour',
-      artist: 'Martin Garrix',
-      city: 'Mumbai',
-      venue: 'DY Patil Stadium, Mumbai',
-      date: '20 Feb 2027 • 17:00 IST',
-      poster: 'posters/martin-garrix-india-poster.webp',
-      tiers: [
-        { name: 'Stadium Floor', price: 3299, cutPct: 14 },
-        { name: 'VIP Pit', price: 6999, cutPct: 16 }
-      ]
+        "id": "dj-snake-sunburn-arena-2026",
+        "title": "DJ Snake \u2014 Sunburn Arena India Tour",
+        "artist": "DJ Snake",
+        "city": "Bengaluru",
+        "venue": "NICE Grounds Bengaluru / Mahalaxmi Racecourse",
+        "date": "18\u201319 Dec 2026 \u2022 16:00 IST",
+        "poster": "https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "GA Phase 1",
+                "price": 2000,
+                "cutPct": 14.0
+            },
+            {
+                "name": "VIP Phase 2",
+                "price": 3000,
+                "cutPct": 14.0
+            },
+            {
+                "name": "Fanpit Phase 2",
+                "price": 5000,
+                "cutPct": 14.0
+            }
+        ]
     },
     {
-      id: 'dua-lipa-mumbai-2026',
-      title: 'Dua Lipa Radical Optimism Tour',
-      artist: 'Dua Lipa',
-      city: 'Mumbai',
-      venue: 'MMRDA Grounds, BKC, Mumbai',
-      date: '15 Mar 2027 • 18:00 IST',
-      poster: 'posters/dua-lipa-india-poster.webp',
-      tiers: [
-        { name: 'Gold Lawn', price: 4499, cutPct: 12 },
-        { name: 'Lounge Pass', price: 9499, cutPct: 15 }
-      ]
+        "id": "arijit-singh-india-tour-2026-27",
+        "title": "Arijit Singh \u2014 India Tour 2026\u20132027",
+        "artist": "Arijit Singh",
+        "city": "Mumbai",
+        "venue": "Narendra Modi Stadium / JLN Stadium / Mahalaxmi",
+        "date": "29 Dec 2026 \u2013 15 May 2027 \u2022 18:00 IST",
+        "poster": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80",
+        "featured": true,
+        "tiers": [
+            {
+                "name": "Silver Enclosure",
+                "price": 1999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Gold Front",
+                "price": 4499,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Diamond Seating",
+                "price": 9999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Platinum VIP",
+                "price": 14999,
+                "cutPct": 11.0
+            }
+        ]
+    },
+    {
+        "id": "alesso-smirnoff-experience-2026",
+        "title": "Alesso \u2014 Smirnoff Experience India",
+        "artist": "Alesso",
+        "city": "Bengaluru",
+        "venue": "Bhartiya Mall Bengaluru / Huda Gymkhana Gurugram",
+        "date": "27\u201328 Nov 2026 \u2022 16:00 IST",
+        "poster": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "GA Phase 1",
+                "price": 1750,
+                "cutPct": 14.0
+            },
+            {
+                "name": "VIP Phase 1",
+                "price": 3000,
+                "cutPct": 14.0
+            },
+            {
+                "name": "Fanpit Phase 1",
+                "price": 5000,
+                "cutPct": 14.0
+            },
+            {
+                "name": "Smirnoff Lounge",
+                "price": 15000,
+                "cutPct": 14.0
+            }
+        ]
+    },
+    {
+        "id": "faheem-abdullah-unbecoming-2026",
+        "title": "Faheem Abdullah \u2014 The Unbecoming Tour",
+        "artist": "Faheem Abdullah",
+        "city": "New Delhi",
+        "venue": "Brahmkamal Hall, Yashobhoomi, New Delhi",
+        "date": "20 Nov 2026 \u2022 18:00 IST",
+        "poster": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "Silver Entry",
+                "price": 999,
+                "cutPct": 15.0
+            },
+            {
+                "name": "Gold Access",
+                "price": 1499,
+                "cutPct": 15.0
+            },
+            {
+                "name": "Platinum Front",
+                "price": 2499,
+                "cutPct": 15.0
+            },
+            {
+                "name": "VIP Lounge",
+                "price": 4999,
+                "cutPct": 15.0
+            }
+        ]
+    },
+    {
+        "id": "francis-mercier-india-tour-2026",
+        "title": "Francis Mercier \u2014 Sunburn Arena & RROV",
+        "artist": "Francis Mercier",
+        "city": "Mumbai",
+        "venue": "Fairmont Ballroom / A DOT Gurugram / RROV Goa",
+        "date": "24\u201327 Dec 2026 \u2022 21:00 IST",
+        "poster": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
+        "featured": false,
+        "tiers": [
+            {
+                "name": "GA Access",
+                "price": 2499,
+                "cutPct": 14.0
+            },
+            {
+                "name": "VIP Area",
+                "price": 3000,
+                "cutPct": 14.0
+            },
+            {
+                "name": "Backstage Enclosure",
+                "price": 6000,
+                "cutPct": 14.0
+            }
+        ]
     }
-  ];
+];
 
   const SAFE_PORTAL_ROUTES = new Set([
     '/portal',
