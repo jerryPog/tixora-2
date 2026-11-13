@@ -1262,8 +1262,11 @@
               ${extIdBadge}
             </td>
             <td class="min-w-[180px]">
-              <div class="font-bold text-white font-sans">${escapeHtml(b.event_title)}</div>
-              <div class="text-[11px] text-[var(--muted)]">${escapeHtml(b.tier_name)}${seatsText}</div>
+              <div class="font-bold text-white font-sans">${escapeHtml(getCanonicalTourTitle(b.event_title))}</div>
+              <div class="text-[11px] text-[var(--muted)]">
+                ${detectCityFromTitle(b.event_title) ? `<span class="text-zinc-300 font-medium">${escapeHtml(detectCityFromTitle(b.event_title))}</span> &bull; ` : ''}
+                ${escapeHtml(b.tier_name)}${seatsText}
+              </div>
             </td>
             <td class="tabular-nums">${Number(b.quantity || 1)}</td>
             <td class="font-sans text-xs">
@@ -1396,6 +1399,35 @@
       .join('');
   }
 
+  function getCanonicalTourTitle(raw) {
+    if (!raw) return 'Unassigned Tour';
+    const lower = raw.toLowerCase().trim();
+    if (lower.includes('arijit') || lower.includes('arjit')) return 'Arijit Singh';
+    if (lower.includes('diljit')) return 'Diljit Dosanjh';
+    if (lower.includes('chainsmoker')) return 'The Chainsmokers';
+    if (lower.includes('darshan')) return 'Darshan Raval';
+    if (lower.includes('coldplay')) return 'Coldplay';
+    if (lower.includes('dua lipa')) return 'Dua Lipa';
+    if (lower.includes('garrix')) return 'Martin Garrix';
+    if (lower.includes('guns')) return "Guns N' Roses";
+    if (lower.includes('anyma')) return 'Anyma';
+    if (lower.includes('brejcha')) return 'Boris Brejcha';
+    if (lower.includes('fred')) return 'Fred again..';
+    return raw.trim();
+  }
+
+  function detectCityFromTitle(raw) {
+    const l = (raw || '').toLowerCase();
+    if (l.includes('bangalore') || l.includes('banglore') || l.includes('blr')) return 'Bengaluru';
+    if (l.includes('mumbai') || l.includes('bom')) return 'Mumbai';
+    if (l.includes('hyderabad') || l.includes('hyd')) return 'Hyderabad';
+    if (l.includes('ahmedabaad') || l.includes('ahmedabad')) return 'Ahmedabad';
+    if (l.includes('delhi')) return 'Delhi';
+    if (l.includes('goa')) return 'Goa';
+    if (l.includes('chandigarh')) return 'Chandigarh';
+    return '';
+  }
+
   let _eventBreakdownMetric = 'volume'; // 'volume' | 'passes'
 
   window.setEventBreakdownMetric = function (metric) {
@@ -1421,14 +1453,23 @@
     const eventStats = {};
 
     _portalBookings.forEach((b) => {
-      const title = b.event_title || 'Unassigned Event';
-      if (!eventStats[title]) {
-        eventStats[title] = { title, orders: 0, passes: 0, volume: 0, categories: new Set() };
+      const canonicalTitle = getCanonicalTourTitle(b.event_title);
+      if (!eventStats[canonicalTitle]) {
+        eventStats[canonicalTitle] = {
+          title: canonicalTitle,
+          orders: 0,
+          passes: 0,
+          volume: 0,
+          categories: new Set(),
+          cities: new Set()
+        };
       }
-      eventStats[title].orders += 1;
-      eventStats[title].passes += Number(b.quantity || 1);
-      eventStats[title].volume += Number(b.total_amount || 0);
-      if (b.tier_name) eventStats[title].categories.add(b.tier_name);
+      eventStats[canonicalTitle].orders += 1;
+      eventStats[canonicalTitle].passes += Number(b.quantity || 1);
+      eventStats[canonicalTitle].volume += Number(b.total_amount || 0);
+      if (b.tier_name) eventStats[canonicalTitle].categories.add(b.tier_name);
+      const city = detectCityFromTitle(b.event_title);
+      if (city) eventStats[canonicalTitle].cities.add(city);
     });
 
     const sortedEvents = Object.values(eventStats).sort((a, b) => {
@@ -1577,11 +1618,16 @@
           ${sortedEvents.map((ev) => {
             const pct = Math.max(0.1, Math.round((ev.volume / totalVolume) * 1000) / 10);
             const cats = Array.from(ev.categories).join(', ');
+            const citiesList = Array.from(ev.cities || []);
+            const citiesStr = citiesList.length > 0 ? citiesList.join(', ') : 'All Cities';
             return `
               <div class="ops-subcard p-3.5 flex items-center justify-between gap-3 hover:border-[var(--crimson)] transition-colors">
                 <div class="min-w-0 flex-1">
-                  <div class="font-bold text-white text-xs truncate">${escapeHtml(ev.title)}</div>
-                  <div class="text-[11px] text-[var(--muted)] mt-0.5 flex flex-wrap items-center gap-1.5">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-white text-xs truncate">${escapeHtml(ev.title)}</span>
+                    <span class="ops-badge-navy text-[10px] px-2 py-0.5 rounded font-semibold text-[var(--crimson-ink)]">${escapeHtml(citiesStr)}</span>
+                  </div>
+                  <div class="text-[11px] text-[var(--muted)] mt-1 flex flex-wrap items-center gap-1.5">
                     <span>${escapeHtml(cats || 'General')}</span>
                     <span>&bull;</span>
                     <span class="text-zinc-300 font-medium">${ev.orders} ${ev.orders === 1 ? 'sale' : 'sales'}</span>
