@@ -49,8 +49,8 @@
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="supabase-config.js" defer></script>
-    <script src="auth.js?v=8" defer></script>
-    <script src="portal-app.js?v=8" defer></script>
+    <script src="auth.js?v=9" defer></script>
+    <script src="portal-app.js?v=9" defer></script>
 </head>
 
 <body class="ops-body antialiased" data-portal-page="events">
@@ -293,66 +293,97 @@
         </footer>
     </div>
 
-    <!-- BOOK / RESERVE PASS MODAL -->
+        <!-- BOOK / RESERVE PASS MODAL WITH CITY SELECTOR & COMPLETE PRICE LIST -->
     <div id="portal-book-modal" class="modal-backdrop hidden opacity-0" role="dialog" aria-modal="true"
         aria-labelledby="portal-book-title">
-        <div class="modal-card space-y-4">
+        <div class="modal-card modal-card--wide space-y-4 max-w-3xl">
             <button type="button" onclick="closePortalModal('portal-book-modal')" class="modal-close-btn"
                 aria-label="Close booking dialog">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="modal-dark-banner">
                 <div>
-                    <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">Direct
-                        Promoter Booking &amp; Net Billing</div>
-                    <h2 id="portal-book-title" class="text-lg font-bold text-white">Event Allocation</h2>
+                    <div class="text-[11px] uppercase tracking-wider text-[var(--crimson-ink)] font-bold">
+                        Tour Rate Card &bull; Direct Promoter Net Billing
+                    </div>
+                    <h2 id="portal-book-title" class="text-xl font-bold text-white">Event Allocation</h2>
                     <p id="portal-book-meta" class="text-xs text-[var(--muted)]">Venue &bull; Date</p>
                 </div>
             </div>
 
-            <form id="portal-book-form" onsubmit="handlePortalBookingSubmit(event)" class="space-y-3">
+            <!-- STEP 1: CHOOSE TOUR CITY -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="modal-field-label font-semibold text-white">1. Choose Tour City</label>
+                    <span id="book-city-venue" class="text-[11px] text-[var(--muted)] truncate max-w-[320px]"></span>
+                </div>
+                <div id="book-city-pills" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- STEP 2: ENTIRE PRICE LIST (MRP, COMMISSION, NET PAYABLE) -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label class="modal-field-label font-semibold text-white">2. Price List &amp; Promoter Margin</label>
+                    <span class="text-[11px] text-[var(--emerald-ink)] font-mono font-medium">Click any row to select pass</span>
+                </div>
+                <div class="overflow-x-auto rounded-xl border border-[var(--line)] bg-[var(--soft)] max-h-60 overflow-y-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead class="sticky top-0 bg-[#1c1c20] z-10 border-b border-[var(--line)]">
+                            <tr class="text-[var(--muted)]">
+                                <th class="p-2.5 font-semibold">Pass Category / Tier</th>
+                                <th class="p-2.5 font-semibold text-right">Official MRP</th>
+                                <th class="p-2.5 font-semibold text-right">Commission</th>
+                                <th class="p-2.5 font-semibold text-right">Net Payable</th>
+                                <th class="p-2.5 font-semibold text-center w-20">Select</th>
+                            </tr>
+                        </thead>
+                        <tbody id="book-pricelist-tbody" class="divide-y divide-[var(--line)]"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STEP 3: ATTENDEE & DIRECT BOOKING DETAILS -->
+            <form id="portal-book-form" onsubmit="handlePortalBookingSubmit(event)" class="space-y-3 pt-2 border-t border-[var(--line)]">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label for="book-tier-select" class="modal-field-label">Pass Tier</label>
-                        <select id="book-tier-select" onchange="updatePortalBookingSummary()"
-                            class="modal-input"></select>
+                        <label for="book-tier-select" class="modal-field-label font-semibold text-white">Selected Category</label>
+                        <select id="book-tier-select" onchange="onModalTierSelectChange()" class="modal-input"></select>
                     </div>
                     <div>
-                        <label for="book-qty-select" class="modal-field-label">Quantity</label>
+                        <label for="book-qty-select" class="modal-field-label font-semibold text-white">Quantity</label>
                         <select id="book-qty-select" onchange="updatePortalBookingSummary()" class="modal-input">
                             <option value="1">1 Pass</option>
                             <option value="2">2 Passes</option>
                             <option value="3">3 Passes</option>
                             <option value="4">4 Passes</option>
                             <option value="5">5 Passes</option>
+                            <option value="10">10 Passes (Group)</option>
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label for="book-cust-name" class="modal-field-label">Attendee Full Name</label>
-                    <input id="book-cust-name" type="text" required placeholder="Attendee Name" class="modal-input">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label for="book-cust-phone" class="modal-field-label">Attendee Phone (BookMyShow / District linked)</label>
-                        <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223"
-                            class="modal-input">
+                        <label for="book-cust-name" class="modal-field-label">Attendee Full Name</label>
+                        <input id="book-cust-name" type="text" required placeholder="Attendee Name" class="modal-input">
                     </div>
                     <div>
-                        <label for="book-cust-email" class="modal-field-label">Attendee Email (BookMyShow / District linked)</label>
-                        <input id="book-cust-email" type="email" required placeholder="guest@example.com"
-                            class="modal-input">
+                        <label for="book-cust-phone" class="modal-field-label">Attendee Phone (District linked)</label>
+                        <input id="book-cust-phone" type="tel" required placeholder="+91 98200 11223" class="modal-input">
+                    </div>
+                    <div>
+                        <label for="book-cust-email" class="modal-field-label">Attendee Email (District linked)</label>
+                        <input id="book-cust-email" type="email" required placeholder="guest@example.com" class="modal-input">
                     </div>
                 </div>
 
-                <div
-                    class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1.5 text-xs font-mono">
+                <div class="p-3.5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1.5 text-xs font-mono">
                     <div class="flex justify-between">
-                        <span class="text-[var(--muted)]">Promoter Attribution</span>
+                        <span class="text-[var(--muted)]">Promoter Attribution ID</span>
                         <span id="book-promo-id" class="font-bold text-white">7892 0145</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-[var(--muted)]">Pass Total (MRP)</span>
+                        <span class="text-[var(--muted)]">Pass Total (Official MRP)</span>
                         <span id="book-total-mrp" class="font-bold text-white tabular-nums">₹0</span>
                     </div>
                     <div class="flex justify-between">
@@ -360,13 +391,13 @@
                         <span id="book-est-cut" class="font-bold text-[var(--emerald-ink)] tabular-nums">-₹0</span>
                     </div>
                     <div class="flex justify-between border-t border-[var(--line)] pt-1.5">
-                        <span class="text-white font-bold">Net Amount to Pay</span>
-                        <span id="book-net-payable" class="font-bold text-[var(--crimson-ink)] tabular-nums">₹0</span>
+                        <span class="text-white font-bold text-sm">Net Amount to Pay</span>
+                        <span id="book-net-payable" class="font-bold text-[var(--crimson-ink)] tabular-nums text-base">₹0</span>
                     </div>
                 </div>
 
                 <p class="text-[11px] text-[var(--muted)] leading-relaxed">
-                    Official tickets are punched directly to this attendee's mobile &amp; email in BookMyShow or District upon booking.
+                    Official tickets are punched directly to this attendee's phone &amp; email in BookMyShow / District upon booking.
                 </p>
 
                 <button id="btn-portal-book-submit" type="submit" class="btn-editorial-primary w-full">

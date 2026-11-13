@@ -28,30 +28,120 @@
     "id": "chainsmokers-india-tour-2026",
     "title": "The Chainsmokers \u2014 Sunburn Arena & Sneaker Fest",
     "artist": "The Chainsmokers",
-    "city": "Mumbai",
-    "venue": "Mahalaxmi Race Course / NICE Grounds",
-    "date": "18\u201320 Dec 2026",
+    "genre": "EDM / Festival",
     "poster": "posters/chainsmokers-bengaluru-banner.webp",
     "featured": true,
-    "tiers": [
+    "defaultCity": "Mumbai",
+    "cities": [
       {
-        "name": "GA Festival Phase 2",
-        "price": 5500,
-        "cutPct": 12.0
+        "city": "Mumbai",
+        "venue": "Mahalaxmi Race Course, Mumbai",
+        "date": "18 Dec 2026 \u2022 14:00 IST",
+        "tiers": [
+          {
+            "name": "GA Festival Pass",
+            "price": 7000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Festival Pass",
+            "price": 12000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Festival Pass",
+            "price": 14000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Tuborg Lounge Festival",
+            "price": 30000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "The Core Lounge\u2013Fest",
+            "price": 40000,
+            "cutPct": 12.0
+          }
+        ]
       },
       {
-        "name": "VIP Festival Phase 7",
+        "city": "Delhi NCR",
+        "venue": "Jawaharlal Nehru Stadium / Yashobhoomi, Delhi NCR",
+        "date": "19 Dec 2026 \u2022 12:00 IST",
+        "tiers": [
+          {
+            "name": "GA Festival Phase 2",
+            "price": 5500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Festival Phase 2",
+            "price": 8000,
+            "cutPct": 12.0
+          }
+        ]
+      },
+      {
+        "city": "Bengaluru",
+        "venue": "NICE Grounds, Bengaluru",
+        "date": "20 Dec 2026 \u2022 16:00 IST",
+        "tiers": [
+          {
+            "name": "VIP Phase 7",
+            "price": 7000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "GA Combo Phase 1",
+            "price": 7000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Combo Phase 1",
+            "price": 9000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Phase 3",
+            "price": 10000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Tuborg Lounge",
+            "price": 12999,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
+    "city": "Mumbai",
+    "venue": "Mahalaxmi Race Course, Mumbai",
+    "date": "18 Dec 2026 \u2022 14:00 IST",
+    "tiers": [
+      {
+        "name": "GA Festival Pass",
         "price": 7000,
         "cutPct": 12.0
       },
       {
-        "name": "Fanpit Phase 2",
-        "price": 8000,
+        "name": "VIP Festival Pass",
+        "price": 12000,
         "cutPct": 12.0
       },
       {
-        "name": "Tuborg Lounge",
-        "price": 12999,
+        "name": "Fanpit Festival Pass",
+        "price": 14000,
+        "cutPct": 12.0
+      },
+      {
+        "name": "Tuborg Lounge Festival",
+        "price": 30000,
+        "cutPct": 12.0
+      },
+      {
+        "name": "The Core Lounge\u2013Fest",
+        "price": 40000,
         "cutPct": 12.0
       }
     ]
@@ -59,12 +149,38 @@
   {
     "id": "home-festival-goa-2026",
     "title": "The Home \u2014 Home Festival 2026",
-    "artist": "The Home Festival",
+    "artist": "The Home",
+    "genre": "Festival / Electronic",
+    "poster": "posters/anyma-aeden-poster-1.webp",
+    "featured": true,
+    "defaultCity": "Goa",
+    "cities": [
+      {
+        "city": "Goa",
+        "venue": "Vagator Hills, Vagator, Bardez, Goa",
+        "date": "29\u201330 Dec 2026 \u2022 14:00 IST",
+        "tiers": [
+          {
+            "name": "GA Festival Pass",
+            "price": 6999,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Festival Pass",
+            "price": 9999,
+            "cutPct": 12.0
+          },
+          {
+            "name": "HSBC Starstruck Lounge",
+            "price": 49999,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
     "city": "Goa",
-    "venue": "Vagator Hills, Vagator, Goa",
-    "date": "29\u201330 Dec 2026",
-    "poster": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80",
-    "featured": false,
+    "venue": "Vagator Hills, Vagator, Bardez, Goa",
+    "date": "29\u201330 Dec 2026 \u2022 14:00 IST",
     "tiers": [
       {
         "name": "GA Festival Pass",
@@ -77,7 +193,7 @@
         "cutPct": 12.0
       },
       {
-        "name": "Starstruck Lounge",
+        "name": "HSBC Starstruck Lounge",
         "price": 49999,
         "cutPct": 12.0
       }
@@ -86,27 +202,77 @@
   {
     "id": "keinemusik-adam-port-india-2026",
     "title": "Keinemusik presents Adam Port",
-    "artist": "Keinemusik & Adam Port",
-    "city": "New Delhi",
-    "venue": "NSIC Okhla / Bhartiya Mall / Biswa Bangla",
-    "date": "13\u201315 Nov 2026",
-    "poster": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80",
+    "artist": "Keinemusik / Adam Port",
+    "genre": "Afro House / Melodic",
+    "poster": "posters/anyma-aeden-poster-2.webp",
     "featured": false,
+    "defaultCity": "New Delhi",
+    "cities": [
+      {
+        "city": "New Delhi",
+        "venue": "NSIC Exhibition Ground, Okhla Gate 6, New Delhi",
+        "date": "13 Nov 2026 \u2022 15:00 IST",
+        "tiers": [
+          {
+            "name": "GA Standard Access",
+            "price": 3500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Enclosure Pass",
+            "price": 6500,
+            "cutPct": 12.0
+          }
+        ]
+      },
+      {
+        "city": "Kolkata",
+        "venue": "Biswa Bangla Mela Prangan, Kolkata",
+        "date": "14 Nov 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "GA Standard Access",
+            "price": 3500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Enclosure Pass",
+            "price": 6500,
+            "cutPct": 12.0
+          }
+        ]
+      },
+      {
+        "city": "Bengaluru",
+        "venue": "Bhartiya Mall Of Bengaluru",
+        "date": "15 Nov 2026 \u2022 15:30 IST",
+        "tiers": [
+          {
+            "name": "GA Standard Access",
+            "price": 3500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP 360 Experience Deck",
+            "price": 7500,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
+    "city": "New Delhi",
+    "venue": "NSIC Exhibition Ground, Okhla Gate 6, New Delhi",
+    "date": "13 Nov 2026 \u2022 15:00 IST",
     "tiers": [
       {
-        "name": "GA Entry Phase 1",
+        "name": "GA Standard Access",
         "price": 3500,
-        "cutPct": 14.0
+        "cutPct": 12.0
       },
       {
-        "name": "VIP Enclosure",
+        "name": "VIP Enclosure Pass",
         "price": 6500,
-        "cutPct": 14.0
-      },
-      {
-        "name": "Backstage Experience",
-        "price": 11000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       }
     ]
   },
@@ -114,26 +280,140 @@
     "id": "darshan-raval-love-letters-2026",
     "title": "Darshan Raval \u2014 Love Letters India Tour",
     "artist": "Darshan Raval",
-    "city": "Ahmedabad",
-    "venue": "SAVANNA Lawn / Bhartiya Mall / Dome SVP",
-    "date": "22 Nov \u2013 19 Dec 2026",
-    "poster": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80",
+    "genre": "Bollywood / Romantic Pop",
+    "poster": "posters/khalid-india-banner.webp",
     "featured": false,
+    "defaultCity": "Ahmedabad",
+    "cities": [
+      {
+        "city": "Ahmedabad",
+        "venue": "SAVANNA Party Lawn, Ahmedabad",
+        "date": "22 Nov 2026 \u2022 17:30 IST",
+        "tiers": [
+          {
+            "name": "Silver Standing Pass",
+            "price": 1499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Seated Pass",
+            "price": 2999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fan Pit Front Stage",
+            "price": 4999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Bengaluru",
+        "venue": "Bhartiya Mall Of Bengaluru",
+        "date": "29 Nov 2026 \u2022 17:30 IST",
+        "tiers": [
+          {
+            "name": "Silver Pass",
+            "price": 1499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Standing Area",
+            "price": 2999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Front Seating",
+            "price": 4999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Kolkata",
+        "venue": "Aquatica Ground, Kolkata",
+        "date": "05 Dec 2026 \u2022 17:30 IST",
+        "tiers": [
+          {
+            "name": "Silver Pass",
+            "price": 1499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Arena Pass",
+            "price": 2799,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Elevated Deck",
+            "price": 4999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Mumbai",
+        "venue": "Dome SVP Stadium, Worli, Mumbai",
+        "date": "13 Dec 2026 \u2022 17:30 IST",
+        "tiers": [
+          {
+            "name": "Bronze Bowl Seating",
+            "price": 2499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Floor Standing",
+            "price": 3999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Premium Center Ring",
+            "price": 6499,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Delhi NCR",
+        "venue": "Okhla Industrial Area Phase 3, Delhi NCR",
+        "date": "19 Dec 2026 \u2022 17:30 IST",
+        "tiers": [
+          {
+            "name": "Silver Arena Pass",
+            "price": 1999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Standing Pass",
+            "price": 3499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fan Pit Front Enclosure",
+            "price": 5999,
+            "cutPct": 11.0
+          }
+        ]
+      }
+    ],
+    "city": "Ahmedabad",
+    "venue": "SAVANNA Party Lawn, Ahmedabad",
+    "date": "22 Nov 2026 \u2022 17:30 IST",
     "tiers": [
       {
-        "name": "Silver Enclosure",
+        "name": "Silver Standing Pass",
         "price": 1499,
-        "cutPct": 12.0
+        "cutPct": 11.0
       },
       {
-        "name": "Gold Front",
-        "price": 2499,
-        "cutPct": 12.0
+        "name": "Gold Seated Pass",
+        "price": 2999,
+        "cutPct": 11.0
       },
       {
-        "name": "Fanpit Standing",
+        "name": "Fan Pit Front Stage",
         "price": 4999,
-        "cutPct": 12.0
+        "cutPct": 11.0
       }
     ]
   },
@@ -141,26 +421,128 @@
     "id": "shreya-ghoshal-unstoppable-2026",
     "title": "Shreya Ghoshal \u2014 The Unstoppable Tour",
     "artist": "Shreya Ghoshal",
-    "city": "Bengaluru",
-    "venue": "Airtel Arena / ACA Stadium / Jio World Garden",
-    "date": "22 Nov 2026 \u2013 27 Mar 2027",
-    "poster": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80",
+    "genre": "Classical / Bollywood Symphony",
+    "poster": "posters/khalid-india-banner.webp",
     "featured": false,
+    "defaultCity": "Bengaluru",
+    "cities": [
+      {
+        "city": "Bengaluru",
+        "venue": "Airtel Arena, Bengaluru",
+        "date": "22 Nov 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Enclosure",
+            "price": 2500,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Reserve",
+            "price": 4500,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Platinum Royal Pass",
+            "price": 12000,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fanpit Front Stage",
+            "price": 12000,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Guwahati",
+        "venue": "ACA Stadium, Barsapara, Guwahati",
+        "date": "19 Dec 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Entry",
+            "price": 700,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Stalls",
+            "price": 1500,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold VIP Seating",
+            "price": 3500,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Kochi",
+        "venue": "Cochin Trade Centre, Kochi",
+        "date": "07 Mar 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Access",
+            "price": 1000,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Reserved Seating",
+            "price": 2500,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Platinum Center",
+            "price": 5000,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Chennai",
+        "venue": "YMCA College of Physical Education, Chennai",
+        "date": "20 Mar 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Enclosure",
+            "price": 1500,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Front Arena",
+            "price": 3000,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Hospitality Lounge",
+            "price": 6000,
+            "cutPct": 11.0
+          }
+        ]
+      }
+    ],
+    "city": "Bengaluru",
+    "venue": "Airtel Arena, Bengaluru",
+    "date": "22 Nov 2026 \u2022 18:00 IST",
     "tiers": [
       {
-        "name": "Silver Seating",
+        "name": "Silver Enclosure",
         "price": 2500,
-        "cutPct": 12.0
+        "cutPct": 11.0
       },
       {
-        "name": "Gold Front",
+        "name": "Gold Reserve",
         "price": 4500,
-        "cutPct": 12.0
+        "cutPct": 11.0
       },
       {
-        "name": "Fanpit VIP",
+        "name": "Platinum Royal Pass",
         "price": 12000,
-        "cutPct": 12.0
+        "cutPct": 11.0
+      },
+      {
+        "name": "Fanpit Front Stage",
+        "price": 12000,
+        "cutPct": 11.0
       }
     ]
   },
@@ -168,26 +550,94 @@
     "id": "dj-snake-sunburn-arena-2026",
     "title": "DJ Snake \u2014 Sunburn Arena India Tour",
     "artist": "DJ Snake",
-    "city": "Bengaluru",
-    "venue": "NICE Grounds Bengaluru / Mahalaxmi Racecourse",
-    "date": "18\u201319 Dec 2026",
-    "poster": "https://images.unsplash.com/photo-1574391884720-bbc3740c59d1?w=800&auto=format&fit=crop&q=80",
+    "genre": "Trap / Dance / EDM",
+    "poster": "posters/chainsmokers-bengaluru-banner.webp",
     "featured": false,
-    "tiers": [
+    "defaultCity": "Bengaluru",
+    "cities": [
       {
-        "name": "GA Phase 1",
-        "price": 2000,
-        "cutPct": 14.0
+        "city": "Bengaluru",
+        "venue": "NICE Grounds, Madavara, Bengaluru",
+        "date": "18 Dec 2026 \u2022 16:00 IST",
+        "tiers": [
+          {
+            "name": "GA Phase 1 Pass",
+            "price": 2000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Phase 2 Pass",
+            "price": 3000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Phase 2",
+            "price": 5000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "GA Combo Phase 1",
+            "price": 7000,
+            "cutPct": 12.0
+          }
+        ]
       },
       {
-        "name": "VIP Phase 2",
+        "city": "Mumbai",
+        "venue": "Mahalaxmi Race Course, Mumbai",
+        "date": "19 Dec 2026 \u2022 14:00 IST",
+        "tiers": [
+          {
+            "name": "GA Single Day Pass",
+            "price": 3500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Single Day Pass",
+            "price": 6000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Single Day",
+            "price": 7500,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Festival 2-Day GA",
+            "price": 7000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Tuborg Lounge Festival",
+            "price": 30000,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
+    "city": "Bengaluru",
+    "venue": "NICE Grounds, Madavara, Bengaluru",
+    "date": "18 Dec 2026 \u2022 16:00 IST",
+    "tiers": [
+      {
+        "name": "GA Phase 1 Pass",
+        "price": 2000,
+        "cutPct": 12.0
+      },
+      {
+        "name": "VIP Phase 2 Pass",
         "price": 3000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       },
       {
         "name": "Fanpit Phase 2",
         "price": 5000,
-        "cutPct": 14.0
+        "cutPct": 12.0
+      },
+      {
+        "name": "GA Combo Phase 1",
+        "price": 7000,
+        "cutPct": 12.0
       }
     ]
   },
@@ -195,30 +645,262 @@
     "id": "arijit-singh-india-tour-2026-27",
     "title": "Arijit Singh \u2014 India Tour 2026\u20132027",
     "artist": "Arijit Singh",
-    "city": "Mumbai",
-    "venue": "Narendra Modi Stadium / JLN Stadium / Mahalaxmi",
-    "date": "29 Dec 2026 \u2013 15 May 2027",
-    "poster": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80",
+    "genre": "Bollywood / Soul / Symphony",
+    "poster": "posters/khalid-india-banner.webp",
     "featured": true,
+    "defaultCity": "Goa",
+    "cities": [
+      {
+        "city": "Goa",
+        "venue": "Vagator Hills, Vagator, Goa",
+        "date": "29 Dec 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "GA Festival Pass",
+            "price": 6999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Festival Pass",
+            "price": 11999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Ahmedabad",
+        "venue": "Narendra Modi Stadium, Ahmedabad",
+        "date": "09 Jan 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Tier Pass",
+            "price": 6499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Pitch Pass",
+            "price": 7999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Enclosure Pass",
+            "price": 9999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Diamond Ring Pass",
+            "price": 14999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fan Pit Front Stage",
+            "price": 24999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Chandigarh",
+        "venue": "Sector 34 Exhibition Ground, Chandigarh",
+        "date": "23 Jan 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Enclosure",
+            "price": 1999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Standing",
+            "price": 4499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Arena Pass",
+            "price": 9999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Platinum Ring",
+            "price": 14999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Jaipur",
+        "venue": "JECC by Accor, Sitapura, Jaipur",
+        "date": "07 Feb 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Enclosure",
+            "price": 2999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Pass",
+            "price": 4499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Front Pass",
+            "price": 9999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Lounge Deck",
+            "price": 12499,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Mumbai",
+        "venue": "Mahalaxmi Race Course, Mumbai",
+        "date": "20 Feb 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Pitch Standing",
+            "price": 4999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Center Enclosure",
+            "price": 7499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Diamond Front Stage",
+            "price": 24999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Platinum Hospitality Lounge",
+            "price": 34999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Bengaluru",
+        "venue": "NICE Grounds, Tumkur Road, Bengaluru",
+        "date": "13 Mar 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Enclosure",
+            "price": 14999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Front Arena",
+            "price": 19999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fan Pit Front",
+            "price": 34999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Hospitality Lounge",
+            "price": 49999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Delhi NCR",
+        "venue": "Jawaharlal Nehru Stadium, New Delhi",
+        "date": "27 Mar 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Silver Standing Pass",
+            "price": 4999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Pitch Arena",
+            "price": 8999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Grandstand Lounge",
+            "price": 18999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Pune",
+        "venue": "Mahalaxmi Lawns, Karve Nagar, Pune",
+        "date": "10 Apr 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Arena",
+            "price": 3999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Stalls",
+            "price": 5999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Front Enclosure",
+            "price": 12499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Elevated Deck",
+            "price": 19999,
+            "cutPct": 11.0
+          }
+        ]
+      },
+      {
+        "city": "Hyderabad",
+        "venue": "Gachibowli Outdoor Stadium, Hyderabad",
+        "date": "15 May 2027 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Bronze Pass",
+            "price": 2499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Pass",
+            "price": 4999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Arena Pass",
+            "price": 12499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Fan Pit Enclosure",
+            "price": 24999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Hospitality Lounge",
+            "price": 34999,
+            "cutPct": 11.0
+          }
+        ]
+      }
+    ],
+    "city": "Goa",
+    "venue": "Vagator Hills, Vagator, Goa",
+    "date": "29 Dec 2026 \u2022 18:00 IST",
     "tiers": [
       {
-        "name": "Silver Enclosure",
-        "price": 1999,
+        "name": "GA Festival Pass",
+        "price": 6999,
         "cutPct": 11.0
       },
       {
-        "name": "Gold Front",
-        "price": 4499,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Diamond Seating",
-        "price": 9999,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Platinum VIP",
-        "price": 14999,
+        "name": "VIP Festival Pass",
+        "price": 11999,
         "cutPct": 11.0
       }
     ]
@@ -227,31 +909,89 @@
     "id": "alesso-smirnoff-experience-2026",
     "title": "Alesso \u2014 Smirnoff Experience India",
     "artist": "Alesso",
-    "city": "Bengaluru",
-    "venue": "Bhartiya Mall Bengaluru / Huda Gymkhana Gurugram",
-    "date": "27\u201328 Nov 2026",
-    "poster": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&auto=format&fit=crop&q=80",
+    "genre": "Progressive House / EDM",
+    "poster": "posters/anyma-aeden-poster-2.webp",
     "featured": false,
-    "tiers": [
+    "defaultCity": "Bengaluru",
+    "cities": [
       {
-        "name": "GA Phase 1",
-        "price": 1750,
-        "cutPct": 14.0
+        "city": "Bengaluru",
+        "venue": "Bhartiya Mall Of Bengaluru",
+        "date": "27 Nov 2026 \u2022 16:00 IST",
+        "tiers": [
+          {
+            "name": "GA Phase 1 Pass",
+            "price": 1750,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Phase 1 Pass",
+            "price": 3000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Phase 1",
+            "price": 5000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Smirnoff Experience Lounge",
+            "price": 15000,
+            "cutPct": 12.0
+          }
+        ]
       },
       {
-        "name": "VIP Phase 1",
+        "city": "Delhi NCR",
+        "venue": "Huda Gymkhana Club, Sector 29, Gurugram / Delhi NCR",
+        "date": "28 Nov 2026 \u2022 16:00 IST",
+        "tiers": [
+          {
+            "name": "GA Phase 1 Pass",
+            "price": 1750,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Phase 1 Pass",
+            "price": 3000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Fanpit Phase 1",
+            "price": 5000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "Smirnoff Experience Lounge",
+            "price": 15000,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
+    "city": "Bengaluru",
+    "venue": "Bhartiya Mall Of Bengaluru",
+    "date": "27 Nov 2026 \u2022 16:00 IST",
+    "tiers": [
+      {
+        "name": "GA Phase 1 Pass",
+        "price": 1750,
+        "cutPct": 12.0
+      },
+      {
+        "name": "VIP Phase 1 Pass",
         "price": 3000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       },
       {
         "name": "Fanpit Phase 1",
         "price": 5000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       },
       {
-        "name": "Smirnoff Lounge",
+        "name": "Smirnoff Experience Lounge",
         "price": 15000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       }
     ]
   },
@@ -259,31 +999,72 @@
     "id": "faheem-abdullah-unbecoming-2026",
     "title": "Faheem Abdullah \u2014 The Unbecoming Tour",
     "artist": "Faheem Abdullah",
-    "city": "New Delhi",
-    "venue": "Brahmkamal Hall, Yashobhoomi, New Delhi",
-    "date": "20 Nov 2026",
-    "poster": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80",
+    "genre": "Indie / Sufi Acoustic",
+    "poster": "posters/khalid-india-banner.webp",
     "featured": false,
+    "defaultCity": "New Delhi",
+    "cities": [
+      {
+        "city": "New Delhi",
+        "venue": "Brahmkamal Hall\u2013Auditorium, Yashobhoomi, New Delhi",
+        "date": "20 Nov 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "Balcony Tier Pass",
+            "price": 999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Silver Stalls",
+            "price": 1499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Gold Center Pass",
+            "price": 2499,
+            "cutPct": 11.0
+          },
+          {
+            "name": "Platinum Front Stage",
+            "price": 3999,
+            "cutPct": 11.0
+          },
+          {
+            "name": "VIP Meet & Greet",
+            "price": 4999,
+            "cutPct": 11.0
+          }
+        ]
+      }
+    ],
+    "city": "New Delhi",
+    "venue": "Brahmkamal Hall\u2013Auditorium, Yashobhoomi, New Delhi",
+    "date": "20 Nov 2026 \u2022 18:00 IST",
     "tiers": [
       {
-        "name": "Silver Entry",
+        "name": "Balcony Tier Pass",
         "price": 999,
-        "cutPct": 15.0
+        "cutPct": 11.0
       },
       {
-        "name": "Gold Access",
+        "name": "Silver Stalls",
         "price": 1499,
-        "cutPct": 15.0
+        "cutPct": 11.0
       },
       {
-        "name": "Platinum Front",
+        "name": "Gold Center Pass",
         "price": 2499,
-        "cutPct": 15.0
+        "cutPct": 11.0
       },
       {
-        "name": "VIP Lounge",
+        "name": "Platinum Front Stage",
+        "price": 3999,
+        "cutPct": 11.0
+      },
+      {
+        "name": "VIP Meet & Greet",
         "price": 4999,
-        "cutPct": 15.0
+        "cutPct": 11.0
       }
     ]
   },
@@ -291,26 +1072,76 @@
     "id": "francis-mercier-india-tour-2026",
     "title": "Francis Mercier \u2014 Sunburn Arena & RROV",
     "artist": "Francis Mercier",
-    "city": "Mumbai",
-    "venue": "Fairmont Ballroom / A DOT Gurugram / RROV Goa",
-    "date": "24\u201327 Dec 2026",
-    "poster": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
+    "genre": "Deep House / Afro Tech",
+    "poster": "posters/anyma-aeden-poster-1.webp",
     "featured": false,
+    "defaultCity": "Mumbai",
+    "cities": [
+      {
+        "city": "Mumbai",
+        "venue": "Infinity Ballroom, Fairmont Hotel, Mumbai",
+        "date": "24 Dec 2026 \u2022 21:00 IST",
+        "tiers": [
+          {
+            "name": "GA Entry Pass",
+            "price": 3000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Elevated Deck",
+            "price": 6000,
+            "cutPct": 12.0
+          }
+        ]
+      },
+      {
+        "city": "Delhi NCR",
+        "venue": "A DOT by GNH, Sector 29, Gurugram / Delhi NCR",
+        "date": "25 Dec 2026 \u2022 18:00 IST",
+        "tiers": [
+          {
+            "name": "GA Phase 1 Pass",
+            "price": 2499,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Front Pass",
+            "price": 4999,
+            "cutPct": 12.0
+          }
+        ]
+      },
+      {
+        "city": "Goa",
+        "venue": "RROV: Goa, Vagator, Goa",
+        "date": "27 Dec 2026 \u2022 21:00 IST",
+        "tiers": [
+          {
+            "name": "GA Entry Pass",
+            "price": 3000,
+            "cutPct": 12.0
+          },
+          {
+            "name": "VIP Sunset Lounge",
+            "price": 7000,
+            "cutPct": 12.0
+          }
+        ]
+      }
+    ],
+    "city": "Mumbai",
+    "venue": "Infinity Ballroom, Fairmont Hotel, Mumbai",
+    "date": "24 Dec 2026 \u2022 21:00 IST",
     "tiers": [
       {
-        "name": "GA Access",
-        "price": 2499,
-        "cutPct": 14.0
-      },
-      {
-        "name": "VIP Area",
+        "name": "GA Entry Pass",
         "price": 3000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       },
       {
-        "name": "Backstage Enclosure",
+        "name": "VIP Elevated Deck",
         "price": 6000,
-        "cutPct": 14.0
+        "cutPct": 12.0
       }
     ]
   }
@@ -717,6 +1548,8 @@
   let _portalPayouts = [];
   let _portalCommissions = [];
   let _bookingModalEvent = null;
+  let _bookingModalCity = null;
+  let _bookingModalTierIdx = 0;
 
   function escapeHtml(str) {
     if (str === null || str === undefined) return '';
@@ -1133,11 +1966,13 @@
 
     const events = _portalEvents.length ? _portalEvents : CANONICAL_PORTAL_EVENTS;
     const filtered = events.filter((ev) => {
+      const cityList = (ev.cities || []).map((c) => c.city.toLowerCase());
       const cityOk =
         _portalCityFilter === 'all' ||
         (ev.city || '').toLowerCase().includes(_portalCityFilter) ||
-        (ev.venue || '').toLowerCase().includes(_portalCityFilter);
-      const hay = `${ev.title} ${ev.artist} ${ev.venue} ${ev.city} ${ev.date}`.toLowerCase();
+        (ev.venue || '').toLowerCase().includes(_portalCityFilter) ||
+        cityList.some((c) => c.includes(_portalCityFilter));
+      const hay = `${ev.title} ${ev.artist} ${ev.venue} ${ev.city} ${ev.date} ${cityList.join(' ')}`.toLowerCase();
       const textOk = !search || hay.includes(search);
       return cityOk && textOk;
     });
@@ -1157,48 +1992,62 @@
 
     grid.innerHTML = filtered
       .map((ev) => {
-        const baseTier = ev.tiers[0] || { name: 'GA Standard', price: 3499, cutPct: 12 };
+        const baseTier = (ev.tiers && ev.tiers[0]) || { name: 'GA Pass', price: 3499, cutPct: 12 };
         const activeCut = Math.max(userCut, Number(baseTier.cutPct || 12));
         const earnAmt = Math.round((Number(baseTier.price) * activeCut) / 100);
         const safeId = escapeHtml(ev.id);
 
+        // Render mini city buttons on the card
+        const cityPills = (ev.cities || [{ city: ev.city }])
+          .map((c) => {
+            const cityName = escapeHtml(c.city);
+            return `<button type="button" onclick="event.stopPropagation(); openPortalBookModal('${safeId}', '${cityName}')" class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-[#27272a] text-[#d4d4d8] hover:bg-[var(--crimson-ink)] hover:text-white transition-colors border border-[var(--line)]">${cityName}</button>`;
+          })
+          .join(' ');
+
         return `
-          <article class="tour-card tour-card--grid">
+          <article class="tour-card tour-card--grid cursor-pointer" onclick="openPortalBookModal('${safeId}')">
             <div class="tour-card-media">
               <img src="${escapeHtml(sanitizeAssetUrl(ev.poster))}" alt="${escapeHtml(ev.title)}" width="480" height="320" loading="lazy" decoding="async">
-              <span class="tour-cut-pill tabular-nums">${activeCut.toFixed(0)}% Cut</span>
+              <span class="tour-cut-pill tabular-nums">${activeCut.toFixed(0)}% Margin</span>
               <span class="tour-venue-pill">
                 <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0"></i>
-                <span class="truncate">${escapeHtml(ev.venue)}</span>
+                <span class="truncate">${escapeHtml(ev.venue || ev.city)}</span>
               </span>
             </div>
 
             <div class="tour-card-body">
               <div>
-                <div class="tour-meta-row">
+                <div class="tour-meta-row flex-wrap gap-1.5 items-center">
                   <span class="tour-tag tour-tag--featured">${escapeHtml(ev.city)}</span>
                   <span>${escapeHtml(ev.date)}</span>
                 </div>
                 <h3 class="tour-card-title">${escapeHtml(ev.title)}</h3>
-                <p class="tour-card-desc">${escapeHtml(baseTier.name)} pass &bull; Punched to BookMyShow / District &bull; Upfront promoter discount.</p>
+                <p class="tour-card-desc">${escapeHtml(ev.artist)} &bull; Official National Tour Allocation</p>
+                
+                <!-- City quick-choice bar -->
+                <div class="pt-2 flex flex-wrap items-center gap-1.5">
+                  <span class="text-[10px] font-semibold text-[var(--muted)] uppercase tracking-wider">Cities:</span>
+                  ${cityPills}
+                </div>
               </div>
 
               <div class="tour-card-footer">
                 <div class="tour-price-split tabular-nums">
                   <div>
-                    <span class="tour-price-label">Starting MRP</span>
+                    <span class="tour-price-label">Official MRP</span>
                     <span class="tour-price-val">₹${Number(baseTier.price).toLocaleString('en-IN')}</span>
                   </div>
                   <div class="text-right">
-                    <span class="tour-price-label">Upfront Margin</span>
-                    <span class="tour-price-val" style="color: var(--emerald-ink);">-₹${earnAmt.toLocaleString('en-IN')}/pass</span>
+                    <span class="tour-price-label">Promoter Cut</span>
+                    <span class="tour-yield-val">Earn ₹${earnAmt.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 
-                <div>
-                  <button type="button" data-book-event="${safeId}" class="btn-editorial-primary btn-compact w-full">
-                    <i data-lucide="ticket" class="w-3.5 h-3.5"></i>
-                    <span>Book / Reserve Pass</span>
+                <div class="pt-2">
+                  <button type="button" onclick="event.stopPropagation(); openPortalBookModal('${safeId}')" class="btn-editorial-primary w-full flex items-center justify-center gap-1.5">
+                    <i data-lucide="ticket" class="w-4 h-4"></i>
+                    <span>View Rate Card &amp; Book</span>
                   </button>
                 </div>
               </div>
@@ -1211,31 +2060,21 @@
     if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
   }
 
-  function openPortalBookModal(eventId) {
+  function openPortalBookModal(eventId, preferredCity) {
     const list = _portalEvents.length ? _portalEvents : CANONICAL_PORTAL_EVENTS;
     const ev = list.find((item) => String(item.id) === String(eventId)) || list[0];
     if (!ev) return;
     _bookingModalEvent = ev;
 
     const titleEl = document.getElementById('portal-book-title');
-    const metaEl = document.getElementById('portal-book-meta');
     const promoEl = document.getElementById('book-promo-id');
-    const tierSelect = document.getElementById('book-tier-select');
     const qtySelect = document.getElementById('book-qty-select');
 
     if (titleEl) titleEl.textContent = ev.title;
-    if (metaEl) metaEl.textContent = `${ev.venue} • ${ev.date}`;
     if (promoEl) promoEl.textContent = getActiveRefCode();
-    if (tierSelect) {
-      tierSelect.innerHTML = ev.tiers
-        .map(
-          (t, idx) =>
-            `<option value="${idx}">${escapeHtml(t.name)} - ₹${Number(t.price).toLocaleString('en-IN')}</option>`
-        )
-        .join('');
-    }
     if (qtySelect) qtySelect.value = '1';
 
+    // Autofill contact fields
     const nameEl = document.getElementById('book-cust-name');
     const phoneEl = document.getElementById('book-cust-phone');
     const emailEl = document.getElementById('book-cust-email');
@@ -1243,15 +2082,134 @@
     if (phoneEl && !phoneEl.value && _activePromoter) phoneEl.value = _activePromoter.phone || '+91 98200 11223';
     if (emailEl && !emailEl.value && _activeUser) emailEl.value = _activeUser.email || '';
 
-    updatePortalBookingSummary();
+    // Render city selector pills in modal
+    const cities = ev.cities && ev.cities.length ? ev.cities : [{ city: ev.city, venue: ev.venue, date: ev.date, tiers: ev.tiers }];
+    const pillsContainer = document.getElementById('book-city-pills');
+    if (pillsContainer) {
+      pillsContainer.innerHTML = cities
+        .map((c) => {
+          const safeCity = escapeHtml(c.city);
+          return `<button type="button" data-modal-city="${safeCity}" onclick="selectPortalModalCity('${safeCity}')" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[var(--line)] bg-[#1c1c20] text-[#d4d4d8] hover:bg-[#27272a] transition-all">${safeCity}</button>`;
+        })
+        .join('');
+    }
+
+    // Determine initial city
+    let initialCity = preferredCity;
+    if (!initialCity || !cities.some((c) => c.city.toLowerCase() === initialCity.toLowerCase())) {
+      initialCity = ev.defaultCity || cities[0].city;
+    }
+
+    selectPortalModalCity(initialCity);
     openPortalModal('portal-book-modal');
   }
 
-  function updatePortalBookingSummary() {
+  function selectPortalModalCity(cityName) {
     if (!_bookingModalEvent) return;
-    const tierIdx = Number(document.getElementById('book-tier-select')?.value || 0);
+    const cities = _bookingModalEvent.cities && _bookingModalEvent.cities.length
+      ? _bookingModalEvent.cities
+      : [{ city: _bookingModalEvent.city, venue: _bookingModalEvent.venue, date: _bookingModalEvent.date, tiers: _bookingModalEvent.tiers }];
+
+    const cityObj = cities.find((c) => c.city.toLowerCase() === (cityName || '').toLowerCase()) || cities[0];
+    _bookingModalCity = cityObj;
+    _bookingModalTierIdx = 0;
+
+    // Update city pills active state
+    document.querySelectorAll('[data-modal-city]').forEach((pill) => {
+      const active = (pill.getAttribute('data-modal-city') || '').toLowerCase() === cityObj.city.toLowerCase();
+      if (active) {
+        pill.className = 'px-3.5 py-1.5 rounded-xl text-xs font-bold border border-[var(--crimson-ink)] bg-[var(--crimson-ink)] text-white shadow-md transition-all';
+      } else {
+        pill.className = 'px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-[var(--line)] bg-[#1c1c20] text-[#d4d4d8] hover:bg-[#27272a] transition-all';
+      }
+    });
+
+    // Update modal meta with exact venue & date
+    const metaEl = document.getElementById('portal-book-meta');
+    const venueEl = document.getElementById('book-city-venue');
+    if (metaEl) metaEl.textContent = `${cityObj.venue} • ${cityObj.date}`;
+    if (venueEl) venueEl.textContent = `${cityObj.venue} • ${cityObj.date}`;
+
+    // Render entire price list table (MRP, Commission, Net Payable)
+    renderPriceListTable(cityObj);
+
+    // Populate dropdown options
+    const tierSelect = document.getElementById('book-tier-select');
+    if (tierSelect) {
+      tierSelect.innerHTML = cityObj.tiers
+        .map(
+          (t, idx) =>
+            `<option value="${idx}">${escapeHtml(t.name)} - MRP ₹${Number(t.price).toLocaleString('en-IN')}</option>`
+        )
+        .join('');
+      tierSelect.value = '0';
+    }
+
+    updatePortalBookingSummary();
+  }
+
+  function renderPriceListTable(cityObj) {
+    const tbody = document.getElementById('book-pricelist-tbody');
+    if (!tbody || !cityObj || !cityObj.tiers) return;
+
+    const userCut = Number((_activePromoter && _activePromoter.commission_rate) || 8);
+
+    tbody.innerHTML = cityObj.tiers
+      .map((t, idx) => {
+        const rate = Math.max(userCut, Number(t.cutPct || 12));
+        const mrp = Number(t.price);
+        const comm = Math.round((mrp * rate) / 100);
+        const net = Math.max(0, mrp - comm);
+        const isSelected = idx === _bookingModalTierIdx;
+
+        const rowBg = isSelected ? 'bg-[#27272a] border-l-2 border-[var(--crimson-ink)]' : 'hover:bg-[#212126]';
+        const btnCls = isSelected ? 'bg-[var(--crimson-ink)] text-white' : 'bg-[#2e2e33] text-[var(--muted)] hover:text-white';
+
+        return `
+          <tr class="cursor-pointer transition-colors ${rowBg}" onclick="selectModalTier(${idx})">
+            <td class="p-2.5 font-medium text-white flex items-center gap-1.5">
+              ${isSelected ? '<span class="w-1.5 h-1.5 rounded-full bg-[var(--crimson-ink)]"></span>' : ''}
+              <span>${escapeHtml(t.name)}</span>
+            </td>
+            <td class="p-2.5 text-right font-mono text-[var(--muted)] tabular-nums">₹${mrp.toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-right font-mono text-[var(--emerald-ink)] tabular-nums">
+              <span class="px-1.5 py-0.5 rounded bg-[var(--emerald-ink)]/10 font-medium">${rate.toFixed(0)}% (-₹${comm.toLocaleString('en-IN')})</span>
+            </td>
+            <td class="p-2.5 text-right font-mono font-bold text-white tabular-nums text-sm">₹${net.toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-center">
+              <button type="button" class="px-2 py-1 rounded text-[10px] font-bold transition-all ${btnCls}">
+                ${isSelected ? 'Selected' : 'Select'}
+              </button>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+  }
+
+  window.selectPortalModalCity = selectPortalModalCity;
+
+  window.selectModalTier = function (idx) {
+    _bookingModalTierIdx = Number(idx);
+    const tierSelect = document.getElementById('book-tier-select');
+    if (tierSelect) tierSelect.value = String(idx);
+    if (_bookingModalCity) renderPriceListTable(_bookingModalCity);
+    updatePortalBookingSummary();
+  };
+
+  window.onModalTierSelectChange = function () {
+    const tierSelect = document.getElementById('book-tier-select');
+    if (tierSelect) {
+      _bookingModalTierIdx = Number(tierSelect.value || 0);
+      if (_bookingModalCity) renderPriceListTable(_bookingModalCity);
+      updatePortalBookingSummary();
+    }
+  };
+
+  function updatePortalBookingSummary() {
+    if (!_bookingModalEvent || !_bookingModalCity) return;
+    const tier = (_bookingModalCity.tiers && _bookingModalCity.tiers[_bookingModalTierIdx]) || { name: 'GA Pass', price: 3499, cutPct: 12 };
     const qty = Number(document.getElementById('book-qty-select')?.value || 1);
-    const tier = _bookingModalEvent.tiers[tierIdx] || _bookingModalEvent.tiers[0];
     const userCut = Number((_activePromoter && _activePromoter.commission_rate) || 8);
     const rate = Math.max(userCut, Number(tier.cutPct || 12));
     const total = Number(tier.price) * qty;
@@ -1263,19 +2221,18 @@
     const netEl = document.getElementById('book-net-payable');
     const btnText = document.getElementById('btn-portal-book-text');
 
-    if (mrpEl) mrpEl.textContent = '₹' + total.toLocaleString('en-IN');
-    if (cutEl) cutEl.textContent = '-₹' + cut.toLocaleString('en-IN') + ` (${rate}% Margin)`;
-    if (netEl) netEl.textContent = '₹' + netPayable.toLocaleString('en-IN');
-    if (btnText) btnText.textContent = `Pay ₹${netPayable.toLocaleString('en-IN')} & Book Pass`;
+    if (mrpEl) mrpEl.textContent = `₹${total.toLocaleString('en-IN')}`;
+    if (cutEl) cutEl.textContent = `-₹${cut.toLocaleString('en-IN')} (${rate}% Margin Saved)`;
+    if (netEl) netEl.textContent = `₹${netPayable.toLocaleString('en-IN')}`;
+    if (btnText) btnText.textContent = `Pay Net ₹${netPayable.toLocaleString('en-IN')} & Book Pass`;
   }
 
   async function handlePortalBookingSubmit(e) {
-    e.preventDefault();
-    if (!_bookingModalEvent || !_activeUser) return;
+    if (e && e.preventDefault) e.preventDefault();
+    if (!_bookingModalEvent || !_bookingModalCity) return;
 
-    const tierIdx = Number(document.getElementById('book-tier-select')?.value || 0);
+    const tier = (_bookingModalCity.tiers && _bookingModalCity.tiers[_bookingModalTierIdx]) || { name: 'GA Pass', price: 3499, cutPct: 12 };
     const qty = Number(document.getElementById('book-qty-select')?.value || 1);
-    const tier = _bookingModalEvent.tiers[tierIdx] || _bookingModalEvent.tiers[0];
     const custName = (document.getElementById('book-cust-name')?.value || '').trim();
     const custPhone = (document.getElementById('book-cust-phone')?.value || '').trim();
     const custEmail = (document.getElementById('book-cust-email')?.value || '').trim().toLowerCase();
@@ -1292,6 +2249,8 @@
     const netAmountPaid = totalAmount - commissionAmount;
     let orderRef = 'TIX-' + Math.floor(100000 + Math.random() * 900000);
 
+    const fullEventTitle = `${_bookingModalEvent.title} (${_bookingModalCity.city})`;
+
     try {
       if (window.TixoraAuth && typeof window.TixoraAuth.fetchWithCsrf === 'function') {
         const res = await window.TixoraAuth.fetchWithCsrf('/api/cart/checkout', {
@@ -1300,7 +2259,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             customer: { name: custName, phone: custPhone, email: custEmail },
-            items: [{ title: _bookingModalEvent.title, tier: tier.name, price: tier.price, quantity: qty }],
+            items: [{ title: fullEventTitle, tier: tier.name, price: tier.price, quantity: qty }],
             expiresAt: Date.now() + 600000
           })
         });
@@ -1314,9 +2273,10 @@
     if (window.TixoraAuth && typeof window.TixoraAuth.recordLocalBooking === 'function') {
       window.TixoraAuth.recordLocalBooking(_activeUser, {
         order_ref: orderRef,
-        event_title: _bookingModalEvent.title,
-        tier_name: tier.name,
+        event_title: fullEventTitle,
+        tier_name: `${tier.name} (${_bookingModalCity.city})`,
         quantity: qty,
+        unit_price: tier.price,
         total_amount: totalAmount,
         commission_rate: rate,
         commission_amount: commissionAmount,
@@ -1335,7 +2295,7 @@
     if (btnText) btnText.textContent = 'Pay Net Amount & Book Pass';
     closePortalModal('portal-book-modal');
     await hydratePortalLedgerAndHistory();
-    showToast(`Pass ${orderRef} booked! Official ticket punched to attendee's BookMyShow / District account.`);
+    showToast(`Pass ${orderRef} booked! ${tier.name} (${_bookingModalCity.city}) punched to BookMyShow / District.`);
   }
 
   function setBookingStatusFilter(status) {
