@@ -24,1127 +24,1127 @@
   forcePortalTopOnLoad();
 
   const CANONICAL_PORTAL_EVENTS = [
-  {
-    "id": "chainsmokers-india-tour-2026",
-    "title": "The Chainsmokers \u2014 Sunburn Arena & Sneaker Fest",
-    "artist": "The Chainsmokers",
-    "genre": "EDM / Festival",
-    "poster": "posters/chainsmokers-bengaluru-banner.webp",
-    "featured": true,
-    "defaultCity": "Mumbai",
-    "cities": [
-      {
+    {
+        "id": "chainsmokers-india-tour-2026",
+        "title": "The Chainsmokers — Sunburn Arena & Sneaker Fest",
+        "artist": "The Chainsmokers",
+        "genre": "EDM / Festival",
+        "poster": "posters/chainsmokers-bengaluru-banner.webp",
+        "featured": true,
+        "defaultCity": "Mumbai",
+        "cities": [
+            {
+                "city": "Mumbai",
+                "venue": "Mahalaxmi Race Course, Mumbai",
+                "date": "18 Dec 2026 • 14:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Festival Pass",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Festival Pass",
+                        "price": 12000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Festival Pass",
+                        "price": 14000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Tuborg Lounge Festival",
+                        "price": 30000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "The Core Lounge–Fest",
+                        "price": 40000,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Delhi NCR",
+                "venue": "Jawaharlal Nehru Stadium / Yashobhoomi, Delhi NCR",
+                "date": "19 Dec 2026 • 12:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Festival Phase 2",
+                        "price": 5500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Festival Phase 2",
+                        "price": 8000,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Bengaluru",
+                "venue": "NICE Grounds, Bengaluru",
+                "date": "20 Dec 2026 • 16:00 IST",
+                "tiers": [
+                    {
+                        "name": "VIP Phase 7",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "GA Combo Phase 1",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Combo Phase 1",
+                        "price": 9000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Phase 3",
+                        "price": 10000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Tuborg Lounge",
+                        "price": 12999,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "Mumbai",
         "venue": "Mahalaxmi Race Course, Mumbai",
-        "date": "18 Dec 2026 \u2022 14:00 IST",
+        "date": "18 Dec 2026 • 14:00 IST",
         "tiers": [
-          {
-            "name": "GA Festival Pass",
-            "price": 7000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Festival Pass",
-            "price": 12000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Festival Pass",
-            "price": 14000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Tuborg Lounge Festival",
-            "price": 30000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "The Core Lounge\u2013Fest",
-            "price": 40000,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Festival Pass",
+                "price": 7000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Festival Pass",
+                "price": 12000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit Festival Pass",
+                "price": 14000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Tuborg Lounge Festival",
+                "price": 30000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "The Core Lounge–Fest",
+                "price": 40000,
+                "cutPct": 12.0
+            }
         ]
-      },
-      {
-        "city": "Delhi NCR",
-        "venue": "Jawaharlal Nehru Stadium / Yashobhoomi, Delhi NCR",
-        "date": "19 Dec 2026 \u2022 12:00 IST",
-        "tiers": [
-          {
-            "name": "GA Festival Phase 2",
-            "price": 5500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Festival Phase 2",
-            "price": 8000,
-            "cutPct": 12.0
-          }
-        ]
-      },
-      {
-        "city": "Bengaluru",
-        "venue": "NICE Grounds, Bengaluru",
-        "date": "20 Dec 2026 \u2022 16:00 IST",
-        "tiers": [
-          {
-            "name": "VIP Phase 7",
-            "price": 7000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "GA Combo Phase 1",
-            "price": 7000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Combo Phase 1",
-            "price": 9000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Phase 3",
-            "price": 10000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Tuborg Lounge",
-            "price": 12999,
-            "cutPct": 12.0
-          }
-        ]
-      }
-    ],
-    "city": "Mumbai",
-    "venue": "Mahalaxmi Race Course, Mumbai",
-    "date": "18 Dec 2026 \u2022 14:00 IST",
-    "tiers": [
-      {
-        "name": "GA Festival Pass",
-        "price": 7000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Festival Pass",
-        "price": 12000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "Fanpit Festival Pass",
-        "price": 14000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "Tuborg Lounge Festival",
-        "price": 30000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "The Core Lounge\u2013Fest",
-        "price": 40000,
-        "cutPct": 12.0
-      }
-    ]
-  },
-  {
-    "id": "home-festival-goa-2026",
-    "title": "The Home \u2014 Home Festival 2026",
-    "artist": "The Home",
-    "genre": "Festival / Electronic",
-    "poster": "posters/anyma-aeden-poster-1.webp",
-    "featured": true,
-    "defaultCity": "Goa",
-    "cities": [
-      {
+    },
+    {
+        "id": "home-festival-goa-2026",
+        "title": "The Home — Home Festival 2026",
+        "artist": "The Home",
+        "genre": "Festival / Electronic",
+        "poster": "posters/home-festival-goa-poster.webp",
+        "featured": true,
+        "defaultCity": "Goa",
+        "cities": [
+            {
+                "city": "Goa",
+                "venue": "Vagator Hills, Vagator, Bardez, Goa",
+                "date": "29–30 Dec 2026 • 14:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Festival Pass",
+                        "price": 6999,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Festival Pass",
+                        "price": 9999,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "HSBC Starstruck Lounge",
+                        "price": 49999,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "Goa",
         "venue": "Vagator Hills, Vagator, Bardez, Goa",
-        "date": "29\u201330 Dec 2026 \u2022 14:00 IST",
+        "date": "29–30 Dec 2026 • 14:00 IST",
         "tiers": [
-          {
-            "name": "GA Festival Pass",
-            "price": 6999,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Festival Pass",
-            "price": 9999,
-            "cutPct": 12.0
-          },
-          {
-            "name": "HSBC Starstruck Lounge",
-            "price": 49999,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Festival Pass",
+                "price": 6999,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Festival Pass",
+                "price": 9999,
+                "cutPct": 12.0
+            },
+            {
+                "name": "HSBC Starstruck Lounge",
+                "price": 49999,
+                "cutPct": 12.0
+            }
         ]
-      }
-    ],
-    "city": "Goa",
-    "venue": "Vagator Hills, Vagator, Bardez, Goa",
-    "date": "29\u201330 Dec 2026 \u2022 14:00 IST",
-    "tiers": [
-      {
-        "name": "GA Festival Pass",
-        "price": 6999,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Festival Pass",
-        "price": 9999,
-        "cutPct": 12.0
-      },
-      {
-        "name": "HSBC Starstruck Lounge",
-        "price": 49999,
-        "cutPct": 12.0
-      }
-    ]
-  },
-  {
-    "id": "keinemusik-adam-port-india-2026",
-    "title": "Keinemusik presents Adam Port",
-    "artist": "Keinemusik / Adam Port",
-    "genre": "Afro House / Melodic",
-    "poster": "posters/anyma-aeden-poster-2.webp",
-    "featured": false,
-    "defaultCity": "New Delhi",
-    "cities": [
-      {
+    },
+    {
+        "id": "keinemusik-adam-port-india-2026",
+        "title": "Keinemusik presents Adam Port",
+        "artist": "Keinemusik / Adam Port",
+        "genre": "Afro House / Melodic",
+        "poster": "posters/keinemusik-adam-port-poster.webp",
+        "featured": false,
+        "defaultCity": "New Delhi",
+        "cities": [
+            {
+                "city": "New Delhi",
+                "venue": "NSIC Exhibition Ground, Okhla Gate 6, New Delhi",
+                "date": "13 Nov 2026 • 15:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Standard Access",
+                        "price": 3500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Enclosure Pass",
+                        "price": 6500,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Kolkata",
+                "venue": "Biswa Bangla Mela Prangan, Kolkata",
+                "date": "14 Nov 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Standard Access",
+                        "price": 3500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Enclosure Pass",
+                        "price": 6500,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Bengaluru",
+                "venue": "Bhartiya Mall Of Bengaluru",
+                "date": "15 Nov 2026 • 15:30 IST",
+                "tiers": [
+                    {
+                        "name": "GA Standard Access",
+                        "price": 3500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP 360 Experience Deck",
+                        "price": 7500,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "New Delhi",
         "venue": "NSIC Exhibition Ground, Okhla Gate 6, New Delhi",
-        "date": "13 Nov 2026 \u2022 15:00 IST",
+        "date": "13 Nov 2026 • 15:00 IST",
         "tiers": [
-          {
-            "name": "GA Standard Access",
-            "price": 3500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Enclosure Pass",
-            "price": 6500,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Standard Access",
+                "price": 3500,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Enclosure Pass",
+                "price": 6500,
+                "cutPct": 12.0
+            }
         ]
-      },
-      {
-        "city": "Kolkata",
-        "venue": "Biswa Bangla Mela Prangan, Kolkata",
-        "date": "14 Nov 2026 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "GA Standard Access",
-            "price": 3500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Enclosure Pass",
-            "price": 6500,
-            "cutPct": 12.0
-          }
-        ]
-      },
-      {
-        "city": "Bengaluru",
-        "venue": "Bhartiya Mall Of Bengaluru",
-        "date": "15 Nov 2026 \u2022 15:30 IST",
-        "tiers": [
-          {
-            "name": "GA Standard Access",
-            "price": 3500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP 360 Experience Deck",
-            "price": 7500,
-            "cutPct": 12.0
-          }
-        ]
-      }
-    ],
-    "city": "New Delhi",
-    "venue": "NSIC Exhibition Ground, Okhla Gate 6, New Delhi",
-    "date": "13 Nov 2026 \u2022 15:00 IST",
-    "tiers": [
-      {
-        "name": "GA Standard Access",
-        "price": 3500,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Enclosure Pass",
-        "price": 6500,
-        "cutPct": 12.0
-      }
-    ]
-  },
-  {
-    "id": "darshan-raval-love-letters-2026",
-    "title": "Darshan Raval \u2014 Love Letters India Tour",
-    "artist": "Darshan Raval",
-    "genre": "Bollywood / Romantic Pop",
-    "poster": "posters/khalid-india-banner.webp",
-    "featured": false,
-    "defaultCity": "Ahmedabad",
-    "cities": [
-      {
+    },
+    {
+        "id": "darshan-raval-love-letters-2026",
+        "title": "Darshan Raval — Love Letters India Tour",
+        "artist": "Darshan Raval",
+        "genre": "Bollywood / Romantic Pop",
+        "poster": "posters/darshan-raval-love-letters-poster.webp",
+        "featured": false,
+        "defaultCity": "Ahmedabad",
+        "cities": [
+            {
+                "city": "Ahmedabad",
+                "venue": "SAVANNA Party Lawn, Ahmedabad",
+                "date": "22 Nov 2026 • 17:30 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Standing Pass",
+                        "price": 1499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Seated Pass",
+                        "price": 2999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fan Pit Front Stage",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Bengaluru",
+                "venue": "Bhartiya Mall Of Bengaluru",
+                "date": "29 Nov 2026 • 17:30 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Pass",
+                        "price": 1499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Standing Area",
+                        "price": 2999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Front Seating",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Kolkata",
+                "venue": "Aquatica Ground, Kolkata",
+                "date": "05 Dec 2026 • 17:30 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Pass",
+                        "price": 1499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Arena Pass",
+                        "price": 2799,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Elevated Deck",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Mumbai",
+                "venue": "Dome SVP Stadium, Worli, Mumbai",
+                "date": "13 Dec 2026 • 17:30 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Bowl Seating",
+                        "price": 2499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Floor Standing",
+                        "price": 3999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Premium Center Ring",
+                        "price": 6499,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Delhi NCR",
+                "venue": "Okhla Industrial Area Phase 3, Delhi NCR",
+                "date": "19 Dec 2026 • 17:30 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Arena Pass",
+                        "price": 1999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Standing Pass",
+                        "price": 3499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fan Pit Front Enclosure",
+                        "price": 5999,
+                        "cutPct": 11.0
+                    }
+                ]
+            }
+        ],
         "city": "Ahmedabad",
         "venue": "SAVANNA Party Lawn, Ahmedabad",
-        "date": "22 Nov 2026 \u2022 17:30 IST",
+        "date": "22 Nov 2026 • 17:30 IST",
         "tiers": [
-          {
-            "name": "Silver Standing Pass",
-            "price": 1499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Seated Pass",
-            "price": 2999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fan Pit Front Stage",
-            "price": 4999,
-            "cutPct": 11.0
-          }
+            {
+                "name": "Silver Standing Pass",
+                "price": 1499,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Gold Seated Pass",
+                "price": 2999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Fan Pit Front Stage",
+                "price": 4999,
+                "cutPct": 11.0
+            }
         ]
-      },
-      {
-        "city": "Bengaluru",
-        "venue": "Bhartiya Mall Of Bengaluru",
-        "date": "29 Nov 2026 \u2022 17:30 IST",
-        "tiers": [
-          {
-            "name": "Silver Pass",
-            "price": 1499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Standing Area",
-            "price": 2999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Front Seating",
-            "price": 4999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Kolkata",
-        "venue": "Aquatica Ground, Kolkata",
-        "date": "05 Dec 2026 \u2022 17:30 IST",
-        "tiers": [
-          {
-            "name": "Silver Pass",
-            "price": 1499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Arena Pass",
-            "price": 2799,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Elevated Deck",
-            "price": 4999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Mumbai",
-        "venue": "Dome SVP Stadium, Worli, Mumbai",
-        "date": "13 Dec 2026 \u2022 17:30 IST",
-        "tiers": [
-          {
-            "name": "Bronze Bowl Seating",
-            "price": 2499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Floor Standing",
-            "price": 3999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Premium Center Ring",
-            "price": 6499,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Delhi NCR",
-        "venue": "Okhla Industrial Area Phase 3, Delhi NCR",
-        "date": "19 Dec 2026 \u2022 17:30 IST",
-        "tiers": [
-          {
-            "name": "Silver Arena Pass",
-            "price": 1999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Standing Pass",
-            "price": 3499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fan Pit Front Enclosure",
-            "price": 5999,
-            "cutPct": 11.0
-          }
-        ]
-      }
-    ],
-    "city": "Ahmedabad",
-    "venue": "SAVANNA Party Lawn, Ahmedabad",
-    "date": "22 Nov 2026 \u2022 17:30 IST",
-    "tiers": [
-      {
-        "name": "Silver Standing Pass",
-        "price": 1499,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Gold Seated Pass",
-        "price": 2999,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Fan Pit Front Stage",
-        "price": 4999,
-        "cutPct": 11.0
-      }
-    ]
-  },
-  {
-    "id": "shreya-ghoshal-unstoppable-2026",
-    "title": "Shreya Ghoshal \u2014 The Unstoppable Tour",
-    "artist": "Shreya Ghoshal",
-    "genre": "Classical / Bollywood Symphony",
-    "poster": "posters/khalid-india-banner.webp",
-    "featured": false,
-    "defaultCity": "Bengaluru",
-    "cities": [
-      {
+    },
+    {
+        "id": "shreya-ghoshal-unstoppable-2026",
+        "title": "Shreya Ghoshal — The Unstoppable Tour",
+        "artist": "Shreya Ghoshal",
+        "genre": "Classical / Bollywood Symphony",
+        "poster": "posters/shreya-ghoshal-unstoppable-poster.webp",
+        "featured": false,
+        "defaultCity": "Bengaluru",
+        "cities": [
+            {
+                "city": "Bengaluru",
+                "venue": "Airtel Arena, Bengaluru",
+                "date": "22 Nov 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Enclosure",
+                        "price": 2500,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Reserve",
+                        "price": 4500,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Platinum Royal Pass",
+                        "price": 12000,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fanpit Front Stage",
+                        "price": 12000,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Guwahati",
+                "venue": "ACA Stadium, Barsapara, Guwahati",
+                "date": "19 Dec 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Entry",
+                        "price": 700,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Stalls",
+                        "price": 1500,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold VIP Seating",
+                        "price": 3500,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Kochi",
+                "venue": "Cochin Trade Centre, Kochi",
+                "date": "07 Mar 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Access",
+                        "price": 1000,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Reserved Seating",
+                        "price": 2500,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Platinum Center",
+                        "price": 5000,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Chennai",
+                "venue": "YMCA College of Physical Education, Chennai",
+                "date": "20 Mar 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Enclosure",
+                        "price": 1500,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Front Arena",
+                        "price": 3000,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Hospitality Lounge",
+                        "price": 6000,
+                        "cutPct": 11.0
+                    }
+                ]
+            }
+        ],
         "city": "Bengaluru",
         "venue": "Airtel Arena, Bengaluru",
-        "date": "22 Nov 2026 \u2022 18:00 IST",
+        "date": "22 Nov 2026 • 18:00 IST",
         "tiers": [
-          {
-            "name": "Silver Enclosure",
-            "price": 2500,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Reserve",
-            "price": 4500,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Platinum Royal Pass",
-            "price": 12000,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fanpit Front Stage",
-            "price": 12000,
-            "cutPct": 11.0
-          }
+            {
+                "name": "Silver Enclosure",
+                "price": 2500,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Gold Reserve",
+                "price": 4500,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Platinum Royal Pass",
+                "price": 12000,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Fanpit Front Stage",
+                "price": 12000,
+                "cutPct": 11.0
+            }
         ]
-      },
-      {
-        "city": "Guwahati",
-        "venue": "ACA Stadium, Barsapara, Guwahati",
-        "date": "19 Dec 2026 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Entry",
-            "price": 700,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Stalls",
-            "price": 1500,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold VIP Seating",
-            "price": 3500,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Kochi",
-        "venue": "Cochin Trade Centre, Kochi",
-        "date": "07 Mar 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Silver Access",
-            "price": 1000,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Reserved Seating",
-            "price": 2500,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Platinum Center",
-            "price": 5000,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Chennai",
-        "venue": "YMCA College of Physical Education, Chennai",
-        "date": "20 Mar 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Silver Enclosure",
-            "price": 1500,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Front Arena",
-            "price": 3000,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Hospitality Lounge",
-            "price": 6000,
-            "cutPct": 11.0
-          }
-        ]
-      }
-    ],
-    "city": "Bengaluru",
-    "venue": "Airtel Arena, Bengaluru",
-    "date": "22 Nov 2026 \u2022 18:00 IST",
-    "tiers": [
-      {
-        "name": "Silver Enclosure",
-        "price": 2500,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Gold Reserve",
-        "price": 4500,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Platinum Royal Pass",
-        "price": 12000,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Fanpit Front Stage",
-        "price": 12000,
-        "cutPct": 11.0
-      }
-    ]
-  },
-  {
-    "id": "dj-snake-sunburn-arena-2026",
-    "title": "DJ Snake \u2014 Sunburn Arena India Tour",
-    "artist": "DJ Snake",
-    "genre": "Trap / Dance / EDM",
-    "poster": "posters/chainsmokers-bengaluru-banner.webp",
-    "featured": false,
-    "defaultCity": "Bengaluru",
-    "cities": [
-      {
+    },
+    {
+        "id": "dj-snake-sunburn-arena-2026",
+        "title": "DJ Snake — Sunburn Arena India Tour",
+        "artist": "DJ Snake",
+        "genre": "Trap / Dance / EDM",
+        "poster": "posters/dj-snake-sunburn-arena-poster.webp",
+        "featured": false,
+        "defaultCity": "Bengaluru",
+        "cities": [
+            {
+                "city": "Bengaluru",
+                "venue": "NICE Grounds, Madavara, Bengaluru",
+                "date": "18 Dec 2026 • 16:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Phase 1 Pass",
+                        "price": 2000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Phase 2 Pass",
+                        "price": 3000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Phase 2",
+                        "price": 5000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "GA Combo Phase 1",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Mumbai",
+                "venue": "Mahalaxmi Race Course, Mumbai",
+                "date": "19 Dec 2026 • 14:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Single Day Pass",
+                        "price": 3500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Single Day Pass",
+                        "price": 6000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Single Day",
+                        "price": 7500,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Festival 2-Day GA",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Tuborg Lounge Festival",
+                        "price": 30000,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "Bengaluru",
         "venue": "NICE Grounds, Madavara, Bengaluru",
-        "date": "18 Dec 2026 \u2022 16:00 IST",
+        "date": "18 Dec 2026 • 16:00 IST",
         "tiers": [
-          {
-            "name": "GA Phase 1 Pass",
-            "price": 2000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Phase 2 Pass",
-            "price": 3000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Phase 2",
-            "price": 5000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "GA Combo Phase 1",
-            "price": 7000,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Phase 1 Pass",
+                "price": 2000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Phase 2 Pass",
+                "price": 3000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit Phase 2",
+                "price": 5000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "GA Combo Phase 1",
+                "price": 7000,
+                "cutPct": 12.0
+            }
         ]
-      },
-      {
-        "city": "Mumbai",
-        "venue": "Mahalaxmi Race Course, Mumbai",
-        "date": "19 Dec 2026 \u2022 14:00 IST",
-        "tiers": [
-          {
-            "name": "GA Single Day Pass",
-            "price": 3500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Single Day Pass",
-            "price": 6000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Single Day",
-            "price": 7500,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Festival 2-Day GA",
-            "price": 7000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Tuborg Lounge Festival",
-            "price": 30000,
-            "cutPct": 12.0
-          }
-        ]
-      }
-    ],
-    "city": "Bengaluru",
-    "venue": "NICE Grounds, Madavara, Bengaluru",
-    "date": "18 Dec 2026 \u2022 16:00 IST",
-    "tiers": [
-      {
-        "name": "GA Phase 1 Pass",
-        "price": 2000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Phase 2 Pass",
-        "price": 3000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "Fanpit Phase 2",
-        "price": 5000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "GA Combo Phase 1",
-        "price": 7000,
-        "cutPct": 12.0
-      }
-    ]
-  },
-  {
-    "id": "arijit-singh-india-tour-2026-27",
-    "title": "Arijit Singh \u2014 India Tour 2026\u20132027",
-    "artist": "Arijit Singh",
-    "genre": "Bollywood / Soul / Symphony",
-    "poster": "posters/khalid-india-banner.webp",
-    "featured": true,
-    "defaultCity": "Goa",
-    "cities": [
-      {
+    },
+    {
+        "id": "arijit-singh-india-tour-2026-27",
+        "title": "Arijit Singh — India Tour 2026–2027",
+        "artist": "Arijit Singh",
+        "genre": "Bollywood / Soul / Symphony",
+        "poster": "posters/arijit-singh-india-tour-poster.webp",
+        "featured": true,
+        "defaultCity": "Goa",
+        "cities": [
+            {
+                "city": "Goa",
+                "venue": "Vagator Hills, Vagator, Goa",
+                "date": "29 Dec 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Festival Pass",
+                        "price": 6999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Festival Pass",
+                        "price": 11999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Ahmedabad",
+                "venue": "Narendra Modi Stadium, Ahmedabad",
+                "date": "09 Jan 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Tier Pass",
+                        "price": 6499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Pitch Pass",
+                        "price": 7999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Enclosure Pass",
+                        "price": 9999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Diamond Ring Pass",
+                        "price": 14999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fan Pit Front Stage",
+                        "price": 24999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Chandigarh",
+                "venue": "Sector 34 Exhibition Ground, Chandigarh",
+                "date": "23 Jan 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Enclosure",
+                        "price": 1999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Standing",
+                        "price": 4499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Arena Pass",
+                        "price": 9999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Platinum Ring",
+                        "price": 14999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Jaipur",
+                "venue": "JECC by Accor, Sitapura, Jaipur",
+                "date": "07 Feb 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Enclosure",
+                        "price": 2999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Pass",
+                        "price": 4499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Front Pass",
+                        "price": 9999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Lounge Deck",
+                        "price": 12499,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Mumbai",
+                "venue": "Mahalaxmi Race Course, Mumbai",
+                "date": "20 Feb 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Pitch Standing",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Center Enclosure",
+                        "price": 7499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Diamond Front Stage",
+                        "price": 24999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Platinum Hospitality Lounge",
+                        "price": 34999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Bengaluru",
+                "venue": "NICE Grounds, Tumkur Road, Bengaluru",
+                "date": "13 Mar 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Enclosure",
+                        "price": 14999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Front Arena",
+                        "price": 19999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fan Pit Front",
+                        "price": 34999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Hospitality Lounge",
+                        "price": 49999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Delhi NCR",
+                "venue": "Jawaharlal Nehru Stadium, New Delhi",
+                "date": "27 Mar 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Silver Standing Pass",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Pitch Arena",
+                        "price": 8999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Grandstand Lounge",
+                        "price": 18999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Pune",
+                "venue": "Mahalaxmi Lawns, Karve Nagar, Pune",
+                "date": "10 Apr 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Arena",
+                        "price": 3999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Stalls",
+                        "price": 5999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Front Enclosure",
+                        "price": 12499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Elevated Deck",
+                        "price": 19999,
+                        "cutPct": 11.0
+                    }
+                ]
+            },
+            {
+                "city": "Hyderabad",
+                "venue": "Gachibowli Outdoor Stadium, Hyderabad",
+                "date": "15 May 2027 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Bronze Pass",
+                        "price": 2499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Pass",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Arena Pass",
+                        "price": 12499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Fan Pit Enclosure",
+                        "price": 24999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Hospitality Lounge",
+                        "price": 34999,
+                        "cutPct": 11.0
+                    }
+                ]
+            }
+        ],
         "city": "Goa",
         "venue": "Vagator Hills, Vagator, Goa",
-        "date": "29 Dec 2026 \u2022 18:00 IST",
+        "date": "29 Dec 2026 • 18:00 IST",
         "tiers": [
-          {
-            "name": "GA Festival Pass",
-            "price": 6999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Festival Pass",
-            "price": 11999,
-            "cutPct": 11.0
-          }
+            {
+                "name": "GA Festival Pass",
+                "price": 6999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "VIP Festival Pass",
+                "price": 11999,
+                "cutPct": 11.0
+            }
         ]
-      },
-      {
-        "city": "Ahmedabad",
-        "venue": "Narendra Modi Stadium, Ahmedabad",
-        "date": "09 Jan 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Tier Pass",
-            "price": 6499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Pitch Pass",
-            "price": 7999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Enclosure Pass",
-            "price": 9999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Diamond Ring Pass",
-            "price": 14999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fan Pit Front Stage",
-            "price": 24999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Chandigarh",
-        "venue": "Sector 34 Exhibition Ground, Chandigarh",
-        "date": "23 Jan 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Enclosure",
-            "price": 1999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Standing",
-            "price": 4499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Arena Pass",
-            "price": 9999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Platinum Ring",
-            "price": 14999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Jaipur",
-        "venue": "JECC by Accor, Sitapura, Jaipur",
-        "date": "07 Feb 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Enclosure",
-            "price": 2999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Pass",
-            "price": 4499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Front Pass",
-            "price": 9999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Lounge Deck",
-            "price": 12499,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Mumbai",
-        "venue": "Mahalaxmi Race Course, Mumbai",
-        "date": "20 Feb 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Silver Pitch Standing",
-            "price": 4999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Center Enclosure",
-            "price": 7499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Diamond Front Stage",
-            "price": 24999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Platinum Hospitality Lounge",
-            "price": 34999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Bengaluru",
-        "venue": "NICE Grounds, Tumkur Road, Bengaluru",
-        "date": "13 Mar 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Silver Enclosure",
-            "price": 14999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Front Arena",
-            "price": 19999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fan Pit Front",
-            "price": 34999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Hospitality Lounge",
-            "price": 49999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Delhi NCR",
-        "venue": "Jawaharlal Nehru Stadium, New Delhi",
-        "date": "27 Mar 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Silver Standing Pass",
-            "price": 4999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Pitch Arena",
-            "price": 8999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Grandstand Lounge",
-            "price": 18999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Pune",
-        "venue": "Mahalaxmi Lawns, Karve Nagar, Pune",
-        "date": "10 Apr 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Arena",
-            "price": 3999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Stalls",
-            "price": 5999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Front Enclosure",
-            "price": 12499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Elevated Deck",
-            "price": 19999,
-            "cutPct": 11.0
-          }
-        ]
-      },
-      {
-        "city": "Hyderabad",
-        "venue": "Gachibowli Outdoor Stadium, Hyderabad",
-        "date": "15 May 2027 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "Bronze Pass",
-            "price": 2499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Pass",
-            "price": 4999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Arena Pass",
-            "price": 12499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Fan Pit Enclosure",
-            "price": 24999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Hospitality Lounge",
-            "price": 34999,
-            "cutPct": 11.0
-          }
-        ]
-      }
-    ],
-    "city": "Goa",
-    "venue": "Vagator Hills, Vagator, Goa",
-    "date": "29 Dec 2026 \u2022 18:00 IST",
-    "tiers": [
-      {
-        "name": "GA Festival Pass",
-        "price": 6999,
-        "cutPct": 11.0
-      },
-      {
-        "name": "VIP Festival Pass",
-        "price": 11999,
-        "cutPct": 11.0
-      }
-    ]
-  },
-  {
-    "id": "alesso-smirnoff-experience-2026",
-    "title": "Alesso \u2014 Smirnoff Experience India",
-    "artist": "Alesso",
-    "genre": "Progressive House / EDM",
-    "poster": "posters/anyma-aeden-poster-2.webp",
-    "featured": false,
-    "defaultCity": "Bengaluru",
-    "cities": [
-      {
+    },
+    {
+        "id": "alesso-smirnoff-experience-2026",
+        "title": "Alesso — Smirnoff Experience India",
+        "artist": "Alesso",
+        "genre": "Progressive House / EDM",
+        "poster": "posters/alesso-smirnoff-experience-poster.webp",
+        "featured": false,
+        "defaultCity": "Bengaluru",
+        "cities": [
+            {
+                "city": "Bengaluru",
+                "venue": "Bhartiya Mall Of Bengaluru",
+                "date": "27 Nov 2026 • 16:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Phase 1 Pass",
+                        "price": 1750,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Phase 1 Pass",
+                        "price": 3000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Phase 1",
+                        "price": 5000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Smirnoff Experience Lounge",
+                        "price": 15000,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Delhi NCR",
+                "venue": "Huda Gymkhana Club, Sector 29, Gurugram / Delhi NCR",
+                "date": "28 Nov 2026 • 16:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Phase 1 Pass",
+                        "price": 1750,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Phase 1 Pass",
+                        "price": 3000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Fanpit Phase 1",
+                        "price": 5000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "Smirnoff Experience Lounge",
+                        "price": 15000,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "Bengaluru",
         "venue": "Bhartiya Mall Of Bengaluru",
-        "date": "27 Nov 2026 \u2022 16:00 IST",
+        "date": "27 Nov 2026 • 16:00 IST",
         "tiers": [
-          {
-            "name": "GA Phase 1 Pass",
-            "price": 1750,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Phase 1 Pass",
-            "price": 3000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Phase 1",
-            "price": 5000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Smirnoff Experience Lounge",
-            "price": 15000,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Phase 1 Pass",
+                "price": 1750,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Phase 1 Pass",
+                "price": 3000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Fanpit Phase 1",
+                "price": 5000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "Smirnoff Experience Lounge",
+                "price": 15000,
+                "cutPct": 12.0
+            }
         ]
-      },
-      {
-        "city": "Delhi NCR",
-        "venue": "Huda Gymkhana Club, Sector 29, Gurugram / Delhi NCR",
-        "date": "28 Nov 2026 \u2022 16:00 IST",
-        "tiers": [
-          {
-            "name": "GA Phase 1 Pass",
-            "price": 1750,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Phase 1 Pass",
-            "price": 3000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Fanpit Phase 1",
-            "price": 5000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "Smirnoff Experience Lounge",
-            "price": 15000,
-            "cutPct": 12.0
-          }
-        ]
-      }
-    ],
-    "city": "Bengaluru",
-    "venue": "Bhartiya Mall Of Bengaluru",
-    "date": "27 Nov 2026 \u2022 16:00 IST",
-    "tiers": [
-      {
-        "name": "GA Phase 1 Pass",
-        "price": 1750,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Phase 1 Pass",
-        "price": 3000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "Fanpit Phase 1",
-        "price": 5000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "Smirnoff Experience Lounge",
-        "price": 15000,
-        "cutPct": 12.0
-      }
-    ]
-  },
-  {
-    "id": "faheem-abdullah-unbecoming-2026",
-    "title": "Faheem Abdullah \u2014 The Unbecoming Tour",
-    "artist": "Faheem Abdullah",
-    "genre": "Indie / Sufi Acoustic",
-    "poster": "posters/khalid-india-banner.webp",
-    "featured": false,
-    "defaultCity": "New Delhi",
-    "cities": [
-      {
+    },
+    {
+        "id": "faheem-abdullah-unbecoming-2026",
+        "title": "Faheem Abdullah — The Unbecoming Tour",
+        "artist": "Faheem Abdullah",
+        "genre": "Indie / Sufi Acoustic",
+        "poster": "posters/faheem-abdullah-unbecoming-poster.webp",
+        "featured": false,
+        "defaultCity": "New Delhi",
+        "cities": [
+            {
+                "city": "New Delhi",
+                "venue": "Brahmkamal Hall–Auditorium, Yashobhoomi, New Delhi",
+                "date": "20 Nov 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "Balcony Tier Pass",
+                        "price": 999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Silver Stalls",
+                        "price": 1499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Gold Center Pass",
+                        "price": 2499,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "Platinum Front Stage",
+                        "price": 3999,
+                        "cutPct": 11.0
+                    },
+                    {
+                        "name": "VIP Meet & Greet",
+                        "price": 4999,
+                        "cutPct": 11.0
+                    }
+                ]
+            }
+        ],
         "city": "New Delhi",
-        "venue": "Brahmkamal Hall\u2013Auditorium, Yashobhoomi, New Delhi",
-        "date": "20 Nov 2026 \u2022 18:00 IST",
+        "venue": "Brahmkamal Hall–Auditorium, Yashobhoomi, New Delhi",
+        "date": "20 Nov 2026 • 18:00 IST",
         "tiers": [
-          {
-            "name": "Balcony Tier Pass",
-            "price": 999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Silver Stalls",
-            "price": 1499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Gold Center Pass",
-            "price": 2499,
-            "cutPct": 11.0
-          },
-          {
-            "name": "Platinum Front Stage",
-            "price": 3999,
-            "cutPct": 11.0
-          },
-          {
-            "name": "VIP Meet & Greet",
-            "price": 4999,
-            "cutPct": 11.0
-          }
+            {
+                "name": "Balcony Tier Pass",
+                "price": 999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Silver Stalls",
+                "price": 1499,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Gold Center Pass",
+                "price": 2499,
+                "cutPct": 11.0
+            },
+            {
+                "name": "Platinum Front Stage",
+                "price": 3999,
+                "cutPct": 11.0
+            },
+            {
+                "name": "VIP Meet & Greet",
+                "price": 4999,
+                "cutPct": 11.0
+            }
         ]
-      }
-    ],
-    "city": "New Delhi",
-    "venue": "Brahmkamal Hall\u2013Auditorium, Yashobhoomi, New Delhi",
-    "date": "20 Nov 2026 \u2022 18:00 IST",
-    "tiers": [
-      {
-        "name": "Balcony Tier Pass",
-        "price": 999,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Silver Stalls",
-        "price": 1499,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Gold Center Pass",
-        "price": 2499,
-        "cutPct": 11.0
-      },
-      {
-        "name": "Platinum Front Stage",
-        "price": 3999,
-        "cutPct": 11.0
-      },
-      {
-        "name": "VIP Meet & Greet",
-        "price": 4999,
-        "cutPct": 11.0
-      }
-    ]
-  },
-  {
-    "id": "francis-mercier-india-tour-2026",
-    "title": "Francis Mercier \u2014 Sunburn Arena & RROV",
-    "artist": "Francis Mercier",
-    "genre": "Deep House / Afro Tech",
-    "poster": "posters/anyma-aeden-poster-1.webp",
-    "featured": false,
-    "defaultCity": "Mumbai",
-    "cities": [
-      {
+    },
+    {
+        "id": "francis-mercier-india-tour-2026",
+        "title": "Francis Mercier — Sunburn Arena & RROV",
+        "artist": "Francis Mercier",
+        "genre": "Deep House / Afro Tech",
+        "poster": "posters/francis-mercier-sunburn-poster.webp",
+        "featured": false,
+        "defaultCity": "Mumbai",
+        "cities": [
+            {
+                "city": "Mumbai",
+                "venue": "Infinity Ballroom, Fairmont Hotel, Mumbai",
+                "date": "24 Dec 2026 • 21:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Entry Pass",
+                        "price": 3000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Elevated Deck",
+                        "price": 6000,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Delhi NCR",
+                "venue": "A DOT by GNH, Sector 29, Gurugram / Delhi NCR",
+                "date": "25 Dec 2026 • 18:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Phase 1 Pass",
+                        "price": 2499,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Front Pass",
+                        "price": 4999,
+                        "cutPct": 12.0
+                    }
+                ]
+            },
+            {
+                "city": "Goa",
+                "venue": "RROV: Goa, Vagator, Goa",
+                "date": "27 Dec 2026 • 21:00 IST",
+                "tiers": [
+                    {
+                        "name": "GA Entry Pass",
+                        "price": 3000,
+                        "cutPct": 12.0
+                    },
+                    {
+                        "name": "VIP Sunset Lounge",
+                        "price": 7000,
+                        "cutPct": 12.0
+                    }
+                ]
+            }
+        ],
         "city": "Mumbai",
         "venue": "Infinity Ballroom, Fairmont Hotel, Mumbai",
-        "date": "24 Dec 2026 \u2022 21:00 IST",
+        "date": "24 Dec 2026 • 21:00 IST",
         "tiers": [
-          {
-            "name": "GA Entry Pass",
-            "price": 3000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Elevated Deck",
-            "price": 6000,
-            "cutPct": 12.0
-          }
+            {
+                "name": "GA Entry Pass",
+                "price": 3000,
+                "cutPct": 12.0
+            },
+            {
+                "name": "VIP Elevated Deck",
+                "price": 6000,
+                "cutPct": 12.0
+            }
         ]
-      },
-      {
-        "city": "Delhi NCR",
-        "venue": "A DOT by GNH, Sector 29, Gurugram / Delhi NCR",
-        "date": "25 Dec 2026 \u2022 18:00 IST",
-        "tiers": [
-          {
-            "name": "GA Phase 1 Pass",
-            "price": 2499,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Front Pass",
-            "price": 4999,
-            "cutPct": 12.0
-          }
-        ]
-      },
-      {
-        "city": "Goa",
-        "venue": "RROV: Goa, Vagator, Goa",
-        "date": "27 Dec 2026 \u2022 21:00 IST",
-        "tiers": [
-          {
-            "name": "GA Entry Pass",
-            "price": 3000,
-            "cutPct": 12.0
-          },
-          {
-            "name": "VIP Sunset Lounge",
-            "price": 7000,
-            "cutPct": 12.0
-          }
-        ]
-      }
-    ],
-    "city": "Mumbai",
-    "venue": "Infinity Ballroom, Fairmont Hotel, Mumbai",
-    "date": "24 Dec 2026 \u2022 21:00 IST",
-    "tiers": [
-      {
-        "name": "GA Entry Pass",
-        "price": 3000,
-        "cutPct": 12.0
-      },
-      {
-        "name": "VIP Elevated Deck",
-        "price": 6000,
-        "cutPct": 12.0
-      }
-    ]
-  }
+    }
 ];
 
   const SAFE_PORTAL_ROUTES = new Set([
