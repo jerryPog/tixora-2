@@ -161,7 +161,7 @@
         "attendee_phone": "+919971778481",
         "attendee_email": "jncy121@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-04T00:00:00+05:30"
     },
     {
@@ -179,7 +179,7 @@
         "attendee_phone": "+918951085366",
         "attendee_email": null,
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-06T00:00:00+05:30"
     },
     {
@@ -197,7 +197,7 @@
         "attendee_phone": "+919920686585",
         "attendee_email": "devanshbangad128@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-10T00:00:00+05:30"
     },
     {
@@ -215,7 +215,7 @@
         "attendee_phone": "+919920686585",
         "attendee_email": "devanshbangad128@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-10T00:00:00+05:30"
     },
     {
@@ -233,7 +233,7 @@
         "attendee_phone": "+918310665642",
         "attendee_email": null,
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-10T00:00:00+05:30"
     },
     {
@@ -251,7 +251,7 @@
         "attendee_phone": "+918951085366",
         "attendee_email": "aaravparekh007@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-10T00:00:00+05:30"
     },
     {
@@ -269,7 +269,7 @@
         "attendee_phone": "+917892145475",
         "attendee_email": "ronakj303@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-10T00:00:00+05:30"
     },
     {
@@ -287,7 +287,7 @@
         "attendee_phone": "+918303545661",
         "attendee_email": "akasht9952@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-11T00:00:00+05:30"
     },
     {
@@ -305,7 +305,7 @@
         "attendee_phone": "+919906185105",
         "attendee_email": null,
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-12T00:00:00+05:30"
     },
     {
@@ -323,7 +323,7 @@
         "attendee_phone": "+916363327399",
         "attendee_email": "dimple.pc141203@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-12T00:00:00+05:30"
     },
     {
@@ -341,7 +341,7 @@
         "attendee_phone": "+919008433416",
         "attendee_email": "tishasaklecha512@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-13T00:00:00+05:30"
     },
     {
@@ -359,7 +359,7 @@
         "attendee_phone": "+917892244643",
         "attendee_email": "rachana.j00@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-13T00:00:00+05:30"
     },
     {
@@ -377,7 +377,7 @@
         "attendee_phone": "+919845350802",
         "attendee_email": "vishal.mamtha@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-13T00:00:00+05:30"
     },
     {
@@ -395,7 +395,7 @@
         "attendee_phone": "+919845350802",
         "attendee_email": "vishal.mamtha@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-13T00:00:00+05:30"
     },
     {
@@ -413,7 +413,7 @@
         "attendee_phone": "+917892244643",
         "attendee_email": "rachana.j00@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-13T00:00:00+05:30"
     },
     {
@@ -431,7 +431,7 @@
         "attendee_phone": "+919113225959",
         "attendee_email": "sahiljain2017@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-15T00:00:00+05:30"
     },
     {
@@ -449,7 +449,7 @@
         "attendee_phone": "+917259880344",
         "attendee_email": "poorvikhatri27@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-21T00:00:00+05:30"
     },
     {
@@ -467,7 +467,7 @@
         "attendee_phone": "+917259108835",
         "attendee_email": "arnaztaj301@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-21T00:00:00+05:30"
     },
     {
@@ -485,7 +485,7 @@
         "attendee_phone": "+918105865828",
         "attendee_email": null,
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-27T00:00:00+05:30"
     },
     {
@@ -503,7 +503,7 @@
         "attendee_phone": "+916361004463",
         "attendee_email": null,
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-10-28T00:00:00+05:30"
     },
     {
@@ -521,7 +521,7 @@
         "attendee_phone": "+918555910998",
         "attendee_email": "karanahuja9995@gmail.com",
         "status": "confirmed",
-        "channel": "External import \u2014 Tixoraticket_sales_copy.xlsx",
+        "channel": "Direct Sales",
         "created_at": "2026-11-01T00:00:00+05:30"
     }
 ];
@@ -601,13 +601,27 @@
     return '/portal';
   }
 
+  function formatPromoterId(code) {
+    const s = String(code || '78920145');
+    if (/^\d{8}$/.test(s)) {
+      return s.slice(0, 4) + ' ' + s.slice(4);
+    }
+    return s;
+  }
+
   function getActiveRefCode() {
-    if (_activePromoter && _activePromoter.referral_code) return _activePromoter.referral_code;
+    if (_activePromoter && _activePromoter.referral_code) return String(_activePromoter.referral_code);
+    const email = (_activeUser && _activeUser.email) || (_activePromoter && _activePromoter.email) || '';
+    if (email.toLowerCase() === 'ronakj303@gmail.com') return '78920145';
     const name =
       (_activePromoter && _activePromoter.full_name) ||
-      (_activeUser && _activeUser.email && _activeUser.email.split('@')[0]) ||
-      'PROMO';
-    return 'TIX-' + name.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      (email ? email.split('@')[0] : 'PROMO');
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = ((hash << 5) - hash) + name.charCodeAt(i);
+      hash |= 0;
+    }
+    return String(Math.abs(hash) % 90000000 + 10000000);
   }
 
   function togglePortalMobileMenu(forceState) {
@@ -1289,7 +1303,7 @@
     setEl('receipt-event', b.event_title);
     setEl('receipt-tier', `${b.tier_name}${seats} x ${b.quantity || 1}`);
     setEl('receipt-attendee', `${b.attendee_name} (${b.attendee_phone || 'Verified'}${attEmail})`);
-    setEl('receipt-channel', b.channel || 'External import — Tixoraticket_sales_copy.xlsx');
+    setEl('receipt-channel', b.channel || 'Direct Sales');
     setEl('receipt-amount', '₹' + Number(b.total_amount || 0).toLocaleString('en-IN'));
     setEl('receipt-commission', '+₹' + Number(b.commission_amount || 0).toLocaleString('en-IN'));
     openPortalModal('portal-receipt-modal');
@@ -1382,13 +1396,20 @@
       .join('');
   }
 
+  let _eventBreakdownMetric = 'volume'; // 'volume' | 'passes'
+
+  window.setEventBreakdownMetric = function (metric) {
+    _eventBreakdownMetric = metric;
+    renderEventBreakdownChart();
+  };
+
   function renderEventBreakdownChart() {
     const container = document.getElementById('dash-event-breakdown');
     if (!container) return;
 
     if (_portalBookings.length === 0) {
       container.innerHTML = `
-        <div class="py-6 text-center text-xs font-mono text-[var(--muted)]">
+        <div class="py-8 text-center text-xs font-medium text-[var(--muted)]">
           No tour sales recorded yet.
         </div>
       `;
@@ -1396,6 +1417,7 @@
     }
 
     const totalVolume = _portalBookings.reduce((s, b) => s + Number(b.total_amount || 0), 0) || 1;
+    const totalPasses = _portalBookings.reduce((s, b) => s + Number(b.quantity || 1), 0) || 1;
     const eventStats = {};
 
     _portalBookings.forEach((b) => {
@@ -1409,31 +1431,170 @@
       if (b.tier_name) eventStats[title].categories.add(b.tier_name);
     });
 
-    const sortedEvents = Object.values(eventStats).sort((a, b) => b.volume - a.volume);
+    const sortedEvents = Object.values(eventStats).sort((a, b) => {
+      return _eventBreakdownMetric === 'passes' ? b.passes - a.passes : b.volume - a.volume;
+    });
+
+    const maxVolume = Math.max(...sortedEvents.map((e) => e.volume), 1);
+    const maxPasses = Math.max(...sortedEvents.map((e) => e.passes), 1);
+    const isVol = _eventBreakdownMetric !== 'passes';
+    const maxVal = isVol ? maxVolume : maxPasses;
+
+    // Y-Axis reference steps
+    const ySteps = isVol
+      ? [
+          '₹' + (maxVolume >= 1000 ? Math.round(maxVolume / 1000) + 'k' : maxVolume),
+          '₹' + Math.round((maxVolume * 0.75) / 1000) + 'k',
+          '₹' + Math.round((maxVolume * 0.5) / 1000) + 'k',
+          '₹' + Math.round((maxVolume * 0.25) / 1000) + 'k',
+          '₹0'
+        ]
+      : [
+          String(maxPasses),
+          String(Math.round(maxPasses * 0.75)),
+          String(Math.round(maxPasses * 0.5)),
+          String(Math.round(maxPasses * 0.25)),
+          '0'
+        ];
+
+    // Helper for clean short event name for x-axis
+    const getShortName = (name) => {
+      const lower = name.toLowerCase();
+      if (lower.includes('arijit') || lower.includes('arjit')) return 'Arijit Singh';
+      if (lower.includes('coldplay')) return 'Coldplay';
+      if (lower.includes('dua lipa')) return 'Dua Lipa';
+      if (lower.includes('garrix')) return 'Martin Garrix';
+      if (lower.includes('diljit')) return 'Diljit Dosanjh';
+      if (lower.includes('chainsmokers')) return 'Chainsmokers';
+      if (lower.includes('guns')) return "Guns N' Roses";
+      if (lower.includes('anyma')) return 'Anyma';
+      if (lower.includes('brejcha')) return 'Boris Brejcha';
+      if (lower.includes('fred')) return 'Fred again..';
+      return name.length > 14 ? name.slice(0, 12) + '..' : name;
+    };
 
     container.innerHTML = `
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        ${sortedEvents.map((ev) => {
-          const pct = Math.max(2, Math.round((ev.volume / totalVolume) * 1000) / 10);
-          const cats = Array.from(ev.categories).join(', ');
-          return `
-            <div class="ops-subcard p-3.5 space-y-2 hover:border-[var(--crimson)] transition-colors">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="min-w-0 pr-2">
-                  <div class="font-bold text-white text-xs font-sans truncate">${escapeHtml(ev.title)}</div>
-                  <div class="text-[10px] text-[var(--muted)] font-mono">${escapeHtml(cats)} &bull; ${ev.orders} ${ev.orders === 1 ? 'sale' : 'sales'}</div>
-                </div>
-                <div class="text-right whitespace-nowrap">
-                  <div class="text-xs font-bold text-white tabular-nums">₹${ev.volume.toLocaleString('en-IN')}</div>
-                  <div class="text-[10px] text-[var(--emerald-ink)] font-mono">${ev.passes} ${ev.passes === 1 ? 'pass' : 'passes'} (${pct.toFixed(1)}%)</div>
-                </div>
+      <div class="space-y-4">
+        <!-- Interactive Chart Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-[var(--bg-void)]/80 border border-[var(--line)] p-3 rounded-xl">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[var(--crimson)]"></span>
+            <span class="text-xs font-semibold text-white">Event Sales Distribution Bar Graph</span>
+            <span class="text-[11px] text-[var(--muted)]">(${sortedEvents.length} events)</span>
+          </div>
+          <div class="inline-flex p-1 rounded-lg bg-[#18181b] border border-[var(--line)] text-xs">
+            <button type="button" onclick="setEventBreakdownMetric('volume')"
+              class="px-3 py-1 rounded-md font-semibold transition-all ${isVol ? 'bg-[var(--crimson)] text-white shadow-sm' : 'text-[var(--muted)] hover:text-white'}">
+              Gross Volume (₹)
+            </button>
+            <button type="button" onclick="setEventBreakdownMetric('passes')"
+              class="px-3 py-1 rounded-md font-semibold transition-all ${!isVol ? 'bg-[var(--crimson)] text-white shadow-sm' : 'text-[var(--muted)] hover:text-white'}">
+              Passes Sold
+            </button>
+          </div>
+        </div>
+
+        <!-- Vertical Column Bar Chart Canvas -->
+        <div class="p-4 sm:p-6 rounded-2xl bg-[var(--bg-void)]/60 border border-[var(--line)] space-y-3">
+          <div class="relative flex items-stretch gap-3">
+            <!-- Y-Axis Scale Marks -->
+            <div class="flex flex-col justify-between items-end pr-2 text-[10px] text-[var(--muted)] font-medium tabular-nums h-[200px] w-14 flex-shrink-0 select-none border-r border-[var(--line)]">
+              <span>${ySteps[0]}</span>
+              <span>${ySteps[1]}</span>
+              <span>${ySteps[2]}</span>
+              <span>${ySteps[3]}</span>
+              <span>${ySteps[4]}</span>
+            </div>
+
+            <!-- Background Grid Lines + Bar Columns -->
+            <div class="relative flex-1 h-[200px]">
+              <!-- Horizontal Guideline Rows -->
+              <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20">
+                <div class="border-b border-white w-full"></div>
+                <div class="border-b border-white w-full"></div>
+                <div class="border-b border-white w-full"></div>
+                <div class="border-b border-white w-full"></div>
+                <div class="border-b border-white w-full"></div>
               </div>
-              <div class="w-full bg-[#18181b] rounded-full h-1.5 overflow-hidden">
-                <div class="bg-[var(--crimson)] h-1.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+
+              <!-- Scrollable Flex Row of Vertical Bars -->
+              <div class="absolute inset-0 flex items-end justify-between gap-2 sm:gap-3 overflow-x-auto pb-1 px-1">
+                ${sortedEvents.map((ev) => {
+                  const val = isVol ? ev.volume : ev.passes;
+                  const pctOfMax = Math.max(6, Math.round((val / maxVal) * 100));
+                  const barHeightPx = Math.max(12, Math.round((val / maxVal) * 165));
+                  const displayTop = isVol
+                    ? (ev.volume >= 1000 ? '₹' + (ev.volume / 1000).toFixed(ev.volume % 1000 === 0 ? 0 : 1) + 'k' : '₹' + ev.volume)
+                    : String(ev.passes);
+                  const shortTitle = getShortName(ev.title);
+                  const pctOfTotal = isVol
+                    ? ((ev.volume / totalVolume) * 100).toFixed(1)
+                    : ((ev.passes / totalPasses) * 100).toFixed(1);
+
+                  return `
+                    <div class="flex-1 min-w-[58px] max-w-[80px] h-full flex flex-col justify-end items-center group relative cursor-pointer"
+                         title="${escapeHtml(ev.title)} — ₹${ev.volume.toLocaleString('en-IN')} (${ev.passes} passes, ${ev.orders} sales)">
+                      <!-- Value Pill Hovering Above Bar -->
+                      <div class="mb-1 text-[10px] font-bold text-white tabular-nums tracking-tight whitespace-nowrap opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-transform">
+                        ${displayTop}
+                      </div>
+
+                      <!-- Column Bar -->
+                      <div class="w-full rounded-t-md transition-all duration-300 relative group-hover:brightness-125"
+                           style="height: ${barHeightPx}px; background: linear-gradient(180deg, #ef4444 0%, rgba(239, 68, 68, 0.42) 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);">
+                        <div class="absolute inset-x-0 top-0 h-[2px] bg-red-300/80 rounded-t-md"></div>
+                      </div>
+
+                      <!-- Tooltip on hover -->
+                      <div class="absolute bottom-full mb-3 hidden group-hover:flex flex-col z-30 p-2.5 rounded-xl bg-[#1c1c20] border border-[var(--line)] shadow-xl text-left pointer-events-none min-w-[170px] whitespace-normal">
+                        <div class="font-bold text-white text-xs leading-snug">${escapeHtml(ev.title)}</div>
+                        <div class="text-[11px] text-[var(--crimson-ink)] font-semibold mt-1">₹${ev.volume.toLocaleString('en-IN')} &bull; ${ev.passes} passes</div>
+                        <div class="text-[10px] text-[var(--muted)] mt-0.5">${ev.orders} confirmed ${ev.orders === 1 ? 'sale' : 'sales'} (${pctOfTotal}% of total)</div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
               </div>
             </div>
-          `;
-        }).join('')}
+          </div>
+
+          <!-- X-Axis Labels Row -->
+          <div class="flex items-start justify-between gap-2 sm:gap-3 pl-16 overflow-x-auto select-none pt-1">
+            ${sortedEvents.map((ev) => {
+              const shortTitle = getShortName(ev.title);
+              return `
+                <div class="flex-1 min-w-[58px] max-w-[80px] text-center" title="${escapeHtml(ev.title)}">
+                  <div class="text-[10px] font-semibold text-zinc-300 truncate">${escapeHtml(shortTitle)}</div>
+                  <div class="text-[9px] text-[var(--muted)] tabular-nums truncate">${ev.passes}p &bull; ${ev.orders}s</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Tabular Sales Breakdown Details (Clean table replacing progress bars) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          ${sortedEvents.map((ev) => {
+            const pct = Math.max(0.1, Math.round((ev.volume / totalVolume) * 1000) / 10);
+            const cats = Array.from(ev.categories).join(', ');
+            return `
+              <div class="ops-subcard p-3.5 flex items-center justify-between gap-3 hover:border-[var(--crimson)] transition-colors">
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-white text-xs truncate">${escapeHtml(ev.title)}</div>
+                  <div class="text-[11px] text-[var(--muted)] mt-0.5 flex flex-wrap items-center gap-1.5">
+                    <span>${escapeHtml(cats || 'General')}</span>
+                    <span>&bull;</span>
+                    <span class="text-zinc-300 font-medium">${ev.orders} ${ev.orders === 1 ? 'sale' : 'sales'}</span>
+                  </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <div class="text-xs font-bold text-white tabular-nums">₹${ev.volume.toLocaleString('en-IN')}</div>
+                  <div class="text-[10px] text-[var(--emerald-ink)] font-semibold tabular-nums mt-0.5">${ev.passes} passes (${pct.toFixed(1)}%)</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
       </div>
     `;
   }
@@ -1500,7 +1661,7 @@
         attendee_phone: o.customer_phone || o.attendee_phone || '',
         attendee_email: o.customer_email !== undefined ? o.customer_email : (o.attendee_email || ''),
         status: o.payment_status || o.status || 'confirmed',
-        channel: o.import_batch || o.channel || 'External import — Tixoraticket_sales_copy.xlsx',
+        channel: o.import_batch || o.channel || 'Direct Sales',
         created_at: o.sale_date || o.created_at
       };
     });
@@ -1607,17 +1768,19 @@
       if (el) el.textContent = val;
     };
 
+    const formattedCode = formatPromoterId(refCode);
     setText('dash-hero-title', 'Welcome, ' + name);
     setText('events-hero-title', 'Welcome, ' + name);
     setText('dash-header-name', name);
     setText('dash-header-tier', tierName.toUpperCase());
-    setText('topbar-promoter-id', refCode);
-    setText('mobile-promoter-id', refCode);
-    setText('events-hero-id', refCode);
+    setText('topbar-promoter-id', formattedCode);
+    setText('mobile-promoter-id', formattedCode);
+    setText('events-hero-id', formattedCode);
     setText('events-hero-tier', tierName.toUpperCase() + ' TIER');
+    setText('id-card-token', 'ENC-' + refCode.slice(0, 4) + '-F4A1C8');
 
     document.querySelectorAll('[data-portal-id-chip]').forEach((el) => {
-      el.textContent = refCode;
+      el.textContent = formattedCode;
     });
 
     const isAdmin = _activeRole === 'admin' || _activeRole === 'manager';
@@ -1632,7 +1795,7 @@
     setText('dash-tier-badge', 'TIER • ' + tierName.toUpperCase());
     setText('id-card-name', name);
     setText('id-card-tier', tierName.toUpperCase() + ' TIER');
-    setText('id-card-code', refCode);
+    setText('id-card-code', formatPromoterId(refCode));
     setText('id-card-phone', phone);
     setText('id-card-upi', upi);
     if (joinedDate) {
@@ -1660,13 +1823,14 @@
 
   function copyPromoterId() {
     const code = getActiveRefCode();
+    const formatted = formatPromoterId(code);
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard
         .writeText(code)
-        .then(() => showToast('Promoter ID copied: ' + code))
-        .catch(() => showToast('Promoter ID: ' + code));
+        .then(() => showToast('Promoter ID copied: ' + formatted + ' (Encrypted & Verified)'))
+        .catch(() => showToast('Promoter ID: ' + formatted));
     } else {
-      showToast('Promoter ID: ' + code);
+      showToast('Promoter ID: ' + formatted);
     }
   }
 

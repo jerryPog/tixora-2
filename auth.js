@@ -532,7 +532,8 @@
                 additional_phone: '9845350802',
                 city: 'Bengaluru',
                 organization: 'Tixora Operations & South India Tour Desk',
-                referral_code: 'TIX-RONAK-BLR',
+                referral_code: '78920145',
+                encrypted_token: 'ENC-7892-F4A1C8',
                 tier_id: 2,
                 tier_name: 'Capo',
                 commission_rate: 11.00,
@@ -552,7 +553,7 @@
         const city = meta.city || 'Mumbai';
         const cleanName = fullName.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8) || 'PROMO';
         const cleanCity = city.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3) || 'IND';
-        const refCode = meta.referral_code || `TIX-${cleanName}-${cleanCity}`;
+        const refCode = meta.referral_code || String(Math.abs(cleanName.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)) % 90000000 + 10000000);
         let savedUpi = '';
         try {
             savedUpi = user.id ? (_safeStorage.getItem(`tx_upi_${user.id}`) || '') : '';
@@ -841,7 +842,7 @@
 
         const cleanName = (fullName || 'PROMO').split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '').slice(0, 8);
         const cleanCity = (city || 'IND').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
-        const refCode = `TIX-${cleanName}-${cleanCity}-${Math.floor(100 + Math.random() * 900)}`;
+        const refCode = String(Math.floor(10000000 + Math.random() * 90000000));
 
         const { data: authData, error: authErr } = await withTimeout(
             client.auth.signUp({

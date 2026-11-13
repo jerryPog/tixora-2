@@ -31,7 +31,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                        display: ['"Bricolage Grotesque"', 'sans-serif'],
+                        display: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
                         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace']
                     },
                     colors: {
@@ -63,7 +63,7 @@
     <script src="supabase-config.js" defer></script>
     <script src="auth.js?v=5" defer></script>
 </head>
-<body class="ops-body ops-shell antialiased">
+<body class="ops-body ops-shell antialiased font-sans">
 
     <!-- Top Command Navigation Bar (Protected) -->
     <header id="admin-header" class="hidden ops-topbar sticky top-0 z-40 px-4 sm:px-6 min-h-16 py-2 flex flex-wrap items-center justify-between gap-2">
@@ -73,7 +73,7 @@
                     <source srcset="tixora-logo.webp" type="image/webp">
                     <img src="tixora-logo.png" alt="TIXORA" width="112" height="28" class="h-7 w-auto object-contain">
                 </picture>
-                <span class="ops-badge-gold text-[10px] font-mono px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold hidden sm:inline-block">
+                <span class="ops-badge-gold text-[10px] font-medium px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold hidden sm:inline-block">
                     OPERATIONS
                 </span>
             </a>
@@ -90,10 +90,10 @@
                 <input type="search" id="global-search-input" enterkeyhint="search" placeholder="Search tours, venues, promoters..."
                     class="w-full bg-white/10 border border-white/20 rounded-full pl-9 pr-10 py-1.5 text-base text-white placeholder-[#a1a1aa] focus:outline-none focus:border-[#ef4444] transition-colors"
                     oninput="handleGlobalSearch(this.value)">
-                <span class="absolute right-2.5 top-2.5 text-[10px] font-mono text-[#a1a1aa] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
+                <span class="absolute right-2.5 top-2.5 text-[10px] font-medium text-[#a1a1aa] bg-white/10 px-1.5 py-0.5 rounded border border-white/15">/</span>
             </div>
 
-            <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 hover:border-[#ef4444] transition-colors">
+            <button type="button" onclick="openModal('supabase-modal')" id="db-status-pill" class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium bg-white/10 border border-white/20 hover:border-[#ef4444] transition-colors">
                 <span class="w-2 h-2 rounded-full bg-zinc-300" id="db-status-dot"></span>
                 <span class="text-[#a1a1aa] text-[11px]" id="db-status-text">PostgreSQL Connected</span>
             </button>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="hidden sm:flex flex-col text-left">
                     <span id="admin-user-email" class="text-xs text-white font-semibold leading-none">admin@tixora.live</span>
-                    <span id="admin-user-role-badge" class="text-[10px] font-mono leading-none mt-1" style="color: #f87171;">SUPER ADMIN</span>
+                    <span id="admin-user-role-badge" class="text-[10px] font-medium leading-none mt-1" style="color: #f87171;">SUPER ADMIN</span>
                 </div>
                 <i data-lucide="log-out" class="w-3.5 h-3.5 text-[#a1a1aa] hover:text-white ml-1 hidden sm:block"></i>
             </button>
@@ -135,7 +135,7 @@
             <div class="ops-spinner mx-auto" role="status" aria-label="Verifying operations clearance"></div>
             <div class="space-y-1">
                 <div class="font-bold text-[var(--ink)] text-sm">Verifying Access</div>
-                <div class="text-xs font-mono text-[var(--muted)]">Checking RBAC session</div>
+                <div class="text-xs font-medium text-[var(--muted)]">Verifying access clearance</div>
             </div>
         </div>
     </div>
@@ -153,7 +153,7 @@
                     </picture>
                 </a>
                 <div>
-                    <span class="ops-badge-gold inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-mono uppercase tracking-wider font-bold">
+                    <span class="ops-badge-gold inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider font-bold">
                         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
                         <span>Admin Gateway</span>
                     </span>
@@ -174,15 +174,15 @@
             <form onsubmit="handleAdminSignIn(event)" class="space-y-4">
                 <div>
                     <label for="admin-login-email" class="modal-field-label">Admin Email</label>
-                    <input type="email" id="admin-login-email" name="email" required autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="admin@tixora.live" class="modal-input font-mono">
+                    <input type="email" id="admin-login-email" name="email" required autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next" placeholder="admin@tixora.live" class="modal-input">
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label for="admin-login-password" class="modal-field-label" style="margin:0;">Master Password</label>
-                        <a href="/reset-password" class="text-[11px] font-mono font-semibold" style="color: var(--crimson-ink); text-decoration: underline;">Forgot password?</a>
+                        <a href="/reset-password" class="text-[11px] font-medium font-semibold" style="color: var(--crimson-ink); text-decoration: underline;">Forgot password?</a>
                     </div>
-                    <input type="password" id="admin-login-password" name="password" required autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="••••••••••••" class="modal-input font-mono">
+                    <input type="password" id="admin-login-password" name="password" required autocomplete="current-password" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="••••••••••••" class="modal-input">
                 </div>
 
                 <button type="submit" id="admin-login-btn" class="btn-editorial-primary w-full">
@@ -193,7 +193,7 @@
 
             <!-- Verification Details -->
             <div class="pt-2 border-t border-[var(--line)]">
-                <div class="ops-subcard p-3.5 text-[11px] font-mono text-[var(--muted)] space-y-1">
+                <div class="ops-subcard p-3.5 text-[11px] font-medium text-[var(--muted)] space-y-1">
                     <div class="flex items-center justify-between font-bold text-[var(--ink)]">
                         <span>Database RBAC</span>
                         <span style="color: var(--emerald-ink);">Strict Auth</span>
@@ -202,7 +202,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-between pt-1 text-xs font-mono">
+            <div class="flex items-center justify-between pt-1 text-xs font-medium">
                 <a href="/" class="inline-flex items-center space-x-1 font-semibold" style="color: var(--crimson-ink);">
                     <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                     <span>Back to Fan Site</span>
@@ -227,7 +227,7 @@
                 <h1 class="text-xl font-bold text-[var(--ink)]">Access Restricted</h1>
                 <p class="text-xs text-[var(--muted)]">The Operations Desk requires Administrator clearance.</p>
             </div>
-            <div class="ops-subcard p-3.5 text-xs font-mono text-left space-y-1">
+            <div class="ops-subcard p-3.5 text-xs font-medium text-left space-y-1">
                 <div class="text-[var(--muted)]">Active Account:</div>
                 <div id="forbidden-user-email" class="text-[var(--ink)] font-bold truncate">user@tixora.live</div>
                 <div class="text-[var(--muted)] pt-1">Assigned Role:</div>
@@ -256,7 +256,7 @@
         <aside id="main-sidebar" class="ops-sidebar lg:w-64 flex flex-col justify-between p-4 flex-shrink-0 transition-all duration-300">
             <div class="space-y-5">
                 <div class="flex items-center justify-between lg:hidden pb-2 border-b border-white/10">
-                    <span class="text-xs font-mono font-bold uppercase tracking-wider text-white">Operations Nav</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-white">Operations Nav</span>
                     <button type="button" onclick="toggleSidebar(false)" class="text-[#a1a1aa] hover:text-white p-2 rounded-lg inline-flex items-center justify-center" aria-label="Close Navigation Menu">
                         <i data-lucide="x" class="w-4 h-4"></i>
                     </button>
@@ -273,7 +273,7 @@
                         </div>
                         <div class="min-w-0">
                             <div id="sidebar-user-name" class="text-xs font-semibold text-white truncate">Master Admin</div>
-                            <div id="sidebar-user-role" class="text-[10px] font-mono" style="color: #f87171;">Operations Clearance</div>
+                            <div id="sidebar-user-role" class="text-[10px] font-medium" style="color: #f87171;">Operations Manager</div>
                         </div>
                     </div>
                     <button type="button" onclick="handleAdminSignOut()" class="text-[#a1a1aa] hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors" title="Sign Out" aria-label="Sign Out">
@@ -283,7 +283,7 @@
 
                 <!-- Navigation Groups -->
                 <div class="space-y-1">
-                    <div class="text-[10px] font-mono text-[#a1a1aa] uppercase tracking-wider px-2.5 py-1">
+                    <div class="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider px-2.5 py-1">
                         Core Desk
                     </div>
 
@@ -313,7 +313,7 @@
                         </button>
                     </nav>
 
-                    <div class="text-[10px] font-mono text-[#a1a1aa] uppercase tracking-wider px-2.5 pt-4 pb-1">
+                    <div class="text-[10px] font-medium text-[#a1a1aa] uppercase tracking-wider px-2.5 pt-4 pb-1">
                         Settlement &amp; Gate
                     </div>
 
@@ -327,7 +327,7 @@
                         <button type="button" onclick="switchTab('antiscalping')" id="tab-btn-antiscalping"
                             class="tab-btn w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all text-[#a1a1aa] hover:text-white hover:bg-white/[0.06] border-l-2 border-transparent">
                             <i data-lucide="shield-check" class="w-4 h-4 text-[#a1a1aa]"></i>
-                            <span>Turnstile Gate</span>
+                            <span>Gate Admissions</span>
                         </button>
 
                         <button type="button" onclick="openModal('supabase-modal')"
@@ -346,7 +346,7 @@
             </div>
 
             <!-- Bottom System Telemetry Card -->
-            <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 text-[11px] font-mono text-[#a1a1aa] space-y-1">
+            <div class="p-3 rounded-2xl bg-white/[0.06] border border-white/15 text-[11px] font-medium text-[#a1a1aa] space-y-1">
                 <div class="flex items-center justify-between text-white font-semibold">
                     <span class="flex items-center space-x-1.5">
                         <span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>
@@ -385,7 +385,7 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <span class="text-xs font-semibold text-[var(--muted)]">Active Tours</span>
-                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0">100% On-Sale</span>
+                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider whitespace-nowrap flex-shrink-0">100% On-Sale</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight" id="metric-tours-count">8 Tours</div>
@@ -399,7 +399,7 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <span class="text-xs font-semibold text-[var(--muted)]">Booking Volume</span>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-gmv-badge">DB Synced</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider whitespace-nowrap flex-shrink-0" id="metric-gmv-badge">DB Synced</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-gmv">₹0.00</div>
@@ -410,7 +410,7 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <span class="text-xs font-semibold text-[var(--muted)]">Pass Utilization</span>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-passes-badge">0% Reserved</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider whitespace-nowrap flex-shrink-0" id="metric-passes-badge">0% Reserved</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-passes">0 passes</div>
@@ -421,7 +421,7 @@
                     <div class="ops-card p-5 flex flex-col justify-between space-y-3">
                         <div class="flex items-center justify-between gap-2">
                             <span class="text-xs font-semibold text-[var(--muted)]">UPI Settlement Pool</span>
-                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold whitespace-nowrap flex-shrink-0" id="metric-commissions-badge">Rail Ready</span>
+                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider whitespace-nowrap flex-shrink-0" id="metric-commissions-badge">Rail Ready</span>
                         </div>
                         <div class="space-y-1">
                             <div class="text-2xl font-bold text-[var(--ink)] tracking-tight tabular-nums" id="metric-commissions">₹0.00</div>
@@ -437,8 +437,8 @@
                     <div class="lg:col-span-4 ops-card p-5 flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between mb-1.5">
-                                <h2 class="text-sm font-bold text-[var(--ink)]">Settlement Architecture</h2>
-                                <span class="ops-badge-emerald text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">NPCI UPI LIVE</span>
+                                <h2 class="text-sm font-bold text-[var(--ink)]">Commission &amp; Settlement Summary</h2>
+                                <span class="ops-badge-emerald text-[10px] font-medium px-2.5 py-0.5 rounded-full font-bold">NPCI UPI LIVE</span>
                             </div>
                             <p class="text-xs text-[var(--muted)] mb-3">Live payment rail settlement distribution</p>
 
@@ -451,7 +451,7 @@
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
                                     <span class="text-base font-bold text-[var(--ink)] tabular-nums" id="chart-center-val">₹0.00</span>
-                                    <span class="text-[9px] font-mono text-[var(--muted)] uppercase tracking-wider">Settled</span>
+                                    <span class="text-[10px] font-medium text-[var(--muted)] uppercase tracking-wider">Settled</span>
                                 </div>
                             </div>
                         </div>
@@ -465,17 +465,17 @@
                                     </div>
                                     <div class="text-[11px] text-[var(--muted)]">Under-45-second gate verification settlement</div>
                                 </div>
-                                <span class="font-mono text-[var(--ink)] tabular-nums font-bold flex-shrink-0" id="chart-upi-val">₹0.00</span>
+                                <span class="font-semibold text-[var(--ink)] tabular-nums flex-shrink-0" id="chart-upi-val">₹0.00</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="min-w-0 pr-2">
                                     <div class="font-semibold text-[var(--ink)] flex items-center space-x-1.5">
                                         <span class="w-2 h-2 rounded-full" style="background-color: var(--crimson);"></span>
-                                        <span class="truncate">BookMyShow Mesh Ingestion (28%)</span>
+                                        <span class="truncate">BookMyShow Distribution (28%)</span>
                                     </div>
                                     <div class="text-[11px] text-[var(--muted)]">Dynamic rotating barcode tokens provisioned</div>
                                 </div>
-                                <span class="font-mono text-[var(--ink)] tabular-nums font-bold flex-shrink-0" id="chart-bms-val">₹0.00</span>
+                                <span class="font-semibold text-[var(--ink)] tabular-nums flex-shrink-0" id="chart-bms-val">₹0.00</span>
                             </div>
                         </div>
                     </div>
@@ -499,12 +499,12 @@
                     </div>
                 </div>
 
-                <!-- ROW 3: PLATFORM VELOCITY & SECURITY TELEMETRY -->
+                <!-- ROW 3: Sales Velocity &amp; Venue Operations -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
                             <span>Total Platform Volume</span>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-gmv-badge">Live DB</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider" id="telemetry-gmv-badge">Live DB</span>
                         </div>
                         <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-gmv">₹0.00</div>
                         <div class="text-xs text-[var(--muted)]" id="telemetry-gmv-sub">0 Confirmed Orders</div>
@@ -513,7 +513,7 @@
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
                             <span>Verified Pass Drops Sold</span>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-passes-badge">0% Sold</span>
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider" id="telemetry-passes-badge">0% Sold</span>
                         </div>
                         <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-passes">0 passes</div>
                         <div class="text-xs text-[var(--muted)]" id="telemetry-passes-sub">Across 8 confirmed tour stages</div>
@@ -521,11 +521,11 @@
 
                     <div class="ops-card p-5 space-y-2">
                         <div class="flex items-center justify-between text-xs font-semibold text-[var(--muted)]">
-                            <span>Turnstile Gate Scans</span>
-                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold" id="telemetry-scans-badge">Awaiting Ingress</span>
+                            <span>Venue Gate Admissions</span>
+                            <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider" id="telemetry-scans-badge">Awaiting Check-in</span>
                         </div>
                         <div class="text-2xl font-bold text-[var(--ink)] tabular-nums" id="telemetry-scans">12,480 scans</div>
-                        <div class="text-xs text-[var(--muted)]">Verified dynamic QR token ingress</div>
+                        <div class="text-xs text-[var(--muted)]">Live digital ticket admissions</div>
                     </div>
                 </div>
 
@@ -547,11 +547,11 @@
                                 <tr>
                                     <th class="w-8"><input type="checkbox" aria-label="Select all recent bookings" class="rounded accent-[#ef4444]"></th>
                                     <th>Attendee Name</th>
-                                    <th class="font-mono">Order Number</th>
-                                    <th class="font-mono">Pass Amount</th>
+                                    <th>Order Number</th>
+                                    <th>Pass Amount</th>
                                     <th>Concert Tour</th>
-                                    <th class="font-mono">Payment Mode</th>
-                                    <th class="font-mono">Booking Date</th>
+                                    <th>Payment Mode</th>
+                                    <th>Booking Date</th>
                                     <th>Wallet Status</th>
                                 </tr>
                             </thead>
@@ -570,7 +570,7 @@
                         <div>
                             <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
                                 <h2 class="text-sm font-bold text-[var(--ink)]">Operations Dispatches</h2>
-                                <span class="ops-badge-emerald text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">Mesh Connected</span>
+                                <span class="ops-badge-emerald text-[10px] font-medium px-2.5 py-0.5 rounded-full font-bold">Live Sync Active</span>
                             </div>
                             <div class="space-y-3.5 text-xs">
                                 <div class="flex items-start space-x-3">
@@ -580,9 +580,9 @@
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="font-semibold text-[var(--ink)] truncate">BMS Partner Engine</span>
-                                            <span class="text-[10px] font-mono text-[var(--muted)]">Just now</span>
+                                            <span class="text-[10px] font-medium text-[var(--muted)]">Just now</span>
                                         </div>
-                                        <p class="text-[11px] text-[var(--muted)] truncate">Dynamic rotating barcode tokens provisioned.</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">Live digital tickets synced with wallet.</p>
                                     </div>
                                 </div>
 
@@ -593,9 +593,9 @@
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="font-semibold text-[var(--ink)] truncate">Turnstile Gate 1</span>
-                                            <span class="text-[10px] font-mono text-[var(--muted)]">12m ago</span>
+                                            <span class="text-[10px] font-medium text-[var(--muted)]">12m ago</span>
                                         </div>
-                                        <p class="text-[11px] text-[var(--muted)] truncate">JLN Stadium turnstile scanner active.</p>
+                                        <p class="text-[11px] text-[var(--muted)] truncate">JLN Stadium entry scanner active.</p>
                                     </div>
                                 </div>
 
@@ -606,7 +606,7 @@
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="font-semibold text-[var(--ink)] truncate">NPCI Settlement Rail</span>
-                                            <span class="text-[10px] font-mono text-[var(--muted)]">45m ago</span>
+                                            <span class="text-[10px] font-medium text-[var(--muted)]">45m ago</span>
                                         </div>
                                         <p class="text-[11px] text-[var(--muted)] truncate">Instant UPI settlement rail verified (&lt;45s).</p>
                                     </div>
@@ -619,7 +619,7 @@
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="font-semibold text-[var(--ink)] truncate">Anti-Scalping Guard</span>
-                                            <span class="text-[10px] font-mono text-[var(--muted)]">2h ago</span>
+                                            <span class="text-[10px] font-medium text-[var(--muted)]">2h ago</span>
                                         </div>
                                         <p class="text-[11px] text-[var(--muted)] truncate">Entry scanner rejected 0 duplicate attempts.</p>
                                     </div>
@@ -634,9 +634,9 @@
                             <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
                                 <div>
                                     <h2 class="text-sm font-bold text-[var(--ink)]">Featured Hero Spotlight</h2>
-                                    <div class="text-[11px] font-mono font-semibold" style="color: var(--crimson-ink);">Live on Fan Homepage Hero</div>
+                                    <div class="text-[11px] font-medium font-semibold" style="color: var(--crimson-ink);">Live on Fan Homepage Hero</div>
                                 </div>
-                                <button type="button" onclick="switchTab('tours')" class="text-xs font-mono font-bold" style="color: var(--crimson-ink);">
+                                <button type="button" onclick="switchTab('tours')" class="text-xs font-semibold" style="color: var(--crimson-ink);">
                                     Switch Tour
                                 </button>
                             </div>
@@ -644,10 +644,10 @@
                             <div class="rounded-2xl overflow-hidden bg-[var(--bg-void)] mb-3 aspect-[16/9] relative border border-[var(--line)]">
                                 <img id="spotlight-poster" src="posters/anyma-aeden-poster-1.jpg" alt="Featured Tour" width="480" height="270" loading="lazy" decoding="async" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#111113]/85 via-transparent to-transparent"></div>
-                                <span id="spotlight-layout-badge" class="ops-badge-navy absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                                <span id="spotlight-layout-badge" class="ops-badge-navy absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider">
                                     Arena Open-Air
                                 </span>
-                                <span class="ops-badge-gold absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                                <span class="ops-badge-gold absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider">
                                     Featured Drop
                                 </span>
                             </div>
@@ -657,7 +657,7 @@
                                     <div class="font-bold text-[var(--ink)] text-sm" id="spotlight-title">Anyma Presents Genesys Live</div>
                                     <div class="text-xs text-[var(--muted)]" id="spotlight-venue">Mahalaxmi Racecourse, Mumbai</div>
                                 </div>
-                                <div class="text-right font-mono">
+                                <div class="text-right">
                                     <div class="text-[var(--ink)] font-bold" id="spotlight-mrp">₹3,499</div>
                                     <div class="text-[11px] font-bold" style="color: var(--emerald-ink);" id="spotlight-cut">16% Cut</div>
                                 </div>
@@ -665,7 +665,7 @@
                         </div>
 
                         <div class="pt-3">
-                            <div class="flex justify-between items-center text-[10px] font-mono text-[var(--muted)] mb-1">
+                            <div class="flex justify-between items-center text-[10px] font-medium text-[var(--muted)] mb-1">
                                 <span>Allocation Quota Reserved</span>
                                 <span id="spotlight-quota-text" class="text-[var(--ink)] font-semibold">5,200 / 7,000 passes</span>
                             </div>
@@ -680,7 +680,7 @@
                         <div>
                             <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--line)]">
                                 <h2 class="text-sm font-bold text-[var(--ink)]">Operations Checklist</h2>
-                                <span class="text-[10px] font-mono text-[var(--muted)]" id="overview-activity-feed">Active</span>
+                                <span class="text-[10px] font-medium text-[var(--muted)]" id="overview-activity-feed">Active</span>
                             </div>
 
                             <div class="flex flex-wrap gap-2 mb-3">
@@ -727,7 +727,7 @@
 
                         <div class="pt-3 border-t border-[var(--line)] flex items-center justify-between text-[11px] text-[var(--muted)]">
                             <span>Operations Checklist</span>
-                            <span class="font-mono font-bold" style="color: var(--emerald-ink);">Synced</span>
+                            <span class="font-semibold text-xs" style="color: var(--emerald-ink);">Synced</span>
                         </div>
                     </div>
                 </div>
@@ -736,10 +736,10 @@
                 <div class="ops-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <div class="flex items-center space-x-2.5">
                         <i data-lucide="globe" class="w-4 h-4" style="color: var(--crimson-ink);"></i>
-                        <span class="font-bold text-[var(--ink)]">Metro Ingress Distribution</span>
+                        <span class="font-bold text-[var(--ink)]">City-wise Sales Distribution</span>
                         <span class="text-[var(--muted)] text-[11px]">Real-time fan traffic velocity</span>
                     </div>
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-[var(--muted)]">
+                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-medium text-[var(--muted)]">
                         <span>Mumbai: <b class="text-[var(--ink)]">38.5%</b></span>
                         <span>Delhi-NCR: <b class="text-[var(--ink)]">32.1%</b></span>
                         <span>Bengaluru: <b class="text-[var(--ink)]">18.4%</b></span>
@@ -802,7 +802,7 @@
                     <div class="flex items-center w-full sm:w-auto">
                         <label for="promoter-search-input" class="visually-hidden">Search promoters or referral codes</label>
                         <input type="search" id="promoter-search-input" enterkeyhint="search" oninput="filterPromoters()" placeholder="Search promoter or code..."
-                            class="modal-input font-mono w-full sm:w-60">
+                            class="modal-input w-full sm:w-60">
                     </div>
                 </div>
 
@@ -911,12 +911,12 @@
             <section id="tab-antiscalping" class="space-y-5 hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 class="text-xl font-bold text-[var(--ink)] tracking-tight">Turnstile Gate Access &amp; Scalper Prevention</h2>
-                        <p class="text-xs text-[var(--muted)]">Dynamic QR telemetry, screenshot rejection, and bot defense.</p>
+                        <h2 class="text-xl font-bold text-[var(--ink)] tracking-tight">Venue Gate Admission &amp; Access Control</h2>
+                        <p class="text-xs text-[var(--muted)]">Real-time ticket verification, digital entry validation, and duplicate prevention.</p>
                     </div>
                     <button type="button" onclick="simulateGateScan()" class="btn-editorial-outline-light btn-compact whitespace-nowrap">
                         <i data-lucide="scan" class="w-3.5 h-3.5" style="color: var(--emerald-ink);"></i>
-                        <span>Simulate Turnstile Scan</span>
+                        <span>Simulate Gate Check-in</span>
                     </button>
                 </div>
 
@@ -924,10 +924,10 @@
                     <!-- Gate Scan Logs -->
                     <div class="ops-card p-5 space-y-3">
                         <div class="flex items-center justify-between pb-2.5 border-b border-[var(--line)]">
-                            <h3 class="font-bold text-[var(--ink)] text-sm">Venue Turnstile Scans</h3>
-                            <span class="ops-badge-emerald text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">Verified Dynamic QR</span>
+                            <h3 class="font-bold text-[var(--ink)] text-sm">Recent Gate Admissions</h3>
+                            <span class="ops-badge-emerald text-[10px] font-semibold tracking-wider px-2.5 py-0.5 rounded-full">Official Digital Pass</span>
                         </div>
-                        <div class="space-y-2 text-xs font-mono" id="gate-scans-list">
+                        <div class="space-y-2 text-xs font-medium" id="gate-scans-list">
                             <!-- Rendered dynamically -->
                         </div>
                     </div>
@@ -935,10 +935,10 @@
                     <!-- Bot Rate Limit Incidents -->
                     <div class="ops-card p-5 space-y-3">
                         <div class="flex items-center justify-between pb-2.5 border-b border-[var(--line)]">
-                            <h3 class="font-bold text-[var(--ink)] text-sm">Bot &amp; Scalper Block Logs</h3>
-                            <span class="ops-badge-crimson text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full">Scraper Defense</span>
+                            <h3 class="font-bold text-[var(--ink)] text-sm">Security &amp; Fraud Prevention Logs</h3>
+                            <span class="ops-badge-crimson text-[10px] font-semibold tracking-wider px-2.5 py-0.5 rounded-full">Automated Protection</span>
                         </div>
-                        <div class="space-y-2 text-xs font-mono" id="bot-blocks-list">
+                        <div class="space-y-2 text-xs font-medium" id="bot-blocks-list">
                             <!-- Rendered dynamically -->
                         </div>
                     </div>
@@ -970,7 +970,7 @@
                 <div>
                     <label for="cfg-supabase-url" class="modal-field-label">Supabase Project URL</label>
                     <input type="url" id="cfg-supabase-url" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="https://hgzcdzlfwweesdljeqdv.supabase.co"
-                        class="modal-input font-mono">
+                        class="modal-input">
                 </div>
                 <div>
                     <label for="cfg-supabase-key" class="modal-field-label">
@@ -978,12 +978,12 @@
                         <span class="font-normal normal-case tracking-normal ml-1" style="color: var(--crimson-ink);">(Never enter a service_role key here)</span>
                     </label>
                     <input type="password" id="cfg-supabase-key" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="sb_publishable_... or anon key"
-                        class="modal-input font-mono">
+                        class="modal-input">
                 </div>
             </div>
 
             <div class="ops-subcard p-3.5 space-y-1.5 text-xs text-[var(--muted)]">
-                <div class="font-bold text-[var(--ink)] font-mono flex items-center space-x-1.5">
+                <div class="font-semibold text-[var(--ink)] flex items-center space-x-1.5">
                     <i data-lucide="info" class="w-3.5 h-3.5" style="color: var(--crimson-ink);"></i>
                     <span>Database Schema Setup</span>
                 </div>
@@ -1031,7 +1031,7 @@
                     </div>
                     <div>
                         <label for="tour-layout" class="modal-field-label">Venue Layout</label>
-                        <select id="tour-layout" class="modal-input font-mono">
+                        <select id="tour-layout" class="modal-input">
                             <option value="Arena Open-Air">Arena Open-Air (Mahalaxmi / BIEC)</option>
                             <option value="Stadium 360°">Stadium 360° (JLN / Dhyan Chand)</option>
                             <option value="Warehouse Floor">Warehouse Floor (Okhla)</option>
@@ -1047,11 +1047,11 @@
                     <div>
                         <label for="tour-date" class="modal-field-label">Tour Date &amp; Time</label>
                         <input type="text" id="tour-date" required placeholder="e.g. 18 DEC 2026 • 6:00 PM"
-                            class="modal-input font-mono">
+                            class="modal-input">
                     </div>
                     <div>
                         <label for="tour-partner" class="modal-field-label">Ticketing Engine</label>
-                        <select id="tour-partner" class="modal-input font-mono">
+                        <select id="tour-partner" class="modal-input">
                             <option value="BookMyShow">BookMyShow</option>
                             <option value="District">District</option>
                             <option value="Direct">Direct Box Office</option>
@@ -1063,23 +1063,23 @@
                     <div>
                         <label for="tour-mrp" class="modal-field-label">Starting MRP (₹)</label>
                         <input type="number" id="tour-mrp" required placeholder="3999"
-                            class="modal-input font-mono">
+                            class="modal-input">
                     </div>
                     <div>
                         <label for="tour-cut" class="modal-field-label">Promoter Cut / Commission (%)</label>
                         <input type="number" id="tour-cut" required placeholder="16" value="16"
-                            class="modal-input font-mono">
+                            class="modal-input">
                     </div>
                 </div>
 
                 <div>
                     <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
                         <label for="tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-[var(--muted)] font-mono">JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <span class="text-[10px] text-[var(--muted)] font-medium">JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
                         <input type="text" id="tour-poster" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="posters/anyma-aeden-poster-1.jpg"
-                            class="modal-input flex-1 font-mono">
+                            class="modal-input flex-1">
                         <label for="tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: max(44px, var(--target-size)); padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="tour-poster-upload-btn-text">Upload</span>
@@ -1088,7 +1088,7 @@
                     </div>
                     <div id="tour-poster-preview-container" class="ops-subcard mt-2 hidden flex items-center space-x-3 p-2.5">
                         <img id="tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded-lg border border-[var(--line)]">
-                        <div class="text-xs font-mono min-w-0">
+                        <div class="text-xs font-medium min-w-0">
                             <div class="text-[var(--ink)] font-semibold truncate max-w-xs" id="tour-poster-filename"></div>
                             <div class="text-[var(--muted)] text-[10px]" id="tour-poster-filesize"></div>
                         </div>
@@ -1111,7 +1111,7 @@
                             <span class="modal-field-label" style="margin:0;">Ticket Tiers &amp; Quotas</span>
                             <span class="text-[11px] text-[var(--muted)]">Set tier names, prices, and quotas</span>
                         </div>
-                        <button type="button" onclick="addTierRow('add-tiers-container')" class="text-xs font-mono font-bold flex items-center space-x-1" style="color: var(--crimson-ink);">
+                        <button type="button" onclick="addTierRow('add-tiers-container')" class="text-xs font-semibold flex items-center space-x-1" style="color: var(--crimson-ink);">
                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                             <span>Add Tier</span>
                         </button>
@@ -1147,7 +1147,7 @@
             </button>
             <div class="space-y-1 pr-8">
                 <div class="flex items-center space-x-2">
-                    <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">Edit Mode</span>
+                    <span class="ops-badge-gold px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase">Edit Mode</span>
                     <h3 id="edit-tour-modal-title" class="text-lg font-bold text-[var(--ink)]">Edit Event &amp; Pricing</h3>
                 </div>
                 <p class="text-xs text-[var(--muted)]">Changes sync live to Supabase and the public site.</p>
@@ -1167,7 +1167,7 @@
                     </div>
                     <div>
                         <label for="edit-tour-layout" class="modal-field-label">Venue Layout</label>
-                        <select id="edit-tour-layout" class="modal-input font-mono">
+                        <select id="edit-tour-layout" class="modal-input">
                             <option value="Arena Open-Air">Arena Open-Air (Mahalaxmi / BIEC)</option>
                             <option value="Stadium 360°">Stadium 360° (JLN / Dhyan Chand)</option>
                             <option value="Warehouse Floor">Warehouse Floor (Okhla)</option>
@@ -1182,11 +1182,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <label for="edit-tour-date" class="modal-field-label">Tour Date &amp; Time</label>
-                        <input type="text" id="edit-tour-date" required class="modal-input font-mono">
+                        <input type="text" id="edit-tour-date" required class="modal-input">
                     </div>
                     <div>
                         <label for="edit-tour-partner" class="modal-field-label">Ticketing Engine</label>
-                        <select id="edit-tour-partner" class="modal-input font-mono">
+                        <select id="edit-tour-partner" class="modal-input">
                             <option value="BookMyShow">BookMyShow</option>
                             <option value="District">District</option>
                             <option value="Direct">Direct Box Office</option>
@@ -1194,7 +1194,7 @@
                     </div>
                     <div>
                         <label for="edit-tour-status" class="modal-field-label">Event Status</label>
-                        <select id="edit-tour-status" class="modal-input font-mono">
+                        <select id="edit-tour-status" class="modal-input">
                             <option value="active">Active (Visible)</option>
                             <option value="draft">Draft (Hidden)</option>
                             <option value="sold_out">Sold Out</option>
@@ -1207,22 +1207,22 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="edit-tour-mrp" class="modal-field-label">Starting MRP (₹)</label>
-                        <input type="number" id="edit-tour-mrp" required class="modal-input font-mono">
+                        <input type="number" id="edit-tour-mrp" required class="modal-input">
                     </div>
                     <div>
                         <label for="edit-tour-cut" class="modal-field-label">Promoter Cut / Commission (%)</label>
-                        <input type="number" id="edit-tour-cut" required class="modal-input font-mono">
+                        <input type="number" id="edit-tour-cut" required class="modal-input">
                     </div>
                 </div>
 
                 <div>
                     <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
                         <label for="edit-tour-poster" class="modal-field-label" style="margin:0;">Poster Image (URL or File Upload)</label>
-                        <span class="text-[10px] text-[var(--muted)] font-mono">JPG, PNG, WebP, GIF • Max 5MB</span>
+                        <span class="text-[10px] text-[var(--muted)] font-medium">JPG, PNG, WebP, GIF • Max 5MB</span>
                     </div>
                     <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
                         <input type="text" id="edit-tour-poster" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="posters/anyma-aeden-poster-1.jpg"
-                            class="modal-input flex-1 font-mono">
+                            class="modal-input flex-1">
                         <label for="edit-tour-poster-file" class="btn-editorial-outline-light cursor-pointer whitespace-nowrap" style="min-block-size: max(44px, var(--target-size)); padding-inline: 14px; font-size: 12px;">
                             <i data-lucide="upload" class="w-3.5 h-3.5"></i>
                             <span id="edit-tour-poster-upload-btn-text">Upload</span>
@@ -1231,7 +1231,7 @@
                     </div>
                     <div id="edit-tour-poster-preview-container" class="ops-subcard mt-2 hidden flex items-center space-x-3 p-2.5">
                         <img id="edit-tour-poster-preview" src="" alt="Poster Preview" class="w-12 h-16 object-cover rounded-lg border border-[var(--line)]">
-                        <div class="text-xs font-mono min-w-0">
+                        <div class="text-xs font-medium min-w-0">
                             <div class="text-[var(--ink)] font-semibold truncate max-w-xs" id="edit-tour-poster-filename"></div>
                             <div class="text-[var(--muted)] text-[10px]" id="edit-tour-poster-filesize"></div>
                         </div>
@@ -1254,7 +1254,7 @@
                             <span class="modal-field-label" style="margin:0;">Ticket Price List &amp; Tier Quotas</span>
                             <span class="text-[11px] text-[var(--muted)]">Configure pricing tiers for this tour</span>
                         </div>
-                        <button type="button" onclick="addTierRow('edit-tiers-container')" class="text-xs font-mono font-bold flex items-center space-x-1" style="color: var(--crimson-ink);">
+                        <button type="button" onclick="addTierRow('edit-tiers-container')" class="text-xs font-semibold flex items-center space-x-1" style="color: var(--crimson-ink);">
                             <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                             <span>Add Tier</span>
                         </button>
@@ -1436,7 +1436,7 @@
             const container = document.getElementById(containerId);
             if (!container) return;
             const row = document.createElement('div');
-            row.className = 'tier-row grid grid-cols-12 gap-2 items-center ops-subcard p-2 text-xs font-mono';
+            row.className = 'tier-row grid grid-cols-12 gap-2 items-center ops-subcard p-2 text-xs font-medium';
             row.innerHTML = `
                 <div class="col-span-12 sm:col-span-5">
                     <input type="text" placeholder="Tier Name (e.g. GA Standard)" aria-label="Tier Name" class="tier-name modal-input" style="padding: 8px 10px;" required>
@@ -1736,7 +1736,7 @@
             if (emailBadge) emailBadge.textContent = userEmail.split('@')[0] || 'Master Admin';
             if (roleBadge) roleBadge.textContent = (role === 'manager' ? 'MANAGER' : 'SUPER ADMIN');
             if (sideName) sideName.textContent = userEmail.split('@')[0] || 'Master Admin';
-            if (sideRole) sideRole.textContent = 'Operations Clearance';
+            if (sideRole) sideRole.textContent = 'Operations Manager';
             if (avatar) {
                 const initials = (userEmail.slice(0, 2) || 'OP').toUpperCase();
                 avatar.innerHTML = `<span class="font-bold text-xs" style="color: #f87171;">${escHtml(initials)}</span>`;
@@ -1910,7 +1910,7 @@
                     if (!errScans && Array.isArray(scansData)) {
                         liveData.gateScans = scansData.map(s => ({
                             pass: (s.issued_passes && s.issued_passes.pass_code) || `PASS-${s.pass_id}`,
-                            gate: s.gate_name || 'Gate 1 Turnstile',
+                            gate: s.gate_name || 'Gate 1 Entry Scanner',
                             terminal: s.scanner_terminal_id || 'TERM-LIVE-01',
                             time: new Date(s.scanned_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
                             status: (s.result || 'granted').toUpperCase(),
@@ -2049,7 +2049,7 @@
             const elTelScans = document.getElementById('telemetry-scans');
             if (elTelScans) elTelScans.textContent = `${scans.length.toLocaleString()} scans`;
             const elTelScansBadge = document.getElementById('telemetry-scans-badge');
-            if (elTelScansBadge) elTelScansBadge.textContent = scans.length > 0 ? `${scans.length} Scanned` : 'Awaiting Ingress';
+            if (elTelScansBadge) elTelScansBadge.textContent = scans.length > 0 ? `${scans.length} Scanned` : 'Awaiting Check-in';
 
             // Render Dynamic Projects List in Overview
             const projectsList = document.getElementById('overview-projects-list');
@@ -2070,19 +2070,19 @@
                                     <div class="min-w-0">
                                         <div class="font-bold text-[var(--ink)] truncate text-xs flex items-center space-x-2">
                                             <span>${escHtml(t.title)}</span>
-                                            ${t.isFeatured ? '<span class="ops-badge-gold px-2 py-0.5 rounded-full text-[9px] font-mono font-bold">Hero Active</span>' : ''}
+                                            ${t.isFeatured ? '<span class="ops-badge-gold px-2 py-0.5 rounded-full text-[10px] font-medium font-bold">Hero Active</span>' : ''}
                                         </div>
                                         <div class="text-[11px] text-[var(--muted)] flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
                                             <span class="truncate">${escHtml(t.venue)}, ${escHtml(t.city)}</span>
                                             <span>&bull;</span>
-                                            <span class="font-mono font-semibold whitespace-nowrap" style="color: var(--crimson-ink);">${escHtml(t.layout || 'Arena Open-Air')}</span>
+                                            <span class="font-semibold whitespace-nowrap text-xs" style="color: var(--crimson-ink);">${escHtml(t.layout || 'Arena Open-Air')}</span>
                                             <span>&bull;</span>
-                                            <span class="font-mono font-bold whitespace-nowrap" style="color: var(--emerald-ink);">${escHtml(t.cut)}% Cut</span>
+                                            <span class="font-semibold whitespace-nowrap text-xs" style="color: var(--emerald-ink);">${escHtml(t.cut)}% Cut</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="w-full sm:w-44 text-right flex-shrink-0">
-                                    <div class="flex justify-between sm:justify-end items-center sm:space-x-2 text-[10px] font-mono text-[var(--muted)] mb-1">
+                                    <div class="flex justify-between sm:justify-end items-center sm:space-x-2 text-[10px] font-medium text-[var(--muted)] mb-1">
                                         <span>${sold.toLocaleString()} / ${total.toLocaleString()} passes</span>
                                         <span class="font-bold text-[var(--ink)] tabular-nums">${pct}%</span>
                                     </div>
@@ -2094,7 +2094,7 @@
                         `;
                     }).join('');
                 } else {
-                    projectsList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No active tour allocations yet.</div>';
+                    projectsList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-medium text-xs">No active tour allocations yet.</div>';
                 }
             }
 
@@ -2145,13 +2145,13 @@
                                     <span class="text-[var(--ink)] font-semibold">${escHtml(o.attendee)}</span>
                                 </div>
                             </td>
-                            <td class="font-mono text-[var(--muted)]">${escHtml(o.orderNum)}</td>
-                            <td class="font-mono text-[var(--ink)] font-bold tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
+                            <td class="font-medium text-[var(--muted)]">${escHtml(o.orderNum)}</td>
+                            <td class="font-semibold text-[var(--ink)] tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
                             <td class="text-[var(--ink)] truncate max-w-[160px]">${escHtml(o.event)}</td>
-                            <td class="text-[var(--muted)] font-mono">${escHtml(o.mode || 'UPI Instant')}</td>
-                            <td class="text-[var(--muted)] font-mono">${escHtml(o.date || '06 Nov 2026')}</td>
+                            <td class="text-[var(--muted)] font-medium">${escHtml(o.mode || 'UPI Instant')}</td>
+                            <td class="text-[var(--muted)] font-medium tabular-nums">${escHtml(o.date || '06 Nov 2026')}</td>
                             <td>
-                                <span class="${ok ? 'ops-badge-emerald' : 'ops-badge-gold'} px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono uppercase">
+                                <span class="${ok ? 'ops-badge-emerald' : 'ops-badge-gold'} px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase">
                                     ${escHtml(o.status || 'Approved')}
                                 </span>
                             </td>
@@ -2159,7 +2159,7 @@
                     `;
                     }).join('');
                 } else {
-                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet.</td></tr>';
+                    ordersTable.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-medium text-xs">No orders recorded yet.</td></tr>';
                 }
             }
         }
@@ -2168,7 +2168,7 @@
             const tbody = document.getElementById('tours-table-body');
             if (!tbody) return;
             if (!liveData.tours || liveData.tours.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No active tours. Click &ldquo;Allocate New Tour&rdquo; above to add one.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="p-8 text-center text-[var(--muted)] font-medium text-xs">No active tours. Click &ldquo;Allocate New Tour&rdquo; above to add one.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.tours.map(t => {
@@ -2184,7 +2184,7 @@
                                 <div>
                                     <div class="font-bold text-[var(--ink)] text-xs">${escHtml(t.title)}</div>
                                     ${isFeatured ? `
-                                        <div class="ops-badge-gold inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[9px] font-mono font-bold mt-1">
+                                        <div class="ops-badge-gold inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-medium font-bold mt-1">
                                             <i data-lucide="star" class="w-2.5 h-2.5"></i>
                                             <span>Featured in Hero</span>
                                         </div>
@@ -2197,21 +2197,21 @@
                             <div class="text-[11px] text-[var(--muted)]">${escHtml(t.city)}</div>
                         </td>
                         <td>
-                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold">
+                            <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-medium font-semibold">
                                 ${escHtml(t.layout || 'Arena Open-Air')}
                             </span>
                         </td>
-                        <td class="font-mono text-[var(--muted)] whitespace-nowrap">${escHtml(t.date)}</td>
-                        <td class="font-mono">
+                        <td class="font-medium text-[var(--muted)] whitespace-nowrap tabular-nums">${escHtml(t.date)}</td>
+                        <td class="font-medium">
                             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${t.partner === 'BookMyShow' ? 'ops-badge-crimson' : 'ops-badge-navy'}">
                                 ${escHtml(t.partner)}
                             </span>
                         </td>
-                        <td class="font-mono font-bold text-[var(--ink)] whitespace-nowrap tabular-nums">₹${Number(t.mrp).toLocaleString('en-IN')}</td>
-                        <td class="font-mono font-bold whitespace-nowrap tabular-nums" style="color: var(--emerald-ink);">${escHtml(t.cut)}% CUT</td>
+                        <td class="font-semibold text-[var(--ink)] whitespace-nowrap tabular-nums">₹${Number(t.mrp).toLocaleString('en-IN')}</td>
+                        <td class="font-semibold whitespace-nowrap tabular-nums" style="color: var(--emerald-ink);">${escHtml(t.cut)}% CUT</td>
                         <td>
                             ${isFeatured ? `
-                                <span class="ops-badge-gold px-2.5 py-1 rounded-full text-[10px] font-mono font-bold inline-flex items-center space-x-1 w-max">
+                                <span class="ops-badge-gold px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider inline-flex items-center space-x-1 w-max">
                                     <i data-lucide="check" class="w-3 h-3"></i>
                                     <span>Active Hero</span>
                                 </span>
@@ -2223,7 +2223,7 @@
                             `}
                         </td>
                         <td>
-                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                            <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase">
                                 ${escHtml(t.status)}
                             </span>
                         </td>
@@ -2247,31 +2247,31 @@
             const tbody = document.getElementById('promoters-table-body');
             if (!tbody) return;
             if (!liveData.promoters || liveData.promoters.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No promoters registered yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="p-8 text-center text-[var(--muted)] font-medium text-xs">No promoters registered yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.promoters.map(p => `
                 <tr class="hover:bg-[var(--soft)]/60 transition-colors">
                     <td class="font-semibold text-[var(--ink)]">
                         <div class="text-xs font-bold">${escHtml(p.name)}</div>
-                        <div class="text-[11px] font-mono text-[var(--muted)] flex flex-wrap items-center gap-1.5 mt-0.5">
+                        <div class="text-[11px] font-medium text-[var(--muted)] flex flex-wrap items-center gap-1.5 mt-0.5">
                             ${p.phone ? `<span>${escHtml(p.phone)}</span>` : ''}
                             ${p.phone && p.email ? `<span>&bull;</span>` : ''}
                             ${p.email ? `<span>${escHtml(p.email)}</span>` : ''}
                         </div>
                     </td>
-                    <td class="font-mono font-semibold text-[var(--ink)]">${escHtml(p.code)}</td>
+                    <td class="font-semibold text-[var(--ink)] tabular-nums">${escHtml(p.code)}</td>
                     <td class="text-[var(--muted)]">${escHtml(p.city)}</td>
                     <td>
-                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider">
                             ${escHtml(p.tier)} (${escHtml(p.tierCut)}%)
                         </span>
                     </td>
-                    <td class="font-mono font-bold text-[var(--ink)] tabular-nums">${Number(p.passes || 0).toLocaleString('en-IN')}</td>
-                    <td class="font-mono font-bold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.earnings).toLocaleString('en-IN')}</td>
-                    <td class="font-mono text-[var(--muted)]">${escHtml(p.upi)}</td>
+                    <td class="font-semibold text-[var(--ink)] tabular-nums">${Number(p.passes || 0).toLocaleString('en-IN')}</td>
+                    <td class="font-semibold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.earnings).toLocaleString('en-IN')}</td>
+                    <td class="font-medium text-[var(--muted)]">${escHtml(p.upi)}</td>
                     <td>
-                        <button type="button" onclick="togglePromoterKyc(${Number(p.id)})" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase cursor-pointer ${p.kyc === 'verified' ? 'ops-badge-emerald' : 'ops-badge-gold'}">
+                        <button type="button" onclick="togglePromoterKyc(${Number(p.id)})" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase cursor-pointer ${p.kyc === 'verified' ? 'ops-badge-emerald' : 'ops-badge-gold'}">
                             ${escHtml(p.kyc)}
                         </button>
                     </td>
@@ -2288,24 +2288,24 @@
             const tbody = document.getElementById('orders-table-body');
             if (!tbody) return;
             if (!liveData.orders || liveData.orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No orders recorded yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-medium text-xs">No orders recorded yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.orders.map(o => `
                 <tr class="hover:bg-[var(--soft)]/60 transition-colors">
-                    <td class="font-mono text-[var(--ink)] font-semibold">${escHtml(o.orderNum)}</td>
+                    <td class="font-semibold text-[var(--ink)]">${escHtml(o.orderNum)}</td>
                     <td class="font-semibold text-[var(--ink)]">${escHtml(o.attendee)}</td>
                     <td class="text-[var(--ink)] truncate max-w-[180px]">${escHtml(o.event)}</td>
-                    <td class="font-mono text-[var(--muted)]">${escHtml(o.tier)} (&times;${Number(o.qty || 1)})</td>
-                    <td class="font-mono font-bold text-[var(--ink)] tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
-                    <td class="font-mono text-[var(--muted)]">${escHtml(o.ref)}</td>
+                    <td class="text-[var(--muted)] font-medium">${escHtml(o.tier)} (&times;${Number(o.qty || 1)})</td>
+                    <td class="font-semibold text-white tabular-nums">₹${Number(o.total).toLocaleString('en-IN')}</td>
+                    <td class="text-[var(--muted)] font-medium">${escHtml(o.ref)}</td>
                     <td>
-                        <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold">
+                        <span class="ops-badge-navy px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider">
                             ${escHtml(o.channel)}
                         </span>
                     </td>
                     <td>
-                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase">
                             ${escHtml(o.status)}
                         </span>
                     </td>
@@ -2317,23 +2317,23 @@
             const tbody = document.getElementById('payouts-table-body');
             if (!tbody) return;
             if (!liveData.payouts || liveData.payouts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-mono text-xs">No payouts triggered yet.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="p-8 text-center text-[var(--muted)] font-medium text-xs">No payouts triggered yet.</td></tr>';
                 return;
             }
             tbody.innerHTML = liveData.payouts.map(p => `
                 <tr class="hover:bg-[var(--soft)]/60 transition-colors">
-                    <td class="font-mono text-[var(--muted)] font-semibold">PAY-${escHtml(p.id)}</td>
+                    <td class="font-semibold text-[var(--muted)]">PAY-${escHtml(p.id)}</td>
                     <td class="font-semibold text-[var(--ink)]">${escHtml(p.promoter)}</td>
-                    <td class="font-mono text-[var(--ink)]">${escHtml(p.upi)}</td>
-                    <td class="font-mono font-bold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.amount).toLocaleString('en-IN')}</td>
-                    <td class="font-mono text-[var(--ink)] tabular-nums">&lt;${Number(p.speed)}s</td>
-                    <td class="font-mono text-[var(--muted)]">${escHtml(p.rrn)}</td>
+                    <td class="font-medium text-[var(--ink)]">${escHtml(p.upi)}</td>
+                    <td class="font-semibold tabular-nums" style="color: var(--emerald-ink);">₹${Number(p.amount).toLocaleString('en-IN')}</td>
+                    <td class="text-[var(--ink)] tabular-nums font-medium">&lt;${Number(p.speed)}s</td>
+                    <td class="text-[var(--muted)] font-medium">${escHtml(p.rrn)}</td>
                     <td>
-                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase">
+                        <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase">
                             ${escHtml(p.status)}
                         </span>
                     </td>
-                    <td class="font-mono text-[var(--muted)] text-right">${escHtml(p.time)}</td>
+                    <td class="text-[var(--muted)] text-right font-medium tabular-nums">${escHtml(p.time)}</td>
                 </tr>
             `).join('');
         }
@@ -2342,7 +2342,7 @@
             const scanList = document.getElementById('gate-scans-list');
             if (scanList) {
                 if (!liveData.gateScans || liveData.gateScans.length === 0) {
-                    scanList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">No gate scans recorded yet.</div>';
+                    scanList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-medium text-xs">No gate admissions recorded yet.</div>';
                 } else {
                     scanList.innerHTML = liveData.gateScans.map(s => `
                         <div class="ops-subcard p-3 flex items-center justify-between gap-3">
@@ -2352,7 +2352,7 @@
                             </div>
                             <div class="text-right flex-shrink-0">
                                 <span class="ops-badge-emerald px-2.5 py-0.5 rounded-full text-[10px] font-bold">${escHtml(s.status)}</span>
-                                <div class="text-[var(--muted)] text-[10px] mt-1 font-mono">${escHtml(s.time)}</div>
+                                <div class="text-[var(--muted)] text-[10px] mt-1 font-medium tabular-nums">${escHtml(s.time)}</div>
                             </div>
                         </div>
                     `).join('');
@@ -2362,7 +2362,7 @@
             const blockList = document.getElementById('bot-blocks-list');
             if (blockList) {
                 if (!liveData.botBlocks || liveData.botBlocks.length === 0) {
-                    blockList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-mono text-xs">Anti-scalping shield active &bull; 0 bot blocks.</div>';
+                    blockList.innerHTML = '<div class="p-6 text-center text-[var(--muted)] font-medium text-xs">Security shield active &bull; 0 fraud attempts detected.</div>';
                 } else {
                     blockList.innerHTML = liveData.botBlocks.map(b => `
                         <div class="ops-subcard p-3 flex items-center justify-between gap-3">
@@ -2370,7 +2370,7 @@
                                 <div class="font-bold truncate" style="color: var(--crimson-ink);">${escHtml(b.type)} - ${escHtml(b.ip)}</div>
                                 <div class="text-[var(--muted)] text-[11px] truncate">${escHtml(b.details)}</div>
                             </div>
-                            <span class="ops-badge-crimson px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono flex-shrink-0">${escHtml(b.action)}</span>
+                            <span class="ops-badge-crimson px-2.5 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0">${escHtml(b.action)}</span>
                         </div>
                     `).join('');
                 }
@@ -2854,7 +2854,7 @@
             const code = tour ? `TIX-PASS-${tour.id}-${Math.floor(Math.random() * 900 + 100)}` : 'TIX-PASS-001';
             const newScan = {
                 pass: code,
-                gate: 'Gate 1 Turnstile',
+                gate: 'Gate 1 Entry Scanner',
                 terminal: 'TERM-GATE-01',
                 time: new Date().toLocaleTimeString('en-US', { hour12: false }) + ' IST',
                 status: 'GRANTED',
@@ -2863,7 +2863,7 @@
             liveData.gateScans.unshift(newScan);
             renderGateScans();
             renderOverview();
-            showToast('Gate scan verified.');
+            showToast('Gate check-in admitted and verified.');
         }
 
         // --------------------------------------------------------------------

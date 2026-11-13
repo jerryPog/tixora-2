@@ -1030,7 +1030,7 @@ SELECT setval('ticket_tiers_id_seq', 30);
 -- 5.6: Promoters & Sales Register (Official Promoter: Ronak Jain)
 -- 4. Promoter: Ronak Jain (56 Passes Sold -> Tier 2 Capo / Silver)
 INSERT INTO promoters (id, full_name, whatsapp_number, email, city, organization, upi_id, tier_id, referral_code, kyc_status, total_passes_sold, total_earnings) VALUES
-(1, 'Ronak Jain', '+917892145475', 'ronakj303@gmail.com', 'Bengaluru', 'Tixora Operations & South India Tour Desk', '7892145475@upi', 2, 'TIX-RONAK-BLR', 'verified', 56, 28209.50)
+(1, 'Ronak Jain', '+917892145475', 'ronakj303@gmail.com', 'Bengaluru', 'Tixora Operations & South India Tour Desk', '7892145475@upi', 2, '78920145', 'verified', 56, 28209.50)
 ON CONFLICT (id) DO UPDATE SET full_name = EXCLUDED.full_name, email = EXCLUDED.email, whatsapp_number = EXCLUDED.whatsapp_number, total_passes_sold = EXCLUDED.total_passes_sold, total_earnings = EXCLUDED.total_earnings, tier_id = EXCLUDED.tier_id;
 SELECT setval('promoters_id_seq', GREATEST((SELECT MAX(id) FROM promoters), 1));
 
